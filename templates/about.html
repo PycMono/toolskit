@@ -1,0 +1,31 @@
+{{ template "base" . }}
+{{ define "content" }}
+<div class="container static-page">
+  <h1>{{ call .T "about.h1" }}</h1>
+  <div class="static-content card">
+    <section>
+      <h2>{{ call .T "about.mission.title" }}</h2>
+      <p>{{ call .T "about.mission.desc" }}</p>
+    </section>
+    <section>
+      <h2>{{ call .T "about.offer.title" }}</h2>
+      <ul>
+        <li>📱 <strong>{{ call .T "about.offer.sms.name" }}</strong> — {{ call .T "about.offer.sms.desc" }}</li>
+        <li>🏠 <strong>{{ call .T "about.offer.address.name" }}</strong> — {{ call .T "about.offer.address.desc" }}</li>
+        <li>🔑 <strong>{{ call .T "about.offer.password.name" }}</strong> — {{ call .T "about.offer.password.desc" }}</li>
+        <li>📧 <strong>{{ call .T "about.offer.email.name" }}</strong> — {{ call .T "about.offer.email.desc" }}</li>
+        <li>🌐 <strong>{{ call .T "about.offer.proxy.name" }}</strong> — {{ call .T "about.offer.proxy.desc" }}</li>
+      </ul>
+    </section>
+    <section>
+      <h2>{{ call .T "about.privacy.title" }}</h2>
+      <p>{{ call .T "about.privacy.desc" }}</p>
+    </section>
+    <section>
+      <h2>{{ call .T "about.contact.title" }}</h2>
+      <p>{{ safeHTML (call .T "about.contact.desc") }}</p>
+    </section>
+  </div>
+</div>
+{{ end }}
+{{ define "extraScript" }}{{ end }}

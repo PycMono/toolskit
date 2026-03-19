@@ -1,0 +1,388 @@
+{{ define "json_head" }}
+<!-- Monaco Editor -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+<!-- CDN libs loaded per-tool as needed -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+{{ end }}
+
+{{ define "json_content" }}
+{{ $lang := .Lang }}
+{{ $meta := .Meta }}
+
+<!-- Topbar with hot tool tabs -->
+<nav class="jt-topbar">
+  <div class="jt-container jt-container--flex">
+    <div class="jt-topbar__left">
+      <a href="/json" class="jt-topbar__logo">{ } JSON</a>
+      <div class="jt-topbar__scroll">
+        {{ range .HotTools }}
+        <a href="/json/{{ .Key }}?lang={{ $lang }}"
+           class="jt-topbar__tab{{ if eq $.ToolKey .Key }} active{{ end }}">
+          <span>{{ .Icon }}</span>
+          <span>{{ if eq $lang "zh" }}{{ .TitleZH }}{{ else }}{{ .TitleEN }}{{ end }}</span>
+        </a>
+        {{ end }}
+        <a href="/json?lang={{ $lang }}" class="jt-topbar__all">{{ call .T "json.home.all_tools" }} →</a>
+      </div>
+    </div>
+    <div class="jt-topbar__right">
+      <a href="/" class="jt-home-link">← Tool Box Nova</a>
+      <div class="jt-lang-switch lang-switcher">
+        <button class="lang-btn" id="jtLangBtn">
+          {{- if eq .Lang "zh" }}🇨🇳 中文
+          {{- else if eq .Lang "en" }}🇺🇸 EN
+          {{- else if eq .Lang "ja" }}🇯🇵 日本語
+          {{- else if eq .Lang "ko" }}🇰🇷 한국어
+          {{- else if eq .Lang "spa" }}🇪🇸 ES
+          {{- else }}🌐 Lang
+          {{- end }} ▾
+        </button>
+        <div class="lang-dropdown" id="jtLangDropdown">
+          <a href="?lang=zh"  class="lang-opt {{ if eq .Lang "zh"  }}active{{ end }}">🇨🇳 中文</a>
+          <a href="?lang=en"  class="lang-opt {{ if eq .Lang "en"  }}active{{ end }}">🇺🇸 English</a>
+          <a href="?lang=ja"  class="lang-opt {{ if eq .Lang "ja"  }}active{{ end }}">🇯🇵 日本語</a>
+          <a href="?lang=ko"  class="lang-opt {{ if eq .Lang "ko"  }}active{{ end }}">🇰🇷 한국어</a>
+          <a href="?lang=spa" class="lang-opt {{ if eq .Lang "spa" }}active{{ end }}">🇪🇸 Español</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Tool Hero -->
+<section class="jt-tool-hero">
+  <div class="jt-container">
+    <div class="jt-tool-hero__inner">
+      <span class="jt-tool-hero__icon">{{ $meta.Icon }}</span>
+      <div>
+        <h1 class="jt-tool-hero__title">
+          {{ if eq $lang "zh" }}{{ $meta.TitleZH }}{{ else }}{{ $meta.TitleEN }}{{ end }}
+        </h1>
+        <p class="jt-tool-hero__desc">
+          {{ if eq $lang "zh" }}{{ $meta.DescZH }}{{ else }}{{ $meta.DescEN }}{{ end }}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- Top Ad -->
+  <div style="text-align:center;margin:8px 0 16px">
+    {{- template "partials/ad_slot.html" dict "SlotID" "json-tool-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+  </div>
+
+<!-- Tool Options (per-tool) -->
+<div class="jt-tool-options-bar" id="toolOptionsBar">
+  <div class="jt-container">
+    <div id="toolOptions" class="jt-tool-options-inner"></div>
+  </div>
+</div>
+
+<!-- Main Workspace -->
+<section class="jt-tool-workspace">
+  <div class="jt-container jt-container--wide">
+
+    {{ if eq .ToolKey "diff" }}
+    <!-- Diff: 2-pane + center action + result -->
+    <div class="jt-schema-layout">
+      <div class="jt-editor-pane jt-editor-pane--input">
+        <div class="jt-editor-pane__header">
+          <span class="jt-editor-pane__label">{{ call .T "json.diff.left" }}</span>
+          <div class="jt-editor-pane__actions">
+            <button onclick="loadLeftExample()" class="jt-btn jt-btn--ghost">{{ call .T "json.common.example" }}</button>
+            <button onclick="if(leftEditor)leftEditor.setValue('')" class="jt-btn jt-btn--ghost">{{ call .T "json.common.clear" }}</button>
+          </div>
+        </div>
+        <div id="diffLeftEditor" class="jt-monaco-editor"></div>
+      </div>
+      <div class="jt-editor-actions jt-schema-mid-action">
+        <button class="jt-process-btn" onclick="processJson()" title="{{ call .T "json.diff.btn" }}">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+      <div class="jt-editor-pane jt-editor-pane--input">
+        <div class="jt-editor-pane__header">
+          <span class="jt-editor-pane__label">{{ call .T "json.diff.right" }}</span>
+          <div class="jt-editor-pane__actions">
+            <button onclick="loadRightExample()" class="jt-btn jt-btn--ghost">{{ call .T "json.common.example" }}</button>
+            <button onclick="if(rightEditor)rightEditor.setValue('')" class="jt-btn jt-btn--ghost">{{ call .T "json.common.clear" }}</button>
+          </div>
+        </div>
+        <div id="diffRightEditor" class="jt-monaco-editor"></div>
+      </div>
+    </div>
+    <div id="diffResult" class="jt-diff-result" style="margin-top:16px"></div>
+
+    {{ else if or (eq .ToolKey "tree") (eq .ToolKey "table") (eq .ToolKey "size") (eq .ToolKey "search") }}
+    <!-- Side-by-side: input left + action col + output right -->
+    <div class="jt-schema-layout jt-schema-layout--wide">
+      <div class="jt-editor-pane jt-editor-pane--input">
+        <div class="jt-editor-pane__header">
+          <span class="jt-editor-pane__label">{{ call .T "json.common.input" }}</span>
+          <div class="jt-editor-pane__actions">
+            <button onclick="loadExample()" class="jt-btn jt-btn--ghost">{{ call .T "json.common.example" }}</button>
+            <button onclick="clearInput()"  class="jt-btn jt-btn--ghost">{{ call .T "json.common.clear" }}</button>
+            <label class="jt-btn jt-btn--ghost">{{ call .T "json.common.upload" }}
+              <input type="file" accept=".json,.txt" style="display:none" onchange="uploadFile(this)">
+            </label>
+          </div>
+        </div>
+        <div id="inputEditor" class="jt-monaco-editor jt-monaco-editor--tall"></div>
+        <div class="jt-editor-pane__footer" style="padding:6px 0">
+          <span id="inputSize"></span>
+          <button class="jt-process-btn jt-process-btn--full" style="margin-top:10px" onclick="processJson()">
+            {{ call .T "json.common.process" }}
+          </button>
+          {{ if eq .ToolKey "tree" }}
+          <div style="margin-top:8px;display:flex;gap:6px">
+            <button class="jt-btn jt-btn--ghost" onclick="expandAll()">全部展开</button>
+            <button class="jt-btn jt-btn--ghost" onclick="collapseAll()">全部折叠</button>
+          </div>
+          {{ end }}
+          {{ if eq .ToolKey "search" }}
+          <div id="searchControls" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center"></div>
+          {{ end }}
+        </div>
+      </div>
+      <div class="jt-schema-mid-action" style="visibility:hidden;width:0;padding:0;border:none"></div>
+      <div class="jt-editor-pane jt-editor-pane--output" style="overflow:auto">
+        <div class="jt-editor-pane__header">
+          <span class="jt-editor-pane__label">{{ call .T "json.common.output" }}</span>
+        </div>
+        <div style="padding:12px;overflow:auto;max-height:560px">
+          <div id="treeOutput"   {{ if ne .ToolKey "tree"   }}style="display:none"{{ end }}></div>
+          <div id="tableOutput"  {{ if ne .ToolKey "table"  }}style="display:none"{{ end }}></div>
+          <div id="sizeOutput"   {{ if ne .ToolKey "size"   }}style="display:none"{{ end }}></div>
+          <div id="searchOutput" {{ if ne .ToolKey "search" }}style="display:none"{{ end }}></div>
+        </div>
+      </div>
+    </div>
+
+    {{ else if eq .ToolKey "from-excel" }}
+    <!-- Excel: side-by-side upload left + output right -->
+    <div class="jt-schema-layout jt-schema-layout--wide">
+      <div class="jt-editor-pane">
+        <div class="jt-editor-pane__header">
+          <span class="jt-editor-pane__label">{{ call .T "json.convert.upload_excel" }}</span>
+        </div>
+        <div style="padding:24px">
+          <div class="jt-upload-box" id="excelUploadBox">
+            <span class="jt-upload-icon">📗</span>
+            <p>{{ call .T "json.convert.upload_excel" }}</p>
+            <label class="jt-btn jt-btn--primary">
+              {{ call .T "json.common.upload" }}
+              <input type="file" accept=".xlsx,.xls,.csv" style="display:none"
+                     onchange="handleExcelUpload(this)">
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="jt-schema-mid-action" style="visibility:hidden;width:0;padding:0;border:none"></div>
+      <div class="jt-editor-pane jt-editor-pane--output">
+        <div class="jt-editor-pane__header">
+          <span class="jt-editor-pane__label">{{ call .T "json.common.output" }}</span>
+          <div class="jt-editor-pane__actions">
+            <button onclick="copyOutput()" class="jt-btn jt-btn--primary">{{ call .T "json.common.copy" }}</button>
+            <button onclick="downloadOutput('output.json','json')" class="jt-btn jt-btn--ghost">{{ call .T "json.common.download" }}</button>
+          </div>
+        </div>
+        <div id="outputEditor" class="jt-monaco-editor"></div>
+      </div>
+    </div>
+
+    {{ else if eq .ToolKey "schema-validate" }}
+    <!-- Schema Validate: schema input + execute btn + data input + result -->
+    <div class="jt-schema-layout">
+      <div class="jt-editor-pane">
+        <div class="jt-editor-pane__header">
+          <span class="jt-editor-pane__label">{{ call .T "json.schema.validate.schema_input" }}</span>
+        </div>
+        <div id="schemaEditor" class="jt-monaco-editor"></div>
+      </div>
+      <!-- Execute button between the two editors -->
+      <div class="jt-editor-actions jt-schema-mid-action">
+        <button class="jt-process-btn" onclick="processJson()" title="{{ call .T "json.schema.validate.btn" }}">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </button>
+      </div>
+      <div class="jt-editor-pane">
+        <div class="jt-editor-pane__header">
+          <span class="jt-editor-pane__label">{{ call .T "json.schema.validate.json_input" }}</span>
+          <div class="jt-editor-pane__actions">
+            <button onclick="loadExample()" class="jt-btn jt-btn--ghost">{{ call .T "json.common.example" }}</button>
+          </div>
+        </div>
+        <div id="inputEditor" class="jt-monaco-editor"></div>
+      </div>
+    </div>
+    <div id="outputEditor" class="jt-monaco-editor" style="height:200px;margin-top:16px"></div>
+
+    {{ else }}
+    <!-- Standard dual-pane editor layout -->
+    <div class="jt-editor-layout">
+
+      <!-- Left: Input -->
+      <div class="jt-editor-pane jt-editor-pane--input">
+        <div class="jt-editor-pane__header">
+          <span class="jt-editor-pane__label">{{ call .T "json.common.input" }}</span>
+          <div class="jt-editor-pane__actions">
+            <button onclick="loadExample()" class="jt-btn jt-btn--ghost">{{ call .T "json.common.example" }}</button>
+            <button onclick="clearInput()"  class="jt-btn jt-btn--ghost">{{ call .T "json.common.clear" }}</button>
+            <label class="jt-btn jt-btn--ghost">{{ call .T "json.common.upload" }}
+              <input type="file" accept=".json,.txt,.yaml,.yml,.xml,.csv,.sql" style="display:none"
+                     onchange="uploadFile(this)">
+            </label>
+          </div>
+        </div>
+        <div id="inputEditor" class="jt-monaco-editor"></div>
+        <div class="jt-editor-pane__footer">
+          <span id="inputSize"></span>
+        </div>
+      </div>
+
+      <!-- Middle: Action buttons -->
+      <div class="jt-editor-actions">
+        <button class="jt-process-btn" id="processBtn" onclick="processJson()" title="{{ call .T "json.common.process" }}">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+        <button class="jt-swap-btn" onclick="swapEditors()" title="{{ call .T "json.common.swap" }}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <polyline points="17 1 21 5 17 9"/>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+            <polyline points="7 23 3 19 7 15"/>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Right: Output -->
+      <div class="jt-editor-pane jt-editor-pane--output">
+        <div class="jt-editor-pane__header">
+          <span class="jt-editor-pane__label">{{ call .T "json.common.output" }}</span>
+          <div class="jt-editor-pane__actions">
+            {{ if eq .ToolKey "unescape" }}
+            <button onclick="beautifyOutput()" class="jt-btn jt-btn--primary">✨ 美化</button>
+            {{ end }}
+            <button onclick="copyOutput()" class="jt-btn jt-btn--primary" id="copyBtn">
+              {{ call .T "json.common.copy" }}
+            </button>
+            <button onclick="downloadOutput()" class="jt-btn jt-btn--ghost">
+              {{ call .T "json.common.download" }}
+            </button>
+          </div>
+        </div>
+        <div id="outputEditor" class="jt-monaco-editor"></div>
+        <div class="jt-editor-pane__footer">
+          <span id="outputSize"></span>
+          <span id="outputStats" class="jt-output-stats"></span>
+        </div>
+      </div>
+
+    </div><!-- /jt-editor-layout -->
+    {{ end }}
+
+    <!-- Error Panel -->
+    <div class="jt-error-panel" id="errorPanel" style="display:none">
+      <div class="jt-error-panel__header">
+        <span>❌</span>
+        <span id="errorTitle"></span>
+        <button onclick="hideErrorPanel()" class="jt-error-panel__close">✕</button>
+      </div>
+      <div class="jt-error-panel__body" id="errorBody"></div>
+    </div>
+
+    <!-- JWT Panel (jwt tool only) -->
+    {{ if eq .ToolKey "jwt" }}
+    <div id="jwtPanel" class="jt-jwt-panel" style="display:none"></div>
+    {{ end }}
+
+  </div><!-- /jt-container -->
+</section>
+
+<!-- Related Tools -->
+{{ if .RelatedTools }}
+<section class="jt-related-section">
+  <div class="jt-container">
+    <h2 class="jt-section-title">{{ call .T "json.related.title" }}</h2>
+    <div class="jt-related-grid">
+      {{ range .RelatedTools }}
+      <a class="jt-related-card" href="/json/{{ .Key }}?lang={{ $lang }}">
+        <span>{{ .Icon }}</span>
+        <span>{{ if eq $lang "zh" }}{{ .TitleZH }}{{ else }}{{ .TitleEN }}{{ end }}</span>
+      </a>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}
+
+<!-- FAQ -->
+{{ if .FAQs }}
+<section class="jt-faq-section">
+  <div class="jt-container">
+    <h2 class="jt-section-title">{{ call .T "json.faq.title" }}</h2>
+    <div class="jt-faq-list">
+      {{ range $i, $faq := .FAQs }}
+      <div class="jt-faq-item" id="faq-{{ $i }}">
+        <button class="jt-faq-question" onclick="toggleFAQ('faq-{{ $i }}')">
+          <span>{{ $faq.Q }}</span>
+          <svg class="jt-faq-chevron" width="16" height="16" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="jt-faq-answer"><p>{{ $faq.A }}</p></div>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}
+{{ end }}
+
+{{ define "json_scripts" }}
+<!-- per-tool CDN libs -->
+{{ if or (eq .ToolKey "to-csv") (eq .ToolKey "from-csv") }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"
+        onerror="var s=document.createElement('script');s.src='https://unpkg.com/papaparse@5.4.1/papaparse.min.js';document.head.appendChild(s)"></script>
+{{ end }}
+{{ if or (eq .ToolKey "to-excel") (eq .ToolKey "from-excel") }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+{{ end }}
+{{ if or (eq .ToolKey "to-yaml") (eq .ToolKey "from-yaml") }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"
+        onerror="var s=document.createElement('script');s.src='https://unpkg.com/js-yaml@4.1.0/dist/js-yaml.min.js';document.head.appendChild(s)"></script>
+{{ end }}
+{{ if or (eq .ToolKey "to-xml") (eq .ToolKey "from-xml") }}
+<script src="https://unpkg.com/fast-xml-parser@4.3.5/dist/fxp.js"
+        onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/fast-xml-parser@4.3.5/dist/fxp.js';document.head.appendChild(s)"></script>
+{{ end }}
+{{ if eq .ToolKey "schema-validate" }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/8.12.0/ajv2020.min.js"
+        onerror="var s=document.createElement('script');s.src='https://unpkg.com/ajv@8.12.0/dist/ajv2020.min.js';document.head.appendChild(s)"></script>
+{{ end }}
+{{ if eq .ToolKey "path" }}
+<script src="https://unpkg.com/jsonpath-plus@9.0.0/dist/index-browser-umd.cjs"
+        onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/jsonpath-plus@9.0.0/dist/index-browser-umd.cjs';document.head.appendChild(s)"></script>
+{{ end }}
+{{ if or (eq .ToolKey "to-typescript") (eq .ToolKey "to-python") (eq .ToolKey "to-java") (eq .ToolKey "to-csharp") (eq .ToolKey "to-go") (eq .ToolKey "to-kotlin") (eq .ToolKey "to-swift") (eq .ToolKey "to-rust") (eq .ToolKey "to-php") }}
+<script src="/static/js/json-codegen-core.js"></script>
+{{ end }}
+<script>
+  window.JT_LANG    = "{{ .Lang }}";
+  window.JT_TOOL    = "{{ .ToolKey }}";
+  window.JT_I18N   = {};
+</script>
+<script src="/static/js/json-tools-core.js"></script>
+<script src="/static/js/json-tool-{{ .ToolKey }}.js"></script>
+
+<!-- Bottom Ad -->
+<div style="text-align:center;margin:24px 0">
+  {{- template "partials/ad_slot.html" dict "SlotID" "json-tool-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+</div>
+{{ end }}
+

@@ -1,0 +1,501 @@
+/* SMS 接码器专用样式 - S-02 */
+
+/* ── 全局 ─────────────────────────────────── */
+.sms-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.sms-section-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #0f172a;
+  text-align: center;
+  margin: 0 0 36px;
+}
+
+/* ── 导航 ────────────────────────────────── */
+.sms-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 0;
+}
+
+.sms-navbar > .sms-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+}
+
+.sms-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.sms-navbar__links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.sms-navbar__links a {
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.sms-navbar__links a:hover { color: #ffffff; }
+
+.sms-navbar__balance {
+  background: rgba(79,70,229,0.25);
+  border: 1px solid rgba(79,70,229,0.5);
+  border-radius: 999px;
+  padding: 4px 14px !important;
+  color: #a5b4fc !important;
+  font-weight: 600 !important;
+}
+
+.sms-nav-btn {
+  height: 36px;
+  padding: 0 18px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.sms-nav-btn--ghost {
+  color: rgba(255,255,255,0.8) !important;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.sms-nav-btn--primary {
+  background: #4f46e5;
+  color: #ffffff !important;
+}
+
+.sms-nav-btn--primary:hover { background: #4338ca; }
+
+/* ── Hero ─────────────────────────────────── */
+.sms-hero {
+  position: relative;
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+  padding: 80px 0 72px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.sms-hero__title {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0 0 16px;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.sms-hero__subtitle {
+  font-size: 1.125rem;
+  color: rgba(255,255,255,0.7);
+  max-width: 540px;
+  margin: 0 auto 28px;
+  line-height: 1.6;
+}
+
+.sms-hero__badges {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+}
+
+.sms-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 16px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 999px;
+  color: rgba(255,255,255,0.9);
+  font-size: 0.875rem;
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+}
+
+/* 搜索框 */
+.sms-hero__search {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.hero-search-box {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 6px 6px 6px 16px;
+  gap: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.hero-search-icon { color: #9ca3af; flex-shrink: 0; }
+
+.hero-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  color: #111827;
+  background: transparent;
+}
+
+.hero-search-btn {
+  height: 44px;
+  padding: 0 24px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #ffffff;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+
+.hero-search-btn:hover { opacity: 0.9; }
+
+/* 搜索下拉 */
+.hero-search-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+  z-index: 100;
+  text-align: left;
+}
+
+.dropdown-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 8px;
+  padding: 0 4px;
+}
+
+.dropdown-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: #374151;
+  transition: background 0.1s;
+}
+
+.dropdown-item:hover { background: #f3f4f6; }
+
+.dropdown-item img,
+.dropdown-item .service-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  object-fit: contain;
+  font-size: 16px;
+  text-align: center;
+  line-height: 20px;
+}
+
+/* 背景光晕 */
+.sms-hero__bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(80px);
+  opacity: 0.25;
+}
+.sms-hero__bg-orb--1 {
+  width: 500px; height: 500px;
+  background: #6366f1;
+  top: -200px; left: -100px;
+}
+.sms-hero__bg-orb--2 {
+  width: 400px; height: 400px;
+  background: #8b5cf6;
+  bottom: -150px; right: -50px;
+}
+
+/* ── 数字统计 ─────────────────────────────── */
+.sms-stats-section {
+  background: #ffffff;
+  padding: 48px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.sms-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 24px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+}
+
+.stat-card__number {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #4f46e5;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-card__suffix {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #4f46e5;
+}
+
+.stat-card__label {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 6px 0 0;
+}
+
+/* ── 服务 Logo 无限滚动 ────────────────────── */
+.sms-services-marquee {
+  background: #f8fafc;
+  padding: 24px 0;
+  overflow: hidden;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.marquee-track {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.marquee-inner {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+  animation: marquee-scroll 30s linear infinite;
+}
+
+.marquee-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.marquee-item img,
+.marquee-item .service-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 6px;
+  font-size: 28px;
+  text-align: center;
+  line-height: 32px;
+}
+
+.marquee-item span {
+  font-size: 0.75rem;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+@keyframes marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── 三步说明 ─────────────────────────────── */
+.sms-how-section {
+  background: #ffffff;
+  padding: 64px 0;
+}
+
+.sms-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.step-card {
+  flex: 1;
+  max-width: 280px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 28px 24px;
+  text-align: center;
+  position: relative;
+}
+
+.step-card--arrow {
+  flex: 0;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #d1d5db;
+  padding: 0;
+}
+
+.step-card__num {
+  position: absolute;
+  top: -12px;
+  left: 20px;
+  width: 24px;
+  height: 24px;
+  background: #4f46e5;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-card__icon { font-size: 2rem; margin-bottom: 12px; }
+
+.step-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px;
+}
+
+.step-card p {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ── FAQ 区域 ───────────────────────────── */
+.sms-faq-section {
+  background: #f8fafc;
+  padding: 64px 0;
+}
+
+.faq-list {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.faq-question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.faq-question:hover {
+  background: #f9fafb;
+}
+
+.faq-chevron {
+  flex-shrink: 0;
+  transition: transform 0.2s;
+  color: #9ca3af;
+}
+
+.faq-item.active .faq-chevron {
+  transform: rotate(180deg);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.faq-item.active .faq-answer {
+  max-height: 500px;
+}
+
+.faq-answer p {
+  padding: 0 20px 18px;
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+/* ── 响应式 ──────────────────────────────── */
+@media (max-width: 768px) {
+  .sms-hero__title { font-size: 2rem; }
+  .sms-stats-grid  { grid-template-columns: repeat(2, 1fr); }
+  .sms-steps       { flex-direction: column; }
+  .step-card--arrow { display: none; }
+  .sms-navbar__links a:not(.sms-nav-btn) { display: none; }
+  .dropdown-list { grid-template-columns: 1fr; }
+}
+

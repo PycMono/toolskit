@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="{{ .Lang }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ .Title }}</title>
+  <meta name="description" content="{{ .Description }}">
+  <meta name="keywords" content="{{ .Keywords }}">
+  <link rel="canonical" href="https://toolboxnova.com{{ .CurrentPath }}">
+  <!-- Open Graph -->
+  <meta property="og:title" content="{{ .Title }}">
+  <meta property="og:description" content="{{ .Description }}">
+  <meta property="og:url" content="https://toolboxnova.com{{ .CurrentPath }}">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://toolboxnova.com/static/img/og-image.png">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ .Title }}">
+  <meta name="twitter:description" content="{{ .Description }}">
+  <!-- Favicon -->
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="/static/css/main.css">
+  {{ if .JSONLD }}
+  <script type="application/ld+json">{{ .JSONLD }}</script>
+  {{ end }}
+  <!-- Google Ads placeholder (controlled by config) -->
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXX" crossorigin="anonymous"></script> -->
+</head>
+<body class="{{ .PageClass }}">
+
+<!-- Top Navigation -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <!-- Logo -->
+    <a href="/?lang={{ .Lang }}" class="nav-logo">
+      <span class="logo-icon">🔧</span>
+      <span class="logo-text">Tool Box Nova</span>
+    </a>
+
+    <!-- Nav Menu -->
+    <div class="nav-menu" id="navMenu">
+      <div class="nav-item dropdown">
+        <a href="#" class="nav-link">{{ call .T "nav.privacy" }} ▾</a>
+        <div class="dropdown-menu">
+          <a href="/sms?lang={{ .Lang }}" class="dropdown-item">📱 {{ call .T "home.tool_sms" }}</a>
+          <a href="/virtual-address?lang={{ .Lang }}" class="dropdown-item">🏠 {{ call .T "home.tool_address" }}</a>
+          <a href="/password-generator?lang={{ .Lang }}" class="dropdown-item">🔑 {{ call .T "home.tool_password" }}</a>
+          <a href="/temp-email?lang={{ .Lang }}" class="dropdown-item">📧 {{ call .T "home.tool_email" }}</a>
+          <a href="/proxy?lang={{ .Lang }}" class="dropdown-item">🌐 {{ call .T "home.tool_proxy" }}</a>
+        </div>
+      </div>
+      <div class="nav-item dropdown">
+        <a href="#" class="nav-link">{{ call .T "nav.dev" }} ▾</a>
+        <div class="dropdown-menu">
+          <a href="/json?lang={{ .Lang }}" class="dropdown-item">{ } JSON Tools</a>
+          <a href="/json/learn?lang={{ .Lang }}" class="dropdown-item">📚 {{ call .T "home.tool_json_learn" }}</a>
+          <a href="/json/datasets?lang={{ .Lang }}" class="dropdown-item">🗃️ {{ call .T "home.tool_json_datasets" }}</a>
+          <a href="/tools/regex?lang={{ .Lang }}" class="dropdown-item">🔍 Regex Tester</a>
+          <a href="/tools/base-converter?lang={{ .Lang }}" class="dropdown-item">🔢 Base Converter</a>
+        </div>
+      </div>
+      <div class="nav-item dropdown">
+        <a href="#" class="nav-link">{{ call .T "nav.multimedia" }} ▾</a>
+        <div class="dropdown-menu">
+          <a href="/media/image-compress?lang={{ .Lang }}" class="dropdown-item">🖼️ {{ call .T "img.compress.name" }}</a>
+          <a href="/color/tools?lang={{ .Lang }}" class="dropdown-item">🎨 {{ call .T "color.nav.hub" }}</a>
+          <a href="/color/picker?lang={{ .Lang }}" class="dropdown-item">💧 {{ call .T "color.nav.picker" }}</a>
+          <a href="/color/palette?lang={{ .Lang }}" class="dropdown-item">🎨 {{ call .T "color.nav.palette" }}</a>
+          <a href="/color/converter?lang={{ .Lang }}" class="dropdown-item">🔄 {{ call .T "color.nav.converter" }}</a>
+          <a href="/color/contrast?lang={{ .Lang }}" class="dropdown-item">⚖️ {{ call .T "color.nav.contrast" }}</a>
+          <a href="/color/gradient?lang={{ .Lang }}" class="dropdown-item">🌈 {{ call .T "color.nav.gradient" }}</a>
+          <a href="/color/image-picker?lang={{ .Lang }}" class="dropdown-item">🖼️ {{ call .T "color.nav.imagePicker" }}</a>
+        </div>
+      </div>
+      <div class="nav-item dropdown">
+        <a href="#" class="nav-link">{{ call .T "nav.realtime" }} ▾</a>
+        <div class="dropdown-menu">
+          <a href="/ip?lang={{ .Lang }}" class="dropdown-item">🌍 IP Lookup</a>
+        </div>
+      </div>
+      <div class="nav-item dropdown">
+        <a href="#" class="nav-link">{{ call .T "nav.ai" }} ▾</a>
+        <div class="dropdown-menu">
+          <a href="/ailab/detector?lang={{ .Lang }}" class="dropdown-item">🔍 {{ call .T "ailab.detector.name" }}</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Section: Search + Lang -->
+    <div class="nav-right">
+      <!-- Search -->
+      <div class="nav-search">
+        <input type="text" id="navSearchInput" placeholder="{{ call .T "nav.search_placeholder" }}" autocomplete="off">
+        <button class="search-btn" onclick="doSearch()">🔍</button>
+        <div class="search-dropdown" id="searchDropdown"></div>
+      </div>
+
+      <!-- Language Switcher -->
+      <div class="lang-switcher">
+        <button class="lang-btn" id="langBtn">
+          {{ if eq .Lang "zh" }}🇨🇳 中文{{ else }}🇺🇸 English{{ end }} ▾
+        </button>
+        <div class="lang-dropdown" id="langDropdown">
+          <a href="?lang=zh" class="lang-option {{ if eq .Lang "zh" }}active{{ end }}">🇨🇳 中文</a>
+          <a href="?lang=en" class="lang-option {{ if eq .Lang "en" }}active{{ end }}">🇺🇸 English</a>
+        </div>
+      </div>
+
+      <!-- Mobile hamburger -->
+      <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()">☰</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main class="main-content">
+

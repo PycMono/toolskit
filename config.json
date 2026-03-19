@@ -1,0 +1,66 @@
+{
+  "port": "8086",
+  "debug": true,
+  "site_url": "https://toolboxnova.com",
+  "sms_api_key": "",
+  "email_api_key": "",
+  "google_ads_id": "",
+  "enable_ads": false,
+  "ga_measurement_id": "G-11XY9KKW2J",
+  "enable_ga": true,
+  "ai": {
+    "default_provider": "deepseek",
+    "fallback_provider": "openai",
+    "detector": "deepseek",
+    "humanize": "openai",
+    "task_routing": {
+      "summarize": "openai",
+      "detect": "deepseek"
+    },
+    "openai": {
+      "enabled": true,
+      "api_key": "sk-xxx",
+      "base_url": "https://api.openai.com/v1",
+      "model": "gpt-4o",
+      "max_tokens": 2000,
+      "temperature": 0.7,
+      "timeout": 60
+    },
+    "deepseek": {
+      "enabled": true,
+      "api_key": "sk-xxx",
+      "base_url": "https://api.deepseek.com/v1",
+      "model": "deepseek-chat",
+      "max_tokens": 2000,
+      "temperature": 0.7,
+      "timeout": 60
+    },
+    "doubao": {
+      "enabled": false,
+      "api_key": "",
+      "base_url": "https://ark.cn-beijing.volces.com/api/v3",
+      "model": "doubao-pro-32k",
+      "max_tokens": 2000,
+      "temperature": 0.7,
+      "timeout": 60
+    },
+    "gemini": {
+      "enabled": false,
+      "api_key": "",
+      "base_url": "",
+      "model": "gemini-1.5-pro",
+      "max_tokens": 2000,
+      "temperature": 0.7,
+      "timeout": 60
+    },
+    "claude": {
+      "enabled": false,
+      "api_key": "",
+      "base_url": "",
+      "model": "claude-sonnet-4-6",
+      "max_tokens": 2000,
+      "temperature": 0.7,
+      "timeout": 60
+    }
+  }
+}

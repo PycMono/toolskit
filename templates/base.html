@@ -1,0 +1,183 @@
+{{ define "base" }}
+<!DOCTYPE html>
+<html lang="{{ .Lang }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {{- template "partials/ga.html" . }}
+  {{ if .AdsEnabled }}
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ .AdsClientID }}"
+    crossorigin="anonymous"></script>
+  {{ end }}
+  <title>{{ .Title }}</title>
+  <meta name="description" content="{{ .Description }}">
+  <meta name="keywords" content="{{ .Keywords }}">
+  <link rel="canonical" href="https://toolboxnova.com{{ .CurrentPath }}">
+  <meta property="og:title" content="{{ .Title }}">
+  <meta property="og:description" content="{{ .Description }}">
+  <meta property="og:url" content="https://toolboxnova.com{{ .CurrentPath }}">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://toolboxnova.com/static/img/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/css/main.css">
+  {{ if .JSONLD }}<script type="application/ld+json">{{ .JSONLD }}</script>{{ end }}
+  {{ template "extraHead" . }}
+</head>
+<body class="{{ .PageClass }}">
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="/?lang={{ .Lang }}" class="nav-logo">
+      <span class="logo-icon">🔧</span>
+      <span class="logo-text">Tool Box Nova</span>
+    </a>
+    <div class="nav-menu" id="navMenu">
+      <div class="nav-item has-dropdown">
+        <a href="#" class="nav-link">{{ call .T "nav.privacy" }} <span class="arrow">▾</span></a>
+        <div class="dropdown-menu">
+          <a href="/sms?lang={{ .Lang }}" class="dropdown-item">📱 {{ call .T "home.tool_sms" }}</a>
+          <a href="/virtual-address?lang={{ .Lang }}" class="dropdown-item">🏠 {{ call .T "home.tool_address" }}</a>
+          <a href="/password-generator?lang={{ .Lang }}" class="dropdown-item">🔑 {{ call .T "home.tool_password" }}</a>
+          <a href="/temp-email?lang={{ .Lang }}" class="dropdown-item">📧 {{ call .T "home.tool_email" }}</a>
+          <a href="/proxy?lang={{ .Lang }}" class="dropdown-item">🌐 {{ call .T "home.tool_proxy" }}</a>
+        </div>
+      </div>
+      <div class="nav-item has-dropdown">
+        <a href="#" class="nav-link">{{ call .T "nav.dev" }} <span class="arrow">▾</span></a>
+        <div class="dropdown-menu">
+          <a href="/json?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/json" }}active{{ end }}">{ } {{ call .T "nav.dev_json" }}</a>
+          <div class="dropdown-divider"></div>
+          <a href="/tools/regex?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/tools/regex" }}active{{ end }}">🔍 {{ call .T "nav.dev_regex" }}</a>
+          <a href="/tools/markdown?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/tools/markdown" }}active{{ end }}">📝 {{ call .T "nav.dev_markdown" }}</a>
+          <a href="/tools/timestamp?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/tools/timestamp" }}active{{ end }}">🕐 {{ call .T "nav.dev_timestamp" }}</a>
+          <a href="/tools/base-converter?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/tools/base-converter" }}active{{ end }}">🔢 {{ call .T "nav.dev_base" }}</a>
+          <a href="/tools/case-converter?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/tools/case-converter" }}active{{ end }}">Aa {{ call .T "nav.dev_case" }}</a>
+          <div class="dropdown-divider"></div>
+          <a href="/dev/hash?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/dev/hash" }}active{{ end }}">🔐 {{ call .T "nav.dev_hash" }}</a>
+          <a href="/dev/base64?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/dev/base64" }}active{{ end }}">🔄 {{ call .T "nav.dev_base64" }}</a>
+          <a href="/dev/url-encode?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/dev/url-encode" }}active{{ end }}">🔗 {{ call .T "nav.dev_url_encode" }}</a>
+          <a href="/dev/ip?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/dev/ip" }}active{{ end }}">🌐 {{ call .T "nav.dev_ip" }}</a>
+          <a href="/dev/whois?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/dev/whois" }}active{{ end }}">🔍 {{ call .T "nav.dev_whois" }}</a>
+          <a href="/dev/word-counter?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/dev/word-counter" }}active{{ end }}">📝 {{ call .T "nav.dev_word_counter" }}</a>
+        </div>
+      </div>
+      <div class="nav-item has-dropdown">
+        <a href="#" class="nav-link">{{ call .T "nav.media" }} <span class="arrow">▾</span></a>
+        <div class="dropdown-menu">
+          <a href="/media/image-compress?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/media/image-compress" }}active{{ end }}">📷 {{ call .T "img.compress.name" }}</a>
+          <a href="/media/image-resize?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/media/image-resize" }}active{{ end }}">📐 {{ call .T "img.resize.name" }}</a>
+          <a href="/img/metadata?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/img/metadata" }}active{{ end }}">🔍 {{ call .T "img.metadata.name" }}</a>
+          <a href="/media/qr?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/media/qr" }}active{{ end }}">▦ {{ call .T "qr.name" }}</a>
+          <div class="dropdown-divider"></div>
+          <a href="/img/crop?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/img/crop" }}active{{ end }}">✂️ {{ call .T "nav.img_crop" }}</a>
+          <a href="/img/convert-to-jpg?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/img/convert-to-jpg" }}active{{ end }}">🔄 {{ call .T "nav.img_to_jpg" }}</a>
+          <a href="/img/jpg-to-image?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/img/jpg-to-image" }}active{{ end }}">🖼️ {{ call .T "nav.jpg_to_img" }}</a>
+          <a href="/img/photo-editor?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/img/photo-editor" }}active{{ end }}">🎨 {{ call .T "nav.photo_editor" }}</a>
+          <a href="/img/remove-bg?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/img/remove-bg" }}active{{ end }}">🪄 {{ call .T "nav.remove_bg" }}</a>
+          <a href="/img/watermark?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/img/watermark" }}active{{ end }}">💧 {{ call .T "nav.watermark" }}</a>
+          <a href="/img/rotate?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/img/rotate" }}active{{ end }}">🔃 {{ call .T "nav.rotate" }}</a>
+        </div>
+      </div>
+      <div class="nav-item has-dropdown">
+        <a href="#" class="nav-link">{{ call .T "nav.realtime" }} <span class="arrow">▾</span></a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item">🌍 {{ call .T "nav.ip_lookup" }} <span class="badge-soon">{{ call .T "nav.soon" }}</span></a>
+        </div>
+      </div>
+      <div class="nav-item has-dropdown">
+        <a href="#" class="nav-link">{{ call .T "nav.ai" }} <span class="arrow">▾</span></a>
+        <div class="dropdown-menu">
+          <a href="/ailab/detector?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/ailab/detector" }}active{{ end }}">🔍 {{ call .T "ailab.detector.name" }}</a>
+          <a href="/ailab/humanize?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/ailab/humanize" }}active{{ end }}">✨ {{ call .T "ailab.humanize.name" }}</a>
+        </div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="nav-search-wrap">
+        <input type="text" id="navSearch" class="nav-search-input" placeholder="{{ call .T "nav.search_placeholder" }}" autocomplete="off">
+        <div class="nav-search-results" id="navSearchResults"></div>
+      </div>
+      <div class="lang-switcher">
+        <button class="lang-btn" id="langBtn">
+          {{- if eq .Lang "zh" }}🇨🇳 中文
+          {{- else if eq .Lang "en" }}🇺🇸 English
+          {{- else if eq .Lang "ja" }}🇯🇵 日本語
+          {{- else if eq .Lang "ko" }}🇰🇷 한국어
+          {{- else if eq .Lang "spa" }}🇪🇸 Español
+          {{- else }}🌐 Lang
+          {{- end }} ▾
+        </button>
+        <div class="lang-dropdown" id="langDropdown">
+          <a href="javascript:void(0)" onclick="switchLang('zh')"  class="lang-opt {{ if eq .Lang "zh"  }}active{{ end }}">🇨🇳 中文</a>
+          <a href="javascript:void(0)" onclick="switchLang('en')"  class="lang-opt {{ if eq .Lang "en"  }}active{{ end }}">🇺🇸 English</a>
+          <a href="javascript:void(0)" onclick="switchLang('ja')"  class="lang-opt {{ if eq .Lang "ja"  }}active{{ end }}">🇯🇵 日本語</a>
+          <a href="javascript:void(0)" onclick="switchLang('ko')"  class="lang-opt {{ if eq .Lang "ko"  }}active{{ end }}">🇰🇷 한국어</a>
+          <a href="javascript:void(0)" onclick="switchLang('spa')" class="lang-opt {{ if eq .Lang "spa" }}active{{ end }}">🇪🇸 Español</a>
+        </div>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<main class="main-content">
+{{ template "content" . }}
+</main>
+
+<footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-col footer-brand">
+      <div class="footer-logo">
+        <span class="logo-icon">🔧</span>
+        <span class="logo-text">Tool Box Nova</span>
+      </div>
+      <p class="footer-desc">{{ call .T "footer.desc" }}</p>
+      <div class="footer-tags">
+        <span class="footer-tag">{{ call .T "footer.tag1" }}</span>
+        <span class="footer-tag">{{ call .T "footer.tag2" }}</span>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>{{ call .T "footer.popular_tools" }}</h4>
+      <ul class="footer-links">
+        <li><a href="/sms?lang={{ .Lang }}">📱 {{ call .T "home.tool_sms" }}</a></li>
+        <li><a href="/temp-email?lang={{ .Lang }}">📧 {{ call .T "home.tool_email" }}</a></li>
+        <li><a href="/virtual-address?lang={{ .Lang }}">🏠 {{ call .T "home.tool_address" }}</a></li>
+        <li><a href="/password-generator?lang={{ .Lang }}">🔑 {{ call .T "home.tool_password" }}</a></li>
+        <li><a href="/proxy?lang={{ .Lang }}">🌐 {{ call .T "home.tool_proxy" }}</a></li>
+        <li><a href="/json?lang={{ .Lang }}">{ } {{ call .T "home.tool_json" }}</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>{{ call .T "footer.resources" }}</h4>
+      <ul class="footer-links">
+        <li><a href="/privacy-policy?lang={{ .Lang }}">{{ call .T "footer.link.privacy" }}</a></li>
+        <li><a href="/terms-of-service?lang={{ .Lang }}">{{ call .T "footer.link.terms" }}</a></li>
+        <li><a href="/about?lang={{ .Lang }}">{{ call .T "footer.link.about" }}</a></li>
+        <li><a href="/contact?lang={{ .Lang }}">{{ call .T "footer.link.contact" }}</a></li>
+        <li><a href="/sitemap?lang={{ .Lang }}">{{ call .T "footer.link.sitemap" }}</a></li>
+        <li><a href="/sitemap.xml" target="_blank">sitemap.xml</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <span>{{ call .T "footer.copyright" }}</span>
+      <div class="footer-bottom-links">
+        <a href="/sitemap?lang={{ .Lang }}">{{ call .T "footer.link.sitemap" }}</a>
+        <a href="/robots.txt" target="_blank">robots.txt</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/static/js/ga-events.js"></script>
+<script src="/static/js/main.js"></script>
+{{ template "extraScript" . }}
+</body>
+</html>
+{{ end }}
+
+{{ define "extraHead" }}{{ end }}
+{{ define "extraScript" }}{{ end }}

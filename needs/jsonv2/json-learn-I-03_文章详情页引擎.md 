@@ -1,0 +1,504 @@
+<!-- json-learn-I-03_文章详情页引擎.md -->
+
+# JSON Learn — 文章详情页渲染引擎
+
+---
+
+## 1. 技术选型表
+
+| 功能模块 | 技术方案 | 选型原因 |
+|---------|---------|---------|
+| Markdown 渲染 | Go Template 预渲染 + Marked.js 客户端补充 | 服务端渲染 SEO 友好，客户端处理交互元素 |
+| 代码高亮 | Prism.js + 30+ 语言包 | 轻量、主题丰富、支持行号 |
+| JSON 编辑器 | Monaco Editor（按需加载） | VS Code 同款，语法校验 + 自动补全 |
+| 目录生成 | 客户端 JS 扫描 h2/h3 生成 | 无需服务端额外处理 |
+| 模糊搜索 | Fuse.js | 轻量前端搜索，支持权重配置 |
+| 代码复制 | clipboard.js | 兼容性好，无依赖 |
+| 流程图 | Mermaid.js（按需加载） | Markdown 内嵌语法，渲染质量高 |
+| 数学公式 | KaTeX（按需加载） | 比 MathJax 更快 |
+| 图片懒加载 | IntersectionObserver | 原生 API，无依赖 |
+| 阅读进度 | Scroll 事件 + requestAnimationFrame | 性能优化滚动监听 |
+
+---
+
+## 2. 引擎架构说明
+
+### 全局状态对象
+
+```javascript
+var LearnEngine = {
+  // 文章元数据
+  article: {
+    slug: '',           // 文章唯一标识
+    title: '',          // 当前语言标题
+    category: '',       // 分类标识
+    level: '',          // 难度级别
+    readTime: 0,        // 阅读时长（分钟）
+    prevSlug: null,     // 上一篇 slug
+    nextSlug: null,     // 下一篇 slug
+  },
+
+  // TOC 目录状态
+  toc: {
+    items: [],          // [{id, text, level, element}]
+    activeId: null,     // 当前高亮的锚点 ID
+    observer: null,     // IntersectionObserver 实例
+  },
+
+  // 代码编辑器状态
+  editors: {},          // { editorId: monacoInstance }
+
+  // 练习题状态
+  quizzes: {},          // { quizId: { answer, submitted, correct } }
+
+  // 阅读进度
+  progress: {
+    scrollPercent: 0,   // 滚动百分比
+    completed: false,   // 是否已读完
+    startTime: null,    // 开始阅读时间
+  },
+
+  // 已读文章集合（localStorage 持久化）
+  readArticles: new Set(),
+
+  // 配置
+  config: {
+    MONACO_LAZY_DELAY: 2000,    // Monaco 延迟加载时间
+    TOC_OFFSET: 80,             // TOC 高亮偏移量（header 高度）
+    PROGRESS_THROTTLE: 100,     // 进度更新节流间隔
+    CODE_MAX_HEIGHT: 500,       // 代码块最大高度（可展开）
+  }
+};
+```
+
+### 核心函数职责
+
+#### `initArticlePage()`
+页面入口函数，DOMContentLoaded 后调用：
+1. 解析页面 data 属性获取文章元数据
+2. 调用 `buildTOC()` 生成目录
+3. 调用 `initCodeBlocks()` 处理代码高亮 + 复制按钮
+4. 调用 `initEditors()` 按需加载 Monaco
+5. 调用 `initQuizzes()` 初始化练习题
+6. 调用 `initReadingProgress()` 启动进度追踪
+7. 调用 `loadReadHistory()` 从 localStorage 恢复已读记录
+8. 注册滚动事件监听（节流）
+
+#### `buildTOC()`
+目录生成逻辑：
+```
+1. 扫描 .article-content 内所有 h2, h3 元素
+2. 为每个标题生成唯一 ID（如无则创建：slugify(text) + 序号）
+3. 构建 toc.items 数组：[{id, text, level: 2|3, element}]
+4. 渲染 TOC 到 #tocContainer：
+   - h2 → 一级目录项
+   - h3 → 二级目录项（缩进 pl-4）
+5. 创建 IntersectionObserver：
+   - root: null（视口）
+   - rootMargin: '-80px 0px -70% 0px'（偏移 header + 视口下半部分）
+   - threshold: 0
+6. 对每个标题 observe
+7. 回调中更新 toc.activeId，高亮对应 TOC 项
+```
+
+#### `initCodeBlocks()`
+代码块增强：
+```
+1. 扫描所有 <pre><code> 元素
+2. 对每个代码块：
+   a. 检测语言类名 (language-xxx)
+   b. 添加语言标签角标
+   c. 注入复制按钮（clipboard.js 绑定）
+   d. 如果是 language-json，注入"运行"按钮
+   e. 如果代码超过 CODE_MAX_HEIGHT，添加展开/收起控制
+   f. 调用 Prism.highlightElement() 高亮
+3. 初始化 clipboard.js 实例
+4. 复制成功回调：showToast('已复制！'), 按钮文字临时变为 '✓'
+```
+
+#### `initEditors()`
+Monaco 编辑器按需加载：
+```
+1. 扫描所有 .interactive-editor 容器
+2. 如果无编辑器容器，跳过（不加载 Monaco）
+3. 延迟 MONACO_LAZY_DELAY 后通过 require.config 加载 Monaco
+4. 对每个容器：
+   a. 读取 data-default-value（初始 JSON 内容）
+   b. 创建 Monaco editor 实例：
+      - language: 'json'
+      - theme: 'vs-dark'
+      - minimap: { enabled: false }
+      - lineNumbers: 'on'
+      - automaticLayout: true
+      - scrollBeyondLastLine: false
+   c. 绑定"运行"按钮 → validateAndRun(editorId)
+   d. 绑定"重置"按钮 → editor.setValue(defaultValue)
+   e. 存入 LearnEngine.editors
+```
+
+#### `validateAndRun(editorId)`
+JSON 校验 + 运行：
+```
+1. 获取编辑器内容
+2. try JSON.parse(content)
+3. 成功：
+   a. 输出区域显示格式化后的 JSON（JSON.stringify(parsed, null, 2)）
+   b. 高亮输出区域
+   c. 显示 ✅ 成功提示
+4. 失败：
+   a. 解析错误信息提取行号和描述
+   b. 输出区域显示错误：❌ + 行号 + 错误描述
+   c. 如果 Monaco 支持，在编辑器中标记错误行
+```
+
+#### `initQuizzes()`
+练习题系统：
+```
+1. 扫描所有 .quiz-block 容器
+2. 对每个练习题：
+   a. 读取 data-quiz-id, data-answer, data-type (choice|fill|code)
+   b. 创建 quizzes 状态对象
+   c. 绑定提交按钮事件：
+      - choice 类型：检查 radio/checkbox 选中值
+      - fill 类型：检查输入值（支持多个正确答案）
+      - code 类型：JSON.parse 校验 + 结构匹配
+   d. 提交后显示结果：正确(绿色) / 错误(红色) + 解析
+   e. "重新作答"按钮重置状态
+   f. "查看答案"按钮显示正确答案 + 解析
+```
+
+#### `initReadingProgress()`
+阅读进度追踪：
+```
+1. 记录 startTime = Date.now()
+2. 创建固定进度条 #readingProgressBar（页面顶部细条）
+3. 注册 scroll 事件（节流 PROGRESS_THROTTLE ms）：
+   a. 计算 scrollPercent = scrollTop / (docHeight - windowHeight) * 100
+   b. 更新进度条宽度
+   c. 如果 scrollPercent > 90 且未标记 completed：
+      - completed = true
+      - 调用 markAsRead(article.slug)
+      - gaTrackEvent('json-learn', 'article_complete', article.slug)
+4. markAsRead(slug)：
+   a. readArticles.add(slug)
+   b. localStorage.setItem('json-learn-read', JSON.stringify([...readArticles]))
+   c. 更新路径卡片进度条
+```
+
+#### `loadReadHistory()`
+读取历史记录：
+```
+1. 从 localStorage 读取 'json-learn-read'
+2. 解析为数组，填充 readArticles Set
+3. 遍历路径卡片，计算每个路径的完成百分比
+4. 更新 .path-card__progress-bar 的 width
+```
+
+#### `showToast(message, type)`
+通知提示：
+```
+1. 创建 toast DOM 元素
+2. 类型：success(绿) / error(红) / info(蓝)
+3. 追加到 #toastContainer
+4. 入场动画：fadeIn + translateY(-10px → 0)
+5. 3 秒后自动消失：fadeOut + translateY(0 → -10px)
+6. 动画结束后从 DOM 移除
+```
+
+---
+
+## 3. UI 事件绑定说明
+
+### 搜索筛选（列表页）
+
+```javascript
+// Fuse.js 初始化
+var articleData = []; // 从 DOM 或内联 JSON 获取文章数据
+var fuse = new Fuse(articleData, {
+  keys: [
+    { name: 'title', weight: 0.4 },
+    { name: 'titleEN', weight: 0.3 },
+    { name: 'summary', weight: 0.2 },
+    { name: 'category', weight: 0.1 },
+  ],
+  threshold: 0.3,
+  includeMatches: true,
+});
+
+// 筛选状态
+var filterState = {
+  category: 'all',
+  level: 'all',
+  query: '',
+};
+
+function applyFilters() {
+  var cards = document.querySelectorAll('.article-card');
+  var results = filterState.query
+    ? fuse.search(filterState.query).map(r => r.item.slug)
+    : null;
+
+  var visibleCount = 0;
+  cards.forEach(function(card, index) {
+    var matchCategory = filterState.category === 'all' || card.dataset.category === filterState.category;
+    var matchLevel = filterState.level === 'all' || card.dataset.level === filterState.level;
+    var matchSearch = !results || results.includes(card.dataset.slug);
+
+    if (matchCategory && matchLevel && matchSearch) {
+      card.style.display = '';
+      card.style.animationDelay = (visibleCount * 50) + 'ms';
+      visibleCount++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  // 空状态
+  document.getElementById('articlesEmpty').style.display = visibleCount === 0 ? '' : 'none';
+}
+```
+
+### 分类标签点击
+
+```javascript
+document.querySelectorAll('[data-filter]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    // 移除同组 active
+    this.parentElement.querySelectorAll('.filter-tag').forEach(function(t) {
+      t.classList.remove('filter-tag--active');
+    });
+    this.classList.add('filter-tag--active');
+    filterState.category = this.dataset.filter;
+    applyFilters();
+  });
+});
+```
+
+### TOC 滚动高亮（文章详情页）
+
+```javascript
+// IntersectionObserver 回调
+function onHeadingIntersect(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) {
+      // 移除所有高亮
+      document.querySelectorAll('.toc-link').forEach(function(link) {
+        link.classList.remove('toc-link--active');
+      });
+      // 高亮当前
+      var tocLink = document.querySelector('.toc-link[href="#' + entry.target.id + '"]');
+      if (tocLink) {
+        tocLink.classList.add('toc-link--active');
+        // 确保 TOC 容器内可见
+        tocLink.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    }
+  });
+}
+```
+
+### FAQ 手风琴
+
+```javascript
+function toggleFAQ(button) {
+  var faqItem = button.closest('.faq-item');
+  var answer = faqItem.querySelector('.faq-item__answer');
+  var isOpen = button.getAttribute('aria-expanded') === 'true';
+
+  // 关闭所有其他
+  document.querySelectorAll('.faq-item').forEach(function(item) {
+    if (item !== faqItem) {
+      item.querySelector('.faq-item__question').setAttribute('aria-expanded', 'false');
+      item.querySelector('.faq-item__answer').style.maxHeight = '0';
+      item.classList.remove('faq-item--open');
+    }
+  });
+
+  // 切换当前
+  if (isOpen) {
+    button.setAttribute('aria-expanded', 'false');
+    answer.style.maxHeight = '0';
+    faqItem.classList.remove('faq-item--open');
+  } else {
+    button.setAttribute('aria-expanded', 'true');
+    answer.style.maxHeight = answer.scrollHeight + 'px';
+    faqItem.classList.add('faq-item--open');
+  }
+}
+```
+
+---
+
+## 4. 文章详情页 HTML 模板
+
+```html
+{{ define "content" }}
+
+<!-- 阅读进度条 -->
+<div class="reading-progress" id="readingProgress">
+  <div class="reading-progress__bar" id="readingProgressBar"></div>
+</div>
+
+<!-- 面包屑 -->
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol class="breadcrumb__list">
+    <li><a href="/">Home</a></li>
+    <li><a href="/json">JSON</a></li>
+    <li><a href="/json/learn" data-i18n="learn.article.back_to_list">{{ i18n .Lang "learn.article.back_to_list" }}</a></li>
+    <li class="breadcrumb__current">{{ .Article.Title }}</li>
+  </ol>
+</nav>
+
+<div class="article-layout">
+
+  <!-- ===== 主内容区 ===== -->
+  <main class="article-main">
+    <!-- 文章头部 -->
+    <header class="article-header">
+      <div class="article-header__meta">
+        <span class="badge badge--category badge--{{ .Article.Category }}">
+          {{ categoryName .Lang .Article.Category }}
+        </span>
+        <span class="badge badge--level badge--{{ .Article.Level }}">
+          {{ levelName .Lang .Article.Level }}
+        </span>
+        <span class="article-header__time">
+          ⏱ {{ .Article.ReadTime }} {{ if eq .Lang "en" }}min read{{ else }}分钟阅读{{ end }}
+        </span>
+        <span class="article-header__date">{{ .Article.UpdatedAt }}</span>
+      </div>
+      <h1 class="article-header__title">
+        {{ if eq .Lang "en" }}{{ .Article.TitleEN }}{{ else }}{{ .Article.Title }}{{ end }}
+      </h1>
+    </header>
+
+    <!-- 文章正文（服务端渲染的 HTML） -->
+    <article class="article-content" id="articleContent">
+      {{ .Content }}
+    </article>
+
+    <!-- 上下篇导航 -->
+    <nav class="article-nav">
+      {{ if .PrevArticle }}
+      <a href="/json/learn/{{ .PrevArticle.Slug }}" class="article-nav__link article-nav__link--prev">
+        <span class="article-nav__label" data-i18n="learn.article.prev">{{ i18n .Lang "learn.article.prev" }}</span>
+        <span class="article-nav__title">{{ if eq .Lang "en" }}{{ .PrevArticle.TitleEN }}{{ else }}{{ .PrevArticle.Title }}{{ end }}</span>
+      </a>
+      {{ end }}
+      {{ if .NextArticle }}
+      <a href="/json/learn/{{ .NextArticle.Slug }}" class="article-nav__link article-nav__link--next">
+        <span class="article-nav__label" data-i18n="learn.article.next">{{ i18n .Lang "learn.article.next" }}</span>
+        <span class="article-nav__title">{{ if eq .Lang "en" }}{{ .NextArticle.TitleEN }}{{ else }}{{ .NextArticle.Title }}{{ end }}</span>
+      </a>
+      {{ end }}
+    </nav>
+
+    <!-- 相关文章推荐 -->
+    <section class="related-articles">
+      <h2 data-i18n="learn.article.related">{{ i18n .Lang "learn.article.related" }}</h2>
+      <div class="related-grid">
+        {{ range .Related }}
+        <a href="/json/learn/{{ .Slug }}" class="related-card">
+          <span class="badge badge--{{ .Level }}">{{ levelName $.Lang .Level }}</span>
+          <h3>{{ if eq $.Lang "en" }}{{ .TitleEN }}{{ else }}{{ .Title }}{{ end }}</h3>
+          <span class="related-card__time">{{ .ReadTime }} min</span>
+        </a>
+        {{ end }}
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== 侧边栏 ===== -->
+  <aside class="article-sidebar">
+    <!-- TOC 目录 -->
+    <div class="toc-container" id="tocContainer">
+      <h3 class="toc-title" data-i18n="learn.article.toc_title">
+        {{ i18n .Lang "learn.article.toc_title" }}
+      </h3>
+      <nav class="toc-nav" id="tocNav">
+        <!-- JS 动态生成 -->
+      </nav>
+    </div>
+
+    <!-- 侧边广告 -->
+    {{- template "partials/ad_slot.html" dict
+      "SlotID" "json-learn-sidebar" "Size" "300x250" "MobileHide" true
+      "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+
+    <!-- 操作按钮组 -->
+    <div class="sidebar-actions">
+      <button class="sidebar-btn" onclick="window.print()" data-i18n="learn.article.print">
+        🖨️ {{ i18n .Lang "learn.article.print" }}
+      </button>
+      <button class="sidebar-btn" onclick="shareArticle()" data-i18n="learn.article.share">
+        🔗 {{ i18n .Lang "learn.article.share" }}
+      </button>
+    </div>
+  </aside>
+
+</div>
+
+<!-- 底部广告 -->
+{{- template "partials/ad_slot.html" dict
+  "SlotID" "json-learn-bottom" "Size" "728x90" "Mobile" "320x50"
+  "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+
+{{ end }}
+```
+
+---
+
+## 5. 验收标准 Checklist
+
+### Markdown 渲染
+- [ ] h1-h6 标题渲染正确，层级样式区分
+- [ ] 代码块语法高亮（JSON/JS/Python/Go/Java/Rust 等 30+ 语言）
+- [ ] 行内代码 `code` 样式正确
+- [ ] 表格渲染（边框、斑马条纹、响应式水平滚动）
+- [ ] 有序/无序列表正确缩进
+- [ ] 引用块 blockquote 样式
+- [ ] 图片自适应宽度 + 懒加载
+- [ ] 链接样式 + 外链标记 + target="_blank"
+- [ ] Mermaid 流程图正确渲染
+
+### TOC 目录
+- [ ] 自动扫描 h2/h3 生成目录
+- [ ] 点击目录项平滑滚动到对应位置
+- [ ] 滚动时自动高亮当前章节
+- [ ] TOC 容器 sticky 定位，不遮挡 header
+- [ ] 移动端 TOC 隐藏或折叠为抽屉
+
+### 代码交互
+- [ ] 每个代码块显示语言角标
+- [ ] 复制按钮点击后内容复制到剪贴板 + Toast 反馈
+- [ ] JSON 代码块显示"运行"按钮
+- [ ] Monaco 编辑器按需加载（仅有 .interactive-editor 时）
+- [ ] 编辑器 JSON 校验 + 错误提示
+- [ ] 编辑器"重置"恢复初始值
+- [ ] 长代码块可展开/收起
+
+### 练习题
+- [ ] 选择题正确判定（单选/多选）
+- [ ] 填空题支持多个正确答案
+- [ ] 代码题 JSON.parse 校验
+- [ ] 提交后显示正确/错误状态
+- [ ] 查看答案显示解析文本
+- [ ] 重新作答清除所有状态
+
+### 阅读体验
+- [ ] 阅读进度条顶部显示，实时更新
+- [ ] 阅读完成自动标记已读（localStorage）
+- [ ] 上下篇导航显示正确
+- [ ] 相关文章推荐按分类 + 难度匹配
+- [ ] 面包屑三级导航完整
+- [ ] 打印 / 分享按钮功能正常
+- [ ] 文章正文最大宽度 720px，居中排版
+- [ ] 行高 1.8，段间距 1.5em，阅读舒适
+
+### 性能
+- [ ] Prism.js 仅加载文章中使用的语言包
+- [ ] Monaco Editor 延迟加载
+- [ ] 图片 IntersectionObserver 懒加载
+- [ ] 滚动事件节流（requestAnimationFrame）
+- [ ] 无内存泄漏（页面离开时清理 Observer）
+

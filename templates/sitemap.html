@@ -1,0 +1,42 @@
+{{ template "base" . }}
+{{ define "content" }}
+<div class="container static-page">
+  <h1>{{ call .T "sitemap.h1" }}</h1>
+  <div class="static-content card">
+    <div class="sitemap-grid">
+      <div class="sitemap-section">
+        <h3>🔧 {{ call .T "sitemap.section.privacy" }}</h3>
+        <ul>
+          <li><a href="/sms">{{ call .T "sitemap.link.sms" }}</a></li>
+          <li><a href="/virtual-address">{{ call .T "sitemap.link.address" }}</a></li>
+          <li><a href="/password-generator">{{ call .T "sitemap.link.password" }}</a></li>
+          <li><a href="/temp-email">{{ call .T "sitemap.link.email" }}</a></li>
+          <li><a href="/proxy">{{ call .T "sitemap.link.proxy" }}</a></li>
+        </ul>
+      </div>
+      <div class="sitemap-section">
+        <h3>📋 {{ call .T "sitemap.section.resources" }}</h3>
+        <ul>
+          <li><a href="/about">{{ call .T "sitemap.link.about" }}</a></li>
+          <li><a href="/contact">{{ call .T "sitemap.link.contact" }}</a></li>
+          <li><a href="/privacy-policy">{{ call .T "sitemap.link.privacy" }}</a></li>
+          <li><a href="/terms-of-service">{{ call .T "sitemap.link.terms" }}</a></li>
+        </ul>
+      </div>
+      <div class="sitemap-section">
+        <h3>🤖 SEO</h3>
+        <ul>
+          <li><a href="/sitemap.xml" target="_blank">sitemap.xml</a></li>
+          <li><a href="/robots.txt" target="_blank">robots.txt</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Ad -->
+<div style="text-align:center;margin:24px 0">
+  {{- template "partials/ad_slot.html" dict "SlotID" "sitemap-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+</div>
+{{ end }}
+{{ define "extraScript" }}{{ end }}

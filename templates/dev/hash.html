@@ -1,0 +1,274 @@
+{{ template "base" . }}
+
+{{ define "extraHead" }}
+<link rel="stylesheet" href="/static/css/dev-tools.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="alternate" hreflang="zh" href="{{ .HreflangZH }}">
+<link rel="alternate" hreflang="en" href="{{ .HreflangEN }}">
+<link rel="alternate" hreflang="x-default" href="{{ .Canonical }}">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Hash Generator — MD5 SHA-1 SHA-256 SHA-512 HMAC",
+  "url": "https://toolboxnova.com/dev/hash",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "{{ .Description }}"
+}
+</script>
+{{ if .FAQs }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {{ range $i, $faq := .FAQs }}{{ if $i }},{{ end }}
+    {"@type":"Question","name":{{ $faq.Q | toJSON }},"acceptedAnswer":{"@type":"Answer","text":{{ $faq.A | toJSON }}}}
+    {{ end }}
+  ]
+}
+</script>
+{{ end }}
+{{ end }}
+
+{{ define "content" }}
+<div class="dev-page">
+
+{{- template "partials/ad_slot.html" (dict "SlotID" "dev-hash-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
+
+<section class="hero hero--dev" aria-labelledby="hero-title">
+  <div class="hero__inner container">
+    <h1 class="hero__title" id="hero-title">{{ call .T "hero.hash.title" }}</h1>
+    <p class="hero__subtitle">{{ call .T "hero.hash.subtitle" }}</p>
+    <div class="hero__badges" role="list">
+      <span class="badge badge--blue"   role="listitem">{{ call .T "hero.hash.badge1" }}</span>
+      <span class="badge badge--green"  role="listitem">{{ call .T "hero.hash.badge2" }}</span>
+      <span class="badge badge--purple" role="listitem">{{ call .T "hero.hash.badge3" }}</span>
+    </div>
+  </div>
+</section>
+
+<main class="tool-wrapper container" id="tool-main">
+  <div class="split-panel" role="application">
+
+    <!-- Input -->
+    <div class="split-panel__input" id="panel-input">
+      <div class="input-section">
+        <label class="input-label" for="hashInput">{{ call .T "input.hash.placeholder" }}</label>
+        <div class="code-editor-wrap">
+          <div class="line-numbers" id="lineNumbers" aria-hidden="true"><div>1</div></div>
+          <textarea id="hashInput" class="code-editor" rows="10"
+            placeholder="{{ call .T "input.hash.placeholder" }}"
+            spellcheck="false" autocomplete="off"
+            oninput="DevHash.onInputChange()"
+            aria-label="{{ call .T "input.hash.placeholder" }}"></textarea>
+        </div>
+        <div class="input-footer">
+          <span id="inputCharCount" class="char-count">0 chars</span>
+          <button class="btn btn--ghost btn--sm" onclick="DevHash.clearInput()" type="button">Clear</button>
+        </div>
+      </div>
+
+      <!-- File drop zone -->
+      <div class="drop-zone" id="dropZone" role="button" tabindex="0"
+           aria-label="{{ call .T "input.hash.file_label" }}"
+           ondragover="DevHash.onDragOver(event)"
+           ondragleave="DevHash.onDragLeave(event)"
+           ondrop="DevHash.onDrop(event)"
+           onclick="document.getElementById('fileInput').click()"
+           onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('fileInput').click()">
+        <input type="file" id="fileInput" class="sr-only" multiple
+               onchange="DevHash.onFileSelect(event)"
+               aria-label="{{ call .T "input.hash.file_label" }}">
+        <div class="drop-zone__idle">
+          <svg class="drop-zone__icon" width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <path d="M20 8v16M12 16l8-8 8 8" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round"/>
+            <rect x="4" y="28" width="32" height="8" rx="4" fill="var(--color-primary-light)"/>
+          </svg>
+          <p class="drop-zone__text">{{ call .T "input.hash.file_label" }}</p>
+          <p class="drop-zone__hint">Any file type · Max 2GB</p>
+        </div>
+        <div class="drop-zone__hover">
+          <p>Release to hash file</p>
+        </div>
+      </div>
+
+      <!-- Options -->
+      <div class="options-panel" id="optionsPanel">
+        <button class="options-toggle" onclick="DevHash.toggleOptions()" type="button"
+                aria-expanded="false" aria-controls="optionsBody">
+          <svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="3" stroke="currentColor" fill="none" stroke-width="1.5"/></svg>
+          Options
+          <svg class="chevron" width="12" height="12" viewBox="0 0 12 12">
+            <path d="M2 4l4 4 4-4" stroke="currentColor" fill="none" stroke-width="1.5"/>
+          </svg>
+        </button>
+        <div class="options-body" id="optionsBody" hidden>
+          <label class="option-row">
+            <input type="checkbox" id="optUppercase" onchange="DevHash.onOptionsChange()">
+            <span>{{ call .T "options.hash.uppercase" }}</span>
+          </label>
+          <label class="option-row">
+            <input type="checkbox" id="optHMAC" onchange="DevHash.toggleHMAC()">
+            <span>{{ call .T "options.hash.hmac_mode" }}</span>
+          </label>
+          <div id="hmacKeySection" class="option-sub" hidden>
+            <label class="input-label" for="hmacKey">{{ call .T "input.hash.hmac_key" }}</label>
+            <input type="text" id="hmacKey" class="text-input text-input--sm"
+                   placeholder="{{ call .T "input.hash.hmac_placeholder" }}"
+                   oninput="DevHash.onInputChange()">
+          </div>
+        </div>
+      </div>
+    </div><!-- /panel-input -->
+
+    <!-- Results -->
+    <div class="split-panel__result" id="panel-result">
+      <div class="result-status" id="resultStatus" aria-live="polite">
+        <span class="status-dot status-dot--idle" id="statusDot"></span>
+        <span id="statusText">Waiting for input…</span>
+      </div>
+
+      <div class="hash-cards" id="hashCards" role="list">
+        <div class="hash-card" id="card-md5" role="listitem" data-algo="md5">
+          <div class="hash-card__header">
+            <span class="hash-card__label">MD5</span>
+            <span class="hash-card__bits">128-bit</span>
+            <span class="hash-card__warn" title="Not collision-resistant">⚠️</span>
+          </div>
+          <code id="val-md5" class="hash-value" aria-label="MD5 hash value">—</code>
+          <button class="btn btn--icon" id="copy-md5" onclick="DevHash.copy('md5')" type="button"
+                  aria-label="{{ call .T "result.hash.copy" }} MD5">
+            <svg width="16" height="16" viewBox="0 0 16 16"><rect x="5" y="5" width="9" height="9" rx="1" stroke="currentColor" fill="none"/><path d="M3 11V3h8" stroke="currentColor" fill="none"/></svg>
+          </button>
+        </div>
+
+        <div class="hash-card" id="card-sha1" role="listitem" data-algo="sha1">
+          <div class="hash-card__header">
+            <span class="hash-card__label">SHA-1</span>
+            <span class="hash-card__bits">160-bit</span>
+            <span class="hash-card__warn" title="Deprecated for signatures">⚠️</span>
+          </div>
+          <code id="val-sha1" class="hash-value">—</code>
+          <button class="btn btn--icon" id="copy-sha1" onclick="DevHash.copy('sha1')" type="button"
+                  aria-label="{{ call .T "result.hash.copy" }} SHA-1">
+            <svg width="16" height="16" viewBox="0 0 16 16"><rect x="5" y="5" width="9" height="9" rx="1" stroke="currentColor" fill="none"/><path d="M3 11V3h8" stroke="currentColor" fill="none"/></svg>
+          </button>
+        </div>
+
+        <div class="hash-card hash-card--featured" id="card-sha256" role="listitem" data-algo="sha256">
+          <div class="hash-card__header">
+            <span class="hash-card__label">SHA-256</span>
+            <span class="hash-card__bits">256-bit</span>
+            <span class="hash-card__recommended">✅ Recommended</span>
+          </div>
+          <code id="val-sha256" class="hash-value">—</code>
+          <button class="btn btn--icon" id="copy-sha256" onclick="DevHash.copy('sha256')" type="button"
+                  aria-label="{{ call .T "result.hash.copy" }} SHA-256">
+            <svg width="16" height="16" viewBox="0 0 16 16"><rect x="5" y="5" width="9" height="9" rx="1" stroke="currentColor" fill="none"/><path d="M3 11V3h8" stroke="currentColor" fill="none"/></svg>
+          </button>
+        </div>
+
+        <div class="hash-card" id="card-sha512" role="listitem" data-algo="sha512">
+          <div class="hash-card__header">
+            <span class="hash-card__label">SHA-512</span>
+            <span class="hash-card__bits">512-bit</span>
+          </div>
+          <code id="val-sha512" class="hash-value">—</code>
+          <button class="btn btn--icon" id="copy-sha512" onclick="DevHash.copy('sha512')" type="button"
+                  aria-label="{{ call .T "result.hash.copy" }} SHA-512">
+            <svg width="16" height="16" viewBox="0 0 16 16"><rect x="5" y="5" width="9" height="9" rx="1" stroke="currentColor" fill="none"/><path d="M3 11V3h8" stroke="currentColor" fill="none"/></svg>
+          </button>
+        </div>
+
+        <div class="hash-card hash-card--hmac" id="card-hmac" role="listitem" data-algo="hmac" hidden>
+          <div class="hash-card__header">
+            <span class="hash-card__label">HMAC-SHA256</span>
+            <span class="hash-card__bits">256-bit</span>
+          </div>
+          <code id="val-hmac" class="hash-value">—</code>
+          <button class="btn btn--icon" id="copy-hmac" onclick="DevHash.copy('hmac')" type="button"
+                  aria-label="{{ call .T "result.hash.copy" }} HMAC">
+            <svg width="16" height="16" viewBox="0 0 16 16"><rect x="5" y="5" width="9" height="9" rx="1" stroke="currentColor" fill="none"/><path d="M3 11V3h8" stroke="currentColor" fill="none"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="result-actions">
+        <button class="btn btn--primary" onclick="DevHash.copyAll()" type="button">{{ call .T "result.hash.copy" }} All</button>
+        <button class="btn btn--secondary" onclick="DevHash.downloadAll()" type="button">Download .txt</button>
+      </div>
+    </div><!-- /panel-result -->
+
+  </div><!-- /split-panel -->
+
+  {{- template "partials/ad_slot.html" (dict "SlotID" "dev-hash-sidebar" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
+</main>
+
+<section class="features container" aria-label="Key features">
+  <div class="features__grid">
+    <div class="feature-card">
+      <div class="feature-card__icon">🛡️</div>
+      <h3>{{ call .T "feature.privacy.title" }}</h3>
+      <p>{{ call .T "feature.privacy.desc" }}</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card__icon">⚡</div>
+      <h3>{{ call .T "feature.speed.title" }}</h3>
+      <p>{{ call .T "feature.speed.desc" }}</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card__icon">🆓</div>
+      <h3>{{ call .T "feature.free.title" }}</h3>
+      <p>{{ call .T "feature.free.desc" }}</p>
+    </div>
+  </div>
+</section>
+
+{{ if .FAQs }}
+<section class="faq container" aria-label="Frequently Asked Questions">
+  <h2 class="section-title">FAQ</h2>
+  <div class="faq-list" id="faqList">
+    {{ range $i, $faq := .FAQs }}
+    <div class="faq-item" id="faq-{{ $i }}">
+      <button class="faq-question" type="button"
+              aria-expanded="false" aria-controls="faq-answer-{{ $i }}"
+              onclick="toggleDevFAQ({{ $i }})">
+        {{ $faq.Q }}
+        <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16">
+          <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        </svg>
+      </button>
+      <div class="faq-answer" id="faq-answer-{{ $i }}" hidden>
+        <p>{{ $faq.A }}</p>
+      </div>
+    </div>
+    {{ end }}
+  </div>
+</section>
+{{ end }}
+
+{{- template "partials/ad_slot.html" (dict "SlotID" "dev-hash-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
+
+<div id="toastContainer" class="toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+</div><!-- /dev-page -->
+{{ end }}
+
+{{ define "extraScript" }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js" crossorigin="anonymous"></script>
+<script src="/static/js/dev-hash.js"></script>
+<script>
+function toggleDevFAQ(i) {
+  var btn = document.querySelector('#faq-' + i + ' .faq-question');
+  var ans = document.getElementById('faq-answer-' + i);
+  var open = ans.hidden;
+  ans.hidden = !open;
+  btn.setAttribute('aria-expanded', String(open));
+}
+</script>
+{{ end }}
+

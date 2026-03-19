@@ -1,0 +1,1028 @@
+/* ══════════════════════════════════════════
+   订单结果卡 (.order-result-card)
+   购买成功后替换右侧确认面板
+   ══════════════════════════════════════════ */
+.order-result-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  animation: orcSlideIn 0.3s ease;
+}
+
+@keyframes orcSlideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 顶部：平台+国家+状态 */
+.orc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 16px;
+  background: #f9fafb;
+  border-bottom: 1px solid #f3f4f6;
+  flex-wrap: wrap;
+}
+
+.orc-platform-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.orc-platform-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.orc-platform-name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.3;
+}
+
+.orc-country-name {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+/* 状态徽章 */
+.orc-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: #fff7ed;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #92400e;
+  transition: background 0.2s, color 0.2s;
+}
+
+.orc-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.orc-dot--waiting  { background: #f59e0b; animation: pulse 1.5s infinite; }
+.orc-dot--received { background: #22c55e; }
+.orc-dot--cancelled { background: #9ca3af; }
+.orc-dot--timeout  { background: #f87171; }
+
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}
+
+/* 倒计时 */
+.orc-timer-block {
+  text-align: center;
+  padding: 18px 16px 10px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.orc-timer {
+  font-size: 2rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: #111827;
+  letter-spacing: 2px;
+  transition: color 0.3s;
+}
+
+.orc-timer--warning { color: #d97706; }
+.orc-timer--danger  { color: #dc2626; animation: blink 1s step-end infinite; }
+
+@keyframes blink {
+  50% { opacity: 0.4; }
+}
+
+.orc-timer-label {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-top: 4px;
+}
+
+/* 号码区 */
+.orc-number-block {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.orc-number-label {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.orc-number-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.orc-number {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  font-family: 'SF Mono', 'Fira Mono', monospace;
+  letter-spacing: 1px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.orc-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #374151;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.orc-copy-btn:hover { background: #f9fafb; border-color: #d1d5db; }
+
+.orc-copy-btn--otp {
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #166534;
+}
+
+.orc-hint {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin: 6px 0 0;
+}
+
+/* 等待动画 */
+.orc-waiting {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  font-size: 0.8375rem;
+  color: #6b7280;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.orc-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.orc-dots span {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #d1d5db;
+  animation: dotPulse 1.2s infinite ease-in-out;
+}
+
+.orc-dots span:nth-child(1) { animation-delay: 0s; }
+.orc-dots span:nth-child(2) { animation-delay: 0.2s; }
+.orc-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dotPulse {
+  0%,80%,100% { transform: scale(0.8); opacity: 0.5; }
+  40%          { transform: scale(1);   opacity: 1; }
+}
+
+.orc-sound-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 2px;
+  opacity: 0.7;
+}
+
+.orc-sound-btn:hover { opacity: 1; }
+
+/* OTP 验证码 */
+.orc-otp {
+  padding: 14px 16px;
+  background: #f0fdf4;
+  border-bottom: 1px solid #bbf7d0;
+}
+
+.orc-otp-label {
+  font-size: 0.75rem;
+  color: #166534;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.orc-otp-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.orc-otp-code {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #15803d;
+  font-family: 'SF Mono', 'Fira Mono', monospace;
+  letter-spacing: 4px;
+  flex: 1;
+}
+
+/* SMS 消息 */
+.orc-sms {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.orc-sms-hd {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.orc-sms-badge {
+  background: #4f46e5;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 1px 7px;
+}
+
+.orc-sms-list .sms-item {
+  background: #f9fafb;
+  border: 1px solid #f3f4f6;
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  font-size: 0.8125rem;
+}
+
+.orc-sms-list .sms-item__meta {
+  display: flex;
+  justify-content: space-between;
+  color: #9ca3af;
+  font-size: 0.75rem;
+  margin-bottom: 4px;
+}
+
+.orc-sms-list .sms-item__text mark {
+  background: #fef08a;
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+/* 操作按钮 */
+.orc-actions {
+  display: flex;
+  gap: 8px;
+  padding: 14px 16px;
+  flex-wrap: wrap;
+}
+
+.orc-btn {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+
+.orc-btn:hover   { filter: brightness(0.93); }
+.orc-btn:active  { transform: scale(0.97); }
+
+.orc-btn--cancel {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.orc-btn--rebuy {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.orc-btn--finish {
+  background: #4f46e5;
+  color: #fff;
+}
+
+
+.orc-btn--rebuy {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.orc-btn--finish {
+  background: #4f46e5;
+  color: #fff;
+}
+
+
+/* ══════════════════════════════════════════════
+   订单结果卡 — op-* 组件系统
+   对应 sms_buy.html #order-panel
+   ══════════════════════════════════════════════ */
+
+/* ── 卡片容器 ────────────────────────────────── */
+.order-panel {
+  background: #ffffff;
+  border: 1px solid #eef0f6;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+  animation: op-slide-in 0.3s ease;
+  margin-top: 24px;
+  max-width: 640px;
+}
+
+@keyframes op-slide-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══ ① 头部信息区 ════════════════════════════ */
+.op-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 24px;
+  background: #f9fafb;
+  border-bottom: 1px solid #eef0f6;
+  flex-wrap: wrap;
+}
+
+.op-header__left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* 平台图标 */
+.op-platform-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.op-platform-icon img {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  object-fit: contain;
+}
+
+/* 平台名称 */
+.op-platform-name {
+  font-size: 1.125rem;   /* 18px */
+  font-weight: 700;
+  color: #1f2430;
+  margin: 0 0 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.op-platform-sub {
+  font-size: 0.8125rem;
+  color: #667085;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.op-dot {
+  color: #d0d5dd;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* 状态徽章 */
+.op-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: #fff7ed;
+  color: #92400e;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.op-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.op-status-dot--waiting  { background: #f59e0b; animation: op-pulse 1.5s infinite; }
+.op-status-dot--received { background: #22c55e; animation: none; }
+.op-status-dot--cancelled,
+.op-status-dot--timeout  { background: #9ca3af; animation: none; }
+
+@keyframes op-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.85); }
+}
+
+/* ══ ② 订单元信息栅格 ══════════════════════ */
+.op-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid #eef0f6;
+}
+
+.op-meta-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 10px;
+  border-right: 1px solid #eef0f6;
+  gap: 4px;
+}
+
+.op-meta-item:last-child { border-right: none; }
+
+.op-meta-label {
+  font-size: 0.6875rem;    /* 11px */
+  font-weight: 500;
+  color: #98a2b3;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.op-meta-val {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #1f2430;
+  text-align: center;
+  word-break: break-all;
+  font-variant-numeric: tabular-nums;
+}
+
+.op-meta-val--green  { color: #16a34a; }
+
+.op-meta-item--timer { background: #fafaf5; }
+
+.op-meta-val--timer {
+  font-size: 1rem;
+  color: #374151;
+}
+
+.op-meta-val--timer.op-meta-val--warning { color: #d97706; }
+.op-meta-val--timer.op-meta-val--danger  { color: #dc2626; animation: op-flash 1s infinite; }
+
+@keyframes op-flash {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* ══ ③ 核心信息区 ════════════════════════════ */
+.op-core {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 手机号卡片 */
+.op-number-card {
+  background: #f7f8fc;
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+
+.op-card-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #98a2b3;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 10px;
+}
+
+.op-card-label--green { color: #16a34a; }
+
+.op-number-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.op-number-text {
+  font-size: 1.75rem;   /* 28px */
+  font-weight: 800;
+  color: #1f2430;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  font-family: 'SF Mono', SFMono-Regular, ui-monospace, Menlo, Consolas, monospace;
+  flex: 1;
+  min-width: 0;
+  word-break: break-all;
+}
+
+.op-card-hint {
+  font-size: 0.8125rem;
+  color: #98a2b3;
+  margin: 10px 0 0;
+  line-height: 1.5;
+}
+
+/* 复制按钮（通用）*/
+.op-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 36px;
+  padding: 0 14px;
+  background: #ffffff;
+  color: #4f46e5;
+  border: 1.5px solid #4f46e5;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.op-copy-btn:hover {
+  background: #4f46e5;
+  color: #ffffff;
+}
+
+.op-copy-btn--green {
+  color: #16a34a;
+  border-color: #16a34a;
+}
+
+.op-copy-btn--green:hover {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+/* 等待动画 */
+.op-waiting {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 1px solid #eef0f6;
+  position: relative;
+}
+
+.op-waiting-dots {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.op-waiting-dots span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #4f46e5;
+  animation: op-bounce 1.4s infinite ease-in-out;
+}
+
+.op-waiting-dots span:nth-child(1) { animation-delay: 0s; }
+.op-waiting-dots span:nth-child(2) { animation-delay: 0.2s; }
+.op-waiting-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes op-bounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40%            { transform: scale(1);   opacity: 1; }
+}
+
+.op-waiting-text {
+  font-size: 0.9rem;
+  color: #667085;
+  flex: 1;
+}
+
+.op-sound-btn {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.15s;
+  padding: 4px;
+  border-radius: 6px;
+  line-height: 1;
+}
+
+.op-sound-btn:hover { opacity: 1; background: #f3f4f6; }
+
+/* 验证码卡片 */
+.op-otp-card {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 1.5px solid #86efac;
+  border-radius: 12px;
+  padding: 20px 20px 16px;
+  animation: op-otp-pop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+@keyframes op-otp-pop {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.op-otp-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.op-otp-code {
+  font-size: 2.25rem;   /* 36px */
+  font-weight: 900;
+  color: #15803d;
+  letter-spacing: 0.14em;
+  font-variant-numeric: tabular-nums;
+  font-family: 'SF Mono', SFMono-Regular, ui-monospace, Menlo, Consolas, monospace;
+  flex: 1;
+}
+
+/* ══ ④ 短信内容区 ════════════════════════════ */
+.op-sms-section {
+  border-top: 1px solid #eef0f6;
+  padding: 16px 24px 20px;
+}
+
+.op-sms-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.op-sms-title {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #374151;
+}
+
+.op-sms-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  background: #4f46e5;
+  color: #ffffff;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.op-sms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.op-sms-item {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+
+.op-sms-item__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.op-sms-item__sender {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.op-sms-item__time {
+  font-size: 0.75rem;
+  color: #98a2b3;
+}
+
+.op-sms-item__text {
+  font-size: 0.875rem;
+  color: #4b5563;
+  line-height: 1.6;
+  word-break: break-all;
+  margin: 0;
+}
+
+.op-sms-item__text mark {
+  background: #fef9c3;
+  color: #854d0e;
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+/* ══ ⑤ 底部操作区 ════════════════════════════ */
+.op-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid #eef0f6;
+  background: #f9fafb;
+  flex-wrap: wrap;
+}
+
+.op-btn {
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+/* 危险按钮：取消订单 */
+.op-btn--danger {
+  background: #fff1f2;
+  color: #dc2626;
+  border: 1.5px solid #fecaca;
+}
+
+.op-btn--danger:hover {
+  background: #fee2e2;
+  border-color: #f87171;
+}
+
+/* 次级按钮：换号重试 */
+.op-btn--outline {
+  background: #ffffff;
+  color: #4f46e5;
+  border: 1.5px solid #c7d2fe;
+}
+
+.op-btn--outline:hover {
+  background: #eef2ff;
+  border-color: #4f46e5;
+}
+
+/* 主按钮：完成 */
+.op-btn--primary {
+  background: #4f46e5;
+  color: #ffffff;
+  border: 1.5px solid transparent;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+}
+
+.op-btn--primary:hover {
+  background: #4338ca;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+}
+
+/* ── 响应式 ──────────────────────────────────── */
+@media (max-width: 640px) {
+  .op-header { padding: 14px 16px; }
+  .op-core   { padding: 16px; }
+  .op-meta-grid { grid-template-columns: repeat(2, 1fr); }
+  .op-meta-item:nth-child(2)  { border-right: none; }
+  .op-meta-item:nth-child(3)  { border-top: 1px solid #eef0f6; }
+  .op-number-text { font-size: 1.375rem; }
+  .op-otp-code    { font-size: 1.875rem; }
+  .op-actions { justify-content: stretch; }
+  .op-btn     { flex: 1; min-width: 80px; }
+  .op-sms-section { padding: 14px 16px 16px; }
+}
+
+/* ══════════════════════════════════════════════
+   订单结果双列布局  #order-layout
+   ══════════════════════════════════════════════ */
+
+.order-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 24px;
+  align-items: start;
+  padding: 24px 0 48px;
+}
+
+.order-layout__main {
+  min-width: 0;
+}
+
+.order-layout__main .order-panel {
+  max-width: 100%;
+  margin-top: 0;
+}
+
+.order-layout__aside {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 80px;
+}
+
+.aside-guide-card {
+  background: #ffffff;
+  border: 1px solid #eef0f6;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.aside-guide-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #1f2430;
+  margin: 0 0 14px;
+}
+
+.aside-guide-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.aside-guide-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.8125rem;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.aside-step-num {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  background: #eef2ff;
+  color: #4f46e5;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+.aside-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  color: #92400e;
+  line-height: 1.5;
+}
+
+.aside-tip-icon { font-size: 1rem; flex-shrink: 0; }
+
+.aside-ads-slot {
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 250px;
+}
+
+.aside-ads-placeholder {
+  width: 100%;
+  height: 250px;
+  background: #f9fafb;
+  border: 1.5px dashed #d1d5db;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8125rem;
+  color: #9ca3af;
+  letter-spacing: 0.04em;
+}
+
+.aside-new-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  height: 40px;
+  background: #ffffff;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.aside-new-btn:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+  color: #374151;
+}
+
+.summary-free-note {
+  text-align: center;
+  font-size: 0.8125rem;
+  color: #9ca3af;
+  margin: 10px 0 0;
+}
+
+.op-meta-val--mono {
+  font-family: 'SF Mono', SFMono-Regular, ui-monospace, Consolas, monospace;
+  font-size: 0.75rem;
+}
+
+.op-btn--ghost {
+  background: transparent;
+  color: #9ca3af;
+  border: 1px solid #e5e7eb;
+}
+.op-btn--ghost:hover { background: #f9fafb; color: #6b7280; border-color: #d1d5db; }
+
+@media (max-width: 900px) {
+  .order-layout {
+    grid-template-columns: 1fr;
+  }
+  .order-layout__aside {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .aside-guide-card { flex: 1; min-width: 240px; }
+  .aside-ads-slot   { display: none; }
+  .aside-new-btn    { width: auto; flex: 0 0 auto; align-self: flex-start; }
+}
+
+@media (max-width: 640px) {
+  .order-layout { padding: 16px 0 32px; gap: 16px; }
+  .order-layout__aside { flex-direction: column; }
+  .aside-guide-card { min-width: 0; }
+  .aside-new-btn    { width: 100%; }
+}

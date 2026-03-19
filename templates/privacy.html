@@ -1,0 +1,47 @@
+{{ template "base" . }}
+{{ define "content" }}
+<div class="container static-page">
+  <h1>{{ call .T "privacy.h1" }}</h1>
+  <p class="last-updated">{{ call .T "privacy.last_updated" }}</p>
+  <div class="static-content card">
+    <section>
+      <h2>{{ call .T "privacy.s1.title" }}</h2>
+      <p>{{ call .T "privacy.s1.intro" }}</p>
+      <ul>
+        <li>{{ call .T "privacy.s1.li1" }}</li>
+        <li>{{ call .T "privacy.s1.li2" }}</li>
+        <li>{{ call .T "privacy.s1.li3" }}</li>
+        <li>{{ call .T "privacy.s1.li4" }}</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>{{ call .T "privacy.s2.title" }}</h2>
+      <p>{{ safeHTML (call .T "privacy.s2.desc") }}</p>
+    </section>
+    <section>
+      <h2>{{ call .T "privacy.s3.title" }}</h2>
+      <p>{{ call .T "privacy.s3.desc" }}</p>
+    </section>
+    <section>
+      <h2>{{ call .T "privacy.s4.title" }}</h2>
+      <p>{{ call .T "privacy.s4.desc" }}</p>
+    </section>
+    <section>
+      <h2>{{ call .T "privacy.s5.title" }}</h2>
+      <p>{{ safeHTML (call .T "privacy.s5.desc") }}</p>
+    </section>
+    <section>
+      <h2>{{ call .T "privacy.s6.title" }}</h2>
+      <p>{{ safeHTML (call .T "privacy.s6.desc") }}</p>
+    </section>
+  </div>
+</div>
+
+<!-- Bottom Ad -->
+<div style="text-align:center;margin:24px 0">
+  {{- template "partials/ad_slot.html" dict "SlotID" "privacy-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+</div>
+
+{{ end }}
+{{ define "extraScript" }}{{ end }}
