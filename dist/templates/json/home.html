@@ -1,0 +1,162 @@
+{{ define "json_content" }}
+<!-- JSON Topbar -->
+<nav class="jt-navbar">
+  <div class="jt-container jt-container--flex">
+    <a class="jt-logo" href="/json">
+      <span class="jt-logo__icon">{ }</span>
+      <span class="jt-logo__text">JSON Tools</span>
+    </a>
+    <div class="jt-navbar__right">
+      <a href="/" class="jt-home-link">← Tool Box Nova</a>
+      <div class="jt-lang-switch lang-switcher">
+        <button class="lang-btn" id="jtLangBtn">
+          {{- if eq .Lang "zh" }}🇨🇳 中文
+          {{- else if eq .Lang "en" }}🇺🇸 EN
+          {{- else if eq .Lang "ja" }}🇯🇵 日本語
+          {{- else if eq .Lang "ko" }}🇰🇷 한국어
+          {{- else if eq .Lang "spa" }}🇪🇸 ES
+          {{- else }}🌐 Lang
+          {{- end }} ▾
+        </button>
+        <div class="lang-dropdown" id="jtLangDropdown">
+          <a href="?lang=zh"  class="lang-opt {{ if eq .Lang "zh"  }}active{{ end }}">🇨🇳 中文</a>
+          <a href="?lang=en"  class="lang-opt {{ if eq .Lang "en"  }}active{{ end }}">🇺🇸 English</a>
+          <a href="?lang=ja"  class="lang-opt {{ if eq .Lang "ja"  }}active{{ end }}">🇯🇵 日本語</a>
+          <a href="?lang=ko"  class="lang-opt {{ if eq .Lang "ko"  }}active{{ end }}">🇰🇷 한국어</a>
+          <a href="?lang=spa" class="lang-opt {{ if eq .Lang "spa" }}active{{ end }}">🇪🇸 Español</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="jt-home-hero">
+  <div class="jt-container">
+    <div class="jt-home-hero__badge">40+ Tools</div>
+    <h1 class="jt-home-hero__title">{{ call .T "json.home.title" }}</h1>
+    <p class="jt-home-hero__subtitle">{{ call .T "json.home.subtitle" }}</p>
+
+    <!-- Search -->
+    <div class="jt-home-search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" id="toolSearch"
+             placeholder="{{ call .T "json.home.search_placeholder" }}"
+             oninput="filterTools(this.value)"
+             class="jt-home-search__input"
+             autocomplete="off">
+    </div>
+
+    <!-- Recent Tools -->
+    <div class="jt-recent-tools" id="recentTools" style="display:none">
+      <p class="jt-recent-label">{{ call .T "json.home.recent" }}</p>
+      <div class="jt-recent-list" id="recentList"></div>
+    </div>
+  </div>
+</section>
+
+  <!-- Top Ad -->
+  <div style="text-align:center;margin:8px 0 16px">
+    {{- template "partials/ad_slot.html" dict "SlotID" "json-home-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+  </div>
+
+<!-- Tool Groups -->
+<section class="jt-home-tools">
+  <div class="jt-container">
+
+    {{ $lang := .Lang }}
+    {{ $groups := list "validate" "view" "convert" "codegen" "schema" "encode" }}
+    {{ range $groups }}
+    <div class="jt-tool-group" data-group="{{ . }}">
+      <h2 class="jt-tool-group__title">
+        <span class="jt-group-name">{{ call $.T (printf "json.home.group.%s" .) }}</span>
+        <span class="jt-group-count">{{ groupCount $.AllTools . }}</span>
+      </h2>
+      <div class="jt-tool-grid" id="grid-{{ . }}">
+        {{ $g := . }}
+        {{ range $.AllTools }}{{ if eq .Group $g }}
+        <a class="jt-tool-card" href="/json/{{ .Key }}?lang={{ $lang }}">
+          <span class="jt-tool-card__icon">{{ .Icon }}</span>
+          <div class="jt-tool-card__body">
+            <span class="jt-tool-card__name">{{ if eq $lang "zh" }}{{ .TitleZH }}{{ else }}{{ .TitleEN }}{{ end }}</span>
+            <span class="jt-tool-card__desc">{{ if eq $lang "zh" }}{{ .DescZH }}{{ else }}{{ .DescEN }}{{ end }}</span>
+          </div>
+          <svg class="jt-tool-card__arrow" width="14" height="14" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </a>
+        {{ end }}{{ end }}
+      </div>
+    </div>
+    {{ end }}
+
+  </div>
+</section>
+
+<!-- Learn & Datasets Resource Cards -->
+{{ if .LearnResources }}
+<section class="jt-home-learn">
+  <div class="jt-container">
+    <h2 class="jt-tool-group__title" style="margin-bottom:16px">
+      <span class="jt-group-name">{{ call .T "json.home.group.learn" }}</span>
+    </h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px">
+      {{ $lang := .Lang }}
+      {{ range .LearnResources }}
+      <a class="jt-tool-card" href="{{ .URL }}" style="align-items:flex-start;text-decoration:none">
+        <span class="jt-tool-card__icon">{{ .Icon }}</span>
+        <div class="jt-tool-card__body">
+          <span class="jt-tool-card__name">{{ if eq $lang "zh" }}{{ .TitleZH }}{{ else }}{{ .TitleEN }}{{ end }}</span>
+          <span class="jt-tool-card__desc">{{ if eq $lang "zh" }}{{ .DescZH }}{{ else }}{{ .DescEN }}{{ end }}</span>
+        </div>
+        <span style="background:#f59e0b;color:#000;font-size:11px;font-weight:700;padding:2px 8px;border-radius:9999px;white-space:nowrap;flex-shrink:0">{{ .Badge }}</span>
+      </a>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}
+
+<!-- Features -->
+<section class="jt-home-features">
+  <div class="jt-container">
+    <div class="jt-features-grid">
+      <div class="jt-feature-card">
+        <div class="jt-feature-icon">🔒</div>
+        <h3>{{ call .T "json.home.feature.privacy.title" }}</h3>
+        <p>{{ call .T "json.home.feature.privacy.desc" }}</p>
+      </div>
+      <div class="jt-feature-card">
+        <div class="jt-feature-icon">⚡</div>
+        <h3>{{ call .T "json.home.feature.fast.title" }}</h3>
+        <p>{{ call .T "json.home.feature.fast.desc" }}</p>
+      </div>
+      <div class="jt-feature-card">
+        <div class="jt-feature-icon">🆓</div>
+        <h3>{{ call .T "json.home.feature.free.title" }}</h3>
+        <p>{{ call .T "json.home.feature.free.desc" }}</p>
+      </div>
+      <div class="jt-feature-card">
+        <div class="jt-feature-icon">📦</div>
+        <h3>{{ call .T "json.home.feature.all.title" }}</h3>
+        <p>{{ call .T "json.home.feature.all.desc" }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}
+
+{{ define "json_scripts" }}
+<script src="/static/js/json-home.js"></script>
+
+<!-- Bottom Ad -->
+<div style="text-align:center;margin:24px 0">
+  {{- template "partials/ad_slot.html" dict "SlotID" "json-home-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+</div>
+{{ end }}
+

@@ -1,6 +1,7 @@
 'use strict';
 // to-csharp
 function processJson() {
+  clearErrorPanel();
   const parsed = parseInput(); if (parsed === null) return;
   const rootName = getClassName(); const classes = [];
   function csType(v) {
@@ -26,5 +27,6 @@ function processJson() {
   gen(Array.isArray(parsed) ? parsed[0] : parsed, rootName);
   const hdr = 'using System.Collections.Generic;\nusing System.Text.Json.Serialization;\n\n';
   setOutput(hdr + classes.reverse().join('\n\n'), 'csharp');
+  const el = document.getElementById('outputStats');
+  if (el) el.innerHTML = '<span class="jt-success-badge">✅ C# 类生成完成</span>';
 }
-

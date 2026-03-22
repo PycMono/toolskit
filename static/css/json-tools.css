@@ -105,19 +105,48 @@ body.jt-page {
 .jt-lang-switch a:not(.lang-opt).active { color: var(--jt-amber-dark); font-weight: 700; }
 .jt-lang-switch a:not(.lang-opt):hover  { background: var(--jt-amber-light); }
 
-/* New dropdown style — inherits from main.css lang-switcher */
+/* New dropdown style */
 .jt-lang-switch.lang-switcher { position: relative; }
 .jt-lang-switch .lang-btn {
-  background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.3);
-  color: inherit;
+  background: var(--jt-surface);
+  border: 1px solid var(--jt-border);
+  color: var(--jt-text);
   font-size: 0.8125rem;
   padding: 4px 10px;
   border-radius: 6px;
   cursor: pointer;
   white-space: nowrap;
+  transition: border-color .15s, background .15s;
 }
-.jt-lang-switch .lang-btn:hover { background: rgba(255,255,255,0.25); }
+.jt-lang-switch .lang-btn:hover { background: var(--jt-amber-light); border-color: var(--jt-amber); }
+
+/* Lang dropdown panel — self-contained (main.css may not be loaded in JSON tool pages) */
+.jt-lang-switch .lang-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--jt-border);
+  border-radius: 8px;
+  min-width: 140px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  z-index: 9999;
+  overflow: hidden;
+}
+.jt-lang-switch.lang-switcher:hover .lang-dropdown,
+.jt-lang-switch.lang-switcher.open .lang-dropdown { display: block; }
+.jt-lang-switch .lang-opt {
+  display: block;
+  padding: 10px 16px;
+  font-size: 13px;
+  color: var(--jt-text);
+  text-decoration: none;
+  transition: background .1s;
+  cursor: pointer;
+}
+.jt-lang-switch .lang-opt:hover { background: var(--jt-amber-light); text-decoration: none; }
+.jt-lang-switch .lang-opt.active { color: var(--jt-amber-dark); font-weight: 600; background: #fffbeb; }
 
 /* ── Topbar (tool pages) ────────────────────────── */
 .jt-topbar {
@@ -816,6 +845,7 @@ body.jt-page {
 .jt-jwt-expired { color: var(--jt-red); font-weight: 700; }
 
 /* ── Viewer Layout (tree / table / size / search) ── */
+/* jt-viewer-layout kept for backward compatibility but no longer used by tree/table/size/search */
 .jt-viewer-layout {
   display: grid;
   grid-template-columns: 5fr 7fr;
@@ -841,6 +871,14 @@ body.jt-page {
   flex-direction: column;
   min-height: 540px;
   overflow: auto;
+}
+
+/* Right-panel custom render area inside jt-editor-layout (tree/table/size/search) */
+.jt-viewer-render-area {
+  flex: 1;
+  overflow: auto;
+  padding: 12px;
+  background: var(--jt-surface);
 }
 
 /* ── Diff Panes Layout ──────────────────────────── */

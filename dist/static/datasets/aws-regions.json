@@ -1,0 +1,13 @@
+[
+  {"code":"us-east-1","name":"US East (N. Virginia)","location":"Virginia, USA","az_count":6,"launched":"2006-03-19","services":["EC2","S3","RDS","Lambda","CloudFront","DynamoDB"]},
+  {"code":"us-east-2","name":"US East (Ohio)","location":"Ohio, USA","az_count":3,"launched":"2016-10-17","services":["EC2","S3","RDS","Lambda"]},
+  {"code":"us-west-1","name":"US West (N. California)","location":"California, USA","az_count":3,"launched":"2009-12-03","services":["EC2","S3","RDS","Lambda"]},
+  {"code":"us-west-2","name":"US West (Oregon)","location":"Oregon, USA","az_count":4,"launched":"2011-11-09","services":["EC2","S3","RDS","Lambda","CloudFront"]},
+  {"code":"eu-west-1","name":"Europe (Ireland)","location":"Ireland","az_count":3,"launched":"2007-11-14","services":["EC2","S3","RDS","Lambda"]},
+  {"code":"eu-central-1","name":"Europe (Frankfurt)","location":"Frankfurt, Germany","az_count":3,"launched":"2014-10-23","services":["EC2","S3","RDS","Lambda"]},
+  {"code":"ap-southeast-1","name":"Asia Pacific (Singapore)","location":"Singapore","az_count":3,"launched":"2010-04-28","services":["EC2","S3","RDS","Lambda"]},
+  {"code":"ap-northeast-1","name":"Asia Pacific (Tokyo)","location":"Tokyo, Japan","az_count":4,"launched":"2011-03-02","services":["EC2","S3","RDS","Lambda"]},
+  {"code":"ap-southeast-2","name":"Asia Pacific (Sydney)","location":"Sydney, Australia","az_count":3,"launched":"2012-11-12","services":["EC2","S3","RDS","Lambda"]},
+  {"code":"sa-east-1","name":"South America (Sao Paulo)","location":"Sao Paulo, Brazil","az_count":3,"launched":"2011-12-14","services":["EC2","S3","RDS"]}
+]
+

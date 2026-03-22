@@ -1,0 +1,335 @@
+{{ template "base" . }}
+
+{{ define "extraHead" }}
+<title>{{ .Title }}</title>
+<meta name="description" content="{{ .Description }}">
+<meta name="keywords" content="{{ .Keywords }}">
+
+<meta property="og:title" content="{{ .Title }}">
+<meta property="og:description" content="{{ .Description }}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://toolboxnova.com/img/resize">
+<meta property="og:image" content="https://toolboxnova.com/static/og/img-resize.png">
+
+<link rel="canonical" href="https://toolboxnova.com/img/resize">
+<link rel="alternate" hreflang="zh" href="https://toolboxnova.com/img/resize?lang=zh">
+<link rel="alternate" hreflang="en" href="https://toolboxnova.com/img/resize?lang=en">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<link rel="stylesheet" href="/static/css/img-resize.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "{{ .Title }}",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Web Browser",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "{{ .Description }}",
+  "url": "https://toolboxnova.com/img/resize",
+  "featureList": [
+    "Resize images by pixels",
+    "Resize images by percentage",
+    "Social media preset sizes",
+    "Aspect ratio lock",
+    "Batch processing up to 20 images",
+    "Format conversion (JPG/PNG/WebP)",
+    "Quality control slider",
+    "No upload required - browser-side only",
+    "Download all as ZIP"
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {{- range $i, $faq := .FAQs }}
+    {{- if $i }},{{ end }}
+    {
+      "@type": "Question",
+      "name": "{{ $faq.Q }}",
+      "acceptedAnswer": { "@type": "Answer", "text": "{{ $faq.A }}" }
+    }
+    {{- end }}
+  ]
+}
+</script>
+{{ end }}
+
+{{ define "content" }}
+<div class="img-resize-page">
+
+  <!-- ══ Hero + Upload ══════════════════════ -->
+  <section class="ir-hero">
+    <div class="ir-container">
+      <div class="ir-hero__text">
+        <h1 class="ir-hero__title">{{ call .T "img.resize.hero.title" }}</h1>
+        <p class="ir-hero__subtitle">{{ call .T "img.resize.hero.subtitle" }}</p>
+        <div class="ir-hero__badges">
+          <span class="ir-badge">🔒 {{ call .T "img.resize.hero.badge1" }}</span>
+          <span class="ir-badge">⚡ {{ call .T "img.resize.hero.badge2" }}</span>
+          <span class="ir-badge">✅ {{ call .T "img.resize.hero.badge3" }}</span>
+        </div>
+      </div>
+
+      <!-- 超大拖拽上传区 -->
+      <div class="ir-upload-zone" id="uploadZone">
+        <div class="ir-upload-zone__idle" id="uploadIdle">
+          <div class="ir-upload-zone__graphic">
+            <div class="ir-resize-icon">
+              <div class="ir-resize-icon__frame ir-resize-icon__frame--small"></div>
+              <div class="ir-resize-icon__arrows">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="15 3 21 3 21 9"/>
+                  <polyline points="9 21 3 21 3 15"/>
+                  <line x1="21" y1="3" x2="14" y2="10"/>
+                  <line x1="3" y1="21" x2="10" y2="14"/>
+                </svg>
+              </div>
+              <div class="ir-resize-icon__frame ir-resize-icon__frame--large"></div>
+            </div>
+          </div>
+          <p class="ir-upload-zone__title">{{ call .T "img.resize.upload.title" }}</p>
+          <p class="ir-upload-zone__hint">{{ call .T "img.resize.upload.multi" }}</p>
+          <label class="ir-upload-btn">
+            {{ call .T "img.resize.upload.btn" }}
+            <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" multiple style="display:none">
+          </label>
+          <p class="ir-upload-zone__limit">{{ call .T "img.resize.upload.hint" }}</p>
+        </div>
+        <!-- 拖拽高亮层 -->
+        <div class="ir-upload-zone__drop-overlay" id="dropOverlay">
+          <div class="ir-drop-icon">📐</div>
+          <p>{{ call .T "img.resize.upload.drop_active" }}</p>
+        </div>
+      </div>
+
+      <!-- ── 调整选项面板 ── -->
+      <div class="ir-options-panel" id="optionsPanel" style="display:none">
+
+        <!-- 模式 Tabs -->
+        <div class="ir-mode-tabs">
+          <button class="ir-mode-tab ir-mode-tab--active" data-mode="pixel" onclick="switchMode('pixel')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+            {{ call .T "img.resize.options.mode.pixel" }}
+          </button>
+          <button class="ir-mode-tab" data-mode="percent" onclick="switchMode('percent')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+            {{ call .T "img.resize.options.mode.percent" }}
+          </button>
+          <button class="ir-mode-tab" data-mode="preset" onclick="switchMode('preset')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            {{ call .T "img.resize.options.mode.preset" }}
+          </button>
+        </div>
+
+        <!-- 像素模式 -->
+        <div class="ir-mode-panel" id="panelPixel">
+          <div class="ir-dimension-row">
+            <div class="ir-dim-group">
+              <label class="ir-option-label">{{ call .T "img.resize.options.width" }}</label>
+              <div class="ir-dim-input-wrap">
+                <input type="number" id="pixelWidth" min="1" max="10000" placeholder="800" class="ir-input ir-input--dim">
+                <span class="ir-input-unit">px</span>
+              </div>
+            </div>
+            <button class="ir-lock-btn ir-lock-btn--locked" id="lockBtn" onclick="toggleLock()">
+              <svg id="lockIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </button>
+            <div class="ir-dim-group">
+              <label class="ir-option-label">{{ call .T "img.resize.options.height" }}</label>
+              <div class="ir-dim-input-wrap">
+                <input type="number" id="pixelHeight" min="1" max="10000" placeholder="600" class="ir-input ir-input--dim">
+                <span class="ir-input-unit">px</span>
+              </div>
+            </div>
+          </div>
+          <p class="ir-dim-hint" id="origDimHint"></p>
+        </div>
+
+        <!-- 百分比模式 -->
+        <div class="ir-mode-panel" id="panelPercent" style="display:none">
+          <div class="ir-option-group">
+            <div class="ir-option-group__header">
+              <label class="ir-option-label">{{ call .T "img.resize.options.scale_percent" }}</label>
+              <div class="ir-quality-display"><span id="percentValue">100</span>%</div>
+            </div>
+            <div class="ir-quality-slider-wrap">
+              <span class="ir-slider-min">10%</span>
+              <input type="range" id="percentSlider" min="10" max="200" value="100" step="5" class="ir-quality-slider">
+              <span class="ir-slider-max">200%</span>
+            </div>
+            <p class="ir-option-hint">{{ call .T "img.resize.options.percent_hint" }}</p>
+            <div class="ir-percent-preview" id="percentPreview"></div>
+          </div>
+        </div>
+
+        <!-- 预设模式 -->
+        <div class="ir-mode-panel" id="panelPreset" style="display:none">
+          <div class="ir-preset-section">
+            <p class="ir-preset-section__title">{{ call .T "img.resize.preset.section.social" }}</p>
+            <div class="ir-preset-grid">
+              <button class="ir-preset-btn" onclick="applyPreset(1080,1080,'Instagram Post')"><span class="ir-preset-icon">📸</span><span class="ir-preset-name">Instagram Post</span><span class="ir-preset-dim">1080×1080</span></button>
+              <button class="ir-preset-btn" onclick="applyPreset(1080,1920,'Instagram Story')"><span class="ir-preset-icon">📱</span><span class="ir-preset-name">Instagram Story</span><span class="ir-preset-dim">1080×1920</span></button>
+              <button class="ir-preset-btn" onclick="applyPreset(820,312,'Facebook Cover')"><span class="ir-preset-icon">📘</span><span class="ir-preset-name">Facebook Cover</span><span class="ir-preset-dim">820×312</span></button>
+              <button class="ir-preset-btn" onclick="applyPreset(1200,630,'Facebook Post')"><span class="ir-preset-icon">👍</span><span class="ir-preset-name">Facebook Post</span><span class="ir-preset-dim">1200×630</span></button>
+              <button class="ir-preset-btn" onclick="applyPreset(1200,675,'Twitter/X Post')"><span class="ir-preset-icon">🐦</span><span class="ir-preset-name">Twitter/X Post</span><span class="ir-preset-dim">1200×675</span></button>
+              <button class="ir-preset-btn" onclick="applyPreset(1500,500,'Twitter Header')"><span class="ir-preset-icon">🔵</span><span class="ir-preset-name">Twitter Header</span><span class="ir-preset-dim">1500×500</span></button>
+              <button class="ir-preset-btn" onclick="applyPreset(1280,720,'YouTube Thumb')"><span class="ir-preset-icon">▶️</span><span class="ir-preset-name">YouTube Thumb</span><span class="ir-preset-dim">1280×720</span></button>
+              <button class="ir-preset-btn" onclick="applyPreset(1200,627,'LinkedIn Post')"><span class="ir-preset-icon">💼</span><span class="ir-preset-name">LinkedIn Post</span><span class="ir-preset-dim">1200×627</span></button>
+            </div>
+          </div>
+          <div class="ir-preset-section">
+            <p class="ir-preset-section__title">{{ call .T "img.resize.preset.section.common" }}</p>
+            <div class="ir-preset-grid">
+              <button class="ir-preset-btn" onclick="applyPreset(1280,720,'HD')"><span class="ir-preset-icon">🖥️</span><span class="ir-preset-name">HD</span><span class="ir-preset-dim">1280×720</span></button>
+              <button class="ir-preset-btn" onclick="applyPreset(1920,1080,'Full HD')"><span class="ir-preset-icon">🖥️</span><span class="ir-preset-name">Full HD</span><span class="ir-preset-dim">1920×1080</span></button>
+              <button class="ir-preset-btn" onclick="applyPreset(3840,2160,'4K')"><span class="ir-preset-icon">📺</span><span class="ir-preset-name">4K</span><span class="ir-preset-dim">3840×2160</span></button>
+              <button class="ir-preset-btn" onclick="applyPreset(300,300,'Thumbnail')"><span class="ir-preset-icon">🖼️</span><span class="ir-preset-name">Thumbnail</span><span class="ir-preset-dim">300×300</span></button>
+            </div>
+          </div>
+          <div class="ir-selected-preset" id="selectedPreset" style="display:none">
+            <span class="ir-selected-preset__label">{{ call .T "img.resize.preset.selected" }}：</span>
+            <span id="selectedPresetName"></span>
+            <span id="selectedPresetDim" class="ir-selected-preset__dim"></span>
+          </div>
+        </div>
+
+        <div class="ir-divider"></div>
+
+        <!-- 输出格式 -->
+        <div class="ir-option-group">
+          <label class="ir-option-label">{{ call .T "img.resize.options.format.label" }}</label>
+          <div class="ir-format-options">
+            <label class="ir-format-card ir-format-card--active">
+              <input type="radio" name="outputFormat" value="original" checked>
+              <div class="ir-format-card__inner"><span class="ir-format-card__icon">🔄</span><span class="ir-format-card__name">{{ call .T "img.resize.options.format.original" }}</span></div>
+            </label>
+            <label class="ir-format-card">
+              <input type="radio" name="outputFormat" value="image/jpeg">
+              <div class="ir-format-card__inner"><span class="ir-format-card__icon">🖼️</span><span class="ir-format-card__name">JPG</span></div>
+            </label>
+            <label class="ir-format-card">
+              <input type="radio" name="outputFormat" value="image/png">
+              <div class="ir-format-card__inner"><span class="ir-format-card__icon">🗺️</span><span class="ir-format-card__name">PNG</span></div>
+            </label>
+            <label class="ir-format-card ir-format-card--recommended">
+              <input type="radio" name="outputFormat" value="image/webp">
+              <div class="ir-format-card__inner"><span class="ir-format-card__icon">⚡</span><span class="ir-format-card__name">WebP</span><span class="ir-format-card__tag">{{ call .T "img.resize.format.recommended" }}</span></div>
+            </label>
+          </div>
+        </div>
+
+        <!-- 输出质量 -->
+        <div class="ir-option-group" id="qualityGroup">
+          <div class="ir-option-group__header">
+            <label class="ir-option-label">{{ call .T "img.resize.options.quality.label" }}</label>
+            <div class="ir-quality-display"><span id="qualityValue">90</span>%</div>
+          </div>
+          <div class="ir-quality-slider-wrap">
+            <span class="ir-slider-min">{{ call .T "img.resize.quality.min" }}</span>
+            <input type="range" id="qualitySlider" min="20" max="100" value="90" step="5" class="ir-quality-slider">
+            <span class="ir-slider-max">{{ call .T "img.resize.quality.max" }}</span>
+          </div>
+          <p class="ir-option-hint">{{ call .T "img.resize.options.quality.hint" }}</p>
+        </div>
+
+        <!-- 开始按钮 -->
+        <button class="ir-start-btn" id="startBtn" onclick="startResize()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          <span id="startBtnText">{{ call .T "img.resize.btn.start" }}</span>
+        </button>
+
+      </div><!-- /ir-options-panel -->
+    </div><!-- /ir-container -->
+  </section>
+
+  <!-- ══ Results Section ══════════════════════ -->
+  <section class="ir-results-section" id="resultsSection" style="display:none">
+    <div class="ir-container">
+      <div class="ir-results-layout">
+        <div class="ir-results-main">
+          <div class="ir-results-header" id="resultsHeader"></div>
+          <div class="ir-results-list" id="resultsList"></div>
+          <div class="ir-bulk-actions">
+            <button class="ir-btn-download-all" id="downloadAllBtn" onclick="downloadAll()">⬇ {{ call .T "img.resize.download.all" }}</button>
+            <span class="ir-bulk-hint">{{ call .T "img.resize.download.all_hint" }}</span>
+            <button class="ir-btn-clear" onclick="clearAll()">🗑 {{ call .T "img.resize.download.clear" }}</button>
+          </div>
+          <div class="ir-add-more">
+            <label class="ir-add-more-btn">
+              {{ call .T "img.resize.btn.add_more" }}
+              <input type="file" accept="image/jpeg,image/png,image/webp" multiple style="display:none" onchange="onFileSelect(this)">
+            </label>
+          </div>
+        </div>
+        <div class="ir-results-sidebar">
+          {{- template "partials/ad_slot.html" dict "SlotID" "img-resize-sidebar" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Features ══════════════════════════════ -->
+  <section class="ir-features-section">
+    <div class="ir-container">
+      <div class="ir-features-grid">
+        <div class="ir-feature-card">
+          <div class="ir-feature-icon" style="background:#eff6ff">🔒</div>
+          <h3>{{ call .T "img.resize.feature.privacy.title" }}</h3>
+          <p>{{ call .T "img.resize.feature.privacy.desc" }}</p>
+        </div>
+        <div class="ir-feature-card">
+          <div class="ir-feature-icon" style="background:#f0fdf4">⚡</div>
+          <h3>{{ call .T "img.resize.feature.batch.title" }}</h3>
+          <p>{{ call .T "img.resize.feature.batch.desc" }}</p>
+        </div>
+        <div class="ir-feature-card">
+          <div class="ir-feature-icon" style="background:#fef9e7">📐</div>
+          <h3>{{ call .T "img.resize.feature.preset.title" }}</h3>
+          <p>{{ call .T "img.resize.feature.preset.desc" }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FAQ ══════════════════════════════════ -->
+  <section class="ir-faq-section">
+    <div class="ir-container">
+      <h2 class="ir-section-title">{{ call .T "img.resize.faq.title" }}</h2>
+      <div class="ir-faq-list">
+        {{- range $i, $faq := .FAQs }}
+        <div class="ir-faq-item" id="faq-{{ $i }}">
+          <button class="ir-faq-question" onclick="toggleFAQ('faq-{{ $i }}')">
+            <span>{{ $faq.Q }}</span>
+            <svg class="ir-faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="ir-faq-answer"><p>{{ $faq.A }}</p></div>
+        </div>
+        {{- end }}
+      </div>
+    </div>
+  </section>
+
+  <!-- Bottom Ad -->
+  <div style="text-align:center;margin:24px 0">
+    {{- template "partials/ad_slot.html" dict "SlotID" "img-resize-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+  </div>
+
+</div><!-- /img-resize-page -->
+<div id="toastContainer"></div>
+
+<script src="/static/js/img-resize-engine.js"></script>
+<script src="/static/js/img-resize-ui.js"></script>
+{{ end }}
+
+
+

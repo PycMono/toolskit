@@ -1,0 +1,135 @@
+{{ template "base" . }}
+
+{{ define "content" }}
+
+  <!-- Top Ad -->
+  <div style="text-align:center;margin:8px 0 16px">
+    {{- template "partials/ad_slot.html" dict "SlotID" "proxy-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+  </div>
+<!-- Tab Bar -->
+<div class="tool-tabs">
+  <div class="container">
+    <a href="/temp-email?lang={{ .Lang }}" class="tool-tab">📧 {{ call .T "email.tab" }}</a>
+    <a href="/proxy?lang={{ .Lang }}" class="tool-tab active">🌐 {{ call .T "proxy.tab" }}</a>
+  </div>
+</div>
+
+<div class="container proxy-layout">
+  <!-- Main -->
+  <div class="proxy-main">
+    <!-- URL Input -->
+    <div class="proxy-url-card card">
+      <div class="proxy-url-row">
+        <span class="url-prefix">🔒 https://</span>
+        <input type="text" id="proxyUrl" class="proxy-url-input" placeholder="{{ call .T "proxy.url_placeholder" }}" onkeydown="if(event.key==='Enter')visitProxy()">
+        <button class="btn btn-danger btn-lg" onclick="visitProxy()">{{ call .T "proxy.visit" }}</button>
+      </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="quick-links card">
+      <p class="quick-links-label">{{ call .T "proxy.quick_links" }}</p>
+      <div class="quick-tags">
+        <button class="quick-tag" onclick="quickVisit('google.com')">🔵 Google</button>
+        <button class="quick-tag" onclick="quickVisit('youtube.com')">🔴 YouTube</button>
+        <button class="quick-tag" onclick="quickVisit('wikipedia.org')">📖 Wikipedia</button>
+        <button class="quick-tag" onclick="quickVisit('reddit.com')">🟠 Reddit</button>
+        <button class="quick-tag" onclick="quickVisit('github.com')">⚫ GitHub</button>
+        <button class="quick-tag" onclick="quickVisit('duckduckgo.com')">🟡 DuckDuckGo</button>
+      </div>
+    </div>
+
+    <!-- Options -->
+    <div class="proxy-options card">
+      <div class="options-row">
+        <label class="check-label"><input type="checkbox" id="optEncrypt" checked> {{ call .T "proxy.encrypt" }}</label>
+        <label class="check-label"><input type="checkbox" id="optDisableScripts"> {{ call .T "proxy.disable_scripts" }}</label>
+        <label class="check-label"><input type="checkbox" id="optBlockAds" checked> {{ call .T "proxy.block_ads" }}</label>
+        <div class="node-select-wrap">
+          <select id="proxyNode" class="form-select">
+            <option value="auto">{{ call .T "proxy.node_auto" }}</option>
+            <option value="us">{{ call .T "proxy.node_us" }}</option>
+            <option value="eu">{{ call .T "proxy.node_eu" }}</option>
+            <option value="as">{{ call .T "proxy.node_as" }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="proxy-features">
+      <div class="feature-card card">
+        <div class="feature-icon">🛡</div>
+        <h4>{{ call .T "proxy.feature1_title" }}</h4>
+        <p>{{ call .T "proxy.feature1_desc" }}</p>
+      </div>
+      <div class="feature-card card">
+        <div class="feature-icon">⚡</div>
+        <h4>{{ call .T "proxy.feature2_title" }}</h4>
+        <p>{{ call .T "proxy.feature2_desc" }}</p>
+      </div>
+      <div class="feature-card card">
+        <div class="feature-icon">🔒</div>
+        <h4>{{ call .T "proxy.feature3_title" }}</h4>
+        <p>{{ call .T "proxy.feature3_desc" }}</p>
+      </div>
+    </div>
+
+    <!-- How to use -->
+    <div class="card orange-card">
+      <h3>How to Use</h3>
+      <ol class="how-to-list">
+        <li>Enter the target URL in the address bar above (e.g. google.com)</li>
+        <li>Select your preferred proxy node and options</li>
+        <li>Click the "Visit" button to browse through the proxy</li>
+        <li>When finished, click "Close Proxy" to disconnect</li>
+      </ol>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="card yellow-card">
+      <p>⚠️ {{ call .T "proxy.disclaimer" }}</p>
+    </div>
+
+    <!-- Result iframe -->
+    <div id="proxyResult" style="display:none" class="card">
+      <div class="proxy-result-header">
+        <span id="proxyResultUrl"></span>
+        <button class="btn btn-danger btn-sm" onclick="closeProxy()">✕ Close Proxy</button>
+      </div>
+      <iframe id="proxyFrame" sandbox="allow-same-origin allow-scripts allow-forms" style="width:100%;height:600px;border:none;border-radius:0 0 8px 8px;"></iframe>
+    </div>
+
+    <!-- Ad slot -->
+    <div class="ad-slot" data-slot="proxy-banner" style="display:none;text-align:center;margin:16px 0;"></div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="proxy-sidebar">
+    <div class="info-card stats-card">
+      <h3>{{ call .T "proxy.stats_title" }}</h3>
+      <div class="stat-item">
+        <div class="stat-num" id="todayRequests">-</div>
+        <div class="stat-label">{{ call .T "proxy.today_requests" }}</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" id="availableNodes">-</div>
+        <div class="stat-label">{{ call .T "proxy.available_nodes" }}</div>
+      </div>
+    </div>
+    <div class="ad-slot" data-slot="proxy-sidebar" style="width:300px;min-height:250px;background:#f1f5f9;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:13px;margin-top:16px;">
+      Ad Placeholder 300×250
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Ad -->
+<div style="text-align:center;margin:24px 0">
+  {{- template "partials/ad_slot.html" dict "SlotID" "proxy-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+</div>
+{{ end }}
+
+{{ define "extraScript" }}
+<script src="/static/js/proxy.js"></script>
+{{ end }}
+

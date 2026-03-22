@@ -1,0 +1,400 @@
+{{ define "json_head" }}
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ .Title }}">
+<meta property="og:description" content="{{ .Description }}">
+<meta property="og:url" content="{{ .CanonicalURL }}">
+<meta property="og:site_name" content="ToolboxNova">
+<link rel="canonical" href="{{ .CanonicalURL }}">
+<link rel="alternate" hreflang="en" href="{{ .HreflangEN }}">
+<link rel="alternate" hreflang="zh" href="{{ .HreflangZH }}">
+<link rel="alternate" hreflang="x-default" href="{{ .HreflangEN }}">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "DataCatalog",
+  "name": "Free JSON Datasets — ToolboxNova",
+  "description": "85+ curated open-source JSON datasets for testing, learning, and building applications.",
+  "url": "https://toolboxnova.com/json/datasets",
+  "provider": {"@type": "Organization", "name": "ToolboxNova", "url": "https://toolboxnova.com"}
+}
+</script>
+<style>
+:root {
+  --ds-primary: #f59e0b;
+  --ds-primary-dark: #d97706;
+  --ds-bg: #0f0f0f;
+  --ds-bg-card: #1a1a1a;
+  --ds-bg-card-hover: #242424;
+  --ds-bg-drawer: #181818;
+  --ds-bg-input: #222;
+  --ds-border: #2e2e2e;
+  --ds-border-focus: #f59e0b;
+  --ds-text: #f5f5f5;
+  --ds-text-muted: #888;
+  --ds-success: #22c55e;
+  --ds-error: #ef4444;
+  --ds-radius-sm: 6px;
+  --ds-radius-md: 10px;
+  --ds-radius-lg: 16px;
+  --ds-shadow-card: 0 2px 8px rgba(0,0,0,.4);
+  --ds-shadow-drawer: -4px 0 32px rgba(0,0,0,.6);
+  --ds-transition: 0.18s ease;
+  --ds-transition-drawer: 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--ds-bg); color: var(--ds-text); font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+.ds-container { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+/* Navbar */
+.ds-navbar { background: #111; border-bottom: 1px solid var(--ds-border); padding: 12px 0; }
+.ds-navbar__inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.ds-navbar__left { display: flex; align-items: center; gap: 16px; }
+.ds-logo { font-weight: 700; font-size: 18px; color: var(--ds-primary); text-decoration: none; }
+.ds-back { color: var(--ds-text-muted); text-decoration: none; font-size: 14px; }
+.ds-back:hover { color: var(--ds-text); }
+.ds-lang-switch { display: flex; gap: 8px; font-size: 13px; }
+.ds-lang-switch a { color: var(--ds-text-muted); text-decoration: none; }
+.ds-lang-switch a.active, .ds-lang-switch a:hover { color: var(--ds-primary); }
+/* Hero */
+.ds-hero { padding: 48px 0 32px; text-align: center; }
+.ds-hero__title { font-size: clamp(28px,5vw,48px); font-weight: 800; background: linear-gradient(135deg,#f59e0b,#fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px; }
+.ds-hero__subtitle { color: var(--ds-text-muted); font-size: 16px; max-width: 600px; margin: 0 auto 20px; }
+.ds-hero__badges { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 28px; }
+.ds-badge-pill { padding: 6px 14px; border-radius: 9999px; font-size: 13px; font-weight: 600; }
+.ds-badge-pill--amber { background: rgba(245,158,11,.15); color: #f59e0b; border: 1px solid rgba(245,158,11,.3); }
+.ds-badge-pill--blue  { background: rgba(59,130,246,.15); color: #60a5fa; border: 1px solid rgba(59,130,246,.3); }
+.ds-badge-pill--green { background: rgba(34,197,94,.15);  color: #4ade80; border: 1px solid rgba(34,197,94,.3); }
+/* Search */
+.ds-search { position: relative; max-width: 480px; margin: 0 auto; }
+.ds-search__icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--ds-text-muted); pointer-events: none; }
+.ds-search__input { width: 100%; padding: 12px 40px 12px 44px; background: var(--ds-bg-input); border: 1px solid var(--ds-border); border-radius: var(--ds-radius-md); color: var(--ds-text); font-size: 15px; outline: none; transition: border-color var(--ds-transition); }
+.ds-search__input:focus { border-color: var(--ds-border-focus); box-shadow: 0 0 0 3px rgba(245,158,11,.15); }
+.ds-search__clear { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--ds-text-muted); cursor: pointer; font-size: 16px; padding: 4px; display: none; }
+/* Layout */
+.ds-layout { display: grid; grid-template-columns: 1fr 300px; gap: 24px; padding: 24px 0 48px; }
+@media (max-width: 1024px) { .ds-layout { grid-template-columns: 1fr; } .ds-sidebar { display: none; } }
+/* Controls */
+.ds-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 16px; }
+.ds-tabs { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 8px; padding-bottom: 4px; scrollbar-width: none; }
+.ds-tabs::-webkit-scrollbar { display: none; }
+.ds-tab { padding: 7px 14px; border-radius: 9999px; border: 1px solid var(--ds-border); background: transparent; color: var(--ds-text-muted); cursor: pointer; white-space: nowrap; font-size: 13px; transition: all var(--ds-transition); }
+.ds-tab:hover { border-color: var(--ds-primary); color: var(--ds-text); }
+.ds-tab--active { background: var(--ds-primary); border-color: var(--ds-primary); color: #000; font-weight: 600; }
+.ds-sort-select { padding: 8px 12px; background: var(--ds-bg-input); border: 1px solid var(--ds-border); border-radius: var(--ds-radius-sm); color: var(--ds-text); font-size: 13px; cursor: pointer; }
+.ds-result-bar { font-size: 13px; color: var(--ds-text-muted); margin-bottom: 16px; }
+/* Grid */
+.ds-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+@media (max-width: 1024px) { .ds-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 640px)  { .ds-grid { grid-template-columns: 1fr; } }
+/* Card */
+@keyframes ds-card-enter { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+.ds-card { display:flex; flex-direction:column; background:var(--ds-bg-card); border:1px solid var(--ds-border); border-radius:var(--ds-radius-md); padding:16px; cursor:pointer; animation:ds-card-enter 0.22s ease both; transition:transform var(--ds-transition),box-shadow var(--ds-transition),border-color var(--ds-transition); }
+.ds-card:hover { transform:translateY(-2px); box-shadow:var(--ds-shadow-card); border-color:var(--ds-primary); }
+.ds-card__header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.ds-card__name { font-size:15px; font-weight:600; margin-bottom:6px; line-height:1.4; }
+.ds-card__desc { font-size:13px; color:var(--ds-text-muted); margin-bottom:12px; flex:1; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.ds-card__fields { font-size:12px; color:var(--ds-text-muted); margin-bottom:12px; }
+.ds-card__fields-label { color:var(--ds-primary); margin-right:4px; }
+.ds-card__footer { margin-top:auto; display:flex; align-items:center; justify-content:space-between; }
+.ds-card__size { font-size:12px; color:var(--ds-text-muted); }
+.ds-card__records { font-size:12px; color:var(--ds-text-muted); background:rgba(255,255,255,.06); padding:2px 8px; border-radius:9999px; }
+.ds-card__actions { display:flex; gap:6px; }
+/* Badges */
+.ds-badge { display:inline-flex; align-items:center; padding:3px 10px; border-radius:9999px; font-size:11px; font-weight:600; color:#fff; }
+.ds-badge--geographic   { background:linear-gradient(135deg,#16a34a,#15803d); }
+.ds-badge--reference    { background:linear-gradient(135deg,#2563eb,#1d4ed8); }
+.ds-badge--configuration{ background:linear-gradient(135deg,#ea580c,#c2410c); }
+.ds-badge--testing      { background:linear-gradient(135deg,#dc2626,#b91c1c); }
+.ds-badge--api_mocks    { background:linear-gradient(135deg,#7c3aed,#6d28d9); }
+.ds-badge--finance      { background:linear-gradient(135deg,#ca8a04,#a16207); }
+.ds-badge--science      { background:linear-gradient(135deg,#0891b2,#0e7490); }
+.ds-badge--sports       { background:linear-gradient(135deg,#65a30d,#4d7c0f); }
+.ds-badge--devops       { background:linear-gradient(135deg,#475569,#334155); }
+.ds-badge--aiml         { background:linear-gradient(135deg,#db2777,#be185d); }
+.ds-badge--government   { background:linear-gradient(135deg,#1e40af,#1e3a8a); }
+.ds-badge--social       { background:linear-gradient(135deg,#0284c7,#0369a1); }
+.ds-badge--iot          { background:linear-gradient(135deg,#c2410c,#9a3412); }
+.ds-badge--healthcare   { background:linear-gradient(135deg,#059669,#047857); }
+/* Buttons */
+.ds-btn { padding:6px 12px; border-radius:var(--ds-radius-sm); border:1px solid var(--ds-border); background:transparent; color:var(--ds-text-muted); cursor:pointer; font-size:12px; transition:all var(--ds-transition); white-space:nowrap; }
+.ds-btn:hover { border-color:var(--ds-primary); color:var(--ds-text); }
+.ds-btn--primary { background:var(--ds-primary); border-color:var(--ds-primary); color:#000; font-weight:600; }
+.ds-btn--primary:hover { background:var(--ds-primary-dark); }
+.ds-btn--success { background:#22c55e; border-color:#22c55e; color:#fff; }
+/* Drawer */
+.ds-drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); backdrop-filter:blur(2px); z-index:999; opacity:0; pointer-events:none; transition:opacity var(--ds-transition-drawer); }
+.ds-drawer-overlay--visible { opacity:1; pointer-events:auto; }
+.ds-drawer { position:fixed; right:0; top:0; bottom:0; width:min(480px,100vw); background:var(--ds-bg-drawer); box-shadow:var(--ds-shadow-drawer); transform:translateX(100%); transition:transform var(--ds-transition-drawer); z-index:1000; overflow-y:auto; display:flex; flex-direction:column; }
+.ds-drawer--open { transform:translateX(0); }
+.ds-drawer__header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--ds-border); position:sticky; top:0; background:var(--ds-bg-drawer); }
+.ds-drawer__title { font-size:16px; font-weight:600; }
+.ds-drawer__close { background:none; border:none; color:var(--ds-text-muted); cursor:pointer; font-size:20px; padding:4px 8px; }
+.ds-drawer__body { padding:20px; flex:1; }
+.ds-drawer__meta { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:12px; }
+.ds-drawer__records,.ds-drawer__size { font-size:12px; color:var(--ds-text-muted); }
+.ds-drawer__desc { font-size:14px; color:var(--ds-text-muted); margin-bottom:16px; line-height:1.6; }
+.ds-drawer__section-title { font-size:13px; font-weight:600; color:var(--ds-primary); margin:16px 0 8px; text-transform:uppercase; letter-spacing:.05em; }
+.ds-drawer__fields { list-style:none; display:flex; flex-direction:column; gap:6px; }
+.ds-drawer__field-item { display:grid; grid-template-columns:1fr 80px 1fr; gap:8px; align-items:center; padding:8px; background:rgba(255,255,255,.04); border-radius:var(--ds-radius-sm); font-size:13px; }
+.ds-drawer__field-name { font-weight:500; }
+.ds-type--string  { color:#4ade80; } .ds-type--number  { color:#60a5fa; } .ds-type--boolean { color:#f59e0b; }
+.ds-type--array   { color:#c084fc; } .ds-type--object  { color:#f97316; } .ds-type--null    { color:#94a3b8; }
+.ds-drawer__field-example { color:var(--ds-text-muted); font-family:monospace; font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ds-drawer__tags { display:flex; flex-wrap:wrap; gap:6px; }
+.ds-tag { padding:4px 10px; background:rgba(255,255,255,.07); border-radius:9999px; font-size:12px; color:var(--ds-text-muted); }
+.ds-drawer__url-row { display:flex; gap:8px; align-items:center; }
+.ds-drawer__url { font-size:12px; font-family:monospace; background:rgba(255,255,255,.05); padding:8px; border-radius:var(--ds-radius-sm); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--ds-primary); display:block; }
+.ds-drawer__preview-wrap { background:#1e293b; border-radius:var(--ds-radius-sm); overflow:auto; max-height:300px; }
+.ds-drawer__preview-wrap pre { padding:12px; margin:0; }
+.ds-drawer__preview-wrap code { font-family:monospace; font-size:12px; color:#e2e8f0; white-space:pre; }
+.ds-drawer__related { list-style:none; display:flex; flex-direction:column; gap:6px; }
+.ds-drawer__related-item { display:flex; align-items:center; gap:8px; cursor:pointer; padding:8px; border-radius:var(--ds-radius-sm); font-size:13px; transition:background var(--ds-transition); }
+.ds-drawer__related-item:hover { background:rgba(255,255,255,.06); }
+.ds-drawer__footer { padding:16px 20px; border-top:1px solid var(--ds-border); display:flex; gap:10px; }
+.ds-drawer__footer .ds-btn { flex:1; padding:10px; font-size:13px; text-align:center; }
+/* No results */
+.ds-no-results { display:flex; flex-direction:column; align-items:center; gap:12px; padding:48px 20px; text-align:center; color:var(--ds-text-muted); }
+/* Sidebar */
+.ds-sidebar__tools h4 { font-size:13px; font-weight:600; margin-bottom:12px; color:var(--ds-text-muted); text-transform:uppercase; letter-spacing:.05em; }
+.ds-sidebar__tool-list { list-style:none; display:flex; flex-direction:column; gap:8px; }
+.ds-sidebar__tool-list a { color:var(--ds-text-muted); text-decoration:none; font-size:14px; padding:6px 0; display:block; border-bottom:1px solid var(--ds-border); transition:color var(--ds-transition); }
+.ds-sidebar__tool-list a:hover { color:var(--ds-primary); }
+/* FAQ */
+.ds-faq { margin:40px 0; }
+.ds-faq__title { font-size:22px; font-weight:700; margin-bottom:20px; }
+.ds-faq__item { border:1px solid var(--ds-border); border-radius:var(--ds-radius-md); margin-bottom:8px; overflow:hidden; }
+.ds-faq__q { width:100%; display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background:none; border:none; color:var(--ds-text); cursor:pointer; font-size:14px; font-weight:500; text-align:left; gap:12px; }
+.ds-faq__q:hover { background:rgba(255,255,255,.04); }
+.ds-faq__arrow { flex-shrink:0; transition:transform var(--ds-transition); }
+.ds-faq__a { padding:0 16px 14px; display:none; }
+.ds-faq__a p { font-size:14px; color:var(--ds-text-muted); line-height:1.7; }
+/* Contribute banner */
+.ds-contribute-banner { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; padding:16px 20px; background:rgba(245,158,11,.08); border:1px solid rgba(245,158,11,.25); border-radius:var(--ds-radius-md); margin:24px 0; }
+.ds-contribute-banner strong { font-size:14px; }
+.ds-contribute-banner span { font-size:13px; color:var(--ds-text-muted); margin-left:8px; }
+.ds-btn--outline { padding:8px 16px; border:1px solid var(--ds-primary); color:var(--ds-primary); border-radius:var(--ds-radius-sm); text-decoration:none; font-size:13px; font-weight:600; white-space:nowrap; transition:all var(--ds-transition); }
+.ds-btn--outline:hover { background:var(--ds-primary); color:#000; }
+/* Features */
+.ds-features { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:32px 0; }
+@media (max-width:640px) { .ds-features { grid-template-columns:1fr; } }
+.ds-feature-card { background:var(--ds-bg-card); border:1px solid var(--ds-border); border-radius:var(--ds-radius-md); padding:20px; }
+.ds-feature-card__icon { font-size:24px; margin-bottom:10px; }
+.ds-feature-card h3 { font-size:15px; font-weight:600; margin-bottom:6px; }
+.ds-feature-card p { font-size:13px; color:var(--ds-text-muted); line-height:1.6; }
+/* Toast */
+.ds-toast { position:fixed; bottom:24px; right:24px; background:var(--ds-bg-card); border:1px solid var(--ds-border); color:var(--ds-text); padding:10px 18px; border-radius:var(--ds-radius-md); font-size:14px; z-index:9999; opacity:0; transform:translateY(8px); transition:opacity .2s ease,transform .2s ease; pointer-events:none; }
+.ds-toast--visible { opacity:1; transform:translateY(0); pointer-events:auto; }
+.ds-toast--success { border-color:var(--ds-success); }
+.ds-toast--error { border-color:var(--ds-error); }
+.ds-skeleton { background:linear-gradient(90deg,var(--ds-bg-card) 25%,#222 50%,var(--ds-bg-card) 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:var(--ds-radius-md); height:200px; }
+@keyframes shimmer { from{background-position:200% 0} to{background-position:-200% 0} }
+</style>
+{{ end }}
+
+{{ define "json_content" }}
+<!-- Navbar -->
+<nav class="ds-navbar">
+  <div class="ds-container ds-navbar__inner">
+    <div class="ds-navbar__left">
+      <a class="ds-logo" href="/json">{ } JSON Tools</a>
+      <a class="ds-back" href="/">← Tool Box Nova</a>
+    </div>
+    <div class="ds-lang-switch">
+      <a href="?lang=zh" class="{{ if eq .Lang "zh" }}active{{ end }}">中文</a>
+      <span>/</span>
+      <a href="?lang=en" class="{{ if eq .Lang "en" }}active{{ end }}">EN</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="ds-hero">
+  <div class="ds-container">
+    <h1 class="ds-hero__title" id="ds-hero-title">
+      {{ if eq .Lang "zh" }}免费 JSON 数据集{{ else }}Free JSON Datasets{{ end }}
+    </h1>
+    <p class="ds-hero__subtitle">
+      {{ if eq .Lang "zh" }}85+ 个开源数据集，用于测试、开发和学习。无需注册，无需 API Key。{{ else }}85+ curated, open-source datasets for testing, building, and learning. No sign-up, no API key.{{ end }}
+    </p>
+    <div class="ds-hero__badges">
+      <span class="ds-badge-pill ds-badge-pill--amber">85 {{ if eq .Lang "zh" }}个数据集{{ else }}Datasets{{ end }}</span>
+      <span class="ds-badge-pill ds-badge-pill--blue">14 {{ if eq .Lang "zh" }}个分类{{ else }}Categories{{ end }}</span>
+      <span class="ds-badge-pill ds-badge-pill--green">{{ if eq .Lang "zh" }}开源免费{{ else }}Open Source{{ end }}</span>
+    </div>
+    <div class="ds-search">
+      <svg class="ds-search__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="ds-search-input" type="search" class="ds-search__input"
+        autocomplete="off"
+        placeholder="{{ if eq .Lang "zh" }}按名称、字段或关键词搜索数据集…{{ else }}Search datasets by name, field, or keyword…{{ end }}"
+        oninput="DS.onSearch(this.value)">
+      <button id="ds-search-clear" class="ds-search__clear" onclick="DS.clearSearch()">✕</button>
+    </div>
+  </div>
+</section>
+
+<!-- Top Ad -->
+<div class="ds-container" style="margin-bottom:16px;text-align:center">
+  {{- template "partials/ad_slot.html" dict "SlotID" "json-datasets-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+</div>
+
+<!-- Main Layout -->
+<div class="ds-layout ds-container">
+  <!-- Left: Main -->
+  <main class="ds-main">
+    <!-- Controls -->
+    <div class="ds-controls">
+      <div class="ds-tabs" id="ds-tab-list" role="tablist">
+        <button class="ds-tab ds-tab--active" role="tab" data-category="all" onclick="DS.filterByCategory('all')">{{ if eq .Lang "zh" }}全部{{ else }}All{{ end }}</button>
+        <button class="ds-tab" role="tab" data-category="geographic" onclick="DS.filterByCategory('geographic')">{{ if eq .Lang "zh" }}地理{{ else }}Geographic{{ end }}</button>
+        <button class="ds-tab" role="tab" data-category="reference" onclick="DS.filterByCategory('reference')">{{ if eq .Lang "zh" }}参考{{ else }}Reference{{ end }}</button>
+        <button class="ds-tab" role="tab" data-category="configuration" onclick="DS.filterByCategory('configuration')">{{ if eq .Lang "zh" }}配置{{ else }}Config{{ end }}</button>
+        <button class="ds-tab" role="tab" data-category="testing" onclick="DS.filterByCategory('testing')">{{ if eq .Lang "zh" }}测试{{ else }}Testing{{ end }}</button>
+        <button class="ds-tab" role="tab" data-category="api_mocks" onclick="DS.filterByCategory('api_mocks')">API Mocks</button>
+        <button class="ds-tab" role="tab" data-category="finance" onclick="DS.filterByCategory('finance')">{{ if eq .Lang "zh" }}金融{{ else }}Finance{{ end }}</button>
+        <button class="ds-tab" role="tab" data-category="science" onclick="DS.filterByCategory('science')">{{ if eq .Lang "zh" }}科学{{ else }}Science{{ end }}</button>
+        <button class="ds-tab" role="tab" data-category="sports" onclick="DS.filterByCategory('sports')">{{ if eq .Lang "zh" }}体育{{ else }}Sports{{ end }}</button>
+        <button class="ds-tab" role="tab" data-category="devops" onclick="DS.filterByCategory('devops')">DevOps</button>
+        <button class="ds-tab" role="tab" data-category="aiml" onclick="DS.filterByCategory('aiml')">AI / ML</button>
+        <button class="ds-tab" role="tab" data-category="iot" onclick="DS.filterByCategory('iot')">IoT</button>
+        <button class="ds-tab" role="tab" data-category="healthcare" onclick="DS.filterByCategory('healthcare')">{{ if eq .Lang "zh" }}医疗{{ else }}Healthcare{{ end }}</button>
+      </div>
+      <select id="ds-sort-select" class="ds-sort-select" onchange="DS.onSort(this.value)">
+        <option value="popular">{{ if eq .Lang "zh" }}最受欢迎{{ else }}Most Popular{{ end }}</option>
+        <option value="records_desc">{{ if eq .Lang "zh" }}记录数：从多到少{{ else }}Records: High to Low{{ end }}</option>
+        <option value="records_asc">{{ if eq .Lang "zh" }}记录数：从少到多{{ else }}Records: Low to High{{ end }}</option>
+        <option value="size_desc">{{ if eq .Lang "zh" }}文件大小：从大到小{{ else }}Size: Large First{{ end }}</option>
+        <option value="size_asc">{{ if eq .Lang "zh" }}文件大小：从小到大{{ else }}Size: Small First{{ end }}</option>
+      </select>
+    </div>
+    <!-- Result bar -->
+    <div class="ds-result-bar">
+      <span id="ds-result-count">{{ if eq .Lang "zh" }}显示 <strong>85</strong> 个数据集{{ else }}Showing <strong>85</strong> datasets{{ end }}</span>
+    </div>
+    <!-- Grid -->
+    <div id="ds-grid" class="ds-grid" role="list">
+      <div class="ds-skeleton"></div>
+      <div class="ds-skeleton"></div>
+      <div class="ds-skeleton"></div>
+    </div>
+    <!-- No results -->
+    <div id="ds-no-results" class="ds-no-results" style="display:none">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <p>{{ if eq .Lang "zh" }}未找到匹配的数据集，请尝试其他关键词。{{ else }}No datasets found. Try a different keyword.{{ end }}</p>
+    </div>
+
+    <!-- Contribute banner -->
+    <aside class="ds-contribute-banner">
+      <div>
+        <strong>{{ if eq .Lang "zh" }}有数据集想分享？{{ else }}Have a dataset to share?{{ end }}</strong>
+        <span>{{ if eq .Lang "zh" }}在 GitHub 提交贡献。{{ else }}Submit a contribution on GitHub.{{ end }}</span>
+      </div>
+      <a href="https://github.com/toolboxnova/datasets/issues/new" target="_blank" rel="noopener" class="ds-btn--outline">
+        {{ if eq .Lang "zh" }}在 GitHub 提交{{ else }}Submit on GitHub{{ end }}
+      </a>
+    </aside>
+
+    <!-- Features -->
+    <section class="ds-features">
+      <div class="ds-feature-card">
+        <div class="ds-feature-card__icon">🔓</div>
+        <h3>{{ if eq .Lang "zh" }}完全开源{{ else }}Fully Open Source{{ end }}</h3>
+        <p>{{ if eq .Lang "zh" }}所有数据集采用 MIT / CC-BY 授权，可免费用于任何项目。{{ else }}All datasets are MIT / CC-BY licensed. Use freely in any project.{{ end }}</p>
+      </div>
+      <div class="ds-feature-card">
+        <div class="ds-feature-card__icon">⚡</div>
+        <h3>{{ if eq .Lang "zh" }}即时访问{{ else }}Instant Access{{ end }}</h3>
+        <p>{{ if eq .Lang "zh" }}无需注册，无需 API Key。一键复制、验证或下载。{{ else }}No registration, no API key. Copy, validate, or download in one click.{{ end }}</p>
+      </div>
+      <div class="ds-feature-card">
+        <div class="ds-feature-card__icon">🌐</div>
+        <h3>{{ if eq .Lang "zh" }}14 个分类{{ else }}14 Categories{{ end }}</h3>
+        <p>{{ if eq .Lang "zh" }}从地理到金融，从 AI/ML 到物联网——覆盖每个项目场景。{{ else }}From geographic and finance to AI/ML and IoT — datasets for every project.{{ end }}</p>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="ds-faq">
+      <h2 class="ds-faq__title">{{ if eq .Lang "zh" }}常见问题{{ else }}Frequently Asked Questions{{ end }}</h2>
+      <div class="ds-faq__list">
+        {{ range .FAQData }}
+        <div class="ds-faq__item">
+          <button class="ds-faq__q" onclick="DS.toggleFAQ(this)">
+            {{ .Question }}
+            <svg class="ds-faq__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="ds-faq__a"><p>{{ .Answer }}</p></div>
+        </div>
+        {{ end }}
+      </div>
+    </section>
+
+    <!-- Bottom Ad -->
+    {{- template "partials/ad_slot.html" dict "SlotID" "json-datasets-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+  </main>
+
+  <!-- Right: Sidebar -->
+  <aside class="ds-sidebar">
+    {{- template "partials/ad_slot.html" dict "SlotID" "json-datasets-sidebar" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+    <div class="ds-sidebar__tools" style="margin-top:16px">
+      <h4>{{ if eq .Lang "zh" }}其他 JSON 工具{{ else }}JSON Tools{{ end }}</h4>
+      <ul class="ds-sidebar__tool-list">
+        <li><a href="/json/validate">{{ if eq .Lang "zh" }}JSON 验证器{{ else }}JSON Validator{{ end }}</a></li>
+        <li><a href="/json/pretty">{{ if eq .Lang "zh" }}JSON 美化{{ else }}JSON Formatter{{ end }}</a></li>
+        <li><a href="/json/schema-validate">{{ if eq .Lang "zh" }}Schema 验证{{ else }}Schema Validator{{ end }}</a></li>
+        <li><a href="/json/diff">{{ if eq .Lang "zh" }}JSON 对比{{ else }}JSON Diff{{ end }}</a></li>
+        <li><a href="/json/learn">{{ if eq .Lang "zh" }}学习 JSON{{ else }}Learn JSON{{ end }}</a></li>
+      </ul>
+    </div>
+  </aside>
+</div>
+
+<!-- Drawer overlay -->
+<div id="ds-drawer-overlay" class="ds-drawer-overlay" onclick="DS.closeDrawer()"></div>
+<!-- Drawer -->
+<aside id="ds-drawer" class="ds-drawer" role="dialog" aria-modal="true" style="display:none">
+  <div class="ds-drawer__header">
+    <h2 id="ds-drawer-title" class="ds-drawer__title">Dataset Details</h2>
+    <button class="ds-drawer__close" onclick="DS.closeDrawer()">✕</button>
+  </div>
+  <div class="ds-drawer__body">
+    <div class="ds-drawer__meta">
+      <span id="ds-drawer-badge" class="ds-badge"></span>
+      <span id="ds-drawer-records" class="ds-drawer__records"></span>
+      <span id="ds-drawer-size" class="ds-drawer__size"></span>
+    </div>
+    <p id="ds-drawer-desc" class="ds-drawer__desc"></p>
+
+    <h3 class="ds-drawer__section-title">{{ if eq .Lang "zh" }}字段列表{{ else }}Fields{{ end }}</h3>
+    <ul id="ds-drawer-fields" class="ds-drawer__fields"></ul>
+
+    <h3 class="ds-drawer__section-title">{{ if eq .Lang "zh" }}适用场景{{ else }}Use Cases{{ end }}</h3>
+    <div id="ds-drawer-usecases" class="ds-drawer__tags"></div>
+
+    <h3 class="ds-drawer__section-title">Raw JSON URL</h3>
+    <div class="ds-drawer__url-row">
+      <code id="ds-drawer-url" class="ds-drawer__url"></code>
+      <button class="ds-btn" onclick="DS.copyDrawerURL()">{{ if eq .Lang "zh" }}复制地址{{ else }}Copy URL{{ end }}</button>
+    </div>
+
+    <h3 class="ds-drawer__section-title">{{ if eq .Lang "zh" }}JSON 预览{{ else }}JSON Preview{{ end }}</h3>
+    <div class="ds-drawer__preview-wrap">
+      <pre><code id="ds-drawer-preview"></code></pre>
+    </div>
+
+    <h3 class="ds-drawer__section-title">{{ if eq .Lang "zh" }}相关数据集{{ else }}Related Datasets{{ end }}</h3>
+    <ul id="ds-drawer-related" class="ds-drawer__related"></ul>
+  </div>
+  <div class="ds-drawer__footer">
+    <button class="ds-btn ds-btn--primary" onclick="DS.downloadFromDrawer()">{{ if eq .Lang "zh" }}下载 JSON{{ else }}Download JSON{{ end }}</button>
+    <button class="ds-btn" onclick="DS.validateFromDrawer()">{{ if eq .Lang "zh" }}在验证器中打开{{ else }}Validate in Tool{{ end }}</button>
+  </div>
+</aside>
+
+<!-- Toast -->
+<div id="ds-toast" class="ds-toast" role="alert" aria-live="assertive"></div>
+{{ end }}
+
+{{ define "json_scripts" }}
+<script src="/static/js/datasets-meta.js"></script>
+<script src="/static/js/json-datasets.js"></script>
+{{ end }}
+

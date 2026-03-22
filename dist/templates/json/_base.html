@@ -1,0 +1,29 @@
+{{ define "json_base" }}<!DOCTYPE html>
+<html lang="{{ .Lang }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {{- template "partials/ga.html" . }}
+  {{ if .AdsEnabled }}
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ .AdsClientID }}"
+    crossorigin="anonymous"></script>
+  {{ end }}
+  <title>{{ .Title }}</title>
+  <meta name="description" content="{{ .Description }}">
+  {{ if .Keywords }}<meta name="keywords" content="{{ .Keywords }}">{{ end }}
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/css/json-tools.css">
+  {{ block "json_head" . }}{{ end }}
+</head>
+<body class="jt-page {{ .PageClass }}">
+
+{{ block "json_content" . }}{{ end }}
+
+<div id="toastContainer"></div>
+
+<script src="/static/js/ga-events.js"></script>
+<script src="/static/js/main.js"></script>
+{{ block "json_scripts" . }}{{ end }}
+</body>
+</html>
+{{ end }}

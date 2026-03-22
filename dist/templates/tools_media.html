@@ -1,0 +1,174 @@
+{{ template "base" . }}
+
+{{ define "content" }}
+<div class="media-tools-page">
+  <!-- Hero Section -->
+  <div class="media-hero">
+    <div class="container">
+      <h1 class="hero-title">📷 多媒体工具箱</h1>
+      <p class="hero-subtitle">图片压缩、颜色转换、单位换算、二维码生成 — 完全免费，无需注册</p>
+    </div>
+  </div>
+
+  <!-- Tools Grid -->
+  <div class="container media-tools-container">
+    <div class="tools-grid-media">
+
+      <!-- Image Compress -->
+      <a href="/tools/media/image-compress" class="media-card card-blue">
+        <div class="media-card-icon">📷</div>
+        <h3 class="media-card-title">图片压缩</h3>
+        <p class="media-card-desc">JPG/PNG 无损压缩</p>
+        <div class="media-card-footer">
+          <span class="badge-free">免费</span>
+          <span class="badge-client">纯前端</span>
+        </div>
+      </a>
+
+      <!-- Image Convert -->
+      <a href="/tools/media/image-convert" class="media-card card-blue">
+        <div class="media-card-icon">🖼</div>
+        <h3 class="media-card-title">图片格式转换</h3>
+        <p class="media-card-desc">JPG/PNG/WEBP 互转</p>
+        <div class="media-card-footer">
+          <span class="badge-free">免费</span>
+        </div>
+      </a>
+
+      <!-- Image Resize -->
+      <a href="/tools/media/image-resize" class="media-card card-teal">
+        <div class="media-card-icon">✂️</div>
+        <h3 class="media-card-title">图片裁剪缩放</h3>
+        <p class="media-card-desc">自由裁剪 / 指定尺寸</p>
+        <div class="media-card-footer">
+          <span class="badge-free">免费</span>
+        </div>
+      </a>
+
+      <!-- Video Convert -->
+      <a href="/tools/media/video-convert" class="media-card card-red">
+        <div class="media-card-icon">🎬</div>
+        <h3 class="media-card-title">视频格式转换</h3>
+        <p class="media-card-desc">MP4/AVI/MOV 转换</p>
+        <div class="media-card-footer">
+          <span class="badge-pro">需后端</span>
+        </div>
+      </a>
+
+      <!-- Color Converter -->
+      <a href="/tools/media/color-converter" class="media-card card-rainbow">
+        <div class="media-card-icon">🎨</div>
+        <h3 class="media-card-title">颜色转换</h3>
+        <p class="media-card-desc">HEX/RGB/HSL/CMYK</p>
+        <div class="media-card-footer">
+          <span class="badge-free">免费</span>
+          <span class="badge-hot">🔥 热门</span>
+        </div>
+      </a>
+
+      <!-- Color Picker -->
+      <a href="/tools/media/color-picker" class="media-card card-rainbow">
+        <div class="media-card-icon">🖌</div>
+        <h3 class="media-card-title">在线取色器</h3>
+        <p class="media-card-desc">从图片取色</p>
+        <div class="media-card-footer">
+          <span class="badge-free">免费</span>
+        </div>
+      </a>
+
+      <!-- Color Palette -->
+      <a href="/tools/media/color-palette" class="media-card card-rainbow">
+        <div class="media-card-icon">🌈</div>
+        <h3 class="media-card-title">配色方案生成</h3>
+        <p class="media-card-desc">自动生成配色</p>
+        <div class="media-card-footer">
+          <span class="badge-free">免费</span>
+        </div>
+      </a>
+
+      <!-- Unit Converter -->
+      <a href="/tools/media/unit-converter" class="media-card card-orange">
+        <div class="media-card-icon">📏</div>
+        <h3 class="media-card-title">单位换算</h3>
+        <p class="media-card-desc">长度/重量/温度等</p>
+        <div class="media-card-footer">
+          <span class="badge-free">免费</span>
+          <span class="badge-hot">🔥 热门</span>
+        </div>
+      </a>
+
+      <!-- QR Generator -->
+      <a href="/tools/media/qr-generator" class="media-card card-purple">
+        <div class="media-card-icon">◼</div>
+        <h3 class="media-card-title">二维码生成器</h3>
+        <p class="media-card-desc">自定义 QR Code</p>
+        <div class="media-card-footer">
+          <span class="badge-free">免费</span>
+          <span class="badge-hot">🔥 热门</span>
+        </div>
+      </a>
+
+      <!-- QR Reader -->
+      <a href="/tools/media/qr-reader" class="media-card card-purple">
+        <div class="media-card-icon">🔍</div>
+        <h3 class="media-card-title">二维码识别</h3>
+        <p class="media-card-desc">上传识别</p>
+        <div class="media-card-footer">
+          <span class="badge-free">免费</span>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- Features Section -->
+    <div class="media-features">
+      <div class="feature-box">
+        <div class="feature-icon">🔒</div>
+        <h4>数据不上传</h4>
+        <p>纯前端处理工具，所有数据在浏览器本地完成，不上传服务器</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon">⚡</div>
+        <h4>极速处理</h4>
+        <p>无需等待，浏览器端实时处理，秒级完成</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon">🆓</div>
+        <h4>完全免费</h4>
+        <p>所有功能永久免费，无需注册，无水印</p>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="faq-section">
+      <h2>📖 常见问题</h2>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>图片压缩会损失质量吗？</summary>
+          <p>我们使用智能算法进行有损压缩，在肉眼几乎无法分辨的情况下大幅缩小文件体积。您可以自由调整压缩质量（1-100）来平衡文件大小和画质。</p>
+        </details>
+        <details class="faq-item">
+          <summary>支持批量处理吗？</summary>
+          <p>是的！图片压缩、格式转换等工具支持一次上传最多 20 张图片批量处理，处理完成后可以打包下载。</p>
+        </details>
+        <details class="faq-item">
+          <summary>上传的文件会被保存吗？</summary>
+          <p>纯前端工具（如图片压缩、颜色转换、二维码生成）完全在您的浏览器中处理，文件不会上传到服务器。需要后端的工具（如视频转换）处理完成后 1 小时自动删除。</p>
+        </details>
+        <details class="faq-item">
+          <summary>二维码生成器支持哪些类型？</summary>
+          <p>支持 URL、纯文本、电话、短信、邮件、WiFi、vCard 联系人、地理位置等多种类型。可自定义颜色、尺寸、纠错级别，支持添加中心 Logo。</p>
+        </details>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Bottom Ad -->
+<div style="text-align:center;margin:24px 0">
+  {{- template "partials/ad_slot.html" dict "SlotID" "tools-media-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+</div>
+
+{{ end }}
+

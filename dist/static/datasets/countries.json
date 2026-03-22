@@ -1,0 +1,27 @@
+[
+  {"name":"Afghanistan","code":"AF","capital":"Kabul","region":"Asia","population":40754388,"currency":"AFN","callingCode":"+93"},
+  {"name":"Albania","code":"AL","capital":"Tirana","region":"Europe","population":2837743,"currency":"ALL","callingCode":"+355"},
+  {"name":"Algeria","code":"DZ","capital":"Algiers","region":"Africa","population":44903225,"currency":"DZD","callingCode":"+213"},
+  {"name":"Argentina","code":"AR","capital":"Buenos Aires","region":"Americas","population":45376763,"currency":"ARS","callingCode":"+54"},
+  {"name":"Australia","code":"AU","capital":"Canberra","region":"Oceania","population":25687041,"currency":"AUD","callingCode":"+61"},
+  {"name":"Brazil","code":"BR","capital":"Brasília","region":"Americas","population":215313498,"currency":"BRL","callingCode":"+55"},
+  {"name":"Canada","code":"CA","capital":"Ottawa","region":"Americas","population":38246108,"currency":"CAD","callingCode":"+1"},
+  {"name":"China","code":"CN","capital":"Beijing","region":"Asia","population":1412600000,"currency":"CNY","callingCode":"+86"},
+  {"name":"Egypt","code":"EG","capital":"Cairo","region":"Africa","population":102334404,"currency":"EGP","callingCode":"+20"},
+  {"name":"France","code":"FR","capital":"Paris","region":"Europe","population":68042591,"currency":"EUR","callingCode":"+33"},
+  {"name":"Germany","code":"DE","capital":"Berlin","region":"Europe","population":83783942,"currency":"EUR","callingCode":"+49"},
+  {"name":"India","code":"IN","capital":"New Delhi","region":"Asia","population":1380004385,"currency":"INR","callingCode":"+91"},
+  {"name":"Indonesia","code":"ID","capital":"Jakarta","region":"Asia","population":273523615,"currency":"IDR","callingCode":"+62"},
+  {"name":"Italy","code":"IT","capital":"Rome","region":"Europe","population":60461826,"currency":"EUR","callingCode":"+39"},
+  {"name":"Japan","code":"JP","capital":"Tokyo","region":"Asia","population":126476461,"currency":"JPY","callingCode":"+81"},
+  {"name":"Mexico","code":"MX","capital":"Mexico City","region":"Americas","population":128932753,"currency":"MXN","callingCode":"+52"},
+  {"name":"Nigeria","code":"NG","capital":"Abuja","region":"Africa","population":206139589,"currency":"NGN","callingCode":"+234"},
+  {"name":"Russia","code":"RU","capital":"Moscow","region":"Europe","population":145934462,"currency":"RUB","callingCode":"+7"},
+  {"name":"Saudi Arabia","code":"SA","capital":"Riyadh","region":"Asia","population":34813871,"currency":"SAR","callingCode":"+966"},
+  {"name":"South Korea","code":"KR","capital":"Seoul","region":"Asia","population":51269185,"currency":"KRW","callingCode":"+82"},
+  {"name":"Spain","code":"ES","capital":"Madrid","region":"Europe","population":46754778,"currency":"EUR","callingCode":"+34"},
+  {"name":"Turkey","code":"TR","capital":"Ankara","region":"Asia","population":84339067,"currency":"TRY","callingCode":"+90"},
+  {"name":"United Kingdom","code":"GB","capital":"London","region":"Europe","population":67886011,"currency":"GBP","callingCode":"+44"},
+  {"name":"United States","code":"US","capital":"Washington D.C.","region":"Americas","population":331002651,"currency":"USD","callingCode":"+1"}
+]
+

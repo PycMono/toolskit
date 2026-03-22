@@ -1,6 +1,7 @@
 'use strict';
 // to-swift
 function processJson() {
+  clearErrorPanel();
   const parsed = parseInput(); if (parsed === null) return;
   const rootName = getClassName(); const structs = [];
   function swType(v) {
@@ -26,5 +27,6 @@ function processJson() {
   }
   gen(Array.isArray(parsed) ? parsed[0] : parsed, rootName);
   setOutput(structs.reverse().join('\n\n'), 'swift');
+  const el = document.getElementById('outputStats');
+  if (el) el.innerHTML = '<span class="jt-success-badge">✅ Swift struct 生成完成</span>';
 }
-

@@ -10,12 +10,17 @@ function initToolOptions() {
     </select>`;
 }
 function processJson() {
+  clearErrorPanel();
   const parsed = parseInput(); if (parsed === null) return;
-  if (!Array.isArray(parsed)) { showToast('输入必须为 JSON 数组','error'); return; }
+  if (!Array.isArray(parsed)) {
+    showErrorPanel(new TypeError('输入必须为 JSON 数组（[...]）'), getInput().trim());
+    return;
+  }
   if (typeof Papa === 'undefined') { showToast('PapaParse 库未加载，请刷新页面重试', 'error'); return; }
   const delimEl = document.getElementById('csvDelimiter');
   const delimiter = delimEl ? delimEl.value : ',';
   const csv = Papa.unparse(parsed, { quotes: true, delimiter: delimiter, header: true });
   setOutput(csv, 'plaintext');
-  showToast('转换成功', 'success');
+  const el = document.getElementById('outputStats');
+  if (el) el.innerHTML = `<span class="jt-success-badge">✅ 转换成功，共 ${parsed.length} 行</span>`;
 }

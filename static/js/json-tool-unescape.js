@@ -2,6 +2,7 @@
 // unescape
 function initToolOptions() {}
 function processJson() {
+  clearErrorPanel();
   const raw = getInput().trim(); if (!raw) return;
   try {
     // Handle escaped JSON string (with or without outer quotes)
@@ -14,9 +15,10 @@ function processJson() {
       .replace(/\\"/g, '"').replace(/\\\\/g, '\\');
     const parsed = JSON.parse(unescaped);
     setOutput(JSON.stringify(parsed, null, 2));
-    showToast('反转义成功', 'success');
+    const el = document.getElementById('outputStats');
+    if (el) el.innerHTML = '<span class="jt-success-badge">✅ 反转义完成</span>';
   } catch(e) {
-    showToast('反转义失败：' + e.message, 'error');
+    showErrorPanel(e, raw);
   }
 }
 function beautifyOutput() {
@@ -33,4 +35,5 @@ function loadExample() {
   if (inputEditor) {
     inputEditor.setValue('"{\\\"name\\\":\\\"Alice\\\",\\\"age\\\":30,\\\"city\\\":\\\"Beijing\\\"}"');
   }
+  clearErrorPanel();
 }

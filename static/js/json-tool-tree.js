@@ -2,10 +2,13 @@
 // tree viewer
 function initToolOptions() {}
 function processJson() {
+  clearErrorPanel();
   const parsed = parseInput(); if (parsed === null) return;
   const container = document.getElementById('treeOutput');
   container.innerHTML = '';
   container.appendChild(renderNode(parsed, 'root', '$'));
+  const el = document.getElementById('outputStats');
+  if (el) el.innerHTML = '<span class="jt-success-badge">✅ 树形渲染完成</span>';
 }
 function renderNode(value, key, path) {
   const wrap = document.createElement('div');

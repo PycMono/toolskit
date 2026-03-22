@@ -1,0 +1,152 @@
+{{ template "base" . }}
+
+{{ define "extraHead" }}
+<link rel="stylesheet" href="/static/css/dev-tools.css">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="alternate" hreflang="zh" href="{{ .HreflangZH }}">
+<link rel="alternate" hreflang="en" href="{{ .HreflangEN }}">
+<link rel="alternate" hreflang="x-default" href="{{ .Canonical }}">
+{{ if .FAQs }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {{ range $i, $faq := .FAQs }}{{ if $i }},{{ end }}
+    {"@type":"Question","name":{{ $faq.Q | toJSON }},"acceptedAnswer":{"@type":"Answer","text":{{ $faq.A | toJSON }}}}
+    {{ end }}
+  ]
+}
+</script>
+{{ end }}
+{{ end }}
+
+{{ define "content" }}
+<div class="dev-page">
+
+{{- template "partials/ad_slot.html" (dict "SlotID" "dev-whois-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
+
+<section class="hero hero--dev" aria-labelledby="hero-title">
+  <div class="hero__inner container">
+    <h1 class="hero__title" id="hero-title">{{ call .T "hero.whois.title" }}</h1>
+    <p class="hero__subtitle">{{ call .T "hero.whois.subtitle" }}</p>
+    <div class="hero__badges" role="list">
+      <span class="badge badge--blue"   role="listitem">{{ call .T "hero.whois.badge1" }}</span>
+      <span class="badge badge--green"  role="listitem">{{ call .T "hero.whois.badge2" }}</span>
+      <span class="badge badge--purple" role="listitem">{{ call .T "hero.whois.badge3" }}</span>
+    </div>
+  </div>
+</section>
+
+<main class="tool-wrapper container" id="tool-main">
+
+  <!-- Lookup form -->
+  <div class="ip-lookup-row" style="margin-bottom:var(--space-md)">
+    <input type="text" id="whoisInput" class="text-input" style="flex:1"
+           placeholder="{{ call .T "input.whois.placeholder" }}"
+           onkeydown="if(event.key==='Enter')DevWhois.lookup()">
+    <button id="whoisBtn" class="btn btn--primary" onclick="DevWhois.lookup()" type="button">{{ call .T "input.whois.btn_lookup" }}</button>
+  </div>
+
+  <!-- History -->
+  <div id="whoisHistoryWrap" style="margin-bottom:var(--space-lg)">
+    <span class="char-count">Recent: </span>
+    <div class="whois-history" id="whoisHistory"></div>
+  </div>
+
+  <div class="split-panel" role="application">
+    <!-- Left: structured + raw tabs -->
+    <div id="whoisResults" style="display:none">
+      <div class="whois-tabs" role="tablist">
+        <button class="whois-tab" id="tab-structured" role="tab" aria-selected="true"
+                onclick="DevWhois.switchTab('structured')">{{ call .T "result.whois.tab_structured" }}</button>
+        <button class="whois-tab" id="tab-raw" role="tab" aria-selected="false"
+                onclick="DevWhois.switchTab('raw')">{{ call .T "result.whois.tab_raw" }}</button>
+        <span id="whois-domain-label" style="margin-left:auto;font-size:13px;color:var(--color-text-secondary);align-self:center"></span>
+      </div>
+
+      <!-- Structured view -->
+      <div id="panel-structured">
+        <div class="whois-field"><span class="whois-field__label">{{ call .T "result.whois.registrar" }}</span><span class="whois-field__value" id="whois-registrar">—</span></div>
+        <div class="whois-field"><span class="whois-field__label">{{ call .T "result.whois.created" }}</span><span class="whois-field__value" id="whois-created">—</span></div>
+        <div class="whois-field">
+          <span class="whois-field__label">{{ call .T "result.whois.expires" }}</span>
+          <span class="whois-field__value" id="whois-expires" style="display:flex;align-items:center;gap:var(--space-sm)">—<span id="whois-expiry-badge"></span></span>
+        </div>
+        <div class="whois-field"><span class="whois-field__label">{{ call .T "result.whois.updated" }}</span><span class="whois-field__value" id="whois-updated">—</span></div>
+        <div class="whois-field"><span class="whois-field__label">{{ call .T "result.whois.status" }}</span><span class="whois-field__value" id="whois-status">—</span></div>
+        <div class="whois-field"><span class="whois-field__label">{{ call .T "result.whois.nameservers" }}</span><span class="whois-field__value" id="whois-nameservers" style="white-space:pre-line">—</span></div>
+      </div>
+
+      <!-- Raw view -->
+      <div id="panel-raw" class="whois-raw" hidden>
+        <pre id="whoisRaw">No raw data available.</pre>
+      </div>
+    </div>
+
+    <!-- Right: placeholder when empty -->
+    <div id="whoisPlaceholder" style="display:flex;align-items:center;justify-content:center;min-height:200px;background:var(--color-surface-alt);border-radius:var(--radius-lg);color:var(--color-text-muted);font-size:14px">
+      Enter a domain name and click Lookup
+    </div>
+
+    {{- template "partials/ad_slot.html" (dict "SlotID" "dev-whois-sidebar" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
+  </div>
+</main>
+
+<section class="features container">
+  <div class="features__grid">
+    <div class="feature-card">
+      <div class="feature-card__icon">🔍</div>
+      <h3>{{ call .T "hero.whois.badge1" }}</h3>
+      <p>{{ call .T "feature.privacy.desc" }}</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card__icon">📋</div>
+      <h3>{{ call .T "hero.whois.badge3" }}</h3>
+      <p>{{ call .T "feature.speed.desc" }}</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card__icon">🆓</div>
+      <h3>{{ call .T "feature.free.title" }}</h3>
+      <p>{{ call .T "feature.free.desc" }}</p>
+    </div>
+  </div>
+</section>
+
+{{ if .FAQs }}
+<section class="faq container">
+  <h2 class="section-title">FAQ</h2>
+  <div class="faq-list">
+    {{ range $i, $faq := .FAQs }}
+    <div class="faq-item" id="faq-{{ $i }}">
+      <button class="faq-question" type="button" aria-expanded="false"
+              aria-controls="faq-answer-{{ $i }}" onclick="toggleDevFAQ({{ $i }})">
+        {{ $faq.Q }}
+        <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16">
+          <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        </svg>
+      </button>
+      <div class="faq-answer" id="faq-answer-{{ $i }}" hidden><p>{{ $faq.A }}</p></div>
+    </div>
+    {{ end }}
+  </div>
+</section>
+{{ end }}
+
+{{- template "partials/ad_slot.html" (dict "SlotID" "dev-whois-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
+<div id="toastContainer" class="toast-container" aria-live="assertive" aria-atomic="true"></div>
+</div>
+{{ end }}
+
+{{ define "extraScript" }}
+<script src="/static/js/dev-whois.js"></script>
+<script>
+function toggleDevFAQ(i) {
+  var btn = document.querySelector('#faq-' + i + ' .faq-question');
+  var ans = document.getElementById('faq-answer-' + i);
+  var open = ans.hidden; ans.hidden = !open;
+  btn.setAttribute('aria-expanded', String(open));
+}
+</script>
+{{ end }}
+
