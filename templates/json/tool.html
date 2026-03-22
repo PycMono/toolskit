@@ -83,9 +83,9 @@
   <div class="jt-container jt-container--wide">
 
     {{ if eq .ToolKey "diff" }}
-    <!-- Diff: 2-pane + center action + result -->
-    <div class="jt-schema-layout">
-      <div class="jt-editor-pane jt-editor-pane--input">
+    <!-- Diff: 2-pane side-by-side + result below -->
+    <div class="jt-diff-panes">
+      <div class="jt-diff-pane">
         <div class="jt-editor-pane__header">
           <span class="jt-editor-pane__label">{{ call .T "json.diff.left" }}</span>
           <div class="jt-editor-pane__actions">
@@ -95,12 +95,7 @@
         </div>
         <div id="diffLeftEditor" class="jt-monaco-editor"></div>
       </div>
-      <div class="jt-editor-actions jt-schema-mid-action">
-        <button class="jt-process-btn" onclick="processJson()" title="{{ call .T "json.diff.btn" }}">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-        </button>
-      </div>
-      <div class="jt-editor-pane jt-editor-pane--input">
+      <div class="jt-diff-pane">
         <div class="jt-editor-pane__header">
           <span class="jt-editor-pane__label">{{ call .T "json.diff.right" }}</span>
           <div class="jt-editor-pane__actions">
@@ -111,12 +106,17 @@
         <div id="diffRightEditor" class="jt-monaco-editor"></div>
       </div>
     </div>
-    <div id="diffResult" class="jt-diff-result" style="margin-top:16px"></div>
+    <div style="text-align:center;margin:10px 0">
+      <button class="jt-process-btn jt-process-btn--full" style="max-width:240px;margin:0 auto" onclick="processJson()">
+        {{ call .T "json.diff.btn" }}
+      </button>
+    </div>
+    <div id="diffResult" class="jt-diff-result" style="margin-top:8px"></div>
 
     {{ else if or (eq .ToolKey "tree") (eq .ToolKey "table") (eq .ToolKey "size") (eq .ToolKey "search") }}
-    <!-- Side-by-side: input left + action col + output right -->
-    <div class="jt-schema-layout jt-schema-layout--wide">
-      <div class="jt-editor-pane jt-editor-pane--input">
+    <!-- Side-by-side: input left + output right -->
+    <div class="jt-viewer-layout">
+      <div class="jt-viewer-input">
         <div class="jt-editor-pane__header">
           <span class="jt-editor-pane__label">{{ call .T "json.common.input" }}</span>
           <div class="jt-editor-pane__actions">
@@ -128,28 +128,27 @@
           </div>
         </div>
         <div id="inputEditor" class="jt-monaco-editor jt-monaco-editor--tall"></div>
-        <div class="jt-editor-pane__footer" style="padding:6px 0">
-          <span id="inputSize"></span>
-          <button class="jt-process-btn jt-process-btn--full" style="margin-top:10px" onclick="processJson()">
+        <div class="jt-editor-pane__footer" style="padding:8px 12px;flex-direction:column;align-items:stretch;gap:6px">
+          <span id="inputSize" style="font-size:0.75rem;color:var(--jt-muted)"></span>
+          <button class="jt-process-btn jt-process-btn--full" onclick="processJson()">
             {{ call .T "json.common.process" }}
           </button>
           {{ if eq .ToolKey "tree" }}
-          <div style="margin-top:8px;display:flex;gap:6px">
+          <div style="display:flex;gap:6px">
             <button class="jt-btn jt-btn--ghost" onclick="expandAll()">全部展开</button>
             <button class="jt-btn jt-btn--ghost" onclick="collapseAll()">全部折叠</button>
           </div>
           {{ end }}
           {{ if eq .ToolKey "search" }}
-          <div id="searchControls" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center"></div>
+          <div id="searchControls" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center"></div>
           {{ end }}
         </div>
       </div>
-      <div class="jt-schema-mid-action" style="visibility:hidden;width:0;padding:0;border:none"></div>
-      <div class="jt-editor-pane jt-editor-pane--output" style="overflow:auto">
+      <div class="jt-viewer-output">
         <div class="jt-editor-pane__header">
           <span class="jt-editor-pane__label">{{ call .T "json.common.output" }}</span>
         </div>
-        <div style="padding:12px;overflow:auto;max-height:560px">
+        <div style="padding:12px;overflow:auto;flex:1">
           <div id="treeOutput"   {{ if ne .ToolKey "tree"   }}style="display:none"{{ end }}></div>
           <div id="tableOutput"  {{ if ne .ToolKey "table"  }}style="display:none"{{ end }}></div>
           <div id="sizeOutput"   {{ if ne .ToolKey "size"   }}style="display:none"{{ end }}></div>
@@ -367,7 +366,7 @@
 {{ end }}
 {{ if eq .ToolKey "path" }}
 <script src="https://unpkg.com/jsonpath-plus@9.0.0/dist/index-browser-umd.cjs"
-        onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/jsonpath-plus@9.0.0/dist/index-browser-umd.cjs';document.head.appendChild(s)"></script>
+        onerror="var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jsonpath/1.1.1/jsonpath.min.js';document.head.appendChild(s)"></script>
 {{ end }}
 {{ if or (eq .ToolKey "to-typescript") (eq .ToolKey "to-python") (eq .ToolKey "to-java") (eq .ToolKey "to-csharp") (eq .ToolKey "to-go") (eq .ToolKey "to-kotlin") (eq .ToolKey "to-swift") (eq .ToolKey "to-rust") (eq .ToolKey "to-php") }}
 <script src="/static/js/json-codegen-core.js"></script>

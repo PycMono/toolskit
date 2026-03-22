@@ -221,7 +221,7 @@ function showErrorPanel(err, raw) {
 
   const analysis = analyzeJsonError(err, raw || '');
   if (titleEl) titleEl.textContent = '❌ JSON 格式错误';
-  if (bodyEl) || bodyEl.innerHTML = `
+  if (bodyEl) bodyEl.innerHTML = `
     <div class="jt-error-location">📍 第 <strong>${analysis.line}</strong> 行，第 <strong>${analysis.col}</strong> 列</div>
     <div class="jt-error-message">${escapeHtml(analysis.message)}</div>
     ${analysis.suggestion ? `<div class="jt-error-suggestion">💡 ${escapeHtml(analysis.suggestion)}</div>` : ''}

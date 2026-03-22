@@ -1,5 +1,5 @@
 'use strict';
-// path (requires jsonpath-plus UMD global)
+// path (requires jsonpath-plus UMD global, or cdnjs jsonpath fallback)
 function initToolOptions() {
   document.getElementById('toolOptions').innerHTML = `
     <span class="jt-options-label">JSONPath 表达式</span>
@@ -10,15 +10,24 @@ function processJson() {
   const expr = (document.getElementById('pathInput') ? document.getElementById('pathInput').value : '').trim();
   if (!expr) { showToast('请输入 JSONPath 表达式','error'); return; }
   try {
-    // jsonpath-plus UMD exposes window.JSONPath or window.jsonpathPlus.JSONPath
-    let JPFn = null;
-    if (window.JSONPath && typeof window.JSONPath.JSONPath === 'function') JPFn = window.JSONPath.JSONPath;
-    else if (typeof window.JSONPath === 'function') JPFn = window.JSONPath;
-    else if (window.jsonpathPlus && typeof window.jsonpathPlus.JSONPath === 'function') JPFn = window.jsonpathPlus.JSONPath;
-    if (!JPFn) { showToast('JSONPath 库未加载，请刷新重试', 'error'); return; }
-    const results = JPFn({ path: expr, json: parsed });
+    let results = null;
+    // jsonpath-plus: exposes window.JSONPath.JSONPath or window.JSONPath as function
+    if (window.JSONPath && typeof window.JSONPath.JSONPath === 'function') {
+      results = window.JSONPath.JSONPath({ path: expr, json: parsed });
+    } else if (typeof window.JSONPath === 'function') {
+      results = window.JSONPath({ path: expr, json: parsed });
+    }
+    // cdnjs jsonpath fallback: exposes window.jsonpath.query
+    else if (window.jsonpath && typeof window.jsonpath.query === 'function') {
+      results = window.jsonpath.query(parsed, expr);
+    }
+    else {
+      showToast('JSONPath 库未加载，请刷新重试', 'error');
+      return;
+    }
+    if (!Array.isArray(results)) results = [results];
     setOutput(JSON.stringify(results, null, 2));
     const el = document.getElementById('outputStats');
-    if (el) el.textContent = '匹配 ' + (Array.isArray(results) ? results.length : 1) + ' 条';
+    if (el) el.textContent = '匹配 ' + results.length + ' 条';
   } catch(e) { showToast('JSONPath 错误：' + e.message, 'error'); }
 }

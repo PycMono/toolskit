@@ -815,6 +815,57 @@ body.jt-page {
 .jt-jwt-meta { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.8125rem; color: var(--jt-muted); }
 .jt-jwt-expired { color: var(--jt-red); font-weight: 700; }
 
+/* ── Viewer Layout (tree / table / size / search) ── */
+.jt-viewer-layout {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.jt-viewer-input {
+  background: var(--jt-surface);
+  border: 1px solid var(--jt-border);
+  border-radius: var(--jt-radius-md);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 540px;
+}
+
+.jt-viewer-output {
+  background: var(--jt-surface);
+  border: 1px solid var(--jt-border);
+  border-radius: var(--jt-radius-md);
+  display: flex;
+  flex-direction: column;
+  min-height: 540px;
+  overflow: auto;
+}
+
+/* ── Diff Panes Layout ──────────────────────────── */
+.jt-diff-panes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.jt-diff-pane {
+  background: var(--jt-surface);
+  border: 1px solid var(--jt-border);
+  border-radius: var(--jt-radius-md);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 380px;
+}
+
+.jt-diff-pane .jt-monaco-editor {
+  flex: 1;
+  min-height: 0;
+}
+
 /* ── Schema Layout ──────────────────────────────── */
 .jt-schema-layout {
   display: grid;
@@ -968,7 +1019,7 @@ body.jt-page {
 .jt-toast--info    { background: #374151; }
 
 /* ── Responsive ─────────────────────────────────── */
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .jt-editor-layout {
     grid-template-columns: 1fr;
     grid-template-rows: 360px 48px 360px;
@@ -983,6 +1034,11 @@ body.jt-page {
   .jt-schema-layout { grid-template-columns: 1fr; }
   .jt-schema-layout--wide { grid-template-columns: 1fr; }
   .jt-schema-layout--wide .jt-editor-pane { height: auto; min-height: 300px; }
+  /* new layouts */
+  .jt-viewer-layout { grid-template-columns: 1fr; }
+  .jt-viewer-input, .jt-viewer-output { min-height: 320px; }
+  .jt-diff-panes { grid-template-columns: 1fr; }
+  .jt-diff-pane  { height: 300px; }
 }
 
 @media (max-width: 600px) {
