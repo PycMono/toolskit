@@ -12,6 +12,7 @@ function initToolOptions() {
     </select>`;
 }
 async function processJson() {
+  clearErrorPanel();
   const raw   = getInput(); if (!raw.trim()) return;
   const model = document.getElementById('tokenModel')?.value || 'gpt-4';
   const el    = document.getElementById('outputStats');
@@ -21,6 +22,7 @@ async function processJson() {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ text:raw, model })
     });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();
     const out = JSON.stringify({
       model:      data.model,
@@ -31,8 +33,9 @@ async function processJson() {
       note:       data.note || ''
     }, null, 2);
     setOutput(out, 'json');
-    if (el) el.innerHTML = `<strong>${data.count.toLocaleString()}</strong> tokens`;
-    showToast(`${data.count.toLocaleString()} tokens`,'success');
-  } catch(e) { showToast('Token 计数失败：'+e.message,'error'); }
+    if (el) el.innerHTML = `<span class="jt-success-badge">✅ ${data.count.toLocaleString()} tokens</span>`;
+  } catch(e) {
+    showErrorPanel(e, raw);
+    if (el) el.textContent = '';
+  }
 }
-

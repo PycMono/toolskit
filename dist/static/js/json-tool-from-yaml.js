@@ -8,6 +8,7 @@ function _resolveYaml() {
 }
 
 function processJson() {
+  clearErrorPanel();
   const raw = getInput().trim();
   if (!raw) return;
   const yaml = _resolveYaml();
@@ -32,9 +33,10 @@ function _doConvert(raw, yaml) {
   try {
     const parsed = yaml.load(raw);
     setOutput(JSON.stringify(parsed, null, 2));
-    showToast('✅ YAML → JSON 转换成功', 'success');
+    const el = document.getElementById('outputStats');
+    if (el) el.innerHTML = '<span class="jt-success-badge">✅ YAML → JSON 转换成功</span>';
   } catch(e) {
-    showToast('YAML 解析错误：' + e.message, 'error');
-    setOutput('// YAML 解析错误:\n// ' + e.message, 'plaintext');
+    showErrorPanel(e, raw);
+    setOutput('', 'plaintext');
   }
 }

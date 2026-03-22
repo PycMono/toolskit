@@ -1,6 +1,7 @@
 'use strict';
 // to-java
 function processJson() {
+  clearErrorPanel();
   const parsed = parseInput(); if (parsed === null) return;
   const rootName = getClassName(); const classes = [];
   function javaType(v) {
@@ -25,5 +26,6 @@ function processJson() {
   gen(Array.isArray(parsed) ? parsed[0] : parsed, rootName);
   const hdr = 'import java.util.List;\nimport com.fasterxml.jackson.annotation.JsonProperty;\n\n';
   setOutput(hdr + classes.reverse().join('\n\n'), 'java');
+  const el = document.getElementById('outputStats');
+  if (el) el.innerHTML = '<span class="jt-success-badge">✅ Java 类生成完成</span>';
 }
-

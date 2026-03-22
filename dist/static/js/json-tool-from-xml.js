@@ -18,6 +18,7 @@ function _resolveXMLParser() {
 }
 
 function processJson() {
+  clearErrorPanel();
   const raw = getInput().trim();
   if (!raw) return;
   const XMLParser = _resolveXMLParser();
@@ -42,9 +43,10 @@ function _doConvert(raw, XMLParser) {
     const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '@_' });
     const result = parser.parse(raw);
     setOutput(JSON.stringify(result, null, 2));
-    showToast('✅ XML → JSON 转换成功', 'success');
+    const el = document.getElementById('outputStats');
+    if (el) el.innerHTML = '<span class="jt-success-badge">✅ XML → JSON 转换成功</span>';
   } catch(e) {
-    showToast('XML 解析错误：' + e.message, 'error');
-    setOutput('// XML 解析错误:\n// ' + e.message, 'plaintext');
+    showErrorPanel(e, raw);
+    setOutput('', 'plaintext');
   }
 }

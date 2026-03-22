@@ -2,6 +2,7 @@
 // size analyzer
 function initToolOptions() {}
 function processJson() {
+  clearErrorPanel();
   const raw = getInput().trim(); const parsed = parseInput(); if (parsed === null) return;
   const stats = analyzeSize(parsed);
   const rawSize = new Blob([raw]).size;
@@ -58,4 +59,3 @@ function analyzeSize(obj, depth=0) {
   });
   return stats;
 }
-

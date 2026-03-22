@@ -2,15 +2,18 @@
 // repair
 function initToolOptions() {}
 function processJson() {
+  clearErrorPanel();
   const raw = getInput().trim(); if (!raw) return;
   try {
     const repaired = repairJson(raw);
     setOutput(repaired);
     const el = document.getElementById('outputStats');
-    if (el) el.textContent = raw !== repaired ? '已自动修复' : '✅ JSON 无需修复';
-    showToast('修复完成', 'success');
+    const changed = raw !== repaired;
+    if (el) el.innerHTML = changed
+      ? '<span class="jt-success-badge">✅ 修复完成</span>'
+      : '<span class="jt-success-badge">✅ JSON 无需修复</span>';
   } catch(e) {
-    showToast('修复失败：' + e.message, 'error');
+    showErrorPanel(e, raw);
   }
 }
 function repairJson(raw) {
@@ -39,4 +42,3 @@ function balanceBrackets(s) {
   while (stack.length) s += pairs[stack.pop()];
   return s;
 }
-

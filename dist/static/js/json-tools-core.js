@@ -30,18 +30,17 @@ require(['vs/editor/editor.main'], function() {
         ...opts, value: JSON.stringify({ '$schema': 'http://json-schema.org/draft-07/schema#', type: 'object', properties: {} }, null, 2),
         language: 'json', theme: 'vs',
       });
+      window._schemaEditor.onDidChangeModelContent(function() {
+        const el = document.getElementById('schemaSize');
+        if (el) el.textContent = formatBytes(new Blob([window._schemaEditor.getValue()]).size);
+      });
     }
     const inputEl = document.getElementById('inputEditor');
     if (inputEl) {
       inputEditor = monaco.editor.create(inputEl, {
         ...opts, value: '', language: 'json', theme: 'vs',
       });
-    }
-    const outputEl = document.getElementById('outputEditor');
-    if (outputEl) {
-      outputEditor = monaco.editor.create(outputEl, {
-        ...opts, value: '', language: 'plaintext', theme: 'vs', readOnly: true,
-      });
+      inputEditor.onDidChangeModelContent(updateInputStats);
     }
   } else {
     const inputEl = document.getElementById('inputEditor');

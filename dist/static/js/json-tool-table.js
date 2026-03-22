@@ -3,11 +3,17 @@
 let _tableData = [], _tableKeys = [], _sortState = { key: null, dir: 'asc' };
 function initToolOptions() {}
 function processJson() {
+  clearErrorPanel();
   const parsed = parseInput(); if (parsed === null) return;
-  if (!Array.isArray(parsed)) { showToast('输入必须为 JSON 数组', 'error'); return; }
+  if (!Array.isArray(parsed)) {
+    showErrorPanel(new TypeError('输入必须为 JSON 数组（[...]）'), getInput().trim());
+    return;
+  }
   _tableKeys = [...new Set(parsed.flatMap(r => (typeof r==='object'&&r) ? Object.keys(r) : []))];
   _tableData = parsed;
   renderTable(_tableData, _tableKeys);
+  const el = document.getElementById('outputStats');
+  if (el) el.innerHTML = `<span class="jt-success-badge">✅ 共 ${parsed.length} 行</span>`;
 }
 function renderTable(data, keys) {
   const container = document.getElementById('tableOutput');
@@ -28,4 +34,3 @@ function sortTable(key) {
   _tableData.sort((a,b)=>{ const va=String(a[key]??''),vb=String(b[key]??''); return dir==='asc'?va.localeCompare(vb):vb.localeCompare(va); });
   renderTable(_tableData, _tableKeys);
 }
-

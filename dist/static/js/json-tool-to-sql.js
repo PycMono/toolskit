@@ -12,8 +12,12 @@ function initToolOptions() {
     </select>`;
 }
 function processJson() {
+  clearErrorPanel();
   const parsed = parseInput(); if (parsed === null) return;
-  if (!Array.isArray(parsed)) { showToast('输入必须为 JSON 数组', 'error'); return; }
+  if (!Array.isArray(parsed)) {
+    showErrorPanel(new TypeError('输入必须为 JSON 数组（[...]）'), getInput().trim());
+    return;
+  }
   const table   = document.getElementById('sqlTableName')?.value || 'my_table';
   const dialect = document.getElementById('sqlDialect')?.value   || 'mysql';
   const keys    = [...new Set(parsed.flatMap(r => Object.keys(r)))];
@@ -31,5 +35,6 @@ function processJson() {
     return `INSERT INTO ${q}${table}${qe} (${keys.map(k=>`${q}${k}${qe}`).join(', ')}) VALUES (${vals.join(', ')});`;
   }).join('\n');
   setOutput(createSql + inserts, 'sql');
+  const el = document.getElementById('outputStats');
+  if (el) el.innerHTML = `<span class="jt-success-badge">✅ 生成 ${parsed.length} 条 INSERT 语句</span>`;
 }
-

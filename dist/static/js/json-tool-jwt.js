@@ -2,6 +2,7 @@
 // jwt decoder
 function initToolOptions() {}
 function processJson() {
+  clearErrorPanel();
   const raw = getInput().trim().replace(/^Bearer\s+/i,''); if (!raw) return;
   const parts = raw.split('.');
   if (parts.length < 2) { showToast('无效 JWT（需含至少 2 段）','error'); return; }
@@ -40,4 +41,3 @@ function fmtDur(s) {
   if (s<60) return `${s}秒`; if (s<3600) return `${Math.floor(s/60)}分钟`;
   if (s<86400) return `${Math.floor(s/3600)}小时`; return `${Math.floor(s/86400)}天`;
 }
-

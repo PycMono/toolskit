@@ -2,9 +2,11 @@
 // schema-generate
 function initToolOptions() {}
 function processJson() {
+  clearErrorPanel();
   const parsed = parseInput(); if (parsed === null) return;
   setOutput(JSON.stringify(generateSchema(parsed, 'Root'), null, 2));
-  showToast('Schema 生成完成','success');
+  const el = document.getElementById('outputStats');
+  if (el) el.innerHTML = '<span class="jt-success-badge">✅ Schema 生成完成</span>';
 }
 function generateSchema(value, title) {
   if (value === null) return { type:['null','string'] };
@@ -31,4 +33,3 @@ function generateSchema(value, title) {
   }
   return {};
 }
-

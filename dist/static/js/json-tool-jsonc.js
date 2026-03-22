@@ -2,12 +2,14 @@
 // jsonc — strip comments and trailing commas
 function initToolOptions() {}
 function processJson() {
+  clearErrorPanel();
   const raw = getInput().trim(); if (!raw) return;
   try {
     const stripped = stripJsonComments(raw);
     const parsed = JSON.parse(stripped);
     setOutput(JSON.stringify(parsed, null, 2));
-    showToast('✅ 注释移除成功', 'success');
+    const el = document.getElementById('outputStats');
+    if (el) el.innerHTML = '<span class="jt-success-badge">✅ 注释移除成功</span>';
   } catch(e) { showErrorPanel(e, stripJsonComments(getInput().trim())); }
 }
 function stripJsonComments(str) {
@@ -37,6 +39,3 @@ function stripJsonComments(str) {
   }
   return res;
 }
-
-
-

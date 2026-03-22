@@ -114,9 +114,11 @@
     <div id="diffResult" class="jt-diff-result" style="margin-top:8px"></div>
 
     {{ else if or (eq .ToolKey "tree") (eq .ToolKey "table") (eq .ToolKey "size") (eq .ToolKey "search") }}
-    <!-- Side-by-side: input left + output right -->
-    <div class="jt-viewer-layout">
-      <div class="jt-viewer-input">
+    <!-- Standard dual-pane layout: input left + orange arrow + custom output right -->
+    <div class="jt-editor-layout">
+
+      <!-- Left: Input -->
+      <div class="jt-editor-pane jt-editor-pane--input">
         <div class="jt-editor-pane__header">
           <span class="jt-editor-pane__label">{{ call .T "json.common.input" }}</span>
           <div class="jt-editor-pane__actions">
@@ -127,34 +129,43 @@
             </label>
           </div>
         </div>
-        <div id="inputEditor" class="jt-monaco-editor jt-monaco-editor--tall"></div>
-        <div class="jt-editor-pane__footer" style="padding:8px 12px;flex-direction:column;align-items:stretch;gap:6px">
-          <span id="inputSize" style="font-size:0.75rem;color:var(--jt-muted)"></span>
-          <button class="jt-process-btn jt-process-btn--full" onclick="processJson()">
-            {{ call .T "json.common.process" }}
-          </button>
-          {{ if eq .ToolKey "tree" }}
-          <div style="display:flex;gap:6px">
-            <button class="jt-btn jt-btn--ghost" onclick="expandAll()">全部展开</button>
-            <button class="jt-btn jt-btn--ghost" onclick="collapseAll()">全部折叠</button>
-          </div>
-          {{ end }}
-          {{ if eq .ToolKey "search" }}
-          <div id="searchControls" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center"></div>
-          {{ end }}
+        <div id="inputEditor" class="jt-monaco-editor"></div>
+        <div class="jt-editor-pane__footer">
+          <span id="inputSize"></span>
+          <span id="outputStats" class="jt-output-stats"></span>
         </div>
       </div>
-      <div class="jt-viewer-output">
+
+      <!-- Middle: orange arrow button -->
+      <div class="jt-editor-actions">
+        <button class="jt-process-btn" id="processBtn" onclick="processJson()" title="{{ call .T "json.common.process" }}">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+        {{ if eq .ToolKey "tree" }}
+        <button class="jt-swap-btn" onclick="expandAll()" title="全部展开" style="font-size:12px;width:30px;height:30px">▼</button>
+        <button class="jt-swap-btn" onclick="collapseAll()" title="全部折叠" style="font-size:12px;width:30px;height:30px">▶</button>
+        {{ end }}
+      </div>
+
+      <!-- Right: Custom render output -->
+      <div class="jt-editor-pane jt-editor-pane--output">
         <div class="jt-editor-pane__header">
           <span class="jt-editor-pane__label">{{ call .T "json.common.output" }}</span>
+          {{ if eq .ToolKey "search" }}
+          <div class="jt-editor-pane__actions" id="searchControls" style="flex:1;justify-content:flex-end"></div>
+          {{ end }}
         </div>
-        <div style="padding:12px;overflow:auto;flex:1">
+        <div class="jt-viewer-render-area">
           <div id="treeOutput"   {{ if ne .ToolKey "tree"   }}style="display:none"{{ end }}></div>
           <div id="tableOutput"  {{ if ne .ToolKey "table"  }}style="display:none"{{ end }}></div>
           <div id="sizeOutput"   {{ if ne .ToolKey "size"   }}style="display:none"{{ end }}></div>
           <div id="searchOutput" {{ if ne .ToolKey "search" }}style="display:none"{{ end }}></div>
         </div>
       </div>
+
     </div>
 
     {{ else if eq .ToolKey "from-excel" }}
@@ -190,9 +201,11 @@
     </div>
 
     {{ else if eq .ToolKey "schema-validate" }}
-    <!-- Schema Validate: schema input top-left + data input top-right + result below -->
-    <div class="jt-schema-layout">
-      <div class="jt-editor-pane">
+    <!-- Schema Validate: standard dual-pane (schema left + orange arrow + data right) + result below -->
+    <div class="jt-editor-layout">
+
+      <!-- Left: Schema input -->
+      <div class="jt-editor-pane jt-editor-pane--input">
         <div class="jt-editor-pane__header">
           <span class="jt-editor-pane__label">{{ call .T "json.schema.validate.schema_input" }}</span>
           <div class="jt-editor-pane__actions">
@@ -201,14 +214,23 @@
           </div>
         </div>
         <div id="schemaEditor" class="jt-monaco-editor"></div>
+        <div class="jt-editor-pane__footer">
+          <span id="schemaSize" style="font-size:0.75rem;color:var(--jt-muted)"></span>
+        </div>
       </div>
-      <!-- Execute button between the two editors -->
-      <div class="jt-editor-actions jt-schema-mid-action">
-        <button class="jt-process-btn" onclick="processJson()" title="{{ call .T "json.schema.validate.btn" }}">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+
+      <!-- Middle: orange arrow -->
+      <div class="jt-editor-actions">
+        <button class="jt-process-btn" id="processBtn" onclick="processJson()" title="{{ call .T "json.schema.validate.btn" }}">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
         </button>
       </div>
-      <div class="jt-editor-pane">
+
+      <!-- Right: Data input -->
+      <div class="jt-editor-pane jt-editor-pane--output">
         <div class="jt-editor-pane__header">
           <span class="jt-editor-pane__label">{{ call .T "json.schema.validate.json_input" }}</span>
           <div class="jt-editor-pane__actions">
@@ -217,22 +239,24 @@
           </div>
         </div>
         <div id="inputEditor" class="jt-monaco-editor"></div>
+        <div class="jt-editor-pane__footer">
+          <span id="inputSize"></span>
+          <span id="outputStats" class="jt-output-stats"></span>
+        </div>
       </div>
-    </div>
-    <!-- Validate button + output panel -->
-    <div style="margin-top:12px">
-      <button class="jt-process-btn jt-process-btn--full" onclick="processJson()" style="max-width:200px;margin:0 auto 12px;display:flex;align-items:center;gap:8px;justify-content:center">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        {{ call .T "json.schema.validate.btn" }}
-      </button>
+
+    </div><!-- /jt-editor-layout -->
+
+    <!-- Result panel (shown after validation) -->
+    <div id="schemaResultPanel" class="jt-schema-result-panel" style="display:none;margin-top:12px">
       <div class="jt-editor-pane jt-editor-pane--output">
         <div class="jt-editor-pane__header">
           <span class="jt-editor-pane__label">{{ call .T "json.common.output" }}</span>
           <div class="jt-editor-pane__actions">
-            <button onclick="copyOutput()" class="jt-btn jt-btn--primary" id="copyBtn">{{ call .T "json.common.copy" }}</button>
+            <button onclick="copySchemaResult()" class="jt-btn jt-btn--primary" id="copyBtn">{{ call .T "json.common.copy" }}</button>
           </div>
         </div>
-        <div id="outputEditor" class="jt-monaco-editor" style="height:220px"></div>
+        <div id="schemaResultBody" class="jt-viewer-render-area" style="min-height:100px;max-height:320px"></div>
       </div>
     </div>
 
@@ -381,11 +405,6 @@
 <!-- fast-xml-parser: jsdelivr primary, unpkg fallback -->
 <script src="https://cdn.jsdelivr.net/npm/fast-xml-parser@4.3.5/dist/fxp.js"
         onerror="(function(){var s=document.createElement('script');s.src='https://unpkg.com/fast-xml-parser@4.3.5/dist/fxp.js';document.head.appendChild(s)})()"></script>
-{{ end }}
-{{ if eq .ToolKey "schema-validate" }}
-<!-- Ajv 8: cdnjs primary, jsdelivr fallback -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/8.12.0/ajv2020.min.js"
-        onerror="(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/ajv@8.17.1/dist/ajv2020.min.js';s.onerror=function(){var s2=document.createElement('script');s2.src='https://unpkg.com/ajv@8.17.1/dist/ajv2020.min.js';document.head.appendChild(s2)};document.head.appendChild(s)})()"></script>
 {{ end }}
 {{ if eq .ToolKey "path" }}
 <script src="https://unpkg.com/jsonpath-plus@9.0.0/dist/index-browser-umd.cjs"

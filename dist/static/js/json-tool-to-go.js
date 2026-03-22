@@ -1,6 +1,7 @@
 'use strict';
 // to-go
 function processJson() {
+  clearErrorPanel();
   const parsed = parseInput(); if (parsed === null) return;
   const rootName = getClassName(); const structs = [];
   function gen(obj, name) {
@@ -16,5 +17,6 @@ function processJson() {
   }
   gen(Array.isArray(parsed) ? parsed[0] : parsed, rootName);
   setOutput('package main\n\n' + structs.reverse().join('\n\n'), 'go');
+  const el = document.getElementById('outputStats');
+  if (el) el.innerHTML = '<span class="jt-success-badge">✅ Go 结构体生成完成</span>';
 }
-

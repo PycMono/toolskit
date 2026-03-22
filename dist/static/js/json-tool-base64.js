@@ -7,20 +7,24 @@ function initToolOptions() {
 }
 function processJson() { encodeJson(); }
 function encodeJson() {
+  clearErrorPanel();
   const raw = getInput().trim(); if (!raw) return;
   try {
     JSON.parse(raw);
     setOutput(btoa(unescape(encodeURIComponent(raw))), 'plaintext');
     if (inputEditor) inputEditor.setValue('');
-    showToast('Base64 编码完成', 'success');
+    const el = document.getElementById('outputStats');
+    if (el) el.innerHTML = '<span class="jt-success-badge">✅ Base64 编码完成</span>';
   } catch(e) { showErrorPanel(e, raw); }
 }
 function decodeJson() {
+  clearErrorPanel();
   const raw = getInput().trim(); if (!raw) return;
   try {
     const decoded = decodeURIComponent(escape(atob(raw)));
     setOutput(JSON.stringify(JSON.parse(decoded), null, 2));
     if (inputEditor) inputEditor.setValue('');
-    showToast('Base64 解码完成', 'success');
-  } catch(e) { showToast('解码失败，请确认为合法 Base64 编码的 JSON', 'error'); }
+    const el = document.getElementById('outputStats');
+    if (el) el.innerHTML = '<span class="jt-success-badge">✅ Base64 解码完成</span>';
+  } catch(e) { showErrorPanel(e, raw); }
 }

@@ -6,6 +6,7 @@ function initToolOptions() {
     <input id="pathInput" type="text" placeholder="例如：$.store.book[*].author" class="jt-options-input" style="width:280px">`;
 }
 function processJson() {
+  clearErrorPanel();
   const parsed = parseInput(); if (parsed === null) return;
   const expr = (document.getElementById('pathInput') ? document.getElementById('pathInput').value : '').trim();
   if (!expr) { showToast('请输入 JSONPath 表达式','error'); return; }
@@ -28,6 +29,6 @@ function processJson() {
     if (!Array.isArray(results)) results = [results];
     setOutput(JSON.stringify(results, null, 2));
     const el = document.getElementById('outputStats');
-    if (el) el.textContent = '匹配 ' + results.length + ' 条';
-  } catch(e) { showToast('JSONPath 错误：' + e.message, 'error'); }
+    if (el) el.innerHTML = `<span class="jt-success-badge">✅ 匹配 ${results.length} 条</span>`;
+  } catch(e) { showErrorPanel(e, JSON.stringify(parsed, null, 2)); }
 }

@@ -1,7 +1,7 @@
-
 'use strict';
 // to-php
 function processJson() {
+  clearErrorPanel();
   const parsed = parseInput(); if (parsed === null) return;
   const rootName = getClassName();
   function phpType(v) {
@@ -17,5 +17,6 @@ function processJson() {
   }
   const src = Array.isArray(parsed) ? parsed[0] : parsed;
   setOutput(`<?php\n\n${gen(src, rootName)}\n`, 'php');
+  const el = document.getElementById('outputStats');
+  if (el) el.innerHTML = '<span class="jt-success-badge">✅ PHP 类生成完成</span>';
 }
-
