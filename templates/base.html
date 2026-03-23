@@ -41,6 +41,7 @@
           <a href="/password-generator?lang={{ .Lang }}" class="dropdown-item">🔑 {{ call .T "home.tool_password" }}</a>
           <a href="/temp-email?lang={{ .Lang }}" class="dropdown-item">📧 {{ call .T "home.tool_email" }}</a>
           <a href="/proxy?lang={{ .Lang }}" class="dropdown-item">🌐 {{ call .T "home.tool_proxy" }}</a>
+          <a href="/privacy/check?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/privacy/check" }}active{{ end }}">🔒 {{ call .T "nav.privacy_check" }}</a>
         </div>
       </div>
       <div class="nav-item has-dropdown">

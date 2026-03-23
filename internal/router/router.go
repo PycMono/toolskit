@@ -37,6 +37,18 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 	r.GET("/sms/active", handlers.SMSActivePage)
 	r.GET("/sms/history", handlers.SMSHistoryPage)
 
+	// Privacy Check routes
+	privacy := r.Group("/privacy")
+	{
+		privacy.GET("/check", handlers.PrivacyCheckPage)
+	}
+	privacyAPI := r.Group("/api/privacy")
+	{
+		privacyAPI.POST("/check-email", handlers.PrivacyCheckEmail)
+		privacyAPI.GET("/password-range/:prefix", handlers.PrivacyPasswordRange)
+		privacyAPI.GET("/breaches", handlers.PrivacyBreaches)
+	}
+
 	r.GET("/virtual-address", handlers.VirtualAddressPage)
 	r.GET("/password-generator", handlers.PasswordPage)
 	r.GET("/temp-email", handlers.TempEmailPage)
