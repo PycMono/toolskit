@@ -385,6 +385,9 @@
   </div>
 </section>
 {{ end }}
+
+<!-- Tool Description Article (SEO content for all JSON tools) -->
+<section class="jt-desc-section" id="jt-desc-section" style="display:none"></section>
 {{ end }}
 
 {{ define "json_scripts" }}
@@ -420,6 +423,7 @@
 </script>
 <script src="/static/js/json-tools-core.js"></script>
 <script src="/static/js/json-tool-{{ .ToolKey }}.js"></script>
+<script src="/static/js/json-tool-descriptions.js"></script>
 
 <!-- Bottom Ad -->
 <div style="text-align:center;margin:24px 0">

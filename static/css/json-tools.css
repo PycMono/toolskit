@@ -1027,6 +1027,112 @@ body.jt-page {
 .jt-faq-item--open .jt-faq-answer { max-height: 300px; }
 .jt-faq-answer p { padding: 0 18px 14px; font-size: 0.875rem; color: var(--jt-muted); line-height: 1.7; }
 
+/* ── Tool Description Article ──────────────────── */
+.jt-desc-section {
+  border-top: 1px solid var(--jt-border);
+  background: var(--jt-bg);
+  padding: 40px 0 56px;
+}
+
+.jt-desc-inner {
+  max-width: 860px;
+}
+
+.jt-desc-body h2 {
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: var(--jt-text);
+  margin: 32px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--jt-amber);
+  display: inline-block;
+}
+
+.jt-desc-body h2:first-child { margin-top: 0; }
+
+.jt-desc-body p {
+  font-size: 0.9375rem;
+  color: var(--jt-muted);
+  line-height: 1.8;
+  margin: 0 0 12px;
+}
+
+.jt-desc-body ul,
+.jt-desc-body ol {
+  padding-left: 1.5rem;
+  margin: 0 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.jt-desc-body li {
+  font-size: 0.9375rem;
+  color: var(--jt-muted);
+  line-height: 1.7;
+}
+
+.jt-desc-body li strong { color: var(--jt-text); }
+
+.jt-desc-body pre {
+  background: var(--jt-surface);
+  border: 1px solid var(--jt-border);
+  border-radius: var(--jt-radius-sm);
+  padding: 14px 16px;
+  overflow-x: auto;
+  margin: 0 0 16px;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.jt-desc-body code {
+  font-family: 'Fira Code', 'Cascadia Code', Consolas, monospace;
+  font-size: 0.8125rem;
+  background: var(--jt-surface);
+  border: 1px solid var(--jt-border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  color: var(--jt-text);
+}
+
+.jt-desc-body pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.jt-desc-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 20px;
+  font-size: 0.875rem;
+}
+
+.jt-desc-table th {
+  background: var(--jt-surface);
+  color: var(--jt-text);
+  font-weight: 700;
+  padding: 9px 14px;
+  text-align: left;
+  border: 1px solid var(--jt-border);
+}
+
+.jt-desc-table td {
+  padding: 8px 14px;
+  border: 1px solid var(--jt-border);
+  color: var(--jt-muted);
+  vertical-align: top;
+}
+
+.jt-desc-table tr:nth-child(even) td { background: var(--jt-surface); }
+
+@media (max-width: 768px) {
+  .jt-desc-section { padding: 28px 0 40px; }
+  .jt-desc-table { font-size: 0.8125rem; }
+  .jt-desc-table th, .jt-desc-table td { padding: 7px 10px; }
+}
+
 /* ── Toast ──────────────────────────────────────── */
 #toastContainer {
   position: fixed;
