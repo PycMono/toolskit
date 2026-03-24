@@ -151,7 +151,10 @@ func SitemapXML(c *gin.Context) {
 		
 		// AI Lab
 		"/ailab/detector", "/ailab/humanize",
-		
+		"/ai/detector",
+		"/ai/detector?lang=en", "/ai/detector?lang=zh",
+		"/ai/detector?lang=ja", "/ai/detector?lang=ko", "/ai/detector?lang=es",
+
 		// Dev Tools
 		"/tools", "/tools/json", "/tools/json-formatter", "/tools/json-validator",
 		"/tools/regex", "/tools/markdown", "/tools/timestamp",
@@ -244,7 +247,7 @@ func SitemapXML(c *gin.Context) {
 		} else if r == "/sms/prices" {
 			priority = "0.85"
 			changefreq = "daily"
-		} else if r == "/tools/json" || r == "/tools" || r == "/ailab/detector" {
+		} else if r == "/tools/json" || r == "/tools" || r == "/ailab/detector" || r == "/ai/detector" {
 			priority = "0.9"
 		} else if r == "/media/qr" {
 			priority = "0.9"

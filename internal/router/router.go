@@ -173,11 +173,17 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 		jt.GET("/learn", handlers.JSONLearnHub)
 		jt.GET("/learn/:slug", handlers.JSONLearnArticle)
 	}
-	// AI Lab routes
+	// AI Lab routes (legacy /ailab/*)
 	ailab := r.Group("/ailab")
 	{
 		ailab.GET("/detector", handlers.AIDetectorPage)
 		ailab.GET("/humanize", handlers.AIHumanizePage)
+	}
+
+	// AI Lab routes (new /ai/* - spec-compliant)
+	ai := r.Group("/ai")
+	{
+		ai.GET("/detector", handlers.AIDetectorPage)
 	}
 
 	// Image/Multimedia tools
@@ -247,6 +253,14 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 			ailabAPI.POST("/detect-file", handlers.AIDetectFileAPI)
 			ailabAPI.POST("/detect-url", handlers.AIDetectURLAPI)
 			ailabAPI.POST("/humanize", handlers.HumanizeStream)
+		}
+
+		// New AI API (spec-compliant)
+		aiAPI := api.Group("/ai")
+		{
+			aiAPI.POST("/detect", handlers.AIDetectAPI)
+			aiAPI.POST("/humanize", handlers.AIHumanizeNewAPI)
+			aiAPI.POST("/fetch-url", handlers.AIDetectURLAPI)
 		}
 
 		// SMS API (S-05, S-06, S-07, S-08, S-09)

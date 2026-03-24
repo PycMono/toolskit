@@ -1,4 +1,7 @@
-{{ template "base" . }}
+#!/usr/bin/env python3
+"""Writes the clean detector.html template file."""
+
+TEMPLATE = r"""{{ template "base" . }}
 
 {{ define "extraHead" }}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
@@ -418,3 +421,10 @@ window.__AID_CONFIG__ = {
 </script>
 <script src="/static/js/ai-detector.js"></script>
 {{ end }}
+"""
+
+with open('/Users/pengyachuan/work/go/src/PycMono/github/toolskit/templates/ailab/detector.html', 'w', encoding='utf-8') as f:
+    f.write(TEMPLATE)
+
+print("Written successfully,", len(TEMPLATE), "bytes")
+
