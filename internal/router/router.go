@@ -173,17 +173,26 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 		jt.GET("/learn", handlers.JSONLearnHub)
 		jt.GET("/learn/:slug", handlers.JSONLearnArticle)
 	}
-	// AI Lab routes (legacy /ailab/*)
-	ailab := r.Group("/ailab")
-	{
-		ailab.GET("/detector", handlers.AIDetectorPage)
-		ailab.GET("/humanize", handlers.AIHumanizePage)
-	}
+        // AI Lab routes (legacy /ailab/* - kept for backward compat)
+        ailab := r.Group("/ailab")
+        {
+                ailab.GET("/detector", handlers.AIDetectorPage)
+                // Redirect old humanize URL to new spec-compliant URL
+                ailab.GET("/humanize", func(c *gin.Context) {
+                        lang := c.Query("lang")
+                        target := "/ai/humanizer"
+                        if lang != "" {
+                                target += "?lang=" + lang
+                        }
+                        c.Redirect(301, target)
+                })
+        }
 
 	// AI Lab routes (new /ai/* - spec-compliant)
 	ai := r.Group("/ai")
 	{
 		ai.GET("/detector", handlers.AIDetectorPage)
+		ai.GET("/humanizer", handlers.AIHumanizerPage)
 	}
 
 	// Image/Multimedia tools
@@ -258,8 +267,8 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 		// New AI API (spec-compliant)
 		aiAPI := api.Group("/ai")
 		{
-			aiAPI.POST("/detect", handlers.AIDetectAPI)
-			aiAPI.POST("/humanize", handlers.AIHumanizeNewAPI)
+			aiAPI.POST("/detect", handlers.AIHumanizerDetectAPI)
+			aiAPI.POST("/humanize", handlers.AIHumanizerStreamAPI)
 			aiAPI.POST("/fetch-url", handlers.AIDetectURLAPI)
 		}
 

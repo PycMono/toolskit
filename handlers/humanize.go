@@ -1,3 +1,3 @@
 package handlers
 
-// AIHumanizePage is declared in ailab.go
+// AIHumanizePage is declared in ai_humanizer.go

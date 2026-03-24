@@ -154,6 +154,10 @@ func SitemapXML(c *gin.Context) {
 		"/ai/detector",
 		"/ai/detector?lang=en", "/ai/detector?lang=zh",
 		"/ai/detector?lang=ja", "/ai/detector?lang=ko", "/ai/detector?lang=es",
+		// AI Humanizer (new)
+		"/ai/humanizer",
+		"/ai/humanizer?lang=en", "/ai/humanizer?lang=zh",
+		"/ai/humanizer?lang=ja", "/ai/humanizer?lang=ko", "/ai/humanizer?lang=spa",
 
 		// Dev Tools
 		"/tools", "/tools/json", "/tools/json-formatter", "/tools/json-validator",

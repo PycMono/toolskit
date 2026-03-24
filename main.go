@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"PycMono/github/toolskit/config"
+	"PycMono/github/toolskit/handlers"
 	"PycMono/github/toolskit/internal/aiservice"
 	"PycMono/github/toolskit/internal/router"
 
@@ -21,6 +23,9 @@ func main() {
 	} else {
 		aiservice.InitFactory(aiCfg)
 		log.Printf("✅ AI Service Factory initialized with providers: %v", getEnabledProviders(aiCfg))
+		// Wire humanizer engine (prompts dir + 60s cache TTL)
+		handlers.InitHumanizerEngine("./prompts", 60*time.Second)
+		log.Printf("✅ AI Humanizer Engine initialized")
 	}
 
 	r := gin.Default()
