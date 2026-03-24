@@ -42,12 +42,14 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 	{
 		privacy.GET("/check", handlers.PrivacyCheckPage)
 	}
-	privacyAPI := r.Group("/api/privacy")
-	{
-		privacyAPI.POST("/check-email", handlers.PrivacyCheckEmail)
-		privacyAPI.GET("/password-range/:prefix", handlers.PrivacyPasswordRange)
-		privacyAPI.GET("/breaches", handlers.PrivacyBreaches)
-	}
+        privacyAPI := r.Group("/api/privacy")
+        {
+                privacyAPI.POST("/check-email", handlers.PrivacyCheckEmail)
+                privacyAPI.GET("/password-range/:prefix", handlers.PrivacyPasswordRange)
+                privacyAPI.GET("/breaches", handlers.PrivacyBreaches)
+                // Proxy breach logos so frontend never directly loads from external sites
+                privacyAPI.GET("/logo/:name", handlers.PrivacyBreachLogo)
+        }
 
 	r.GET("/virtual-address", handlers.VirtualAddressPage)
 	r.GET("/password-generator", handlers.PasswordPage)

@@ -1364,7 +1364,7 @@
   "home.privacy_check_desc": "Check if your email or password was exposed in data breaches, with built-in strength analysis and secure password generator",
 
   "pc.seo.title": "Privacy Account Checker — Check If Your Email & Password Were Leaked | ToolboxNova",
-  "pc.seo.description": "Free privacy security tool to check if your email or password has been exposed in data breaches. Uses HIBP k-Anonymity — your password never leaves the browser.",
+  "pc.seo.description": "Free privacy security tool to check if your email or password has been exposed in data breaches. Uses k-Anonymity — your password never leaves the browser.",
   "pc.seo.og_title": "Privacy Account Checker — Were You Breached?",
   "pc.seo.og_desc": "Check email breaches, test password safety, browse leak events, and generate secure passwords. 100% free, your data stays in your browser.",
   "pc.hero.title": "Is Your Account Safe?",
@@ -1419,7 +1419,7 @@
   "pc.generator.copied": "Copied!",
   "pc.generator.placeholder": "Click generate to create a password",
   "pc.breaches.title": "Data Breach Browser",
-  "pc.breaches.subtitle": "Explore all known data breach events from the HIBP database",
+  "pc.breaches.subtitle": "Explore known data breach events worldwide and check if your accounts are at risk",
   "pc.breaches.search_placeholder": "Search breaches by name...",
   "pc.breaches.filter_all": "All",
   "pc.breaches.filter_verified": "Verified",
@@ -1458,7 +1458,7 @@
   "pc.feature.free_title": "Completely Free",
   "pc.feature.free_desc": "No sign-up, no subscription, no hidden fees. Check unlimited emails and passwords at no cost whatsoever.",
   "pc.faq.q1": "How does the email breach check work?",
-  "pc.faq.a1": "We query the Have I Been Pwned database through our secure backend proxy. Your email is sent to our server, which forwards it to the HIBP API and returns the results. We never store your email address.",
+  "pc.faq.a1": "We query a global breach database through our secure server-side interface. Your email is sent to our server for a safe lookup and the results are returned directly. We never store your email address.",
   "pc.faq.q2": "Is my password safe when I check it here?",
   "pc.faq.a2": "Absolutely. Your password is hashed using SHA-1 directly in your browser. Only the first 5 characters of the hash are sent to our server. Your actual password never leaves your browser — this is called k-Anonymity.",
   "pc.faq.q3": "What should I do if my email appears in a breach?",
@@ -1472,7 +1472,7 @@
   "pc.toast.generated": "New password generated",
   "pc.common.close": "Close",
   "pc.common.learn_more": "Learn More",
-  "pc.common.powered_by": "Breach data powered by Have I Been Pwned",
+  "pc.common.powered_by": "",
   "pc.common.records": "records"
 }
 

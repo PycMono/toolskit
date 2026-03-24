@@ -1380,7 +1380,7 @@
   "home.privacy_check_desc": "检测邮箱和密码是否在数据泄露中暴露，内置密码强度评估和安全密码生成器",
 
   "pc.seo.title": "隐私账号安全检测 — 查询邮箱和密码是否泄露 | ToolboxNova",
-  "pc.seo.description": "免费隐私安全工具，检测您的邮箱或密码是否在数据泄露事件中暴露。采用 HIBP k-Anonymity 技术，密码永不离开浏览器。",
+  "pc.seo.description": "免费隐私安全工具，检测您的邮箱或密码是否在数据泄露事件中暴露。密码采用 k-Anonymity 技术，永不离开浏览器。",
   "pc.seo.og_title": "隐私账号安全检测 — 您的账号安全吗？",
   "pc.seo.og_desc": "查询邮箱泄露、检测密码安全、浏览泄露事件、生成安全密码。100% 免费，数据不出浏览器。",
   "pc.hero.title": "您的账号安全吗？",
@@ -1435,7 +1435,7 @@
   "pc.generator.copied": "已复制！",
   "pc.generator.placeholder": "点击生成按钮创建密码",
   "pc.breaches.title": "数据泄露事件浏览器",
-  "pc.breaches.subtitle": "浏览 HIBP 数据库中所有已知数据泄露事件",
+  "pc.breaches.subtitle": "浏览全球已知数据泄露事件，了解您的账号是否面临风险",
   "pc.breaches.search_placeholder": "按名称搜索泄露事件...",
   "pc.breaches.filter_all": "全部",
   "pc.breaches.filter_verified": "已验证",
@@ -1474,7 +1474,7 @@
   "pc.feature.free_title": "完全免费",
   "pc.feature.free_desc": "无需注册、无需订阅、无隐藏费用。无限次检查邮箱和密码，分文不收。",
   "pc.faq.q1": "邮箱泄露查询是如何工作的？",
-  "pc.faq.a1": "我们通过安全的后端代理查询 Have I Been Pwned 数据库。您的邮箱发送至我们的服务器，由服务器转发给 HIBP API 并返回结果。我们绝不存储您的邮箱地址。",
+  "pc.faq.a1": "我们通过安全的服务器端接口查询全球泄露数据库。您的邮箱发送至我们的服务器进行安全查询并返回结果。我们绝不存储您的邮箱地址。",
   "pc.faq.q2": "检测密码时我的密码安全吗？",
   "pc.faq.a2": "完全安全。您的密码在浏览器端使用 SHA-1 算法进行哈希运算，只有哈希值的前5位字符发送到服务器查询。您的真实密码永远不会离开浏览器——这就是 k-Anonymity 技术。",
   "pc.faq.q3": "如果我的邮箱出现在泄露事件中该怎么办？",
@@ -1488,7 +1488,7 @@
   "pc.toast.generated": "新密码已生成",
   "pc.common.close": "关闭",
   "pc.common.learn_more": "了解更多",
-  "pc.common.powered_by": "泄露数据由 Have I Been Pwned 提供",
+  "pc.common.powered_by": "",
   "pc.common.records": "条记录"
 }
 

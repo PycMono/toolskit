@@ -3445,5 +3445,44 @@ document.addEventListener('DOMContentLoaded', function() {
     '<div class="jt-desc-body">' + content + '</div>' +
     '</div>';
   section.style.display = '';
+
+  // ── Insert mid-article ad after the 3rd <h2> ──────────────────────────────
+  // Only inject if Google Ads is enabled (AdsClientID is set on window by the template)
+  var body = section.querySelector('.jt-desc-body');
+  if (!body) return;
+  var h2s = body.querySelectorAll('h2');
+  var insertAfter = h2s[2] || h2s[h2s.length - 1]; // after 3rd h2, or last one
+  if (!insertAfter) return;
+
+  // Find the next sibling element to insert before (skip to after the h2's content block)
+  // We want to insert after the <p> / <ul> that follows the h2, not right after the h2 title
+  var anchor = insertAfter.nextElementSibling;
+  if (anchor && anchor.nextElementSibling) {
+    anchor = anchor.nextElementSibling; // skip one more block so ad sits between sections
+  }
+
+  var adEl = document.createElement('div');
+  adEl.className = 'jt-desc-mid-ad';
+
+  // Check if AdSense client is available (i.e. ads are enabled)
+  var adsbygoogle = window.adsbygoogle;
+  if (typeof adsbygoogle !== 'undefined' && window.JT_ADS_CLIENT) {
+    adEl.innerHTML =
+      '<ins class="adsbygoogle"' +
+      ' style="display:block;text-align:center"' +
+      ' data-ad-client="' + window.JT_ADS_CLIENT + '"' +
+      ' data-ad-slot="json-tool-mid-article"' +
+      ' data-ad-format="auto"' +
+      ' data-full-width-responsive="true"></ins>';
+    body.insertBefore(adEl, anchor || null);
+    try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+  } else if (!window.JT_ADS_ENABLED && window.JT_ADS_DEV) {
+    // Dev placeholder
+    adEl.innerHTML =
+      '<div style="border:2px dashed #ccc;padding:12px 24px;text-align:center;' +
+      'background:#f9f9f9;color:#888;font-size:13px;border-radius:6px;display:inline-block">' +
+      '📢 广告位占位 · json-tool-mid-article · 728×90</div>';
+    body.insertBefore(adEl, anchor || null);
+  }
 });
 

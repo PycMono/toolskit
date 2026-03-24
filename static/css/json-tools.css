@@ -1130,6 +1130,39 @@ body.jt-page {
 .jt-toast--error   { background: var(--jt-red); }
 .jt-toast--info    { background: #374151; }
 
+/* ── Sidebar Ads (sticky skyscraper, 160×600) ────
+   Only shown on screens wide enough (≥1700px) to
+   have room beside the 1400px wide container.
+   Uses position:sticky so they follow scroll but
+   never overlap the editor.
+──────────────────────────────────────────────── */
+.jt-sidebar-ad-wrap {
+  display: none; /* hidden by default, shown via media query below */
+  position: absolute;
+  top: 0;
+  width: 160px;
+}
+.jt-sidebar-ad-wrap--left  { right: calc(100% + 16px); }
+.jt-sidebar-ad-wrap--right { left:  calc(100% + 16px); }
+.jt-sidebar-ad-inner {
+  position: sticky;
+  top: 80px; /* clear the sticky topbar */
+  width: 160px;
+}
+/* The workspace section needs relative positioning for abs children */
+.jt-tool-workspace { position: relative; }
+
+/* In-article mid ad (728×90, injected by JS) */
+.jt-desc-mid-ad {
+  text-align: center;
+  margin: 32px 0;
+  clear: both;
+}
+
+@media (min-width: 1700px) {
+  .jt-sidebar-ad-wrap { display: block; }
+}
+
 /* ── Responsive ─────────────────────────────────── */
 @media (max-width: 768px) {
   .jt-editor-layout {

@@ -142,8 +142,9 @@ func SitemapXML(c *gin.Context) {
 		// SMS Receiver (S-01)
 		"/sms", "/sms/buy", "/sms/prices", "/sms/login", "/sms/register",
 		
-		// Privacy Tools
-		"/virtual-address", "/password-generator", "/temp-email", "/proxy",
+                // Privacy Tools
+                "/virtual-address", "/password-generator", "/temp-email", "/proxy",
+                "/privacy/check",
 		
 		// AI Lab
 		"/ailab/detector", "/ailab/humanize",
