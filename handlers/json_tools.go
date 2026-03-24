@@ -116,23 +116,6 @@ func getRelatedTools(currentKey string) []JsonToolMeta {
 	return related
 }
 
-// JsonToolFAQ holds a FAQ item for a tool
-type JsonToolFAQ struct{ Q, A string }
-
-func getJsonToolFAQs(key, lang string) []JsonToolFAQ {
-	if lang == "en" {
-		return []JsonToolFAQ{
-			{Q: "Is this tool free?", A: "Yes, all JSON tools on Tool Box Nova are completely free with no sign-up required."},
-			{Q: "Is my data secure?", A: "All processing happens entirely in your browser. Your JSON data is never uploaded to any server."},
-			{Q: "What is the maximum JSON size?", A: "There is no hard limit. However, very large JSON files (>10MB) may be slow due to browser processing."},
-		}
-	}
-	return []JsonToolFAQ{
-		{Q: "这个工具免费吗？", A: "是的，Tool Box Nova 上所有 JSON 工具完全免费，无需注册账号。"},
-		{Q: "我的数据安全吗？", A: "所有处理完全在您的浏览器中完成，JSON 数据不会上传到任何服务器。"},
-		{Q: "支持多大的 JSON 文件？", A: "没有强制大小限制，但超过 10MB 的 JSON 可能因浏览器处理而变慢。"},
-	}
-}
 
 // JsonToolPage returns a gin.HandlerFunc for a specific JSON tool
 func JsonToolPage(toolKey string) gin.HandlerFunc {
@@ -166,7 +149,6 @@ func JsonToolPage(toolKey string) gin.HandlerFunc {
 			"Meta":         meta,
 			"HotTools":     getHotTools(),
 			"RelatedTools": getRelatedTools(toolKey),
-			"FAQs":         getJsonToolFAQs(toolKey, lang),
 			"AllTools":     AllJsonToolMetas,
 			"PageClass":    "page-json-tool",
 		})

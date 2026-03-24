@@ -1,8 +1,14 @@
+/* @license MIT */
+/* cloudflare-skip-minify */
 'use strict';
 /**
  * json-tool-descriptions.js
  * SEO article content for JSON Validate & Format tools.
  * Loaded only on matching tool pages. Renders into #jt-desc-section.
+ *
+ * NOTE: Do NOT enable Cloudflare JS Auto-Minify for this file.
+ * The multi-line template strings contain HTML that will be corrupted by minification.
+ * Cloudflare Dashboard → Speed → Optimization → turn OFF "JavaScript" under Auto Minify.
  */
 
 window.JT_DESCRIPTIONS = window.JT_DESCRIPTIONS || {};

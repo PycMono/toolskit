@@ -994,38 +994,6 @@ body.jt-page {
 
 .jt-related-card:hover { border-color: var(--jt-amber); background: var(--jt-amber-light); }
 
-.jt-faq-section { background: var(--jt-bg); border-top: 1px solid var(--jt-border); padding: 32px 0 40px; }
-
-.jt-faq-list { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; }
-
-.jt-faq-item {
-  background: var(--jt-surface);
-  border: 1px solid var(--jt-border);
-  border-radius: var(--jt-radius-sm);
-  overflow: hidden;
-}
-
-.jt-faq-question {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 14px 18px;
-  background: none;
-  border: none;
-  text-align: left;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--jt-text);
-  cursor: pointer;
-}
-
-.jt-faq-chevron { flex-shrink: 0; color: var(--jt-muted); transition: transform 0.2s; }
-.jt-faq-item--open .jt-faq-chevron { transform: rotate(180deg); color: var(--jt-amber); }
-.jt-faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
-.jt-faq-item--open .jt-faq-answer { max-height: 300px; }
-.jt-faq-answer p { padding: 0 18px 14px; font-size: 0.875rem; color: var(--jt-muted); line-height: 1.7; }
 
 /* ── Tool Description Article ──────────────────── */
 .jt-desc-section {

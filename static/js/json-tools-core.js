@@ -305,12 +305,6 @@ function showToast(msg, type = 'info') {
   setTimeout(() => { el.classList.remove('jt-toast--show'); setTimeout(() => el.remove(), 300); }, 3000);
 }
 
-function toggleFAQ(id) {
-  const item   = document.getElementById(id);
-  const isOpen = item.classList.contains('jt-faq-item--open');
-  document.querySelectorAll('.jt-faq-item--open').forEach(i => i.classList.remove('jt-faq-item--open'));
-  if (!isOpen) item.classList.add('jt-faq-item--open');
-}
 
 // Record recent tool visit
 function recordVisit(key, icon, name) {

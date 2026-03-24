@@ -363,30 +363,7 @@
 </section>
 {{ end }}
 
-<!-- FAQ -->
-{{ if .FAQs }}
-<section class="jt-faq-section">
-  <div class="jt-container">
-    <h2 class="jt-section-title">{{ call .T "json.faq.title" }}</h2>
-    <div class="jt-faq-list">
-      {{ range $i, $faq := .FAQs }}
-      <div class="jt-faq-item" id="faq-{{ $i }}">
-        <button class="jt-faq-question" onclick="toggleFAQ('faq-{{ $i }}')">
-          <span>{{ $faq.Q }}</span>
-          <svg class="jt-faq-chevron" width="16" height="16" viewBox="0 0 24 24"
-               fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </button>
-        <div class="jt-faq-answer"><p>{{ $faq.A }}</p></div>
-      </div>
-      {{ end }}
-    </div>
-  </div>
-</section>
-{{ end }}
-
-<!-- Tool Description Article (SEO content for all JSON tools) -->
+<!-- Tool Description Article (SEO content, rendered by json-tool-descriptions.js) -->
 <section class="jt-desc-section" id="jt-desc-section" style="display:none"></section>
 {{ end }}
 
@@ -414,16 +391,16 @@
         onerror="var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jsonpath/1.1.1/jsonpath.min.js';document.head.appendChild(s)"></script>
 {{ end }}
 {{ if or (eq .ToolKey "to-typescript") (eq .ToolKey "to-python") (eq .ToolKey "to-java") (eq .ToolKey "to-csharp") (eq .ToolKey "to-go") (eq .ToolKey "to-kotlin") (eq .ToolKey "to-swift") (eq .ToolKey "to-rust") (eq .ToolKey "to-php") }}
-<script src="/static/js/json-codegen-core.js"></script>
+<script src="/static/js/json-codegen-core.js?{{ .AssetVer }}"></script>
 {{ end }}
 <script>
   window.JT_LANG    = "{{ .Lang }}";
   window.JT_TOOL    = "{{ .ToolKey }}";
   window.JT_I18N   = {};
 </script>
-<script src="/static/js/json-tools-core.js"></script>
-<script src="/static/js/json-tool-{{ .ToolKey }}.js"></script>
-<script src="/static/js/json-tool-descriptions.js"></script>
+<script src="/static/js/json-tools-core.js?{{ .AssetVer }}"></script>
+<script src="/static/js/json-tool-{{ .ToolKey }}.js?{{ .AssetVer }}"></script>
+<script src="/static/js/json-tool-descriptions.js?{{ .AssetVer }}"></script>
 
 <!-- Bottom Ad -->
 <div style="text-align:center;margin:24px 0">

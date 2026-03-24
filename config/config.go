@@ -4,8 +4,9 @@ import "github.com/jinzhu/configor"
 
 type Config struct {
 	// 服务基础
-	Port    string `json:"port"     default:"8086"                    env:"PORT"`
-	SiteURL string `json:"site_url" default:"https://toolboxnova.com" env:"SITE_URL"`
+	Port         string `json:"port"          default:"8086"                    env:"PORT"`
+	SiteURL      string `json:"site_url"      default:"https://toolboxnova.com" env:"SITE_URL"`
+	AssetVersion string `json:"asset_version" default:"v1"                      env:"ASSET_VERSION"`
 
 	// 通知
 	SMSAPIKey   string `json:"sms_api_key"   default:"" env:"SMS_API_KEY"`

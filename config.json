@@ -1,7 +1,8 @@
 {
-  "port": "8088",
-  "debug": true,
+  "port": "5000",
+  "debug": false,
   "site_url": "https://toolboxnova.com",
+  "asset_version": "v20260324",
   "sms_api_key": "",
   "email_api_key": "",
   "google_ads_id": "",

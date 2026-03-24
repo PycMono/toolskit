@@ -52,6 +52,8 @@ func baseData(c *gin.Context, extraData gin.H) gin.H {
 		// Google Analytics (injected by middleware.GAConfig)
 		"GAMeasurementID": c.GetString("GAMeasurementID"),
 		"EnableGA":        c.GetBool("EnableGA"),
+		// Asset version for cache busting (injected by middleware.AdsConfig or set globally)
+		"AssetVer": c.GetString("AssetVersion"),
 	}
 	for k, v := range extraData {
 		data[k] = v
