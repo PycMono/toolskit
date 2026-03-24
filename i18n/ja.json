@@ -12,14 +12,12 @@
   "nav.search_placeholder": "ツールを検索...",
   "nav.lang_zh": "🇨🇳 中文",
   "nav.lang_en": "🇺🇸 English",
-
   "footer.desc": "50以上の無料オンラインツール。開発者と一般ユーザー向け。登録不要、データ保存なし。",
   "footer.tag1": "🛡 データ保存なし",
   "footer.tag2": "👤 完全匿名",
   "footer.popular_tools": "人気ツール",
   "footer.resources": "リソースと法的情報",
   "footer.copyright": "© 2025–2026 Tool Box Nova · すべてのデータはサーバー側で処理され、保存されません。",
-
   "home.title": "Tool Box Nova - 開発者とプライバシー保護のための無料オンラインツール",
   "home.hero_title": "プライバシー保護と開発者向け無料オンラインツール",
   "home.hero_sub": "50以上のツール。登録不要。データ保存なし。",
@@ -70,30 +68,25 @@
   "home.tool_proxy_desc": "無料オンラインプロキシ、実際のIPを隠して匿名閲覧",
   "home.tool_image_compress": "画像圧縮",
   "home.tool_image_compress_desc": "オンラインで画像を圧縮、JPG/PNG/WebP対応",
-
   "sms.name": "SMS 認証コード受信",
   "sms.title": "オンライン SMS 認証 & 仮想番号",
   "sms.desc": "オンラインでSMS認証コードを受信、180以上の国・700以上のプラットフォーム対応",
-
   "sms.seo.landing.title": "SMS 認証コード受信 — 仮想電話番号でオンライン認証コード受信 | Tool Box Nova",
   "sms.seo.landing.desc": "実際の携帯電話の登録不要、オンラインでSMS認証コードを受信、180以上の国・700以上のプラットフォーム対応、最安¥0.1/件。",
   "sms.seo.buy.title": "仮想番号を購入してSMSを受信 | Tool Box Nova",
   "sms.seo.buy.desc": "サービス、国、キャリアを選択し、すぐに仮想電話番号を取得して認証コードを自動受信。",
   "sms.seo.prices.title": "仮想番号料金表 | Tool Box Nova",
   "sms.seo.prices.desc": "700以上のプラットフォーム・180以上の国のリアルタイム料金とSMS受信成功率を確認。",
-
   "sms.hero.title": "オンライン SMS 認証コード受信",
   "sms.hero.subtitle": "実際のSIMカード不要、即座にグローバル仮想番号を取得して認証コードを受信",
   "sms.hero.badge1": "180以上の国",
   "sms.hero.badge2": "700以上のプラットフォーム",
   "sms.hero.badge3": "秒速到着",
   "sms.hero.cta_btn": "今すぐ番号を取得",
-
   "sms.stats.services": "対応プラットフォーム",
   "sms.stats.countries": "対応国数",
   "sms.stats.deliveries": "認証成功数",
   "sms.stats.uptime": "オンライン時間",
-
   "sms.nav.buy": "番号を購入",
   "sms.nav.active": "アクティブ注文",
   "sms.nav.history": "注文履歴",
@@ -101,11 +94,9 @@
   "sms.nav.account": "アカウント",
   "sms.nav.login": "ログイン",
   "sms.nav.register": "新規登録",
-
   "sms.search.placeholder": "プラットフォームを検索（WeChat、Telegram、Google...）",
   "sms.search.no_result": "該当するプラットフォームが見つかりません",
   "sms.search.popular": "人気プラットフォーム",
-
   "sms.service.label": "プラットフォームを選択",
   "sms.country.label": "国を選択",
   "sms.operator.label": "キャリアを選択",
@@ -114,12 +105,10 @@
   "sms.stock.label": "在庫",
   "sms.rate.label": "成功率",
   "sms.stock.out": "番号なし",
-
   "sms.buy.btn": "🛒 番号を購入",
   "sms.buy.buying": "取得中...",
   "sms.buy.no_stock": "利用可能な番号がありません",
   "sms.buy.balance_low": "残高不足です。先にチャージしてください",
-
   "sms.order.number": "仮想番号",
   "sms.order.copy": "コピー",
   "sms.order.copied": "コピー済み ✓",
@@ -131,20 +120,16 @@
   "sms.order.status.received": "✅ 認証コードを受信しました",
   "sms.order.status.cancelled": "キャンセル済み",
   "sms.order.status.timeout": "⏱ タイムアウト",
-
   "sms.otp.label": "認証コード",
   "sms.otp.copy": "認証コードをコピー",
   "sms.otp.copied": "コピー済み",
-
   "sms.btn.cancel": "❌ キャンセル",
   "sms.btn.finish": "✅ 完了",
   "sms.btn.rebuy": "🔄 番号を変更して再試行",
   "sms.btn.another": "再度購入",
-
   "sms.balance.label": "残高",
   "sms.balance.topup": "チャージ",
   "sms.balance.unit": "円",
-
   "sms.history.title": "注文履歴",
   "sms.history.status.all": "すべて",
   "sms.history.status.received": "受信済み",
@@ -152,18 +137,15 @@
   "sms.history.status.timeout": "タイムアウト",
   "sms.history.empty": "注文記録がありません",
   "sms.history.export_csv": "CSV エクスポート",
-
   "sms.prices.title": "料金 & 成功率",
   "sms.prices.success_rate": "成功率",
   "sms.prices.available": "利用可能数",
   "sms.prices.filter_all": "全プラットフォーム",
   "sms.prices.updated_at": "最終更新",
-
   "sms.active.title": "アクティブ注文",
   "sms.active.empty": "アクティブな注文はありません",
   "sms.active.goto_buy": "番号を購入する →",
   "sms.active.new_order": "新しい番号を追加",
-
   "sms.error.insufficient_balance": "残高不足です。チャージ後に再試行してください",
   "sms.error.no_numbers": "現在利用可能な番号がありません。別のキャリアをお試しください",
   "sms.error.network_error": "ネットワークエラーです。リフレッシュして再試行してください",
@@ -174,9 +156,7 @@
   "sms.order.received": "✅ 認証コードを受信しました",
   "sms.order.timeout": "⏱ 待機タイムアウト",
   "sms.order.cancelled": "キャンセル済み",
-
   "sms.faq.title": "よくある質問",
-
   "sms.how.title": "3ステップで認証コード受信、簡単・迅速",
   "sms.how.step1.title": "プラットフォームと国を選択",
   "sms.how.step1.desc": "700以上のプラットフォームからターゲットアプリを検索し、国とキャリアを選択",
@@ -184,7 +164,6 @@
   "sms.how.step2.desc": "ワンクリックで購入、すぐに仮想電話番号を取得してターゲットプラットフォームにコピー",
   "sms.how.step3.title": "認証コードを受信",
   "sms.how.step3.desc": "認証コードSMSが自動到着、ワンクリックでコピーして認証完了",
-
   "sms.login.title": "ログイン",
   "sms.login.email": "メールアドレス",
   "sms.login.password": "パスワード",
@@ -192,7 +171,6 @@
   "sms.login.google": "Googleでログイン",
   "sms.login.no_account": "アカウントをお持ちでないですか？今すぐ登録",
   "sms.login.forgot": "パスワードを忘れた",
-
   "sms.register.title": "新規登録",
   "sms.register.email": "メールアドレス",
   "sms.register.password": "パスワード",
@@ -200,7 +178,6 @@
   "sms.register.btn": "登録",
   "sms.register.google": "Googleで登録",
   "sms.register.has_account": "既にアカウントをお持ちですか？ログインへ",
-
   "sms.account.title": "アカウント設定",
   "sms.account.api_key": "API Key",
   "sms.account.api_key_copy": "コピー",
@@ -210,7 +187,6 @@
   "sms.account.topup.alipay": "Alipay",
   "sms.account.topup.wechat": "WeChat Pay",
   "sms.account.topup.usdt": "USDT",
-
   "sms.stat_activations": "総アクティベーション数",
   "sms.stat_numbers": "オンライン番号数",
   "sms.country_filter": "国でフィルター",
@@ -226,10 +202,8 @@
   "sms.auto_refresh": "自動更新",
   "sms.waiting": "SMS待機中...",
   "sms.copy_code": "認証コードをコピー",
-
   "sms.messages.title": "受信したSMS",
   "sms.messages.sender": "送信者",
-
   "sms.buy.summary.title": "番号取得の確認",
   "sms.buy.btn.get_number": "番号を取得",
   "sms.buy.btn.finish": "利用完了",
@@ -238,7 +212,6 @@
   "sms.buy.otp.arrived": "認証コードが届きました",
   "sms.buy.otp.copy": "認証コードをコピー",
   "sms.history.btn.clear": "履歴をクリア",
-
   "address.title": "グローバル仮想アドレス生成器 - 架空身分情報 | Tool Box Nova",
   "address.meta_desc": "テストやプライバシー保護のために、リアルな架空アドレス・氏名・身分情報を生成。",
   "address.hero_title": "グローバル仮想アドレス生成器",
@@ -263,7 +236,6 @@
   "address.more_info": "詳細情報",
   "address.history": "最近の生成履歴",
   "address.about": "このツールについて",
-
   "password.title": "強力ランダムパスワード生成器 | Tool Box Nova",
   "password.meta_desc": "暗号レベルの安全なランダムパスワードを即時生成。無料・プライベート、サーバーに送信されません。",
   "password.hero_title": "ランダムパスワード生成器",
@@ -287,7 +259,6 @@
   "password.strong_title": "強力なパスワードとは？",
   "password.why_title": "なぜパスワード生成器を使うのか？",
   "password.tips_title": "セキュリティのヒント",
-
   "email.title": "無料一時メールアドレス - 10分メール | Tool Box Nova",
   "email.meta_desc": "無料の使い捨て一時メールアドレスを即時取得。10分後に自動期限切れ、登録不要。",
   "email.tab": "一時メール",
@@ -308,7 +279,6 @@
   "email.what_is": "一時メールとは",
   "email.use_cases": "利用シーン",
   "email.notices": "注意事項",
-
   "proxy.title": "無料匿名ウェブプロキシ - プライベートブラウジング | Tool Box Nova",
   "proxy.meta_desc": "無料オンラインプロキシで匿名ウェブブラウジング。IPアドレスを隠し、ソフトウェアのインストール不要。",
   "proxy.tab": "匿名プロキシ",
@@ -332,10 +302,8 @@
   "proxy.stats_title": "リアルタイム統計",
   "proxy.today_requests": "本日のリクエスト数",
   "proxy.available_nodes": "利用可能なノード",
-
   "about.title": "私たちについて | Tool Box Nova",
   "privacy.title": "プライバシーポリシー | Tool Box Nova",
-
   "about.h1": "Tool Box Nova について",
   "about.mission.title": "私たちのミッション",
   "about.mission.desc": "Tool Box Nova は開発者と一般ユーザー向けの無料でプライバシー優先のオンラインツール集です。登録不要・無料・データ収集なしで、すべての人がプライバシーを保護するツールを利用できるべきだと信じています。",
@@ -357,7 +325,6 @@
   "terms.title": "利用規約 | Tool Box Nova",
   "contact.title": "お問い合わせ | Tool Box Nova",
   "sitemap.title": "サイトマップ | Tool Box Nova",
-
   "contact.h1": "お問い合わせ",
   "contact.intro": "バグ報告、機能提案、ビジネスパートナーシップのリクエストをお寄せください。",
   "contact.field.name": "お名前",
@@ -372,7 +339,6 @@
   "contact.field.message_placeholder": "問題や提案を説明してください...",
   "contact.btn.send": "メッセージを送信",
   "contact.success": "メッセージが送信されました！2営業日以内にご返信いたします。",
-
   "privacy.h1": "プライバシーポリシー",
   "privacy.last_updated": "最終更新：2026年3月12日",
   "privacy.s1.title": "1. 収集する情報",
@@ -391,7 +357,6 @@
   "privacy.s5.desc": "本サイトではGoogle広告が表示される場合があります。Googleは閲覧履歴に基づいてCookieを使用した広告を配信することがあります。<a href=\"https://www.google.com/settings/ads\" target=\"_blank\">Google広告設定</a>からオプトアウトできます。",
   "privacy.s6.title": "6. お問い合わせ",
   "privacy.s6.desc": "プライバシーに関するご質問は<a href=\"/contact\">お問い合わせ</a>ください。",
-
   "sitemap.h1": "サイトマップ",
   "sitemap.section.privacy": "プライバシーツール",
   "sitemap.section.resources": "リソースと法的情報",
@@ -404,7 +369,6 @@
   "sitemap.link.contact": "お問い合わせ",
   "sitemap.link.privacy": "プライバシーポリシー",
   "sitemap.link.terms": "利用規約",
-
   "nav.ip_lookup": "IP 検索",
   "nav.soon": "近日公開",
   "nav.dev_json": "JSON ツールボックス",
@@ -413,13 +377,11 @@
   "nav.dev_timestamp": "タイムスタンプ変換",
   "nav.dev_base": "基数変換",
   "nav.dev_case": "大文字小文字変換",
-
   "footer.link.privacy": "プライバシーポリシー",
   "footer.link.terms": "利用規約",
   "footer.link.about": "私たちについて",
   "footer.link.contact": "お問い合わせ",
   "footer.link.sitemap": "サイトマップ",
-
   "home.search_btn": "検索",
   "home.feature.privacy.title": "プライバシー優先",
   "home.feature.privacy.desc": "データ保存なし、登録不要。あなたのプライバシーが最優先です。",
@@ -427,16 +389,13 @@
   "home.feature.instant.desc": "すべてのツールはブラウザ内で直接動作し、ダウンロード不要です。",
   "home.feature.free.title": "完全無料",
   "home.feature.free.desc": "50以上のすべてのツールが無料で利用可能。隠れた費用や制限はありません。",
-
   "img.resize.preset.selected": "選択済み",
   "img.resize.format.recommended": "推奨",
   "img.resize.quality.min": "小さいファイル",
   "img.resize.quality.max": "高画質",
   "img.resize.btn.add_more": "+ 画像を追加",
-
   "ailab.humanize.badge.human": "Human",
   "ailab.humanize.stat.ai_rate": "AI率",
-
   "tools.title": "プログラミング開発ツール | Tool Box Nova",
   "tools.json_title": "JSON ツールボックス - フォーマット/検証/変換 | Tool Box Nova",
   "tools.regex_title": "正規表現テスター | Tool Box Nova",
@@ -444,9 +403,7 @@
   "tools.timestamp_title": "タイムスタンプ変換ツール | Tool Box Nova",
   "tools.base_title": "基数変換器 | Tool Box Nova",
   "tools.case_title": "大文字小文字/命名規則変換 | Tool Box Nova",
-
   "nav.tools": "プログラミングツール",
-
   "tools.json.seo.title": "無料 JSON バリデーター & フォーマッター — オンライン JSON Lint | Tool Box Nova",
   "tools.json.seo.desc": "オンライン JSON バリデーター＆フォーマッター。正確なエラー行特定、整形・圧縮・URL取得対応、100% ローカル処理、データはサーバーに送信されません。",
   "tools.json.name": "JSON ツール",
@@ -486,14 +443,13 @@
   "tools.json.treeview.collapse": "すべて折りたたむ",
   "tools.json.error.fetch_failed": "URL取得に失敗しました。アドレスまたはCORS制限を確認してください",
   "tools.json.error.empty": "先にJSON内容を入力してください",
-
-  "ailab.detector.seo.title": "無料 AI コンテンツ検出器 — ChatGPT / Gemini テキストを検出 | Tool Box Nova",
-  "ailab.detector.seo.desc": "テキストがAI生成かどうかを正確に検出。ChatGPT、GPT-4、Gemini、Claude対応、文レベルハイライト、完全無料。",
+  "ailab.detector.seo.title": "無料AIコンテンツ検出・人間化ツール — すべてのAI検出器を回避 | ToolboxNova",
+  "ailab.detector.seo.desc": "99%の精度でChatGPT、Claude、GeminiなどのAI生成コンテンツを検出。Turnitin、GPTZeroなどを回避。完全無料・登録不要。",
   "ailab.detector.name": "AI コンテンツ検出器",
   "ailab.detector.title": "AI コンテンツ検出器",
   "ailab.detector.desc": "テキストがAI生成かどうかを正確に検出",
-  "ailab.detector.hero.title": "AI コンテンツ検出器",
-  "ailab.detector.hero.subtitle": "先進的なAI技術を使用し、ChatGPT、GPT-4、Gemini、Claudeなどの主要モデルによるAI生成テキストを正確に検出",
+  "ailab.detector.hero.title": "AIコンテンツを即座に検出・人間化",
+  "ailab.detector.hero.subtitle": "最も精確な無料AI検出ツール。ChatGPT、Claude、Geminiなど主要AIモデルを検出し、内蔵の人間化機能で検出不可能な文章に変換します。",
   "ailab.detector.hero.badge1": "1000万以上のユーザーが信頼",
   "ailab.detector.hero.badge2": "99% の精度",
   "ailab.detector.hero.badge3": "完全無料",
@@ -501,17 +457,17 @@
   "ailab.detector.input.tab_file": "ファイルをアップロード",
   "ailab.detector.input.tab_url": "URLを貼り付け",
   "ailab.detector.input.placeholder": "検出したいテキストを貼り付けまたは入力（最低50文字）...",
-  "ailab.detector.input.upload_hint": "ここにファイルをドラッグ＆ドロップ、またはクリックして選択",
+  "ailab.detector.input.upload_hint": "PDF、DOCX、TXT に対応・最大10MB",
   "ailab.detector.input.upload_formats": ".txt · .pdf · .docx 対応、最大 5MB",
   "ailab.detector.input.upload_btn": "ファイルを選択",
   "ailab.detector.input.url_placeholder": "ウェブページURLを貼り付けてテキストを自動抽出...",
   "ailab.detector.input.url_fetch_btn": "テキストを抽出",
   "ailab.detector.btn.check": "AI コンテンツを検出",
   "ailab.detector.btn.example": "サンプルを表示",
-  "ailab.detector.result.empty_title": "検出結果",
-  "ailab.detector.result.empty_desc": "テキストを入力後、ここに詳細なAI検出結果が表示されます",
+  "ailab.detector.result.empty_title": "分析の準備完了",
+  "ailab.detector.result.empty_desc": "テキストを貼り付けるか、ファイルをアップロードしてAIコンテンツを検出。",
   "ailab.detector.supported_models": "以下のAIモデルの検出に対応",
-  "ailab.detector.result.words": "分析された語数",
+  "ailab.detector.result.words": "語数",
   "ailab.detector.result.sentences": "分析された文数",
   "ailab.detector.result.ai_sentences": "AI生成文",
   "ailab.detector.result.human_sentences": "人間が書いた文",
@@ -526,9 +482,7 @@
   "ailab.detector.btn.checking": "検出中...",
   "ailab.detector.error.timeout": "リクエストがタイムアウトしました。後でもう一度お試しください",
   "ailab.detector.error.failed": "検出に失敗しました。後でもう一度お試しください",
-
   "ailab.detector.sentence_analysis.title": "文ごとの分析",
-
   "ailab.detector.how.title": "仕組み",
   "ailab.detector.how.step1.title": "テキスト分析",
   "ailab.detector.how.step1.desc": "入力テキストを文と段落に分解し、言語特徴を抽出",
@@ -538,19 +492,96 @@
   "ailab.detector.how.step3.desc": "各文のAI生成確率を計算し、総合スコアを生成",
   "ailab.detector.how.step4.title": "結果の可視化",
   "ailab.detector.how.step4.desc": "高リスクの文を色分けハイライトし、詳細な分析レポートを提供",
-
+  "ailab.detector.seo.keywords": "AI検出, AIコンテンツ検出, ChatGPT検出, AIテキスト人間化, AI検出回避, GPTZero代替, Turnitin回避, 無料AI検出器",
+  "ailab.detector.hero.badge_accuracy": "99%の検出精度",
+  "ailab.detector.hero.badge_users": "500万人以上が信頼",
+  "ailab.detector.hero.badge_free": "無料・登録不要",
+  "ailab.detector.hero.detector_strip_label": "チェック対象：",
+  "ailab.detector.input.char_count_label": "{count} / 15,000 文字",
+  "ailab.detector.input.word_count_label": "{count} 語",
+  "ailab.detector.input.url_btn": "URLをスキャン",
+  "ailab.detector.input.clear_btn": "クリア",
+  "ailab.detector.input.sample_btn": "サンプルテキストを試す",
+  "ailab.detector.options.purpose_label": "文章の目的",
+  "ailab.detector.options.purpose_general": "一般文章",
+  "ailab.detector.options.purpose_essay": "小論文",
+  "ailab.detector.options.purpose_article": "記事/ブログ",
+  "ailab.detector.options.purpose_marketing": "マーケティング",
+  "ailab.detector.options.purpose_story": "創作/物語",
+  "ailab.detector.options.purpose_cover_letter": "カバーレター",
+  "ailab.detector.options.purpose_report": "レポート",
+  "ailab.detector.options.purpose_business": "ビジネス文書",
+  "ailab.detector.options.purpose_legal": "法律文書",
+  "ailab.detector.options.tone_label": "文体",
+  "ailab.detector.options.tone_standard": "標準",
+  "ailab.detector.options.tone_fluent": "流暢",
+  "ailab.detector.options.tone_formal": "フォーマル",
+  "ailab.detector.options.tone_academic": "学術的",
+  "ailab.detector.options.tone_aggressive": "力強い",
+  "ailab.detector.options.tone_friendly": "フレンドリー",
+  "ailab.detector.options.lang_label": "コンテンツ言語",
+  "ailab.detector.options.mode_label": "人間化モード",
+  "ailab.detector.options.mode_balanced": "バランス",
+  "ailab.detector.options.mode_enhanced": "強化",
+  "ailab.detector.options.mode_ultra": "ウルトラ（最も自然）",
+  "ailab.detector.btn.detect": "AIをチェック",
+  "ailab.detector.btn.detecting": "分析中...",
+  "ailab.detector.btn.humanize": "AIテキストを人間化",
+  "ailab.detector.btn.humanizing": "人間化処理中...",
+  "ailab.detector.btn.rehumanize": "再人間化",
+  "ailab.detector.result.title": "検出結果",
+  "ailab.detector.result.score_label": "AIスコア",
+  "ailab.detector.result.detectors_title": "主要検出器のスコア",
+  "ailab.detector.result.highlight_ai": "AI生成",
+  "ailab.detector.result.highlight_mixed": "混合",
+  "ailab.detector.result.highlight_human": "人間の文章",
+  "ailab.detector.result.sentences_analyzed": "{count}文を分析",
+  "ailab.detector.result.verdict_human": "✅ 人間が書いた可能性が高い",
+  "ailab.detector.result.verdict_mixed": "⚠️ 混合コンテンツ",
+  "ailab.detector.result.verdict_ai": "❌ AI生成の可能性が高い",
+  "ailab.detector.result.confidence": "信頼度：{pct}%",
+  "ailab.detector.result.readability": "可読性",
+  "ailab.detector.result.language": "言語",
+  "ailab.detector.compare.tab_humanized": "人間化後のテキスト",
+  "ailab.detector.compare.tab_diff": "変更箇所のハイライト",
+  "ailab.detector.compare.words_changed": "{count}語を変更",
+  "ailab.detector.download.copy_btn": "テキストをコピー",
+  "ailab.detector.download.copy_success": "コピーしました！",
+  "ailab.detector.download.download_txt": ".txtをダウンロード",
+  "ailab.detector.download.recheck": "再チェック",
+  "ailab.detector.history.title": "最近のチェック",
+  "ailab.detector.history.empty": "履歴はありません。",
+  "ailab.detector.history.clear": "履歴を消去",
+  "ailab.detector.feature.privacy_title": "100%プライベート",
+  "ailab.detector.feature.privacy_desc": "テキストは安全に処理され、サーバーには保存されません。",
+  "ailab.detector.feature.speed_title": "超高速",
+  "ailab.detector.feature.speed_desc": "3秒以内に正確なAI検出結果を取得。",
+  "ailab.detector.feature.free_title": "常に無料",
+  "ailab.detector.feature.free_desc": "登録不要、サブスクリプション不要。毎回15,000文字まで無料。",
   "ailab.detector.faq.title": "よくある質問",
-  "ailab.detector.faq.q1": "AI コンテンツ検出の精度はどのくらいですか？",
-  "ailab.detector.faq.a1": "当モデルは多様なテストセットで95%以上の精度を達成しています。ただし、AI検出技術はまだ発展中であり、結果は参考としてのみ利用し、唯一の判断基準としないでください。人間が編集したAIテキストは正確に識別しにくい場合があります。",
-  "ailab.detector.faq.q2": "どのAIモデルの検出に対応していますか？",
-  "ailab.detector.faq.a2": "ChatGPT（GPT-3.5/GPT-4）、Google Gemini、Claude、文心一言、通義千問などの主要大規模言語モデルが生成した中国語・英語テキストの検出に対応。新しいAI生成パターンに適応するためモデルを継続的に更新しています。",
-  "ailab.detector.faq.q3": "検出中にテキストは保存されますか？",
-  "ailab.detector.faq.a3": "いいえ。すべての検出はブラウザ側で完全に行われます（または暗号化されたAPI呼び出しを使用）。ユーザーが入力したテキスト内容を保存・記録することはありません。検出完了後、データは即座に破棄されます。",
-  "ailab.detector.faq.q4": "明らかに人間が書いたテキストがAIとマークされるのはなぜですか？",
-  "ailab.detector.faq.a4": "考えられる原因：1) テキストが非常に形式的またはテンプレート的、2) AIに一般的な文構造を使用、3) テキストが短すぎて誤判定。精度向上のため、より多くのコンテキストを入力することをお勧めします。検出結果は実際の状況と合わせて総合的に判断してください。",
-  "ailab.detector.faq.q5": "検出に文字数制限はありますか？",
-  "ailab.detector.faq.a5": "1回の検出で最大5000文字に対応。より長いテキストを検出する場合は、分割して検出することをお勧めします。300〜3000文字のテキストで最も高い精度が得られます。",
-
+  "ailab.detector.faq.q1": "AI検出器の精度はどのくらいですか？",
+  "ailab.detector.faq.a1": "当AI検出器は多様なテキストサンプルで99%の精度を達成しており、GPTZero、Originality.AIなどの主要ツールとの独立テストで検証済みです。ChatGPT、GPT-4、Claude、Gemini、Llamaなど主要AIモデルのコンテンツを検出します。",
+  "ailab.detector.faq.q2": "どのAI検出器でチェックしますか？",
+  "ailab.detector.faq.a2": "GPTZero、Turnitin、Copyleaks、ZeroGPT、Writer.com、Sapling、Originality.AI、Winston AIの8つの主要AI検出器のスコアをワンクリックでシミュレートします。",
+  "ailab.detector.faq.q3": "AI人間化ツールはどのように機能しますか？",
+  "ailab.detector.faq.a3": "人間化ツールは高度な言語モデルを使用してAI生成テキストを書き直し、元の意味を保ちながら自然な人間の文体パターン（多様な文構造、慣用表現、本物のトーン）を導入します。",
+  "ailab.detector.faq.q4": "テキストは保存・共有されますか？",
+  "ailab.detector.faq.a4": "いいえ。テキストはリアルタイムで処理され、サーバーには保存されません。プライバシーを真剣に考慮し、GDPRに準拠しています。",
+  "ailab.detector.faq.q5": "どの言語に対応していますか？",
+  "ailab.detector.faq.a5": "AI検出と人間化は英語、中国語、日本語、韓国語、スペイン語、フランス語、ドイツ語、アラビア語、ヒンディー語など50以上の言語に対応しています。",
+  "ailab.detector.faq.q6": "文字制限はいくつですか？",
+  "ailab.detector.faq.a6": "無料ユーザーはリクエストごとに最大15,000文字をチェックできます。これはすべての主要競合製品の中で最高の無料制限です。登録不要。",
+  "ailab.detector.faq.q7": "Turnitinを回避できますか？",
+  "ailab.detector.faq.a7": "当人間化ツールはTurnitinを含むすべての主要検出器のAIスコアを大幅に低下させます。強化モードとウルトラモードでは95%以上の成功率があります。",
+  "ailab.detector.error.text_too_short": "50文字以上入力してください。",
+  "ailab.detector.error.text_too_long": "15,000文字の制限を超えています。",
+  "ailab.detector.error.api_failed": "検出に失敗しました。もう一度お試しください。",
+  "ailab.detector.error.network": "ネットワークエラー。接続を確認してください。",
+  "ailab.detector.error.rate_limit": "リクエストが多すぎます。少し待ってから再試行してください。",
+  "ailab.detector.toast.copy_success": "テキストをクリップボードにコピーしました！",
+  "ailab.detector.toast.detect_success": "分析完了！",
+  "ailab.detector.toast.humanize_success": "テキストの人間化に成功しました！",
+  "ailab.detector.toast.error_generic": "エラーが発生しました。もう一度お試しください。",
   "ailab.humanize.seo.title": "無料 AI 人間化ツール — AIテキストを人間の文体に変換 | Tool Box Nova",
   "ailab.humanize.seo.desc": "ワンクリックでChatGPT、GeminiなどのAI生成テキストを自然で流暢な人間の文体に書き換え、AI検出器を回避、完全無料。",
   "ailab.humanize.name": "AI 人間化ツール",
@@ -587,7 +618,6 @@
   "ailab.humanize.error.failed": "書き換えに失敗しました。後でもう一度お試しください",
   "ailab.humanize.error.timeout": "リクエストがタイムアウトしました。後でもう一度お試しください",
   "ailab.humanize.stats.words": "語数",
-
   "img.compress.name": "画像圧縮",
   "img.compress.seo.title": "画像圧縮 — オンライン無料 JPG/PNG/WebP 圧縮 | Tool Box Nova",
   "img.compress.seo.desc": "無料オンライン画像圧縮、JPG・PNG・WebP一括処理対応、最大90%圧縮、ファイルはサーバーにアップロードされず、完全にブラウザ内で処理。",
@@ -628,7 +658,6 @@
   "img.compress.options.max_width_placeholder": "空欄 = 制限なし",
   "img.compress.options.keep_exif": "EXIFデータを保持",
   "img.compress.btn.compress_all": "すべて圧縮",
-
   "md.toolbar.bold": "太字",
   "md.toolbar.italic": "イタリック",
   "md.toolbar.heading": "見出し",
@@ -648,23 +677,18 @@
   "md.pane.edit": "編集",
   "md.pane.preview": "プレビュー",
   "md.placeholder": "ここにMarkdownを入力...",
-
   "json.csv.delimiter.label": "区切り文字",
   "json.csv.delimiter.comma": "カンマ (,)",
   "json.csv.delimiter.semicolon": "セミコロン (;)",
   "json.csv.include_header": "ヘッダーを含む",
-
   "json.convert.upload_excel": "Excelファイルをアップロード（.xlsx/.xls）",
-
   "json.schema.validate.schema_input": "JSON Schema",
   "json.schema.validate.json_input": "検証するJSON",
   "json.schema.validate.btn": "検証",
   "json.schema.generate.btn": "Schemaを生成",
-
   "json.diff.left": "元のJSON",
   "json.diff.right": "比較するJSON",
   "json.diff.btn": "比較開始",
-
   "img.resize.name": "画像リサイズ",
   "img.resize.seo.title": "画像リサイズ — オンライン無料 JPG/PNG/WebP サイズ変更 | Tool Box Nova",
   "img.resize.seo.desc": "無料オンライン画像リサイズ、ピクセル・パーセンテージ・SNSプリセットサイズ対応、最大20枚一括処理、画像はサーバーにアップロードされず、完全にブラウザ内で処理。",
@@ -734,7 +758,6 @@
   "img.resize.faq.title": "よくある質問",
   "home.tool_image_resize": "画像リサイズ",
   "home.tool_image_resize_desc": "オンラインで画像サイズを調整、ピクセル/パーセンテージ/プリセット対応",
-
   "img.metadata.name": "画像メタデータビューアー",
   "img.metadata.seo.title": "画像メタデータビューアー — オンライン無料 EXIF/GPS/IPTC 情報表示 | Tool Box Nova",
   "img.metadata.seo.desc": "無料オンラインで画像の隠れたメタデータを表示、EXIF・GPS位置（マッププレビュー）・IPTC著作権・XMP情報対応、画像はサーバーにアップロードされず、完全にブラウザ内で処理、JSON/CSV/TXTエクスポート対応。",
@@ -783,18 +806,15 @@
   "img.metadata.raw.copy_all": "すべてのJSONをコピー",
   "home.tool_image_metadata": "画像メタデータビューアー",
   "home.tool_image_metadata_desc": "オンラインでEXIF/GPS/IPTCメタデータを表示",
-
   "qr.name": "QRコード生成器",
   "qr.title": "オンラインQRコード生成器",
   "qr.desc": "無料でカスタムQRコードを生成、URL・名刺・WiFiなど8種類対応",
   "qr.step.content": "内容を入力",
-
   "qr.hero.title": "無料オンラインQRコード生成器",
   "qr.hero.subtitle": "8種類対応、カスタムカラー/形状/ロゴ、高解像度PNG/SVG/EPSダウンロード",
   "qr.hero.badge1": "完全無料",
   "qr.hero.badge2": "登録不要",
   "qr.hero.badge3": "即ダウンロード",
-
   "qr.type.url": "URL",
   "qr.type.url.desc": "ウェブページリンクを開く",
   "qr.type.vcard": "名刺",
@@ -811,23 +831,18 @@
   "qr.type.twitter.desc": "ツイート内容を事前入力",
   "qr.type.bitcoin": "ビットコイン",
   "qr.type.bitcoin.desc": "暗号通貨受取用QRコード",
-
   "qr.generate.btn": "QRコードを生成",
   "qr.generate.loading": "生成中...",
-
   "qr.design.title": "カスタムデザイン",
   "qr.frame.title": "フレームを選択",
-
   "qr.download.png": "PNG ダウンロード（高解像度）",
   "qr.download.svg": "SVG ダウンロード（ベクター）",
   "qr.download.jpg": "JPG ダウンロード",
   "qr.download.eps": "EPS ダウンロード（印刷用）",
   "qr.download.copying": "クリップボードにコピー中",
   "qr.download.copy_done": "コピー済み！",
-
   "qr.preview.empty": "内容を入力して「QRコードを生成」をクリックしてください",
   "qr.preview.scan_hint": "スマートフォンでスキャンして正常に動作するかテストしてください",
-
   "qr.feature.free.title": "完全無料",
   "qr.feature.free.desc": "すべての機能が無料で利用可能、登録不要、隠れた費用なし",
   "qr.feature.custom.title": "高度なカスタマイズ",
@@ -836,9 +851,7 @@
   "qr.feature.hd.desc": "PNG/SVG/EPS高解像度形式対応、印刷とデジタルメディアのニーズに対応",
   "qr.feature.types.title": "8種類",
   "qr.feature.types.desc": "URL、名刺、WiFi、SMS、メール、ビットコインなど、すべての使用シーンをカバー",
-
   "qr.faq.title": "よくある質問",
-
   "json.home.title": "JSON ツールボックス",
   "json.home.subtitle": "40以上の無料オンラインJSONツール、検証・変換・コード生成をワンストップで",
   "json.home.search_placeholder": "ツールを検索...",
@@ -859,7 +872,6 @@
   "json.home.feature.free.desc": "登録不要、使用制限なし、永久無料",
   "json.home.feature.all.title": "40以上のツール",
   "json.home.feature.all.desc": "検証、変換、コード生成、Schemaなどすべてのシーンをカバー",
-
   "json.common.copy": "コピー",
   "json.common.copy_done": "コピー済み！",
   "json.common.download": "ダウンロード",
@@ -872,10 +884,8 @@
   "json.common.error.invalid": "JSON形式エラー",
   "json.common.error.empty": "先に内容を入力してください",
   "json.common.upload": "ファイルをアップロード",
-
   "json.related.title": "関連ツール",
   "json.faq.title": "よくある質問",
-
   "nav.img_crop": "画像切り抜き",
   "nav.img_to_jpg": "JPGに変換",
   "nav.jpg_to_img": "JPGから変換",
@@ -883,7 +893,6 @@
   "nav.remove_bg": "背景除去",
   "nav.watermark": "ウォーターマーク追加",
   "nav.rotate": "画像回転",
-
   "seo.crop.title": "オンライン無料画像切り抜き – Tool Box Nova",
   "seo.crop.description": "無料オンライン画像切り抜き、自由選択と固定比率の切り抜きに対応、高速・安全、サーバーアップロード不要。",
   "seo.crop.keywords": "オンライン画像切り抜き, 画像トリミング, 無料切り抜き, 写真トリミング, 画像カット",
@@ -905,7 +914,6 @@
   "seo.rotate.title": "オンライン画像回転・反転無料 – Tool Box Nova",
   "seo.rotate.description": "オンラインで画像を任意の角度に回転、水平反転と垂直反転に対応、一括処理、無料使用。",
   "seo.rotate.keywords": "画像回転, 画像反転, オンライン回転, 画像ローテーション, 無料回転",
-
   "hero.crop.title": "オンライン画像切り抜き",
   "hero.crop.subtitle": "自由選択または固定比率で切り抜き、高速・無料、すべてブラウザ内でローカル処理。",
   "hero.crop.badge1": "完全無料",
@@ -923,12 +931,10 @@
   "hero.watermark.subtitle": "写真にカスタムテキストまたはロゴウォーターマークを追加、位置・透明度などを選択、著作権を保護。",
   "hero.rotate.title": "画像の回転と反転",
   "hero.rotate.subtitle": "任意の角度の回転と水平/垂直反転に対応、複数画像の一括処理。",
-
   "upload.common.drag_hint": "ここに画像をドラッグ＆ドロップ、または",
   "upload.common.browse_btn": "ファイルを選択",
   "upload.common.support_hint": "JPG、PNG、WEBP、GIF、BMP、SVG対応 · 各ファイル最大20MB · 最大30ファイル",
   "upload.common.drop_active": "マウスを離して画像を追加",
-
   "options.crop.mode_label": "切り抜きモード",
   "options.crop.mode_free": "自由切り抜き",
   "options.crop.mode_ratio": "固定比率",
@@ -958,13 +964,11 @@
   "options.rotate.flip_v": "垂直反転",
   "options.rotate.rotate_90l": "左に90°回転",
   "options.rotate.rotate_90r": "右に90°回転",
-
   "status.common.waiting": "処理待ち",
   "status.common.processing": "処理中...",
   "status.common.done": "完了",
   "status.common.error": "処理失敗",
   "status.remove_bg.loading_model": "AIモデルを読み込み中（初回は10秒かかる場合があります）...",
-
   "result.common.header": "処理結果",
   "result.common.saved": "節約",
   "result.common.summary": "計{count}ファイル処理済み · 平均{saved}節約",
@@ -972,31 +976,26 @@
   "result.common.download_btn": "ダウンロード",
   "result.common.retry_btn": "再試行",
   "result.common.remove_btn": "削除",
-
   "download.common.all_btn": "すべてダウンロード（ZIP）",
   "download.common.clear_btn": "すべてクリア",
   "download.common.preparing": "ZIP作成中...",
-
   "error.common.format_not_supported": "この形式はサポートされていません",
   "error.common.file_too_large": "ファイルが20MB制限を超えています",
   "error.common.too_many_files": "最大30ファイルまで対応",
   "error.common.process_failed": "処理に失敗しました。再試行してください",
   "error.remove_bg.model_load_failed": "AIモデルの読み込みに失敗しました",
-
   "feature.common.privacy_title": "100% ローカル処理",
   "feature.common.privacy_desc": "すべての画像処理はブラウザ内で行われ、ファイルはサーバーに送信されません。",
   "feature.common.speed_title": "超高速処理",
   "feature.common.speed_desc": "Canvas APIとWebAssemblyに基づき、一括処理でも瞬時に完了。",
   "feature.common.free_title": "永久無料",
   "feature.common.free_desc": "サブスクリプション不要、登録不要、隠れた費用なし、無制限に利用、完全無料。",
-
   "nav.dev_hash": "ハッシュ計算",
   "nav.dev_base64": "Base64 エンコード/デコード",
   "nav.dev_url_encode": "URL エンコード/デコード",
   "nav.dev_ip": "IP 検索",
   "nav.dev_whois": "Whois 検索",
   "nav.dev_word_counter": "文字カウント",
-
   "seo.hash.title": "オンラインハッシュ計算機 — MD5、SHA-1、SHA-256、SHA-512、HMAC | ToolboxNova",
   "seo.hash.description": "無料オンラインでMD5、SHA-1、SHA-256、SHA-512、HMACハッシュ値を計算、テキストとファイル入力対応、すべてクライアント側で計算、データはブラウザから離れません。",
   "seo.hash.keywords": "MD5計算,SHA256オンライン,ハッシュ生成器,HMAC SHA256,ファイルハッシュ,SHA512",
@@ -1015,7 +1014,6 @@
   "seo.word_counter.title": "オンライン文字カウンター — 語数・文字数・可読性・キーワード密度 | ToolboxNova",
   "seo.word_counter.description": "リアルタイムで語数・文字数・文数・段落数を統計、読書時間・Flesch可読性スコア・キーワード密度・文の流暢さ分析を提供、日中英対応。",
   "seo.word_counter.keywords": "文字カウント,語数統計,文字数カウント,可読性スコア,キーワード密度",
-
   "hero.hash.title": "ハッシュ計算機",
   "hero.hash.subtitle": "MD5 · SHA-1 · SHA-256 · SHA-512 · HMAC — すべてのアルゴリズムを一度に計算",
   "hero.hash.badge1": "クライアント側のみ",
@@ -1046,7 +1044,6 @@
   "hero.word_counter.badge1": "可読性スコア",
   "hero.word_counter.badge2": "キーワード密度",
   "hero.word_counter.badge3": "中国語対応",
-
   "input.hash.placeholder": "ハッシュを計算するテキストをここに入力または貼り付け…",
   "input.hash.file_label": "またはファイルをドラッグ＆ドロップしてファイルハッシュを計算",
   "input.hash.hmac_key": "HMAC キー",
@@ -1065,7 +1062,6 @@
   "input.whois.placeholder": "ドメイン名を入力（例：example.com）",
   "input.whois.btn_lookup": "Whois 検索",
   "input.word_counter.placeholder": "ここにテキストを入力または貼り付け…",
-
   "options.hash.uppercase": "大文字出力",
   "options.hash.hmac_mode": "HMACモード",
   "options.base64.url_safe": "URLセーフエンコーディング（Base64URL）",
@@ -1077,7 +1073,6 @@
   "options.url_encode.method_rfc3986": "RFC 3986 厳格モード",
   "options.url_encode.batch": "一括モード（1行に1つ）",
   "options.url_encode.diff": "差分ハイライトを表示",
-
   "result.hash.copy": "コピー",
   "result.hash.copied": "コピー済み！",
   "result.base64.output_label": "出力",
@@ -1113,14 +1108,12 @@
   "result.word_counter.unique_words": "ユニーク語数",
   "result.word_counter.avg_sentence": "平均文長",
   "result.word_counter.keyword_density": "キーワード密度（上位20）",
-
   "feature.privacy.title": "完全なプライバシー",
   "feature.privacy.desc": "すべての処理はブラウザ内でローカルに完了し、データはサーバーに送信されません。",
   "feature.speed.title": "即時結果",
   "feature.speed.desc": "入力しながら計算、ボタンクリック不要、結果はリアルタイム更新。",
   "feature.free.title": "永久無料",
   "feature.free.desc": "登録不要、使用制限なし、隠れた費用なし、いつでも無料で利用可能。",
-
   "home.tool_hash_desc": "MD5 · SHA-256 · SHA-512 · HMAC — ワンクリックで全アルゴリズム計算、クライアント側のみで実行",
   "home.tool_base64_desc": "テキストと最大50MBファイルのBase64エンコード/デコード、Base64URLとMIME対応",
   "home.tool_url_encode_desc": "パーセントエンコード/デコード、差分ハイライト比較 + 一括処理モード",
@@ -1130,7 +1123,6 @@
   "home.tool_json_learn_desc": "53以上の無料チュートリアル — 構文、Schema、JSONPath、jq、セキュリティと実践応用",
   "home.tool_json_datasets": "JSONデータセット",
   "home.tool_json_datasets_desc": "85以上の無料オープンソースJSONデータセット、テスト・開発・学習用",
-
   "color.tools.name": "カラーツール",
   "color.tools.desc": "12の専門カラーツール：カラーピッカー、パレット、色相環、変換器、コントラストチェッカー、グラデーション生成器など",
   "color.hero.title": "カラーツールスイート",
@@ -1296,19 +1288,15 @@
   "color.keyboard.right": "→ — 色相を右にシフト",
   "color.keyboard.copy": "C — 色をコピー",
   "color.keyboard.delete": "Del — 色を削除",
-
   "nav.json_learn": "JSON 学習センター",
-
   "learn.seo.title": "JSON 学習センター — 53以上の無料チュートリアル | ToolboxNova",
   "learn.seo.description": "初心者から上級者まで、53以上の深堀りJSONチュートリアル、構文・多言語実践・Schema・セキュリティとパフォーマンスをカバー。完全無料、オンラインインタラクティブ学習。",
-
   "learn.hero.title": "JSON 学習センター",
   "learn.hero.subtitle": "初心者からエキスパートまで——インターネット上で最も包括的な無料JSONチュートリアル体系",
   "learn.hero.badge_tutorials": "53以上のチュートリアル",
   "learn.hero.badge_datasets": "70以上のデータセット",
   "learn.hero.badge_languages": "10言語",
   "learn.hero.badge_free": "完全無料",
-
   "learn.path.beginner.title": "入門パス",
   "learn.path.beginner.desc": "JSON構文、データ型、基本的なファイル操作を学習。",
   "learn.path.beginner.count": "10記事",
@@ -1318,7 +1306,6 @@
   "learn.path.advanced.title": "上級パス",
   "learn.path.advanced.desc": "Schema、JSONPath、jq、セキュリティ、データベースとAI。",
   "learn.path.advanced.count": "22記事",
-
   "learn.filter.all": "すべて",
   "learn.filter.basics": "基礎入門",
   "learn.filter.multi_lang": "多言語実践",
@@ -1332,25 +1319,19 @@
   "learn.filter.level_beginner": "入門",
   "learn.filter.level_intermediate": "中級",
   "learn.filter.level_advanced": "上級",
-
   "learn.article.toc_title": "目次",
   "learn.article.prev": "前の記事",
   "learn.article.next": "次の記事",
   "learn.article.related": "関連記事",
   "learn.article.back_to_list": "← 学習センターに戻る",
-
   "learn.code.copy": "コピー",
   "learn.code.copied": "コピー済み！",
-
   "learn.faq.title": "よくある質問",
-
   "home.json_learn_title": "JSON 学習センター",
   "home.json_learn_desc": "53以上の無料チュートリアル、入門からマスターまでの完全なJSON学習パス",
-
   "nav.privacy_check": "プライバシーチェッカー",
   "home.privacy_check_title": "プライバシーアカウント検査",
   "home.privacy_check_desc": "メールアドレスやパスワードがデータ漏洩で流出しているか確認。強度分析と安全なパスワード生成器内蔵。",
-
   "pc.seo.title": "プライバシーアカウント検査 — メールとパスワードの漏洩チェック | ToolboxNova",
   "pc.seo.description": "無料のプライバシーセキュリティツール。メールやパスワードがデータ漏洩で流出していないか確認できます。HIBP k-Anonymity使用 — パスワードはブラウザ外に出ません。",
   "pc.seo.og_title": "プライバシーアカウント検査 — あなたのアカウントは安全ですか？",
