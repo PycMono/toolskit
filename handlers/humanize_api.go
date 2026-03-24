@@ -78,8 +78,9 @@ Rules:
 - Return ONLY the rewritten text`,
 }
 
-// HumanizeStream 处理 AI 人性化请求（SSE 流式）
-func HumanizeStream(c *gin.Context) {
+// HumanizeStreamLegacy is the original SSE streaming humanize handler (kept for reference)
+// HumanizeStream is now declared in ailab.go
+func HumanizeStreamLegacy(c *gin.Context) {
 	var req struct {
 		Text     string `json:"text" binding:"required"`
 		Mode     string `json:"mode"`
