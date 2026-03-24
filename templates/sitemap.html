@@ -17,6 +17,16 @@
         </ul>
       </div>
 
+      <!-- 实时查询 -->
+      <div class="sitemap-section">
+        <h3>🌐 {{ call .T "nav.realtime" }}</h3>
+        <ul>
+          <li><a href="/weather/query?lang={{ .Lang }}">{{ call .T "nav.weather_query" }}</a></li>
+          <li><a href="/dev/ip?lang={{ .Lang }}">{{ call .T "nav.dev_ip" }}</a></li>
+          <li><a href="/dev/whois?lang={{ .Lang }}">{{ call .T "nav.dev_whois" }}</a></li>
+        </ul>
+      </div>
+
       <!-- JSON Tools -->
       <div class="sitemap-section">
         <h3>{ } JSON 工具</h3>
@@ -87,8 +97,6 @@
           <li><a href="/dev/hash?lang={{ .Lang }}">Hash 工具</a></li>
           <li><a href="/dev/base64?lang={{ .Lang }}">Base64 编解码</a></li>
           <li><a href="/dev/url-encode?lang={{ .Lang }}">URL 编解码</a></li>
-          <li><a href="/dev/ip?lang={{ .Lang }}">IP 查询</a></li>
-          <li><a href="/dev/whois?lang={{ .Lang }}">Whois 查询</a></li>
           <li><a href="/dev/word-counter?lang={{ .Lang }}">字数统计</a></li>
           <li><a href="/tools/regex?lang={{ .Lang }}">正则表达式</a></li>
           <li><a href="/tools/markdown?lang={{ .Lang }}">Markdown 编辑器</a></li>

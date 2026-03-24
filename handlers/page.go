@@ -145,6 +145,9 @@ func SitemapXML(c *gin.Context) {
                 // Privacy Tools
                 "/virtual-address", "/password-generator", "/temp-email", "/proxy",
                 "/privacy/check",
+
+                // Weather Tools
+                "/weather/query",
 		
 		// AI Lab
 		"/ailab/detector", "/ailab/humanize",

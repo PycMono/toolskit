@@ -264,11 +264,12 @@ ul { list-style: none; }
 .tool-badge-new { background: #10b981; color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
 
 /* Card colors */
-.tool-blue { border-top: 3px solid var(--blue); }
+.tool-blue   { border-top: 3px solid var(--blue); }
 .tool-yellow { border-top: 3px solid var(--yellow); }
-.tool-green { border-top: 3px solid var(--green); }
+.tool-green  { border-top: 3px solid var(--green); }
 .tool-orange { border-top: 3px solid var(--orange); }
 .tool-purple { border-top: 3px solid #8b5cf6; }
+.tool-sky    { border-top: 3px solid #0ea5e9; }
 
 /* ============ FEATURES SECTION ============ */
 .features-section { background: var(--gray-100); padding: 60px 20px; }

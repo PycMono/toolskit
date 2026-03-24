@@ -337,6 +337,18 @@
     <h2 class="section-title">🌍 {{ call .T "home.category_realtime" }}</h2>
     <div class="tools-grid tools-grid--compact">
 
+      <a href="/weather/query?lang={{ .Lang }}" class="tool-card tool-sky">
+        <div class="tool-icon">🌤️</div>
+        <div class="tool-badge-wrap">
+          <span class="tool-badge-new">NEW</span>
+        </div>
+        <div class="tool-info">
+          <h3 class="tool-name">{{ call .T "nav.weather_query" }}</h3>
+          <p class="tool-desc">{{ call .T "wq.home.desc" }}</p>
+        </div>
+        <div class="tool-arrow">→</div>
+      </a>
+
       <a href="/dev/ip?lang={{ .Lang }}" class="tool-card tool-blue">
         <div class="tool-icon">🌐</div>
         <div class="tool-badge-wrap">

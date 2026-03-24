@@ -38,10 +38,16 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 	r.GET("/sms/history", handlers.SMSHistoryPage)
 
 	// Privacy Check routes
-	privacy := r.Group("/privacy")
-	{
-		privacy.GET("/check", handlers.PrivacyCheckPage)
-	}
+        privacy := r.Group("/privacy")
+        {
+                privacy.GET("/check", handlers.PrivacyCheckPage)
+        }
+
+        // ── Weather Tools ─────────────────────────────────────────────
+        weather := r.Group("/weather")
+        {
+                weather.GET("/query", handlers.WeatherQueryPage)
+        }
         privacyAPI := r.Group("/api/privacy")
         {
                 privacyAPI.POST("/check-email", handlers.PrivacyCheckEmail)
