@@ -1,0 +1,22 @@
+{
+  "email.title": "無料一時メールアドレス - 10分メール | Tool Box Nova",
+  "email.meta_desc": "無料の使い捨て一時メールアドレスを即時取得。10分後に自動期限切れ、登録不要。",
+  "email.tab": "一時メール",
+  "email.your_email": "あなたの一時メール",
+  "email.loading": "読み込み中...",
+  "email.ready": "準備完了",
+  "email.copy": "コピー",
+  "email.change": "番号変更",
+  "email.custom_prefix": "カスタムプレフィックス（任意）",
+  "email.settings": "設定",
+  "email.destroy": "破棄して新規作成",
+  "email.inbox": "受信箱",
+  "email.refresh_inbox": "更新",
+  "email.clear_inbox": "クリア",
+  "email.waiting": "メール待機中...",
+  "email.auto_check": "15秒ごとに新着メールを自動チェック",
+  "email.about": "一時メールについて",
+  "email.what_is": "一時メールとは",
+  "email.use_cases": "利用シーン",
+  "email.notices": "注意事項"
+}

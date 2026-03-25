@@ -1,0 +1,12 @@
+{
+  "status.common.waiting": "等待处理",
+  "status.common.processing": "处理中...",
+  "status.common.done": "已完成",
+  "status.common.error": "处理失败",
+  "status.remove_bg.loading_model": "正在加载AI模型（首次可能需要10秒）...",
+  "error.common.format_not_supported": "不支持该文件格式",
+  "error.common.file_too_large": "文件超过 20MB 限制",
+  "error.common.too_many_files": "最多支持 30 个文件",
+  "error.common.process_failed": "处理失败，请重试",
+  "error.remove_bg.model_load_failed": "AI模型加载失败"
+}

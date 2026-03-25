@@ -1,0 +1,22 @@
+{
+  "email.title": "Free Temporary Email Address - 10 Minute Mail | Tool Box Nova",
+  "email.meta_desc": "Get a free disposable temporary email address instantly. Auto-expires in 10 minutes, no registration needed.",
+  "email.tab": "Temp Email",
+  "email.your_email": "Your Temporary Email",
+  "email.loading": "Loading...",
+  "email.ready": "Ready",
+  "email.copy": "Copy",
+  "email.change": "Change",
+  "email.custom_prefix": "Custom prefix (optional)",
+  "email.settings": "Settings",
+  "email.destroy": "Destroy & New",
+  "email.inbox": "Inbox",
+  "email.refresh_inbox": "Refresh",
+  "email.clear_inbox": "Clear",
+  "email.waiting": "Waiting for emails...",
+  "email.auto_check": "Auto-checking every 15 seconds",
+  "email.about": "About Temp Email",
+  "email.what_is": "What is Temp Email?",
+  "email.use_cases": "Use Cases",
+  "email.notices": "Important Notes"
+}

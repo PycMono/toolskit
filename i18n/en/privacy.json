@@ -1,0 +1,21 @@
+{
+  "privacy.title": "Privacy Policy | Tool Box Nova",
+  "privacy.h1": "Privacy Policy",
+  "privacy.last_updated": "Last updated: March 12, 2026",
+  "privacy.s1.title": "1. Information We Collect",
+  "privacy.s1.intro": "Tool Box Nova is designed with privacy at its core. We do not collect, store, or share any personal information you input into our tools. Specifically:",
+  "privacy.s1.li1": "Passwords generated are never transmitted to our servers",
+  "privacy.s1.li2": "Virtual addresses generated are never stored",
+  "privacy.s1.li3": "Temporary email addresses are deleted after expiry",
+  "privacy.s1.li4": "Proxy requests are not logged",
+  "privacy.s2.title": "2. Cookies",
+  "privacy.s2.desc": "We use a single cookie to remember your language preference (<code>lang</code>). This cookie contains no personally identifiable information and is not used for tracking.",
+  "privacy.s3.title": "3. Analytics",
+  "privacy.s3.desc": "We may use privacy-respecting analytics (such as aggregated page view counts) to understand which tools are most useful. No individual user data is collected.",
+  "privacy.s4.title": "4. Third-Party Services",
+  "privacy.s4.desc": "Some tools (such as SMS Receiver) may interface with third-party APIs. These services have their own privacy policies. We recommend reviewing them before use.",
+  "privacy.s5.title": "5. Google Ads",
+  "privacy.s5.desc": "We may display Google Ads on this site. Google may use cookies to serve ads based on your prior visits. You can opt out via <a href=\"https://www.google.com/settings/ads\" target=\"_blank\">Google Ad Settings</a>.",
+  "privacy.s6.title": "6. Contact",
+  "privacy.s6.desc": "For privacy-related questions, please <a href=\"/contact\">contact us</a>."
+}

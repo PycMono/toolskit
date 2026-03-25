@@ -1,0 +1,12 @@
+{
+  "status.common.waiting": "Esperando",
+  "status.common.processing": "Procesando...",
+  "status.common.done": "Completado",
+  "status.common.error": "Error",
+  "status.remove_bg.loading_model": "Cargando modelo de IA (la primera vez puede tardar 10 segundos)...",
+  "error.common.format_not_supported": "Formato de archivo no soportado",
+  "error.common.file_too_large": "El archivo excede el límite de 20MB",
+  "error.common.too_many_files": "Máximo 30 archivos",
+  "error.common.process_failed": "Error en el procesamiento, inténtalo de nuevo",
+  "error.remove_bg.model_load_failed": "Error al cargar el modelo de IA"
+}

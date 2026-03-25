@@ -1,0 +1,12 @@
+{
+  "status.common.waiting": "処理待ち",
+  "status.common.processing": "処理中...",
+  "status.common.done": "完了",
+  "status.common.error": "処理失敗",
+  "status.remove_bg.loading_model": "AIモデルを読み込み中（初回は10秒かかる場合があります）...",
+  "error.common.format_not_supported": "この形式はサポートされていません",
+  "error.common.file_too_large": "ファイルが20MB制限を超えています",
+  "error.common.too_many_files": "最大30ファイルまで対応",
+  "error.common.process_failed": "処理に失敗しました。再試行してください",
+  "error.remove_bg.model_load_failed": "AIモデルの読み込みに失敗しました"
+}

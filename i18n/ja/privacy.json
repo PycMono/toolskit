@@ -1,0 +1,21 @@
+{
+  "privacy.title": "プライバシーポリシー | Tool Box Nova",
+  "privacy.h1": "プライバシーポリシー",
+  "privacy.last_updated": "最終更新：2026年3月12日",
+  "privacy.s1.title": "1. 収集する情報",
+  "privacy.s1.intro": "Tool Box Nova はプライバシーを核心に設計されています。ツール内で入力された個人情報の収集、保存、共有は一切行いません。具体的には：",
+  "privacy.s1.li1": "生成されたパスワードはサーバーに送信されません",
+  "privacy.s1.li2": "生成された仮想アドレスは保存されません",
+  "privacy.s1.li3": "一時メールアドレスは期限切れ後に自動削除されます",
+  "privacy.s1.li4": "プロキシリクエストはログに記録されません",
+  "privacy.s2.title": "2. Cookie",
+  "privacy.s2.desc": "言語設定を記録するために1つのCookie（<code>lang</code>）を使用します。このCookieには個人を特定できる情報は含まれず、トラッキングにも使用されません。",
+  "privacy.s3.title": "3. 分析統計",
+  "privacy.s3.desc": "プライバシーに配慮した統計方法（ページビューの集計など）を使用して、人気のあるツールを把握する場合があります。個人ユーザーデータは収集しません。",
+  "privacy.s4.title": "4. 第三者サービス",
+  "privacy.s4.desc": "一部のツール（SMS認証コード受信など）は第三者APIを使用する場合があります。これらのサービスには独自のプライバシーポリシーがあり、使用前にご確認をお勧めします。",
+  "privacy.s5.title": "5. Google 広告",
+  "privacy.s5.desc": "本サイトではGoogle広告が表示される場合があります。Googleは閲覧履歴に基づいてCookieを使用した広告を配信することがあります。<a href=\"https://www.google.com/settings/ads\" target=\"_blank\">Google広告設定</a>からオプトアウトできます。",
+  "privacy.s6.title": "6. お問い合わせ",
+  "privacy.s6.desc": "プライバシーに関するご質問は<a href=\"/contact\">お問い合わせ</a>ください。"
+}

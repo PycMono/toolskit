@@ -1,0 +1,12 @@
+{
+  "status.common.waiting": "처리 대기",
+  "status.common.processing": "처리 중...",
+  "status.common.done": "완료",
+  "status.common.error": "처리 실패",
+  "status.remove_bg.loading_model": "AI 모델 로딩 중 (첫 사용 시 10초 소요)...",
+  "error.common.format_not_supported": "이 형식은 지원되지 않습니다",
+  "error.common.file_too_large": "파일이 20MB 제한을 초과합니다",
+  "error.common.too_many_files": "최대 30개 파일 지원",
+  "error.common.process_failed": "처리 실패, 다시 시도해 주세요",
+  "error.remove_bg.model_load_failed": "AI 모델 로딩 실패"
+}

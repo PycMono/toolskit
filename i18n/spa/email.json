@@ -1,0 +1,22 @@
+{
+  "email.title": "Correo electrónico temporal gratuito - Buzón de 10 minutos | Tool Box Nova",
+  "email.meta_desc": "Obtén al instante una dirección de correo electrónico desechable gratuita. Caduca automáticamente después de 10 minutos, sin necesidad de registro.",
+  "email.tab": "Correo temporal",
+  "email.your_email": "Tu correo temporal",
+  "email.loading": "Cargando...",
+  "email.ready": "Listo",
+  "email.copy": "Copiar",
+  "email.change": "Cambiar",
+  "email.custom_prefix": "Prefijo personalizado (opcional)",
+  "email.settings": "Ajustes",
+  "email.destroy": "Destruir y crear nuevo",
+  "email.inbox": "Bandeja de entrada",
+  "email.refresh_inbox": "Actualizar",
+  "email.clear_inbox": "Vaciar",
+  "email.waiting": "Esperando correos...",
+  "email.auto_check": "Comprobar nuevos correos cada 15 segundos",
+  "email.about": "Acerca del correo temporal",
+  "email.what_is": "Qué es un correo temporal",
+  "email.use_cases": "Casos de uso",
+  "email.notices": "Avisos"
+}

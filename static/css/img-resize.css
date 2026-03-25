@@ -589,3 +589,11 @@
   line-height: 1.8; margin: 0 0 14px; max-width: 820px;
 }
 
+/* ── About sidebar ads (show at ≥1280px) ── */
+@media (min-width: 1280px) {
+  .ir-about-ad-left,
+  .ir-about-ad-right {
+    display: block !important;
+  }
+}
+

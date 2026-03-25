@@ -1,0 +1,22 @@
+{
+  "email.title": "무료 임시 이메일 주소 - 10분 메일 | Tool Box Nova",
+  "email.meta_desc": "무료 일회용 임시 이메일 주소를 즉시 받기. 10분 후 자동 만료, 가입 불필요.",
+  "email.tab": "임시 이메일",
+  "email.your_email": "나의 임시 이메일",
+  "email.loading": "로딩 중...",
+  "email.ready": "준비 완료",
+  "email.copy": "복사",
+  "email.change": "번호 변경",
+  "email.custom_prefix": "사용자 정의 접두사 (선택)",
+  "email.settings": "설정",
+  "email.destroy": "삭제 후 새로 만들기",
+  "email.inbox": "수신함",
+  "email.refresh_inbox": "새로고침",
+  "email.clear_inbox": "비우기",
+  "email.waiting": "메일 대기 중...",
+  "email.auto_check": "15초마다 새 메일 자동 확인",
+  "email.about": "임시 이메일에 대해",
+  "email.what_is": "임시 이메일이란",
+  "email.use_cases": "사용 시나리오",
+  "email.notices": "주의사항"
+}

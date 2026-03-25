@@ -1,0 +1,22 @@
+{
+  "email.title": "免费临时邮箱地址 - 10分钟邮箱 | Tool Box Nova",
+  "email.meta_desc": "即时获取免费的一次性临时邮箱地址。10分钟后自动过期，无需注册。",
+  "email.tab": "临时邮箱",
+  "email.your_email": "您的临时邮箱",
+  "email.loading": "加载中...",
+  "email.ready": "已就绪",
+  "email.copy": "复制",
+  "email.change": "换号",
+  "email.custom_prefix": "自定义前缀（可选）",
+  "email.settings": "设置",
+  "email.destroy": "销毁并新建",
+  "email.inbox": "收件箱",
+  "email.refresh_inbox": "刷新",
+  "email.clear_inbox": "清空",
+  "email.waiting": "正在等待邮件...",
+  "email.auto_check": "每15秒自动检查新邮件",
+  "email.about": "关于临时邮箱",
+  "email.what_is": "什么是临时邮箱",
+  "email.use_cases": "适用场景",
+  "email.notices": "注意事项"
+}

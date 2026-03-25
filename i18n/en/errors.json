@@ -1,0 +1,12 @@
+{
+  "status.common.waiting": "Waiting",
+  "status.common.processing": "Processing...",
+  "status.common.done": "Done",
+  "status.common.error": "Failed",
+  "status.remove_bg.loading_model": "Loading AI model (first time may take 10s)...",
+  "error.common.format_not_supported": "Format not supported",
+  "error.common.file_too_large": "File exceeds 20MB limit",
+  "error.common.too_many_files": "Maximum 30 files allowed",
+  "error.common.process_failed": "Processing failed, please try again",
+  "error.remove_bg.model_load_failed": "Failed to load AI model"
+}

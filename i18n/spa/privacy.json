@@ -1,0 +1,21 @@
+{
+  "privacy.title": "Política de privacidad | Tool Box Nova",
+  "privacy.h1": "Política de privacidad",
+  "privacy.last_updated": "Última actualización: 12 de marzo de 2026",
+  "privacy.s1.title": "1. Qué información recopilamos",
+  "privacy.s1.intro": "Tool Box Nova está diseñado con la privacidad como núcleo. No recopilamos, almacenamos ni compartimos ninguna información personal que ingreses en las herramientas. Esto incluye:",
+  "privacy.s1.li1": "Las contraseñas generadas no se transmiten a nuestros servidores",
+  "privacy.s1.li2": "Las direcciones virtuales generadas no se almacenan",
+  "privacy.s1.li3": "Las direcciones de correo temporal se eliminan automáticamente al caducar",
+  "privacy.s1.li4": "Las solicitudes de proxy no se registran",
+  "privacy.s2.title": "2. Cookies",
+  "privacy.s2.desc": "Usamos una única cookie para guardar tu preferencia de idioma (<code>lang</code>). Esta cookie no contiene información personal identificable y no se utiliza para rastreo.",
+  "privacy.s3.title": "3. Estadísticas analíticas",
+  "privacy.s3.desc": "Podemos utilizar métodos de estadísticas respetuosos con la privacidad (como recuento agregado de visitas a páginas) para entender qué herramientas son más populares. No recopilamos datos de usuarios individuales.",
+  "privacy.s4.title": "4. Servicios de terceros",
+  "privacy.s4.desc": "Algunas herramientas (como el receptor SMS) pueden conectarse a API de terceros. Estos servicios tienen sus propias políticas de privacidad; te recomendamos consultarlas antes de usarlas.",
+  "privacy.s5.title": "5. Anuncios de Google",
+  "privacy.s5.desc": "Este sitio puede mostrar anuncios de Google. Google puede utilizar cookies para mostrarte anuncios basados en tu historial de navegación. Puedes darte de baja a través de la <a href=\"https://www.google.com/settings/ads\" target=\"_blank\">Configuración de anuncios de Google</a>.",
+  "privacy.s6.title": "6. Contáctanos",
+  "privacy.s6.desc": "Si tienes preguntas relacionadas con la privacidad, <a href=\"/contact\">contáctanos</a>."
+}

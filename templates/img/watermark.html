@@ -78,6 +78,8 @@
       <p class="itb-about__body">{{ call .T "hero.watermark.about.body1" }}</p>
       <p class="itb-about__body">{{ call .T "hero.watermark.about.body2" }}</p>
       <p class="itb-about__body">{{ call .T "hero.watermark.about.body3" }}</p>
+      <p class="itb-about__body">{{ call .T "hero.watermark.about.body4" }}</p>
+      <p class="itb-about__body">{{ call .T "hero.watermark.about.body5" }}</p>
     </section>
     <section class="itb-faq"><h2 class="itb-faq__title">FAQ</h2>{{ range $i,$f := .FAQs }}<div class="itb-faq-item" id="itbFaq-{{ $i }}"><button class="itb-faq-item__q" onclick="itbToggleFAQ({{ $i }})" aria-expanded="false">{{ $f.Q }}<span class="itb-faq-item__arrow">▾</span></button><div class="itb-faq-item__a"><p>{{ $f.A }}</p></div></div>{{ end }}</section>
   <div class="itb-ad-bottom">{{- template "partials/ad_slot.html" dict "SlotID" "img-watermark-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}</div>

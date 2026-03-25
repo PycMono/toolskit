@@ -1,0 +1,21 @@
+{
+  "privacy.title": "隐私政策 | Tool Box Nova",
+  "privacy.h1": "隐私政策",
+  "privacy.last_updated": "最后更新：2026 年 3 月 12 日",
+  "privacy.s1.title": "1. 我们收集哪些信息",
+  "privacy.s1.intro": "Tool Box Nova 以隐私为核心设计。我们不收集、存储或分享您在工具中输入的任何个人信息，具体包括：",
+  "privacy.s1.li1": "生成的密码不会传输到我们的服务器",
+  "privacy.s1.li2": "生成的虚拟地址不会被存储",
+  "privacy.s1.li3": "临时邮箱地址在过期后自动删除",
+  "privacy.s1.li4": "代理请求不会被记录日志",
+  "privacy.s2.title": "2. Cookie",
+  "privacy.s2.desc": "我们使用单个 Cookie 记录您的语言偏好（<code>lang</code>）。该 Cookie 不包含任何可识别个人身份的信息，也不用于追踪。",
+  "privacy.s3.title": "3. 分析统计",
+  "privacy.s3.desc": "我们可能使用隐私友好的统计方式（如聚合页面浏览量）来了解哪些工具最受欢迎。不收集任何个人用户数据。",
+  "privacy.s4.title": "4. 第三方服务",
+  "privacy.s4.desc": "部分工具（如 SMS 接码器）可能对接第三方 API。这些服务有其独立的隐私政策，建议您在使用前查阅。",
+  "privacy.s5.title": "5. Google 广告",
+  "privacy.s5.desc": "本站可能展示 Google 广告。Google 可能通过 Cookie 根据您的历史访问投放广告。您可通过 <a href=\"https://www.google.com/settings/ads\" target=\"_blank\">Google 广告设置</a> 退出。",
+  "privacy.s6.title": "6. 联系我们",
+  "privacy.s6.desc": "如有隐私相关问题，请 <a href=\"/contact\">联系我们</a>。"
+}

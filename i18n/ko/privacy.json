@@ -1,0 +1,21 @@
+{
+  "privacy.title": "개인정보 처리방침 | Tool Box Nova",
+  "privacy.h1": "개인정보 처리방침",
+  "privacy.last_updated": "마지막 업데이트: 2026년 3월 12일",
+  "privacy.s1.title": "1. 수집하는 정보",
+  "privacy.s1.intro": "Tool Box Nova는 프라이버시를 핵심으로 설계되었습니다. 도구에서 입력된 개인 정보의 수집, 저장, 공유는 일절 하지 않습니다. 구체적으로:",
+  "privacy.s1.li1": "생성된 비밀번호는 서버에 전송되지 않습니다",
+  "privacy.s1.li2": "생성된 가상 주소는 저장되지 않습니다",
+  "privacy.s1.li3": "임시 이메일 주소는 만료 후 자동 삭제됩니다",
+  "privacy.s1.li4": "프록시 요청은 로그에 기록되지 않습니다",
+  "privacy.s2.title": "2. 쿠키",
+  "privacy.s2.desc": "언어 설정을 기록하기 위해 하나의 쿠키(<code>lang</code>)를 사용합니다. 이 쿠키에는 개인 식별 가능한 정보가 포함되지 않으며 추적에도 사용되지 않습니다.",
+  "privacy.s3.title": "3. 분석 통계",
+  "privacy.s3.desc": "프라이버시 친화적인 통계 방식(예: 페이지뷰 집계)을 사용하여 인기 있는 도구를 파악할 수 있습니다. 개인 사용자 데이터는 수집하지 않습니다.",
+  "privacy.s4.title": "4. 제3자 서비스",
+  "privacy.s4.desc": "일부 도구(예: SMS 인증코드 수신기)는 제3자 API를 사용할 수 있습니다. 이러한 서비스에는 자체 개인정보 처리방침이 있으며, 사용 전 확인을 권장합니다.",
+  "privacy.s5.title": "5. Google 광고",
+  "privacy.s5.desc": "이 사이트에서는 Google 광고가 표시될 수 있습니다. Google은 방문 기록에 따라 쿠키를 사용하여 광고를 게재할 수 있습니다. <a href=\"https://www.google.com/settings/ads\" target=\"_blank\">Google 광고 설정</a>에서 거부할 수 있습니다.",
+  "privacy.s6.title": "6. 문의하기",
+  "privacy.s6.desc": "프라이버시 관련 질문은 <a href=\"/contact\">문의하기</a>를 이용해 주세요."
+}
