@@ -77,6 +77,7 @@ func render(c *gin.Context, page string, data gin.H) {
 		filepath.Join("templates", page),
 		filepath.Join("templates", "partials", "ad_slot.html"),
 		filepath.Join("templates", "partials", "ga.html"),
+		filepath.Join("templates", "partials", "cookie-consent.html"),
 	}
 
 	// 先注册 FuncMap，再解析文件（顺序很重要）

@@ -1,122 +1,104 @@
 /* ================================================================
-   consent.css — Cookie Consent Banner + Modal + Toast
-   Follows site CSS-variable conventions (--color-primary, etc.)
+   consent.css  —  Minimal Cookie Bar + Preferences Modal
    ================================================================ */
 
 :root {
-  --cky-primary:        var(--color-primary, #1a9b6c);
-  --cky-primary-hover:  #158a5e;
-  --cky-bg:             #1e1e2e;
-  --cky-text:           #f0f0f0;
-  --cky-text-muted:     #a0a0b0;
-  --cky-border:         rgba(255, 255, 255, 0.12);
-  --cky-radius-sm:      8px;
-  --cky-radius-md:      14px;
-  --cky-shadow-banner:  0 -4px 24px rgba(0, 0, 0, 0.35);
-  --cky-shadow-modal:   0 8px 48px rgba(0, 0, 0, 0.55);
-  --cky-toggle-w:       44px;
-  --cky-toggle-h:       24px;
-  --cky-toggle-off:     #4a4a5a;
-  --cky-toggle-on:      var(--cky-primary);
-  --cky-z-banner:       9000;
-  --cky-z-modal:        9001;
-  --cky-z-toast:        9002;
+  --cky-primary:       var(--color-primary, #1a9b6c);
+  --cky-primary-h:     #158a5e;
+  --cky-bg:            #18181f;
+  --cky-text:          #e8e8f0;
+  --cky-muted:         #9898a8;
+  --cky-border:        rgba(255,255,255,0.10);
+  --cky-r:             8px;
+  --cky-shadow:        0 -2px 20px rgba(0,0,0,0.28);
+  --cky-z-bar:         9000;
+  --cky-z-modal:       9001;
+  --cky-z-toast:       9002;
 }
 
-/* ── Banner ──────────────────────────────────────────────────── */
-.cky-banner {
+/* ── Bottom Bar ─────────────────────────────────────────────── */
+.cky-bar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: var(--cky-z-banner);
+  z-index: var(--cky-z-bar);
   background: var(--cky-bg);
   border-top: 1px solid var(--cky-border);
-  box-shadow: var(--cky-shadow-banner);
-  animation: cky-slide-up 0.3s ease-out;
+  box-shadow: var(--cky-shadow);
+  animation: cky-up 0.28s ease-out;
 }
 
-@keyframes cky-slide-up {
+@keyframes cky-up {
   from { transform: translateY(100%); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }
 }
 
-.cky-banner__inner {
-  max-width: 1200px;
+.cky-bar__inner {
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 16px 24px;
+  padding: 12px 20px;
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
-.cky-banner__content {
-  flex: 1 1 320px;
-  min-width: 0;
-}
-
-.cky-banner__title {
-  margin: 0 0 4px;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--cky-text);
-}
-
-.cky-banner__desc {
+.cky-bar__text {
+  flex: 1 1 280px;
   margin: 0;
   font-size: 13px;
-  color: var(--cky-text-muted);
+  color: var(--cky-muted);
   line-height: 1.5;
 }
 
-.cky-banner__link {
+.cky-bar__link {
   color: var(--cky-primary);
-  text-decoration: underline;
+  text-decoration: none;
   margin-left: 4px;
+  white-space: nowrap;
 }
+.cky-bar__link:hover { text-decoration: underline; }
 
-.cky-banner__actions {
+.cky-bar__btns {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   flex-shrink: 0;
-  align-items: center;
-  flex-wrap: wrap;
 }
 
-/* ── Buttons ──────────────────────────────────────────────────── */
-.cky-btn {
-  padding: 9px 18px;
-  border-radius: var(--cky-radius-sm);
+/* ── Buttons ────────────────────────────────────────────────── */
+.cky-bar__btn {
+  padding: 7px 18px;
+  border-radius: var(--cky-r);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s, color 0.2s;
   white-space: nowrap;
-  line-height: 1.4;
-  border: 2px solid transparent;
+  transition: background 0.18s, border-color 0.18s;
+  border: 1.5px solid transparent;
 }
 
-.cky-btn--primary {
+.cky-bar__btn--accept {
   background: var(--cky-primary);
   color: #fff;
   border-color: var(--cky-primary);
 }
-.cky-btn--primary:hover {
-  background: var(--cky-primary-hover);
-  border-color: var(--cky-primary-hover);
+.cky-bar__btn--accept:hover {
+  background: var(--cky-primary-h);
+  border-color: var(--cky-primary-h);
 }
 
-.cky-btn--ghost {
+.cky-bar__btn--reject {
   background: transparent;
-  color: var(--cky-text);
+  color: var(--cky-muted);
   border-color: var(--cky-border);
 }
-.cky-btn--ghost:hover {
-  border-color: var(--cky-text-muted);
+.cky-bar__btn--reject:hover {
+  color: var(--cky-text);
+  border-color: rgba(255,255,255,0.25);
 }
 
-/* ── Modal ───────────────────────────────────────────────────── */
+/* ── Preferences Modal ──────────────────────────────────────── */
 .cky-modal {
   position: fixed;
   inset: 0;
@@ -126,46 +108,44 @@
   justify-content: center;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 600px) {
   .cky-modal { align-items: center; }
 }
 
 .cky-modal__backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
 }
 
 .cky-modal__box {
   position: relative;
   background: var(--cky-bg);
-  border-radius: var(--cky-radius-md) var(--cky-radius-md) 0 0;
-  box-shadow: var(--cky-shadow-modal);
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
   width: 100%;
-  max-width: 520px;
+  max-width: 480px;
+  padding: 20px;
   max-height: 90vh;
   overflow-y: auto;
-  padding: 24px;
 }
 
-@media (min-width: 640px) {
-  .cky-modal__box {
-    border-radius: var(--cky-radius-md);
-  }
+@media (min-width: 600px) {
+  .cky-modal__box { border-radius: 12px; }
 }
 
 .cky-modal__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
 }
 
 .cky-modal__title {
   margin: 0;
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--cky-text);
 }
@@ -173,162 +153,129 @@
 .cky-modal__close {
   background: none;
   border: none;
-  color: var(--cky-text-muted);
+  color: var(--cky-muted);
   cursor: pointer;
-  padding: 4px;
+  padding: 2px;
   line-height: 1;
   border-radius: 4px;
   transition: color 0.15s;
 }
 .cky-modal__close:hover { color: var(--cky-text); }
 
-.cky-modal__desc {
-  margin: 0 0 18px;
-  font-size: 13px;
-  color: var(--cky-text-muted);
-  line-height: 1.5;
-}
-
+/* ── Category list ──────────────────────────────────────────── */
 .cky-modal__categories {
   display: flex;
   flex-direction: column;
-  gap: 1px;
   border: 1px solid var(--cky-border);
-  border-radius: var(--cky-radius-sm);
+  border-radius: var(--cky-r);
   overflow: hidden;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
-.cky-category {
-  padding: 14px 16px;
-  background: rgba(255, 255, 255, 0.03);
+.cky-cat {
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.02);
 }
-.cky-category + .cky-category {
+.cky-cat + .cky-cat {
   border-top: 1px solid var(--cky-border);
 }
 
-.cky-category__row {
+.cky-cat__row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
 }
 
-.cky-category__info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.cky-category__name {
-  font-size: 14px;
+.cky-cat__name {
+  font-size: 13px;
   font-weight: 600;
   color: var(--cky-text);
 }
 
-.cky-category__badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+.cky-cat__locked {
   font-size: 11px;
   font-weight: 600;
-  padding: 2px 7px;
+  color: var(--cky-primary);
+  background: rgba(26,155,108,0.15);
+  padding: 2px 8px;
   border-radius: 20px;
 }
 
-.cky-category__badge--locked {
-  background: rgba(26, 155, 108, 0.2);
-  color: var(--cky-primary);
-}
-
-.cky-category__desc {
-  margin: 6px 0 0;
+.cky-cat__desc {
+  margin: 5px 0 0;
   font-size: 12px;
-  color: var(--cky-text-muted);
+  color: var(--cky-muted);
   line-height: 1.5;
 }
 
-/* ── Toggle Switch ───────────────────────────────────────────── */
-.cky-toggle {
+/* ── Toggle Switch ──────────────────────────────────────────── */
+.cky-switch {
+  position: relative;
   display: inline-block;
   cursor: pointer;
   flex-shrink: 0;
 }
 
-.cky-toggle__input {
+.cky-switch input {
   display: none;
 }
 
-.cky-toggle__track {
-  width: var(--cky-toggle-w);
-  height: var(--cky-toggle-h);
-  background: var(--cky-toggle-off);
+.cky-switch__track {
+  display: block;
+  width: 40px;
+  height: 22px;
+  background: #3a3a4a;
   border-radius: 999px;
   position: relative;
   transition: background 0.2s;
-  cursor: pointer;
 }
 
-.cky-toggle__thumb {
+.cky-switch__track::after {
+  content: '';
   position: absolute;
   top: 2px;
   left: 2px;
-  width: calc(var(--cky-toggle-h) - 4px);
-  height: calc(var(--cky-toggle-h) - 4px);
+  width: 18px;
+  height: 18px;
   background: #fff;
   border-radius: 50%;
   transition: transform 0.2s;
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
-.cky-toggle__input:checked + .cky-toggle__track {
-  background: var(--cky-toggle-on);
+.cky-switch input:checked + .cky-switch__track {
+  background: var(--cky-primary);
 }
 
-.cky-toggle__input:checked + .cky-toggle__track .cky-toggle__thumb {
-  transform: translateX(calc(var(--cky-toggle-w) - var(--cky-toggle-h)));
+.cky-switch input:checked + .cky-switch__track::after {
+  transform: translateX(18px);
 }
 
-.cky-toggle--locked {
-  cursor: not-allowed;
-  opacity: 0.75;
-}
-
-.cky-toggle--locked .cky-toggle__track {
-  cursor: not-allowed;
-}
-
-/* locked toggle is always on */
-.cky-toggle__track--on {
-  background: var(--cky-toggle-on) !important;
-}
-
-/* ── Modal Footer ────────────────────────────────────────────── */
+/* ── Modal Footer ───────────────────────────────────────────── */
 .cky-modal__footer {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   justify-content: flex-end;
-  flex-wrap: wrap;
 }
 
-/* ── Toast ───────────────────────────────────────────────────── */
+/* ── Toast ──────────────────────────────────────────────────── */
 .cky-toast {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: 20px;
+  right: 20px;
   z-index: var(--cky-z-toast);
   background: var(--cky-primary);
   color: #fff;
-  padding: 10px 16px;
-  border-radius: var(--cky-radius-sm);
+  padding: 9px 14px;
+  border-radius: var(--cky-r);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   font-size: 13px;
   font-weight: 600;
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(6px);
   transition: opacity 0.2s, transform 0.2s;
   pointer-events: none;
 }
@@ -338,24 +285,23 @@
   transform: translateY(0);
 }
 
-/* ── Responsive ──────────────────────────────────────────────── */
-@media (max-width: 639px) {
-  .cky-banner__inner {
+/* ── Mobile ─────────────────────────────────────────────────── */
+@media (max-width: 599px) {
+  .cky-bar__inner {
     flex-direction: column;
     align-items: stretch;
-    gap: 14px;
-    padding: 16px;
+    padding: 14px 16px;
+    gap: 12px;
   }
 
-  .cky-banner__actions {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .cky-btn {
+  .cky-bar__btns {
     width: 100%;
+  }
+
+  .cky-bar__btn {
+    flex: 1;
     text-align: center;
-    padding: 11px 16px;
+    padding: 10px;
   }
 
   .cky-toast {
@@ -366,8 +312,7 @@
   }
 }
 
-/* ── Body scroll lock when modal is open ─────────────────────── */
+/* ── Body lock when modal open ──────────────────────────────── */
 body.cky-modal-open {
   overflow: hidden;
 }
-
