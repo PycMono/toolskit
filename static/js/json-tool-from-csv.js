@@ -8,6 +8,7 @@ function initToolOptions() {
     </label>`;
 }
 function processJson() {
+  clearErrorPanel();
   const raw = getInput().trim(); if (!raw) return;
   if (typeof Papa === 'undefined') { showToast('PapaParse 库未加载，请刷新页面重试', 'error'); return; }
   const result = Papa.parse(raw, {
@@ -15,7 +16,12 @@ function processJson() {
     dynamicTyping: document.getElementById('dynamicTyping')?.checked !== false,
     skipEmptyLines: true,
   });
-  if (result.errors.length > 0) showToast('CSV 解析错误：' + result.errors[0].message, 'error');
+  if (result.errors.length > 0) {
+    const fakeErr = new SyntaxError(result.errors[0].message);
+    showErrorPanel(fakeErr, raw);
+    return;
+  }
   setOutput(JSON.stringify(result.data, null, 2));
-  showToast('转换成功', 'success');
+  const el = document.getElementById('outputStats');
+  if (el) el.innerHTML = `<span class="jt-success-badge">✅ 转换成功，共 ${result.data.length} 行</span>`;
 }

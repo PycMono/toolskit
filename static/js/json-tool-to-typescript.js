@@ -1,6 +1,7 @@
 'use strict';
 // to-typescript
 function processJson() {
+  clearErrorPanel();
   const parsed = parseInput(); if (parsed === null) return;
   const rootName = getClassName(); const ifaces = [];
   function gen(obj, name) {
@@ -14,5 +15,6 @@ function processJson() {
   }
   gen(Array.isArray(parsed) ? parsed[0] : parsed, rootName);
   setOutput(ifaces.reverse().join('\n\n'), 'typescript');
+  const el = document.getElementById('outputStats');
+  if (el) el.innerHTML = '<span class="jt-success-badge">✅ TypeScript interface 生成完成</span>';
 }
-

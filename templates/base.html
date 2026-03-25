@@ -4,11 +4,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  {{- template "partials/ga.html" . }}
+  <!-- Theme init: must run before CSS renders to avoid FOUC -->
+  <script>(function(){var t=localStorage.getItem('tbn-theme')||'light';document.documentElement.setAttribute('data-theme',t);})()</script>
+
+  {{/* ── Consent Mode v2 defaults — must be FIRST script, before any GA/Ads ── */}}
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      ad_storage:            '{{ if .ConsentAds }}{{ .ConsentAds }}{{ else }}denied{{ end }}',
+      ad_user_data:          '{{ if .ConsentAds }}{{ .ConsentAds }}{{ else }}denied{{ end }}',
+      ad_personalization:    '{{ if .ConsentAds }}{{ .ConsentAds }}{{ else }}denied{{ end }}',
+      analytics_storage:     '{{ if .ConsentAnalytics }}{{ .ConsentAnalytics }}{{ else }}denied{{ end }}',
+      functionality_storage: 'granted',
+      security_storage:      'granted',
+      wait_for_update:       500
+    });
+    gtag('js', new Date());
+  </script>
+
+  {{/* ── GA Script (Consent Mode v2 controls data sending) ── */}}
+  {{ if .EnableGA }}
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ .GAMeasurementID }}"></script>
+  <script>
+    gtag('config', '{{ .GAMeasurementID }}', {
+      send_page_view: {{ if eq .ConsentAnalytics "granted" }}true{{ else }}false{{ end }},
+      anonymize_ip: true
+    });
+  </script>
+  {{ end }}
+
+  {{/* ── AdSense SDK ── */}}
   {{ if .AdsEnabled }}
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ .AdsClientID }}"
     crossorigin="anonymous"></script>
   {{ end }}
+
+  {{/* ── Consent CSS ── */}}
+  <link rel="stylesheet" href="/static/css/consent.css">
+
   <title>{{ .Title }}</title>
   <meta name="description" content="{{ .Description }}">
   <meta name="keywords" content="{{ .Keywords }}">
@@ -41,6 +75,7 @@
           <a href="/password-generator?lang={{ .Lang }}" class="dropdown-item">🔑 {{ call .T "home.tool_password" }}</a>
           <a href="/temp-email?lang={{ .Lang }}" class="dropdown-item">📧 {{ call .T "home.tool_email" }}</a>
           <a href="/proxy?lang={{ .Lang }}" class="dropdown-item">🌐 {{ call .T "home.tool_proxy" }}</a>
+          <a href="/privacy/check?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/privacy/check" }}active{{ end }}">🔍 {{ call .T "nav.breach_checker" }}</a>
         </div>
       </div>
       <div class="nav-item has-dropdown">
@@ -57,8 +92,6 @@
           <a href="/dev/hash?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/dev/hash" }}active{{ end }}">🔐 {{ call .T "nav.dev_hash" }}</a>
           <a href="/dev/base64?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/dev/base64" }}active{{ end }}">🔄 {{ call .T "nav.dev_base64" }}</a>
           <a href="/dev/url-encode?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/dev/url-encode" }}active{{ end }}">🔗 {{ call .T "nav.dev_url_encode" }}</a>
-          <a href="/dev/ip?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/dev/ip" }}active{{ end }}">🌐 {{ call .T "nav.dev_ip" }}</a>
-          <a href="/dev/whois?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/dev/whois" }}active{{ end }}">🔍 {{ call .T "nav.dev_whois" }}</a>
           <a href="/dev/word-counter?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/dev/word-counter" }}active{{ end }}">📝 {{ call .T "nav.dev_word_counter" }}</a>
         </div>
       </div>
@@ -82,14 +115,17 @@
       <div class="nav-item has-dropdown">
         <a href="#" class="nav-link">{{ call .T "nav.realtime" }} <span class="arrow">▾</span></a>
         <div class="dropdown-menu">
-          <a href="#" class="dropdown-item">🌍 {{ call .T "nav.ip_lookup" }} <span class="badge-soon">{{ call .T "nav.soon" }}</span></a>
+          <a href="/weather/query?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/weather/query" }}active{{ end }}">🌤️ {{ call .T "nav.weather_query" }}</a>
+          <div class="dropdown-divider"></div>
+          <a href="/dev/ip?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/dev/ip" }}active{{ end }}">🌐 {{ call .T "nav.dev_ip" }}</a>
+          <a href="/dev/whois?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/dev/whois" }}active{{ end }}">🔍 {{ call .T "nav.dev_whois" }}</a>
         </div>
       </div>
-      <div class="nav-item has-dropdown">
+        <div class="nav-item has-dropdown">
         <a href="#" class="nav-link">{{ call .T "nav.ai" }} <span class="arrow">▾</span></a>
         <div class="dropdown-menu">
-          <a href="/ailab/detector?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/ailab/detector" }}active{{ end }}">🔍 {{ call .T "ailab.detector.name" }}</a>
-          <a href="/ailab/humanize?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/ailab/humanize" }}active{{ end }}">✨ {{ call .T "ailab.humanize.name" }}</a>
+          <a href="/ai/humanizer?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/ai/humanizer" }}active{{ end }}">🧬 {{ call .T "ah.nav.name" }}</a>
+          <a href="/ai/detector?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/ai/detector" }}active{{ end }}">🔍 {{ call .T "ailab.detector.name" }}</a>
         </div>
       </div>
     </div>
@@ -114,6 +150,19 @@
           <a href="javascript:void(0)" onclick="switchLang('ja')"  class="lang-opt {{ if eq .Lang "ja"  }}active{{ end }}">🇯🇵 日本語</a>
           <a href="javascript:void(0)" onclick="switchLang('ko')"  class="lang-opt {{ if eq .Lang "ko"  }}active{{ end }}">🇰🇷 한국어</a>
           <a href="javascript:void(0)" onclick="switchLang('spa')" class="lang-opt {{ if eq .Lang "spa" }}active{{ end }}">🇪🇸 Español</a>
+        </div>
+      </div>
+      <!-- Theme Switcher in navbar -->
+      <div class="nav-theme-switcher" id="navThemeSwitcher">
+        <button class="nav-theme-btn" id="navThemeBtn" aria-label="Switch theme" title="Switch theme">
+          <span id="navThemeIcon">☀️</span>
+        </button>
+        <div class="nav-theme-dropdown" id="navThemeDropdown">
+          <button class="nav-theme-opt" data-theme="light"  onclick="applyTheme('light')">☀️ Light</button>
+          <button class="nav-theme-opt" data-theme="dark"   onclick="applyTheme('dark')">🌙 Dark</button>
+          <button class="nav-theme-opt" data-theme="forest" onclick="applyTheme('forest')">🌿 Forest</button>
+          <button class="nav-theme-opt" data-theme="ocean"  onclick="applyTheme('ocean')">🌊 Ocean</button>
+          <button class="nav-theme-opt" data-theme="sunset" onclick="applyTheme('sunset')">🌅 Sunset</button>
         </div>
       </div>
       <button class="hamburger" id="hamburger" aria-label="menu">☰</button>
@@ -158,6 +207,7 @@
         <li><a href="/contact?lang={{ .Lang }}">{{ call .T "footer.link.contact" }}</a></li>
         <li><a href="/sitemap?lang={{ .Lang }}">{{ call .T "footer.link.sitemap" }}</a></li>
         <li><a href="/sitemap.xml" target="_blank">sitemap.xml</a></li>
+        <li><a href="javascript:void(0)" id="cky-reopen-btn">🍪 {{ call .T "consent.btn.customize" }}</a></li>
       </ul>
     </div>
   </div>
@@ -172,9 +222,75 @@
   </div>
 </footer>
 
+
 <script src="/static/js/ga-events.js"></script>
 <script src="/static/js/main.js"></script>
 {{ template "extraScript" . }}
+
+{{/* ── Cookie Consent Banner + Modal ── */}}
+{{ template "partials/cookie-consent.html" . }}
+{{/* ── Consent Engine (must be after partial so CKY_CONFIG is ready) ── */}}
+<script src="/static/js/consent-engine.js"></script>
+<script>
+/* ── Global Theme Switcher (Navbar) ── */
+(function(){
+  var THEMES = ['light','dark','forest','ocean','sunset'];
+  var ICONS  = {light:'☀️', dark:'🌙', forest:'🌿', ocean:'🌊', sunset:'🌅'};
+
+  function applyTheme(name) {
+    if (THEMES.indexOf(name) < 0) name = 'light';
+    document.documentElement.setAttribute('data-theme', name);
+    localStorage.setItem('tbn-theme', name);
+    var ic = document.getElementById('navThemeIcon');
+    if (ic) ic.textContent = ICONS[name];
+    document.querySelectorAll('.nav-theme-opt').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.theme === name);
+    });
+    closeThemeMenu();
+    // Sync humanizer icons if present
+    var sunIcon  = document.getElementById('ah-icon-sun');
+    var moonIcon = document.getElementById('ah-icon-moon');
+    if (sunIcon && moonIcon) {
+      sunIcon.style.display  = name === 'dark' ? 'none' : '';
+      moonIcon.style.display = name === 'dark' ? ''     : 'none';
+    }
+  }
+
+  function closeThemeMenu() {
+    var d = document.getElementById('navThemeDropdown');
+    if (d) d.style.display = 'none';
+    var sw = document.getElementById('navThemeSwitcher');
+    if (sw) sw.classList.remove('open');
+  }
+
+  window.applyTheme = applyTheme;
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Force dropdown hidden via inline style (Cloudflare-proof)
+    var dropdown = document.getElementById('navThemeDropdown');
+    if (dropdown) dropdown.style.display = 'none';
+
+    var saved = localStorage.getItem('tbn-theme') || 'light';
+    applyTheme(saved);
+
+    var btn = document.getElementById('navThemeBtn');
+    if (btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var d = document.getElementById('navThemeDropdown');
+        if (!d) return;
+        var isOpen = d.style.display === 'block';
+        d.style.display = isOpen ? 'none' : 'block';
+        var sw = document.getElementById('navThemeSwitcher');
+        if (sw) sw.classList.toggle('open', !isOpen);
+      });
+    }
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('#navThemeSwitcher')) closeThemeMenu();
+    });
+  });
+})();
+</script>
 </body>
 </html>
 {{ end }}

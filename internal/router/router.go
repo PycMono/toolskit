@@ -11,8 +11,14 @@ import (
 )
 
 func Setup(r *gin.Engine, cfg *config.Config) {
-	// Apply i18n + Ads + GA middleware globally
+	// Apply i18n + Consent + Ads + GA middleware globally
+	// Order is important: I18n → Consent → Ads → GA
 	r.Use(middleware.I18nMiddleware())
+	r.Use(middleware.ConsentMiddleware(middleware.ConsentConfig{
+		CookieName:   cfg.ConsentCookieName,
+		CookieMaxAge: 365 * 24 * 3600,
+		Domain:       cfg.Domain,
+	}))
 	r.Use(middleware.AdsConfig(cfg))
 	r.Use(middleware.GAConfig(cfg))
 
@@ -36,6 +42,26 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 	r.GET("/sms/prices", handlers.SMSPricesPage)
 	r.GET("/sms/active", handlers.SMSActivePage)
 	r.GET("/sms/history", handlers.SMSHistoryPage)
+
+	// Privacy Check routes
+	privacy := r.Group("/privacy")
+	{
+		privacy.GET("/check", handlers.PrivacyCheckPage)
+	}
+
+	// ── Weather Tools ─────────────────────────────────────────────
+	weather := r.Group("/weather")
+	{
+		weather.GET("/query", handlers.WeatherQueryPage)
+	}
+	privacyAPI := r.Group("/api/privacy")
+	{
+		privacyAPI.POST("/check-email", handlers.PrivacyCheckEmail)
+		privacyAPI.GET("/password-range/:prefix", handlers.PrivacyPasswordRange)
+		privacyAPI.GET("/breaches", handlers.PrivacyBreaches)
+		// Proxy breach logos so frontend never directly loads from external sites
+		privacyAPI.GET("/logo/:name", handlers.PrivacyBreachLogo)
+	}
 
 	r.GET("/virtual-address", handlers.VirtualAddressPage)
 	r.GET("/password-generator", handlers.PasswordPage)
@@ -153,11 +179,32 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 		jt.GET("/learn", handlers.JSONLearnHub)
 		jt.GET("/learn/:slug", handlers.JSONLearnArticle)
 	}
-	// AI Lab routes
+	// AI Lab routes (legacy /ailab/* → 301 redirect to /ai/*)
 	ailab := r.Group("/ailab")
 	{
-		ailab.GET("/detector", handlers.AIDetectorPage)
-		ailab.GET("/humanize", handlers.AIHumanizePage)
+		ailab.GET("/detector", func(c *gin.Context) {
+			lang := c.Query("lang")
+			target := "/ai/detector"
+			if lang != "" {
+				target += "?lang=" + lang
+			}
+			c.Redirect(301, target)
+		})
+		ailab.GET("/humanize", func(c *gin.Context) {
+			lang := c.Query("lang")
+			target := "/ai/humanizer"
+			if lang != "" {
+				target += "?lang=" + lang
+			}
+			c.Redirect(301, target)
+		})
+	}
+
+	// AI routes (canonical /ai/*)
+	ai := r.Group("/ai")
+	{
+		ai.GET("/detector", handlers.AIDetectorPage)
+		ai.GET("/humanizer", handlers.AIHumanizerPage)
 	}
 
 	// Image/Multimedia tools
@@ -190,28 +237,28 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 	// ── Color Tools Suite — /color/* ──────────────────────────────
 	color := r.Group("/color")
 	{
-		color.GET("/tools",        handlers.ColorToolsHub)
-		color.GET("/picker",       handlers.ColorPickerPage)
-		color.GET("/palette",      handlers.ColorPalettePage)
-		color.GET("/wheel",        handlers.ColorWheelPage)
-		color.GET("/converter",    handlers.ColorConverterV2Page)
-		color.GET("/contrast",     handlers.ColorContrastPage)
-		color.GET("/gradient",     handlers.ColorGradientPage)
+		color.GET("/tools", handlers.ColorToolsHub)
+		color.GET("/picker", handlers.ColorPickerPage)
+		color.GET("/palette", handlers.ColorPalettePage)
+		color.GET("/wheel", handlers.ColorWheelPage)
+		color.GET("/converter", handlers.ColorConverterV2Page)
+		color.GET("/contrast", handlers.ColorContrastPage)
+		color.GET("/gradient", handlers.ColorGradientPage)
 		color.GET("/image-picker", handlers.ColorImagePickerPage)
-		color.GET("/blindness",    handlers.ColorBlindnessPage)
-		color.GET("/names",        handlers.ColorNamesPage)
-		color.GET("/mixer",        handlers.ColorMixerPage)
-		color.GET("/tailwind",     handlers.ColorTailwindPage)
+		color.GET("/blindness", handlers.ColorBlindnessPage)
+		color.GET("/names", handlers.ColorNamesPage)
+		color.GET("/mixer", handlers.ColorMixerPage)
+		color.GET("/tailwind", handlers.ColorTailwindPage)
 	}
 
 	// Developer Tools Suite — /dev/*
 	dev := r.Group("/dev")
 	{
-		dev.GET("/hash",         handlers.DevHashPage)
-		dev.GET("/base64",       handlers.DevBase64Page)
-		dev.GET("/url-encode",   handlers.DevURLEncodePage)
-		dev.GET("/ip",           handlers.DevIPPage)
-		dev.GET("/whois",        handlers.DevWhoisPage)
+		dev.GET("/hash", handlers.DevHashPage)
+		dev.GET("/base64", handlers.DevBase64Page)
+		dev.GET("/url-encode", handlers.DevURLEncodePage)
+		dev.GET("/ip", handlers.DevIPPage)
+		dev.GET("/whois", handlers.DevWhoisPage)
 		dev.GET("/word-counter", handlers.DevWordCounterPage)
 	}
 
@@ -220,13 +267,22 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 	{
 		api.GET("/search", handlers.SearchAPI)
 
-		// AI Lab API
+		// AI API (legacy /api/ailab/* → 301 redirect to /api/ai/*)
 		ailabAPI := api.Group("/ailab")
 		{
-			ailabAPI.POST("/detect", handlers.AIDetectAPI)
-			ailabAPI.POST("/detect-file", handlers.AIDetectFileAPI)
-			ailabAPI.POST("/detect-url", handlers.AIDetectURLAPI)
-			ailabAPI.POST("/humanize", handlers.HumanizeStream)
+			ailabAPI.POST("/detect",      func(c *gin.Context) { c.Redirect(301, "/api/ai/detect") })
+			ailabAPI.POST("/detect-file", func(c *gin.Context) { c.Redirect(301, "/api/ai/detect-file") })
+			ailabAPI.POST("/detect-url",  func(c *gin.Context) { c.Redirect(301, "/api/ai/fetch-url") })
+			ailabAPI.POST("/humanize",    func(c *gin.Context) { c.Redirect(301, "/api/ai/humanize") })
+		}
+
+		// AI API (canonical /api/ai/*)
+		aiAPI := api.Group("/ai")
+		{
+			aiAPI.POST("/detect",      handlers.AIHumanizerDetectAPI)
+			aiAPI.POST("/detect-file", handlers.AIDetectFileAPI)
+			aiAPI.POST("/humanize",    handlers.AIHumanizerStreamAPI)
+			aiAPI.POST("/fetch-url",   handlers.AIDetectURLAPI)
 		}
 
 		// SMS API (S-05, S-06, S-07, S-08, S-09)

@@ -12,6 +12,12 @@ func AdsConfig(cfg *config.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Set("AdsClientID", cfg.GoogleAdsID)
 		c.Set("AdsEnabled", cfg.EnableAds)
+		// AssetVersion is used for cache busting static files (?v=xxx)
+		v := cfg.AssetVersion
+		if v == "" {
+			v = "v1"
+		}
+		c.Set("AssetVersion", v)
 		c.Next()
 	}
 }

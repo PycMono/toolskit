@@ -52,6 +52,13 @@ func baseData(c *gin.Context, extraData gin.H) gin.H {
 		// Google Analytics (injected by middleware.GAConfig)
 		"GAMeasurementID": c.GetString("GAMeasurementID"),
 		"EnableGA":        c.GetBool("EnableGA"),
+		// Asset version for cache busting (injected by middleware.AdsConfig or set globally)
+		"AssetVer": c.GetString("AssetVersion"),
+		// Cookie Consent (injected by middleware.ConsentMiddleware)
+		"ConsentHasDecision": c.GetBool("ConsentHasDecision"),
+		"ConsentAnalytics":   c.GetString("ConsentAnalytics"),
+		"ConsentAds":         c.GetString("ConsentAds"),
+		"ConsentCookieName":  c.GetString("ConsentCookieName"),
 	}
 	for k, v := range extraData {
 		data[k] = v
@@ -140,12 +147,23 @@ func SitemapXML(c *gin.Context) {
 		// SMS Receiver (S-01)
 		"/sms", "/sms/buy", "/sms/prices", "/sms/login", "/sms/register",
 		
-		// Privacy Tools
-		"/virtual-address", "/password-generator", "/temp-email", "/proxy",
+                // Privacy Tools
+                "/virtual-address", "/password-generator", "/temp-email", "/proxy",
+                "/privacy/check",
+
+                // Weather Tools
+                "/weather/query",
 		
 		// AI Lab
 		"/ailab/detector", "/ailab/humanize",
-		
+		"/ai/detector",
+		"/ai/detector?lang=en", "/ai/detector?lang=zh",
+		"/ai/detector?lang=ja", "/ai/detector?lang=ko", "/ai/detector?lang=es",
+		// AI Humanizer (new)
+		"/ai/humanizer",
+		"/ai/humanizer?lang=en", "/ai/humanizer?lang=zh",
+		"/ai/humanizer?lang=ja", "/ai/humanizer?lang=ko", "/ai/humanizer?lang=spa",
+
 		// Dev Tools
 		"/tools", "/tools/json", "/tools/json-formatter", "/tools/json-validator",
 		"/tools/regex", "/tools/markdown", "/tools/timestamp",
@@ -238,7 +256,7 @@ func SitemapXML(c *gin.Context) {
 		} else if r == "/sms/prices" {
 			priority = "0.85"
 			changefreq = "daily"
-		} else if r == "/tools/json" || r == "/tools" || r == "/ailab/detector" {
+		} else if r == "/tools/json" || r == "/tools" || r == "/ailab/detector" || r == "/ai/detector" {
 			priority = "0.9"
 		} else if r == "/media/qr" {
 			priority = "0.9"

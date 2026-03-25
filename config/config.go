@@ -4,8 +4,10 @@ import "github.com/jinzhu/configor"
 
 type Config struct {
 	// 服务基础
-	Port    string `json:"port"     default:"8086"                    env:"PORT"`
-	SiteURL string `json:"site_url" default:"https://toolboxnova.com" env:"SITE_URL"`
+	Port         string `json:"port"          default:"8086"                    env:"PORT"`
+	Debug        bool   `json:"debug"         default:"false"                   env:"DEBUG"`
+	SiteURL      string `json:"site_url"      default:"https://toolboxnova.com" env:"SITE_URL"`
+	AssetVersion string `json:"asset_version" default:"v1"                      env:"ASSET_VERSION"`
 
 	// 通知
 	SMSAPIKey   string `json:"sms_api_key"   default:"" env:"SMS_API_KEY"`
@@ -16,6 +18,10 @@ type Config struct {
 	EnableAds       bool   `json:"enable_ads"        default:"true" env:"ENABLE_ADS"`
 	GAMeasurementID string `json:"ga_measurement_id" default:"" env:"GA_MEASUREMENT_ID"`
 	EnableGA        bool   `json:"enable_ga"         default:"true" env:"ENABLE_GA"`
+
+	// Cookie Consent (GDPR / CCPA)
+	ConsentCookieName string `json:"consent_cookie_name" default:"cky_consent"     env:"CONSENT_COOKIE_NAME"`
+	Domain            string `json:"domain"              default:"toolboxnova.com" env:"DOMAIN"`
 
 	// AI
 	AI AIConfig `json:"ai"`

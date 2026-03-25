@@ -64,6 +64,15 @@
         <div class="tool-arrow">→</div>
       </a>
 
+      <a href="/privacy/check?lang={{ .Lang }}" class="tool-card tool-red">
+        <div class="tool-icon">🔍</div>
+        <div class="tool-info">
+          <h3 class="tool-name">{{ call .T "home.privacy_check_title" }}</h3>
+          <p class="tool-desc">{{ call .T "home.privacy_check_desc" }}</p>
+        </div>
+        <div class="tool-arrow">→</div>
+      </a>
+
     </div>
   </div>
 </section>
@@ -328,6 +337,18 @@
     <h2 class="section-title">🌍 {{ call .T "home.category_realtime" }}</h2>
     <div class="tools-grid tools-grid--compact">
 
+      <a href="/weather/query?lang={{ .Lang }}" class="tool-card tool-sky">
+        <div class="tool-icon">🌤️</div>
+        <div class="tool-badge-wrap">
+          <span class="tool-badge-new">NEW</span>
+        </div>
+        <div class="tool-info">
+          <h3 class="tool-name">{{ call .T "nav.weather_query" }}</h3>
+          <p class="tool-desc">{{ call .T "wq.home.desc" }}</p>
+        </div>
+        <div class="tool-arrow">→</div>
+      </a>
+
       <a href="/dev/ip?lang={{ .Lang }}" class="tool-card tool-blue">
         <div class="tool-icon">🌐</div>
         <div class="tool-badge-wrap">
@@ -374,14 +395,14 @@
         <div class="tool-arrow">→</div>
       </a>
 
-      <a href="/ailab/humanize?lang={{ .Lang }}" class="tool-card tool-green">
-        <div class="tool-icon">✍️</div>
+      <a href="/ai/humanizer?lang={{ .Lang }}" class="tool-card tool-purple">
+        <div class="tool-icon">🧬</div>
         <div class="tool-badge-wrap">
           <span class="tool-badge-new">NEW</span>
         </div>
         <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "ailab.humanize.name" }}</h3>
-          <p class="tool-desc">{{ call .T "ailab.humanize.desc" }}</p>
+          <h3 class="tool-name">{{ call .T "ah.nav.name" }}</h3>
+          <p class="tool-desc">{{ call .T "ah.hero.subtitle" }}</p>
         </div>
         <div class="tool-arrow">→</div>
       </a>

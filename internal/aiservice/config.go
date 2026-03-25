@@ -2,45 +2,33 @@ package aiservice
 
 import (
 	"os"
-
-	"gopkg.in/yaml.v3"
 )
 
 type ProviderConfig struct {
-	Enabled     bool    `yaml:"enabled"`
-	APIKey      string  `yaml:"api_key"`
-	BaseURL     string  `yaml:"base_url"`
-	Model       string  `yaml:"model"`
-	MaxTokens   int     `yaml:"max_tokens"`
-	Temperature float64 `yaml:"temperature"`
-	Timeout     int     `yaml:"timeout"`
+	Enabled     bool    `json:"enabled"`
+	APIKey      string  `json:"api_key"`
+	BaseURL     string  `json:"base_url"`
+	Model       string  `json:"model"`
+	MaxTokens   int     `json:"max_tokens"`
+	Temperature float64 `json:"temperature"`
+	Timeout     int     `json:"timeout"`
 }
 
 type AIConfig struct {
-	DefaultProvider  string            `yaml:"default_provider"`
-	FallbackProvider string            `yaml:"fallback_provider"`
-	TaskRouting      map[string]string `yaml:"task_routing"`
-	OpenAI           ProviderConfig    `yaml:"openai"`
-	DeepSeek         ProviderConfig    `yaml:"deepseek"`
-	Gemini           ProviderConfig    `yaml:"gemini"`
-	Doubao           ProviderConfig    `yaml:"doubao"`
-	Claude           ProviderConfig    `yaml:"claude"`
+	DefaultProvider  string            `json:"default_provider"`
+	FallbackProvider string            `json:"fallback_provider"`
+	TaskRouting      map[string]string `json:"task_routing"`
+	Detector         string            `json:"detector"`
+	Humanize         string            `json:"humanize"`
+	OpenAI           ProviderConfig    `json:"openai"`
+	DeepSeek         ProviderConfig    `json:"deepseek"`
+	Gemini           ProviderConfig    `json:"gemini"`
+	Doubao           ProviderConfig    `json:"doubao"`
+	Claude           ProviderConfig    `json:"claude"`
 }
 
-func LoadAIConfig(configPath string) (*AIConfig, error) {
-	data, err := os.ReadFile(configPath)
-	if err != nil {
-		return nil, err
-	}
-	var wrapper struct {
-		AI AIConfig `yaml:"ai"`
-	}
-	if err := yaml.Unmarshal(data, &wrapper); err != nil {
-		return nil, err
-	}
-	cfg := &wrapper.AI
-
-	// 环境变量优先级高于配置文件
+// applyEnvOverrides applies environment variable overrides to the config.
+func applyEnvOverrides(cfg *AIConfig) {
 	envOverrides := map[string]*string{
 		"OPENAI_API_KEY":   &cfg.OpenAI.APIKey,
 		"DEEPSEEK_API_KEY": &cfg.DeepSeek.APIKey,
@@ -53,5 +41,62 @@ func LoadAIConfig(configPath string) (*AIConfig, error) {
 			*ptr = v
 		}
 	}
-	return cfg, nil
 }
+
+// AppAIConfig mirrors config.AIConfig to avoid circular imports.
+// Call NewAIConfigFromFields instead of importing config package directly.
+type AppProviderConfig struct {
+	Enabled     bool
+	APIKey      string
+	BaseURL     string
+	Model       string
+	MaxTokens   int
+	Temperature float64
+	Timeout     int
+}
+
+type AppAIConfig struct {
+	DefaultProvider  string
+	FallbackProvider string
+	TaskRouting      map[string]string
+	Detector         string
+	Humanize         string
+	OpenAI           AppProviderConfig
+	DeepSeek         AppProviderConfig
+	Gemini           AppProviderConfig
+	Doubao           AppProviderConfig
+	Claude           AppProviderConfig
+}
+
+func toProviderConfig(p AppProviderConfig) ProviderConfig {
+	return ProviderConfig{
+		Enabled:     p.Enabled,
+		APIKey:      p.APIKey,
+		BaseURL:     p.BaseURL,
+		Model:       p.Model,
+		MaxTokens:   p.MaxTokens,
+		Temperature: p.Temperature,
+		Timeout:     p.Timeout,
+	}
+}
+
+// NewAIConfigFromApp creates an AIConfig from the app-level config fields.
+// This removes the dependency on configs/config.yaml entirely.
+func NewAIConfigFromApp(app AppAIConfig) *AIConfig {
+	cfg := &AIConfig{
+		DefaultProvider:  app.DefaultProvider,
+		FallbackProvider: app.FallbackProvider,
+		TaskRouting:      app.TaskRouting,
+		Detector:         app.Detector,
+		Humanize:         app.Humanize,
+		OpenAI:           toProviderConfig(app.OpenAI),
+		DeepSeek:         toProviderConfig(app.DeepSeek),
+		Gemini:           toProviderConfig(app.Gemini),
+		Doubao:           toProviderConfig(app.Doubao),
+		Claude:           toProviderConfig(app.Claude),
+	}
+	// 环境变量优先级高于配置文件
+	applyEnvOverrides(cfg)
+	return cfg
+}
+

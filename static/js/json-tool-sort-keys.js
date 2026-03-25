@@ -9,9 +9,12 @@ function initToolOptions() {
     </div>`;
 }
 function processJson() {
+  clearErrorPanel();
   const parsed = parseInput(); if (parsed === null) return;
   const order = document.querySelector('input[name="sortOrder"]:checked')?.value || 'asc';
   setOutput(JSON.stringify(sortKeys(parsed, order), null, 2));
+  const el = document.getElementById('outputStats');
+  if (el) el.innerHTML = '<span class="jt-success-badge">✅ 排序完成</span>';
 }
 function sortKeys(obj, order) {
   if (Array.isArray(obj)) return obj.map(v => sortKeys(v, order));
@@ -21,4 +24,3 @@ function sortKeys(obj, order) {
   for (const k of keys) res[k] = sortKeys(obj[k], order);
   return res;
 }
-

@@ -1,27 +1,51 @@
 'use strict';
 // search
+// Parsed cache — set when processJson() succeeds, used for live re-search on input change
+let _searchParsed = null;
+
 function initToolOptions() {
-  // Render search controls - try below-button slot first (new layout), fallback to top bar
+  // searchControls is now in the right-panel header (new layout)
   const target = document.getElementById('searchControls') || document.getElementById('toolOptions');
   if (!target) return;
   target.innerHTML =
-    '<input id="searchInput" type="text" placeholder="搜索 Key 或 Value..." class="jt-options-input" style="width:200px;flex:1" oninput="processJson()">' +
-    '<div class="jt-options-radio-group" style="display:flex;gap:8px;flex-wrap:wrap">' +
+    '<input id="searchInput" type="text" placeholder="搜索 Key 或 Value..." class="jt-options-input" style="width:180px;flex:1" oninput="_runSearch()">' +
+    '<div class="jt-options-radio-group" style="display:flex;gap:6px;flex-wrap:wrap">' +
       '<label class="jt-options-radio"><input type="radio" name="searchIn" value="both" checked><span>全部</span></label>' +
       '<label class="jt-options-radio"><input type="radio" name="searchIn" value="key"><span>仅 Key</span></label>' +
       '<label class="jt-options-radio"><input type="radio" name="searchIn" value="value"><span>仅 Value</span></label>' +
     '</div>';
+  // Re-wire radio buttons to also trigger live search
+  target.querySelectorAll('input[name="searchIn"]').forEach(function(r) {
+    r.addEventListener('change', _runSearch);
+  });
 }
+
 function processJson() {
+  clearErrorPanel();
   const parsed = parseInput(); if (parsed === null) return;
+  _searchParsed = parsed;
+  // Auto-run search immediately if a query is already typed
+  _runSearch();
+  const el = document.getElementById('outputStats');
+  if (el) el.innerHTML = '<span class="jt-success-badge">✅ 解析成功，可输入关键词搜索</span>';
+}
+
+function _runSearch() {
+  if (!_searchParsed) return;
   const qEl = document.getElementById('searchInput');
   const query = qEl ? qEl.value.trim() : '';
-  if (!query) return;
+  const container = document.getElementById('searchOutput');
+  if (!container) return;
+  if (!query) {
+    container.innerHTML = '<p class="jt-search-empty" style="color:var(--jt-muted);padding:16px">请在上方输入搜索关键词</p>';
+    return;
+  }
   const checkedEl = document.querySelector('input[name="searchIn"]:checked');
   const searchIn = checkedEl ? checkedEl.value : 'both';
-  const results = searchJson(parsed, query, searchIn, '$');
+  const results = searchJson(_searchParsed, query, searchIn, '$');
   renderSearchResults(results);
 }
+
 function searchJson(node, query, searchIn, path) {
   const res = [], q = query.toLowerCase();
   function walk(v, p) {
@@ -38,6 +62,7 @@ function searchJson(node, query, searchIn, path) {
   }
   walk(node, path); return res;
 }
+
 function renderSearchResults(results) {
   const c = document.getElementById('searchOutput');
   if (!c) return;

@@ -1,6 +1,7 @@
 'use strict';
 // to-rust
 function processJson() {
+  clearErrorPanel();
   const parsed = parseInput(); if (parsed === null) return;
   const rootName = getClassName(); const structs = [];
   function rustType(v) {
@@ -23,5 +24,6 @@ function processJson() {
   gen(Array.isArray(parsed) ? parsed[0] : parsed, rootName);
   const hdr = 'use serde::{Deserialize, Serialize};\n\n';
   setOutput(hdr + structs.reverse().join('\n\n'), 'rust');
+  const el = document.getElementById('outputStats');
+  if (el) el.innerHTML = '<span class="jt-success-badge">✅ Rust struct 生成完成</span>';
 }
-

@@ -1,6 +1,7 @@
 'use strict';
 // to-kotlin
 function processJson() {
+  clearErrorPanel();
   const parsed = parseInput(); if (parsed === null) return;
   const rootName = getClassName(); const classes = [];
   function ktType(v) {
@@ -24,5 +25,6 @@ function processJson() {
   gen(Array.isArray(parsed) ? parsed[0] : parsed, rootName);
   const hdr = 'import kotlinx.serialization.*\nimport kotlinx.serialization.json.*\n\n';
   setOutput(hdr + classes.reverse().join('\n\n'), 'kotlin');
+  const el = document.getElementById('outputStats');
+  if (el) el.innerHTML = '<span class="jt-success-badge">✅ Kotlin data class 生成完成</span>';
 }
-

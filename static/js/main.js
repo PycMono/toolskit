@@ -73,24 +73,44 @@ function doNavSearch(q) {
     .catch(() => {});
 }
 
+// ---- Force dropdowns hidden on load (Cloudflare-proof) ----
+// We set inline style display:none so Cloudflare CSS minification can never override it.
+(function() {
+  function hideDropdowns() {
+    document.querySelectorAll('.lang-dropdown, .nav-theme-dropdown').forEach(function(el) {
+      el.style.display = 'none';
+    });
+  }
+  hideDropdowns();
+  // Also run after DOM ready in case elements are added late
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', hideDropdowns);
+  }
+})();
+
 // ---- Lang Dropdown Toggle ----
-// Wire up ALL .lang-switcher elements (main navbar + JSON tool topbar)
 document.querySelectorAll('.lang-switcher').forEach(function(switcher) {
-  const btn = switcher.querySelector('.lang-btn');
-  if (!btn) return;
+  var dropdown = switcher.querySelector('.lang-dropdown');
+  var btn = switcher.querySelector('.lang-btn');
+  if (!btn || !dropdown) return;
+
   btn.addEventListener('click', function(e) {
     e.stopPropagation();
-    switcher.classList.toggle('open');
-    // Close other lang switchers
-    document.querySelectorAll('.lang-switcher').forEach(function(s) {
-      if (s !== switcher) s.classList.remove('open');
-    });
+    var isOpen = dropdown.style.display === 'block';
+    // Close all dropdowns first
+    document.querySelectorAll('.lang-dropdown').forEach(function(d) { d.style.display = 'none'; });
+    document.querySelectorAll('.lang-switcher').forEach(function(s) { s.classList.remove('open'); });
+    if (!isOpen) {
+      dropdown.style.display = 'block';
+      switcher.classList.add('open');
+    }
   });
 });
-document.addEventListener('click', function() {
-  document.querySelectorAll('.lang-switcher').forEach(function(s) {
-    s.classList.remove('open');
-  });
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.lang-switcher')) {
+    document.querySelectorAll('.lang-dropdown').forEach(function(d) { d.style.display = 'none'; });
+    document.querySelectorAll('.lang-switcher').forEach(function(s) { s.classList.remove('open'); });
+  }
 });
 
 // ---- Mobile Menu ----

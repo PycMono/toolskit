@@ -10,11 +10,16 @@ function initToolOptions() {
     </div>`;
 }
 function processJson() {
+  clearErrorPanel();
   const parsed = parseInput(); if (parsed === null) return;
   const delim = document.getElementById('flattenDelimiter')?.value || '.';
   const dir = document.querySelector('input[name="flattenDir"]:checked')?.value || 'flat';
   const result = dir === 'flat' ? flatten(parsed, '', delim) : unflatten(parsed, delim);
   setOutput(JSON.stringify(result, null, 2));
+  const el = document.getElementById('outputStats');
+  if (el) el.innerHTML = dir === 'flat'
+    ? '<span class="jt-success-badge">✅ 扁平化完成</span>'
+    : '<span class="jt-success-badge">✅ 还原完成</span>';
 }
 function flatten(obj, prefix, delim) {
   const res = {};
@@ -38,4 +43,3 @@ function unflatten(obj, delim) {
   }
   return res;
 }
-
