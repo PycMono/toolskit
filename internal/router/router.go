@@ -173,11 +173,17 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 		jt.GET("/learn", handlers.JSONLearnHub)
 		jt.GET("/learn/:slug", handlers.JSONLearnArticle)
 	}
-	// AI Lab routes (legacy /ailab/* - kept for backward compat)
+	// AI Lab routes (legacy /ailab/* → 301 redirect to /ai/*)
 	ailab := r.Group("/ailab")
 	{
-		ailab.GET("/detector", handlers.AIDetectorPage)
-		// Redirect old humanize URL to new spec-compliant URL
+		ailab.GET("/detector", func(c *gin.Context) {
+			lang := c.Query("lang")
+			target := "/ai/detector"
+			if lang != "" {
+				target += "?lang=" + lang
+			}
+			c.Redirect(301, target)
+		})
 		ailab.GET("/humanize", func(c *gin.Context) {
 			lang := c.Query("lang")
 			target := "/ai/humanizer"
@@ -188,7 +194,7 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 		})
 	}
 
-	// AI Lab routes (new /ai/* - spec-compliant)
+	// AI routes (canonical /ai/*)
 	ai := r.Group("/ai")
 	{
 		ai.GET("/detector", handlers.AIDetectorPage)
@@ -255,21 +261,22 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 	{
 		api.GET("/search", handlers.SearchAPI)
 
-		// AI Lab API
+		// AI API (legacy /api/ailab/* → 301 redirect to /api/ai/*)
 		ailabAPI := api.Group("/ailab")
 		{
-			ailabAPI.POST("/detect", handlers.AIDetectAPI)
-			ailabAPI.POST("/detect-file", handlers.AIDetectFileAPI)
-			ailabAPI.POST("/detect-url", handlers.AIDetectURLAPI)
-			ailabAPI.POST("/humanize", handlers.HumanizeStream)
+			ailabAPI.POST("/detect",      func(c *gin.Context) { c.Redirect(301, "/api/ai/detect") })
+			ailabAPI.POST("/detect-file", func(c *gin.Context) { c.Redirect(301, "/api/ai/detect-file") })
+			ailabAPI.POST("/detect-url",  func(c *gin.Context) { c.Redirect(301, "/api/ai/fetch-url") })
+			ailabAPI.POST("/humanize",    func(c *gin.Context) { c.Redirect(301, "/api/ai/humanize") })
 		}
 
-		// New AI API (spec-compliant)
+		// AI API (canonical /api/ai/*)
 		aiAPI := api.Group("/ai")
 		{
-			aiAPI.POST("/detect", handlers.AIHumanizerDetectAPI)
-			aiAPI.POST("/humanize", handlers.AIHumanizerStreamAPI)
-			aiAPI.POST("/fetch-url", handlers.AIDetectURLAPI)
+			aiAPI.POST("/detect",      handlers.AIHumanizerDetectAPI)
+			aiAPI.POST("/detect-file", handlers.AIDetectFileAPI)
+			aiAPI.POST("/humanize",    handlers.AIHumanizerStreamAPI)
+			aiAPI.POST("/fetch-url",   handlers.AIDetectURLAPI)
 		}
 
 		// SMS API (S-05, S-06, S-07, S-08, S-09)

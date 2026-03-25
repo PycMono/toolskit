@@ -120,6 +120,19 @@
           <a href="javascript:void(0)" onclick="switchLang('spa')" class="lang-opt {{ if eq .Lang "spa" }}active{{ end }}">🇪🇸 Español</a>
         </div>
       </div>
+      <!-- Theme Switcher in navbar -->
+      <div class="nav-theme-switcher" id="navThemeSwitcher">
+        <button class="nav-theme-btn" id="navThemeBtn" aria-label="Switch theme" title="Switch theme">
+          <span id="navThemeIcon">☀️</span>
+        </button>
+        <div class="nav-theme-dropdown" id="navThemeDropdown">
+          <button class="nav-theme-opt" data-theme="light"  onclick="applyTheme('light')">☀️ Light</button>
+          <button class="nav-theme-opt" data-theme="dark"   onclick="applyTheme('dark')">🌙 Dark</button>
+          <button class="nav-theme-opt" data-theme="forest" onclick="applyTheme('forest')">🌿 Forest</button>
+          <button class="nav-theme-opt" data-theme="ocean"  onclick="applyTheme('ocean')">🌊 Ocean</button>
+          <button class="nav-theme-opt" data-theme="sunset" onclick="applyTheme('sunset')">🌅 Sunset</button>
+        </div>
+      </div>
       <button class="hamburger" id="hamburger" aria-label="menu">☰</button>
     </div>
   </div>
@@ -176,25 +189,12 @@
   </div>
 </footer>
 
-<!-- ── Global Theme FAB ── -->
-<div class="g-theme-fab" id="gThemeFab" aria-label="Switch theme">
-  <button class="g-theme-fab__btn" id="gThemeBtn" title="Switch theme">
-    <span id="gThemeIcon">☀️</span>
-  </button>
-  <div class="g-theme-fab__menu" id="gThemeMenu" role="menu">
-    <button class="g-theme-fab__opt" data-theme="light"  onclick="applyTheme('light')" title="Light">☀️</button>
-    <button class="g-theme-fab__opt" data-theme="dark"   onclick="applyTheme('dark')"  title="Dark">🌙</button>
-    <button class="g-theme-fab__opt" data-theme="forest" onclick="applyTheme('forest')" title="Forest">🌿</button>
-    <button class="g-theme-fab__opt" data-theme="ocean"  onclick="applyTheme('ocean')" title="Ocean">🌊</button>
-    <button class="g-theme-fab__opt" data-theme="sunset" onclick="applyTheme('sunset')" title="Sunset">🌅</button>
-  </div>
-</div>
 
 <script src="/static/js/ga-events.js"></script>
 <script src="/static/js/main.js"></script>
 {{ template "extraScript" . }}
 <script>
-/* ── Global Theme Switcher (FAB) ── */
+/* ── Global Theme Switcher (Navbar) ── */
 (function(){
   var THEMES = ['light','dark','forest','ocean','sunset'];
   var ICONS  = {light:'☀️', dark:'🌙', forest:'🌿', ocean:'🌊', sunset:'🌅'};
@@ -203,20 +203,15 @@
     if (THEMES.indexOf(name) < 0) name = 'light';
     document.documentElement.setAttribute('data-theme', name);
     localStorage.setItem('tbn-theme', name);
-    // Update FAB icon
-    var ic = document.getElementById('gThemeIcon');
+    // Update navbar icon
+    var ic = document.getElementById('navThemeIcon');
     if (ic) ic.textContent = ICONS[name];
     // Mark active option
-    document.querySelectorAll('.g-theme-fab__opt').forEach(function(b) {
+    document.querySelectorAll('.nav-theme-opt').forEach(function(b) {
       b.classList.toggle('active', b.dataset.theme === name);
     });
     closeMenu();
-    // Bridge: sync detector's icon if present
-    var aidIcon = document.getElementById('aidThemeIcon');
-    if (aidIcon) {
-      aidIcon.className = name === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-    }
-    // Bridge: sync humanizer icon if present
+    // Bridge: sync humanizer sun/moon icon
     var sunIcon  = document.getElementById('ah-icon-sun');
     var moonIcon = document.getElementById('ah-icon-moon');
     if (sunIcon && moonIcon) {
@@ -226,25 +221,26 @@
   }
 
   function closeMenu() {
-    var m = document.getElementById('gThemeMenu');
-    if (m) m.classList.remove('open');
+    var d = document.getElementById('navThemeDropdown');
+    if (d) d.classList.remove('open');
+    var sw = document.getElementById('navThemeSwitcher');
+    if (sw) sw.classList.remove('open');
   }
 
-  // Expose globally so detector's AID.toggleTheme() can delegate here
   window.applyTheme = applyTheme;
 
   document.addEventListener('DOMContentLoaded', function() {
     var saved = localStorage.getItem('tbn-theme') || 'light';
     applyTheme(saved);
 
-    var btn = document.getElementById('gThemeBtn');
+    var btn = document.getElementById('navThemeBtn');
     if (btn) btn.addEventListener('click', function(e) {
       e.stopPropagation();
-      var m = document.getElementById('gThemeMenu');
-      if (m) m.classList.toggle('open');
+      var sw = document.getElementById('navThemeSwitcher');
+      if (sw) sw.classList.toggle('open');
     });
     document.addEventListener('click', function(e) {
-      if (!e.target.closest('#gThemeFab')) closeMenu();
+      if (!e.target.closest('#navThemeSwitcher')) closeMenu();
     });
   });
 })();

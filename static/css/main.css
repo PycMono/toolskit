@@ -263,53 +263,35 @@ a { color: var(--t-primary); }
 .lang-opt:hover { background: var(--t-bg); text-decoration: none; }
 .lang-opt.active { color: var(--t-primary); font-weight: 600; }
 
-/* ── Global Theme FAB (floating action button, bottom-right) ── */
-.g-theme-fab {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 9998;
-}
-.g-theme-fab__btn {
-  width: 46px; height: 46px;
+/* ── Navbar Theme Switcher ── */
+.nav-theme-switcher { position: relative; }
+.nav-theme-btn {
+  width: 34px; height: 34px;
   border-radius: 50%;
-  background: var(--t-primary);
-  color: #fff;
-  border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  box-shadow: 0 4px 16px rgba(0,0,0,.25);
-  transition: transform .2s, box-shadow .2s;
-}
-.g-theme-fab__btn:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(0,0,0,.3); }
-.g-theme-fab__menu {
-  display: none;
-  position: absolute;
-  bottom: calc(100% + 10px);
-  right: 0;
-  background: var(--t-surface);
   border: 1px solid var(--t-border);
-  border-radius: 12px;
-  padding: 6px;
-  box-shadow: 0 8px 32px rgba(0,0,0,.18);
-  flex-direction: column;
-  gap: 4px;
-  min-width: 52px;
-  align-items: center;
-}
-.g-theme-fab__menu.open { display: flex; }
-.g-theme-fab__opt {
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  background: none;
-  font-size: 18px;
+  background: var(--t-surface);
+  font-size: 16px;
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: background .15s, border-color .15s;
+  transition: border-color .15s, background .15s, transform .15s;
 }
-.g-theme-fab__opt:hover { background: var(--t-bg); }
-.g-theme-fab__opt.active { border-color: var(--t-primary); background: var(--t-bg); }
+.nav-theme-btn:hover { border-color: var(--t-primary); transform: rotate(20deg); }
+.nav-theme-dropdown {
+  display: none;
+  position: absolute; top: calc(100% + 8px); right: 0;
+  background: var(--t-surface); border: 1px solid var(--t-border);
+  border-radius: var(--radius); min-width: 130px;
+  box-shadow: var(--shadow-lg); z-index: 9999; overflow: hidden;
+}
+.nav-theme-switcher.open .nav-theme-dropdown { display: block; }
+.nav-theme-opt {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 9px 14px;
+  font-size: 13px; color: var(--t-text2); background: none; border: none;
+  text-align: left; cursor: pointer; transition: background .1s;
+}
+.nav-theme-opt:hover { background: var(--t-bg); }
+.nav-theme-opt.active { color: var(--t-primary); font-weight: 600; }
 
 /* ── Navbar theme-aware ── */
 .hamburger {
@@ -1349,7 +1331,6 @@ mark.rx-match { border-radius:2px; padding:0 1px; }
 .ad-container-top, .ad-container-bottom { max-width:1200px; margin:20px auto; padding:0 20px; }
 .ad-container-sidebar { margin-bottom:20px; }
 .ad-slot { margin:16px 0; }
-.ad-placeholder { border:2px dashed #ccc; padding:20px; text-align:center; background:#f9f9f9; color:#666; border-radius:8px; }
 
 /* ── Hero 区域 (Block A-02: gptzero.me style) ──── */
 .detector-hero {

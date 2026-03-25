@@ -1,12 +1,12 @@
 {
-  "port": "8989",
+  "port": "5000",
   "debug": false,
   "site_url": "https://toolboxnova.com",
   "asset_version": "v20260326",
   "sms_api_key": "",
   "email_api_key": "",
   "google_ads_id": "ca-pub-9000734285117391",
-  "enable_ads": false,
+  "enable_ads": true,
   "ga_measurement_id": "G-11XY9KKW2J",
   "enable_ga": true,
   "ai": {
