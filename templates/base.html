@@ -4,6 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Theme init: must run before CSS renders to avoid FOUC -->
+  <script>(function(){var t=localStorage.getItem('tbn-theme')||'light';document.documentElement.setAttribute('data-theme',t);})()</script>
   {{- template "partials/ga.html" . }}
   {{ if .AdsEnabled }}
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ .AdsClientID }}"
@@ -118,6 +120,18 @@
           <a href="javascript:void(0)" onclick="switchLang('spa')" class="lang-opt {{ if eq .Lang "spa" }}active{{ end }}">🇪🇸 Español</a>
         </div>
       </div>
+      <div class="theme-switcher" id="themeSwitcher">
+        <button class="theme-btn" id="themeBtn" aria-label="Switch theme" title="Switch theme">
+          <span id="themeIcon">🌙</span>
+        </button>
+        <div class="theme-dropdown" id="themeDropdown">
+          <button class="theme-opt" data-theme="light" onclick="applyTheme('light')">☀️ Light</button>
+          <button class="theme-opt" data-theme="dark" onclick="applyTheme('dark')">🌙 Dark</button>
+          <button class="theme-opt" data-theme="forest" onclick="applyTheme('forest')">🌿 Forest</button>
+          <button class="theme-opt" data-theme="ocean" onclick="applyTheme('ocean')">🌊 Ocean</button>
+          <button class="theme-opt" data-theme="sunset" onclick="applyTheme('sunset')">🌅 Sunset</button>
+        </div>
+      </div>
       <button class="hamburger" id="hamburger" aria-label="menu">☰</button>
     </div>
   </div>
@@ -177,6 +191,43 @@
 <script src="/static/js/ga-events.js"></script>
 <script src="/static/js/main.js"></script>
 {{ template "extraScript" . }}
+<script>
+/* ── Global Theme Switcher ── */
+(function(){
+  var THEMES={
+    light:{icon:'☀️'},dark:{icon:'🌙'},forest:{icon:'🌿'},ocean:{icon:'🌊'},sunset:{icon:'🌅'}
+  };
+  function applyTheme(name){
+    if(!THEMES[name])name='light';
+    document.documentElement.setAttribute('data-theme',name);
+    localStorage.setItem('tbn-theme',name);
+    var ic=document.getElementById('themeIcon');
+    if(ic)ic.textContent=THEMES[name].icon;
+    document.querySelectorAll('.theme-opt').forEach(function(b){
+      b.classList.toggle('active',b.dataset.theme===name);
+    });
+    closeThemeDropdown();
+  }
+  function closeThemeDropdown(){
+    var d=document.getElementById('themeDropdown');
+    if(d)d.classList.remove('open');
+  }
+  window.applyTheme=applyTheme;
+  document.addEventListener('DOMContentLoaded',function(){
+    var saved=localStorage.getItem('tbn-theme')||'light';
+    applyTheme(saved);
+    var btn=document.getElementById('themeBtn');
+    if(btn)btn.addEventListener('click',function(e){
+      e.stopPropagation();
+      var d=document.getElementById('themeDropdown');
+      if(d)d.classList.toggle('open');
+    });
+    document.addEventListener('click',function(e){
+      if(!e.target.closest('#themeSwitcher'))closeThemeDropdown();
+    });
+  });
+})();
+</script>
 </body>
 </html>
 {{ end }}

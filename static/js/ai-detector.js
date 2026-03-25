@@ -375,6 +375,7 @@
     $id('aidResult').style.display = 'flex';
 
     updateGauge(result.score, result.verdict);
+    renderBreakdown(result.score, result.sentences || []);
     renderDetectorScores(result.detectors || {});
     renderHighlightedText(result.sentences || []);
 
@@ -385,6 +386,55 @@
     if (typeof gsap !== 'undefined') {
       gsap.from('#aidResult', { opacity: 0, y: 20, duration: 0.4, ease: 'power2.out' });
     }
+  }
+
+  // Compute & animate the AI / AI-Assisted / Human breakdown bar
+  function renderBreakdown(score, sentences) {
+    // Derive percentages from sentence-level data if available,
+    // otherwise estimate from the overall score
+    let pctAI = 0, pctAssisted = 0, pctHuman = 0;
+
+    if (sentences && sentences.length > 0) {
+      const total = sentences.length;
+      const aiCount       = sentences.filter(s => s.type === 'ai').length;
+      const mixedCount    = sentences.filter(s => s.type === 'mixed').length;
+      const humanCount    = sentences.filter(s => s.type === 'human').length;
+      pctAI       = Math.round((aiCount    / total) * 100);
+      pctAssisted = Math.round((mixedCount / total) * 100);
+      pctHuman    = 100 - pctAI - pctAssisted;
+      if (pctHuman < 0) pctHuman = 0;
+    } else {
+      // Fallback: estimate from overall score
+      // score 0-100: AI%, rest split between assisted and human
+      pctAI       = Math.round(score * 0.7);
+      pctAssisted = Math.round(score * 0.3);
+      pctHuman    = 100 - pctAI - pctAssisted;
+      if (pctHuman < 0) pctHuman = 0;
+    }
+
+    // Apply widths (animated via CSS transition)
+    requestAnimationFrame(() => {
+      const segAI       = $id('bdSegAI');
+      const segAssisted = $id('bdSegAssisted');
+      const segHuman    = $id('bdSegHuman');
+      if (segAI)       segAI.style.width       = pctAI       + '%';
+      if (segAssisted) segAssisted.style.width  = pctAssisted + '%';
+      if (segHuman)    segHuman.style.width     = pctHuman    + '%';
+    });
+
+    // Update percentage labels with CountUp
+    function animatePct(elId, val) {
+      const el = $id(elId);
+      if (!el) return;
+      if (typeof CountUp !== 'undefined') {
+        new CountUp.CountUp(el, val, { duration: 0.9, suffix: '%' }).start();
+      } else {
+        el.textContent = val + '%';
+      }
+    }
+    animatePct('bdPctAI',       pctAI);
+    animatePct('bdPctAssisted', pctAssisted);
+    animatePct('bdPctHuman',    pctHuman);
   }
 
   function updateGauge(score, verdict) {
@@ -476,19 +526,73 @@
 
   function renderHighlightedText(sentences) {
     const container = $id('aidHighlightText');
+    const gotoBtn   = $id('aidGotoHumanizer');
+
     if (!sentences || sentences.length === 0) {
-      container.textContent = State.inputText;
+      container.innerHTML = '<div class="aid-highlight-para">' + esc(State.inputText) + '</div>';
+      if (gotoBtn) gotoBtn.style.display = 'none';
       $id('aidHighlightFooter').textContent = '';
       return;
     }
-    container.innerHTML = sentences.map(s => {
-      const cls = 'sentence sentence--' + (s.type || 'human');
-      const opacity = s.type === 'ai' ? Math.max(0.15, (s.score || 50) / 100 * 0.5)
-                    : s.type === 'mixed' ? 0.25 : 0.12;
-      const rgb = s.type === 'ai' ? '239,68,68' : s.type === 'mixed' ? '245,158,11' : '16,185,129';
-      return `<span class="${cls}" style="background:rgba(${rgb},${opacity})" title="AI: ${Math.round(s.score || 0)}%">${esc(s.text)} </span>`;
+
+    // Group sentences into paragraphs (split on double-newline or every ~3-4 sentences)
+    const GROUP_SIZE = 3;
+    const groups = [];
+    for (let i = 0; i < sentences.length; i += GROUP_SIZE) {
+      groups.push(sentences.slice(i, i + GROUP_SIZE));
+    }
+
+    let aiCount = 0, mixedCount = 0, humanCount = 0;
+
+    container.innerHTML = groups.map((group, gi) => {
+      // Determine dominant type for this paragraph
+      const types = group.map(s => s.type || 'human');
+      const aiPct = types.filter(t => t === 'ai').length / types.length;
+      const mixedPct = types.filter(t => t === 'mixed').length / types.length;
+      const paraType = aiPct >= 0.5 ? 'ai' : mixedPct >= 0.4 ? 'mixed' : 'human';
+
+      types.forEach(t => {
+        if (t === 'ai') aiCount++;
+        else if (t === 'mixed') mixedCount++;
+        else humanCount++;
+      });
+
+      const labelMap = {
+        ai:    '<span class="aid-para-label aid-para-label--ai"><i class="fa-solid fa-robot"></i> AI</span>',
+        mixed: '<span class="aid-para-label aid-para-label--mixed"><i class="fa-solid fa-circle-half-stroke"></i> Mixed</span>',
+        human: '<span class="aid-para-label aid-para-label--human"><i class="fa-solid fa-user"></i> Human</span>',
+      };
+
+      const sentencesHtml = group.map(s => {
+        const cls = 'sentence sentence--' + (s.type || 'human');
+        const opacity = s.type === 'ai'    ? Math.max(0.15, (s.score || 50) / 100 * 0.55)
+                      : s.type === 'mixed' ? 0.25 : 0.12;
+        const rgb = s.type === 'ai'    ? '239,68,68'
+                  : s.type === 'mixed' ? '245,158,11' : '16,185,129';
+        const pct = Math.round(s.score || 0);
+        return `<span class="${cls}" style="background:rgba(${rgb},${opacity})"
+          title="AI probability: ${pct}%" data-score="${pct}">${esc(s.text)} </span>`;
+      }).join('');
+
+      return `<div class="aid-highlight-para aid-highlight-para--${paraType}">
+        ${labelMap[paraType]}
+        <div class="aid-para-text">${sentencesHtml}</div>
+      </div>`;
     }).join('');
+
+    // Show goto humanizer if any AI content found
+    const hasAI = aiCount > 0 || mixedCount > 0;
+    if (gotoBtn) gotoBtn.style.display = hasAI ? 'inline-flex' : 'none';
+
     $id('aidHighlightFooter').textContent = t('result.sentences', { count: sentences.length });
+  }
+
+  // ─── Cross-tool: goto humanizer ──────────────────────────
+  function goToHumanizer() {
+    const text = State.inputText || '';
+    if (!text.trim()) return;
+    try { sessionStorage.setItem('ah_prefill_text', text); } catch(e) {}
+    window.location.href = '/ai/humanizer';
   }
 
   // ─── Compare ──────────────────────────────────────────────
@@ -696,6 +800,22 @@
     loadHistory();
     renderHistory();
 
+    // Cross-tool prefill: if navigated from AI Humanizer
+    try {
+      var prefill = sessionStorage.getItem('aid_prefill_text');
+      if (prefill) {
+        sessionStorage.removeItem('aid_prefill_text');
+        var ta = $id('aidInputText');
+        if (ta) {
+          ta.value = prefill;
+          State.inputText = prefill;
+          handleTextInput(ta);
+          // Auto-start detection after a short delay
+          setTimeout(function() { startDetect(); }, 600);
+        }
+      }
+    } catch(e) {}
+
     // Purpose tabs
     const purposeTabs = $id('aidPurposeTabs');
     if (purposeTabs) {
@@ -741,6 +861,7 @@
     clearHistory,
     toggleFAQ,
     toggleTheme,
+    goToHumanizer,
   };
 
   // Boot

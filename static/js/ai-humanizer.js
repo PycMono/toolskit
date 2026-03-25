@@ -61,12 +61,16 @@ function escRx(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 
 // ─── Mode descriptions ───────────────────────────────────────
 var MODE_DESC = {
-  basic:      function(){ return t('ah.mode.basic.desc'); },
+  free:       function(){ return t('ah.mode.free.desc'); },
   standard:   function(){ return t('ah.mode.standard.desc'); },
-  aggressive: function(){ return t('ah.mode.aggressive.desc'); },
-  academic:   function(){ return t('ah.mode.academic.desc'); },
+  smart:      function(){ return t('ah.mode.smart.desc'); },
+  easy:       function(){ return t('ah.mode.easy.desc'); },
   creative:   function(){ return t('ah.mode.creative.desc'); },
-  business:   function(){ return t('ah.mode.business.desc'); },
+  academic:   function(){ return t('ah.mode.academic.desc'); },
+  formal:     function(){ return t('ah.mode.formal.desc'); },
+  casual:     function(){ return t('ah.mode.casual.desc'); },
+  aggressive: function(){ return t('ah.mode.aggressive.desc'); },
+  ultra:      function(){ return t('ah.mode.ultra.desc'); },
 };
 
 // ─── Public API ───────────────────────────────────────────────
@@ -91,6 +95,19 @@ var AIHumanizer = {
 
     // Load history
     loadHistory();
+
+    // Cross-tool prefill: if navigated from AI Detector
+    try {
+      var prefill = sessionStorage.getItem('ah_prefill_text');
+      if (prefill) {
+        sessionStorage.removeItem('ah_prefill_text');
+        var taP = document.getElementById('ah-input');
+        if (taP) {
+          taP.value = prefill;
+          AIHumanizer.onInputChange({ target: taP });
+        }
+      }
+    } catch(e) {}
 
     // Apply i18n to data-i18n elements
     document.querySelectorAll('[data-i18n]').forEach(function(el) {
@@ -427,6 +444,18 @@ var AIHumanizer = {
     });
     if (!isOpen) { item.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
   },
+
+  // ── Cross-tool: send humanized text to AI Detector ───────
+  goToDetector: function() {
+    var text = STATE.outputText || '';
+    if (!text.trim()) return;
+    try {
+      sessionStorage.setItem('aid_prefill_text', text);
+    } catch(e) {}
+    var lang = window.__lang__ || 'en';
+    var url = '/ai/detector' + (lang && lang !== 'en' ? '?lang=' + lang : '');
+    window.location.href = url;
+  },
 };
 
 // ─── Internal helpers ─────────────────────────────────────────
@@ -469,6 +498,9 @@ function finalizeOutput() {
   updateReadability(STATE.outputText);
   var btn = el('ah-humanize-again');
   if (btn) show(btn);
+  // Show cross-tool button
+  var detBtn = el('ah-goto-detector');
+  if (detBtn) show(detBtn);
   div.scrollTop = 0;
 }
 function renderFinalOutput(text) {

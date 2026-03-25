@@ -81,30 +81,46 @@ window.__lang__ = "{{ .Lang }}";
 <div class="ah-mode-bar">
   <div class="ah-container">
     <div class="ah-mode-scroll" role="tablist" aria-label="{{ call .T "ah.mode.label" }}">
-      <button class="ah-mode-btn active" role="tab" data-mode="basic"
-              aria-selected="true" onclick="AIHumanizer.setMode('basic')">
-        <span>⚡</span><span>{{ call .T "ah.mode.basic" }}</span>
+      <button class="ah-mode-btn active" role="tab" data-mode="free"
+              aria-selected="true" onclick="AIHumanizer.setMode('free')">
+        <span>⚡</span><span>{{ call .T "ah.mode.free" }}</span>
       </button>
       <button class="ah-mode-btn" role="tab" data-mode="standard"
               aria-selected="false" onclick="AIHumanizer.setMode('standard')">
         <span>⚖️</span><span>{{ call .T "ah.mode.standard" }}</span>
+      </button>
+      <button class="ah-mode-btn" role="tab" data-mode="smart"
+              aria-selected="false" onclick="AIHumanizer.setMode('smart')">
+        <span>🧠</span><span>{{ call .T "ah.mode.smart" }}</span>
+      </button>
+      <button class="ah-mode-btn" role="tab" data-mode="easy"
+              aria-selected="false" onclick="AIHumanizer.setMode('easy')">
+        <span>☀️</span><span>{{ call .T "ah.mode.easy" }}</span>
+      </button>
+      <button class="ah-mode-btn" role="tab" data-mode="creative"
+              aria-selected="false" onclick="AIHumanizer.setMode('creative')">
+        <span>🎨</span><span>{{ call .T "ah.mode.creative" }}</span>
+      </button>
+      <button class="ah-mode-btn" role="tab" data-mode="academic"
+              aria-selected="false" onclick="AIHumanizer.setMode('academic')">
+        <span>🎓</span><span>{{ call .T "ah.mode.academic" }}</span>
+      </button>
+      <button class="ah-mode-btn" role="tab" data-mode="formal"
+              aria-selected="false" onclick="AIHumanizer.setMode('formal')">
+        <span>💼</span><span>{{ call .T "ah.mode.formal" }}</span>
+      </button>
+      <button class="ah-mode-btn" role="tab" data-mode="casual"
+              aria-selected="false" onclick="AIHumanizer.setMode('casual')">
+        <span>😊</span><span>{{ call .T "ah.mode.casual" }}</span>
       </button>
       <button class="ah-mode-btn" role="tab" data-mode="aggressive"
               aria-selected="false" onclick="AIHumanizer.setMode('aggressive')">
         <span>🔥</span><span>{{ call .T "ah.mode.aggressive" }}</span>
         <span class="ah-mode-btn__badge">Best</span>
       </button>
-      <button class="ah-mode-btn" role="tab" data-mode="academic"
-              aria-selected="false" onclick="AIHumanizer.setMode('academic')">
-        <span>🎓</span><span>{{ call .T "ah.mode.academic" }}</span>
-      </button>
-      <button class="ah-mode-btn" role="tab" data-mode="creative"
-              aria-selected="false" onclick="AIHumanizer.setMode('creative')">
-        <span>🎨</span><span>{{ call .T "ah.mode.creative" }}</span>
-      </button>
-      <button class="ah-mode-btn" role="tab" data-mode="business"
-              aria-selected="false" onclick="AIHumanizer.setMode('business')">
-        <span>💼</span><span>{{ call .T "ah.mode.business" }}</span>
+      <button class="ah-mode-btn" role="tab" data-mode="ultra"
+              aria-selected="false" onclick="AIHumanizer.setMode('ultra')">
+        <span>🚀</span><span>{{ call .T "ah.mode.ultra" }}</span>
       </button>
     </div>
     <div class="ah-mode-desc" id="ah-mode-desc">{{ call .T "ah.mode.standard.desc" }}</div>
@@ -112,6 +128,12 @@ window.__lang__ = "{{ .Lang }}";
 </div>
 
 <!-- ③ Main workspace -->
+<div class="ah-outer-wrap">
+  <!-- Left sidebar ad -->
+  <aside class="ah-sidebar-ad ah-sidebar-ad--left">
+    {{- template "partials/ad_slot.html" dict "SlotID" "ai-humanizer-left" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+  </aside>
+
 <div class="ah-workspace-wrap">
   <div class="ah-container">
 
@@ -269,6 +291,16 @@ window.__lang__ = "{{ .Lang }}";
                     style="display:none">
               {{ call .T "ah.action.humanize_again" }}
             </button>
+            <!-- Cross-tool: send humanized text to AI Detector -->
+            <button class="ah-btn ah-btn--sm ah-btn--ghost ah-btn--cross" id="ah-goto-detector"
+                    onclick="AIHumanizer.goToDetector()"
+                    style="display:none"
+                    title="{{ call .T "ah.action.goto_detector" }}">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+              {{ call .T "ah.action.goto_detector" }}
+            </button>
             <button class="ah-btn ah-btn--sm ah-btn--primary" id="ah-copy-btn"
                     onclick="AIHumanizer.copyOutput()">
               {{ call .T "ah.action.copy" }}
@@ -331,52 +363,80 @@ window.__lang__ = "{{ .Lang }}";
   </div><!-- /container -->
 </div><!-- /workspace-wrap -->
 
+  <!-- Right sidebar ad -->
+  <aside class="ah-sidebar-ad ah-sidebar-ad--right">
+    {{- template "partials/ad_slot.html" dict "SlotID" "ai-humanizer-right" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+  </aside>
+</div><!-- /outer-wrap -->
+
 {{- template "partials/ad_slot.html" dict "SlotID" "ai-humanizer-sidebar" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
 
-<!-- ④ Features -->
-<section class="ah-features">
+<!-- ④ Bottom Editorial Section (humanizeai.pro style) -->
+<section class="ah-editorial">
   <div class="ah-container">
-    <div class="ah-features-grid">
-      <div class="ah-feat-card">
-        <div class="ah-feat-card__icon">🔒</div>
-        <h3>{{ call .T "ah.feature.privacy.title" }}</h3>
-        <p>{{ call .T "ah.feature.privacy.desc" }}</p>
-      </div>
-      <div class="ah-feat-card">
-        <div class="ah-feat-card__icon">⚡</div>
-        <h3>{{ call .T "ah.feature.speed.title" }}</h3>
-        <p>{{ call .T "ah.feature.speed.desc" }}</p>
-      </div>
-      <div class="ah-feat-card">
-        <div class="ah-feat-card__icon">🎁</div>
-        <h3>{{ call .T "ah.feature.free.title" }}</h3>
-        <p>{{ call .T "ah.feature.free.desc" }}</p>
-      </div>
-      <div class="ah-feat-card">
-        <div class="ah-feat-card__icon">✨</div>
-        <h3>{{ call .T "ah.feature.multimode.title" }}</h3>
-        <p>{{ call .T "ah.feature.multimode.desc" }}</p>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- ⑤ FAQ -->
-<section class="ah-faq">
-  <div class="ah-container">
-    <h2>FAQ</h2>
-    {{ range $i, $f := .FAQ }}
-    <div class="ah-faq-item">
-      <button class="ah-faq-q" aria-expanded="false"
-              onclick="AIHumanizer.toggleFAQ(this)">
-        <span>{{ $f.Q }}</span>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="6 9 12 15 18 9"/>
+    <!-- Cross-tool CTA -->
+    <div class="ah-cta-banner">
+      <div class="ah-cta-banner__text">
+        <h2>{{ call .T "ah.cta.title" }}</h2>
+        <p>{{ call .T "ah.cta.desc" }}</p>
+      </div>
+      <a href="/ai/detector{{ if ne .Lang "en" }}?lang={{ .Lang }}{{ end }}" class="ah-btn ah-btn--primary ah-btn--cta">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
         </svg>
-      </button>
-      <div class="ah-faq-a"><p>{{ $f.A }}</p></div>
+        {{ call .T "ah.cta.btn_detector" }}
+      </a>
     </div>
-    {{ end }}
+
+    <!-- Stats row -->
+    <div class="ah-ed-stats">
+      <div class="ah-ed-stat">
+        <span class="ah-ed-stat__num">10,000+</span>
+        <span class="ah-ed-stat__lbl">{{ call .T "ah.ed.stat_words" }}</span>
+      </div>
+      <div class="ah-ed-stat">
+        <span class="ah-ed-stat__num">10</span>
+        <span class="ah-ed-stat__lbl">{{ call .T "ah.ed.stat_modes" }}</span>
+      </div>
+      <div class="ah-ed-stat">
+        <span class="ah-ed-stat__num">50+</span>
+        <span class="ah-ed-stat__lbl">{{ call .T "ah.ed.stat_langs" }}</span>
+      </div>
+      <div class="ah-ed-stat">
+        <span class="ah-ed-stat__num">100%</span>
+        <span class="ah-ed-stat__lbl">{{ call .T "ah.ed.stat_free" }}</span>
+      </div>
+    </div>
+
+    <!-- Content grid -->
+    <div class="ah-ed-grid">
+      <div class="ah-ed-card ah-ed-card--wide">
+        <h3>{{ call .T "ah.ed.h1" }}</h3>
+        <p>{{ call .T "ah.ed.p1" }}</p>
+      </div>
+      <div class="ah-ed-card">
+        <h3>{{ call .T "ah.ed.h2" }}</h3>
+        <p>{{ call .T "ah.ed.p2" }}</p>
+      </div>
+      <div class="ah-ed-card">
+        <h3>{{ call .T "ah.ed.h3" }}</h3>
+        <p>{{ call .T "ah.ed.p3" }}</p>
+      </div>
+      <div class="ah-ed-card">
+        <h3>{{ call .T "ah.ed.h4" }}</h3>
+        <p>{{ call .T "ah.ed.p4" }}</p>
+      </div>
+      <div class="ah-ed-card">
+        <h3>{{ call .T "ah.ed.h5" }}</h3>
+        <p>{{ call .T "ah.ed.p5" }}</p>
+      </div>
+      <div class="ah-ed-card">
+        <h3>{{ call .T "ah.ed.h6" }}</h3>
+        <p>{{ call .T "ah.ed.p6" }}</p>
+      </div>
+    </div>
+
   </div>
 </section>
 

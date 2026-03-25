@@ -5,8 +5,8 @@
   "asset_version": "v20260326",
   "sms_api_key": "",
   "email_api_key": "",
-  "google_ads_id": "",
-  "enable_ads": false,
+  "google_ads_id": "ca-pub-9000734285117391",
+  "enable_ads": true,
   "ga_measurement_id": "G-11XY9KKW2J",
   "enable_ga": true,
   "ai": {

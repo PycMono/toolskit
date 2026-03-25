@@ -39,6 +39,32 @@
   <!-- 顶部广告 -->
   {{- template "partials/ad_slot.html" (dict "SlotID" "weather-query-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
 
+  <!-- Hero 描述区 -->
+  <div class="wq-hero-section">
+    <div class="wq-container">
+      <div class="wq-hero__inner">
+        <div class="wq-hero__text">
+          <h1 class="wq-hero__title">{{ call .T "wq.hero.title" }}</h1>
+          <p class="wq-hero__subtitle">{{ call .T "wq.hero.subtitle" }}</p>
+        </div>
+        <div class="wq-hero__stats">
+          <div class="wq-hero__stat">
+            <span class="wq-hero__stat-num">3M+</span>
+            <span class="wq-hero__stat-lbl">{{ call .T "wq.hero.stat_cities" }}</span>
+          </div>
+          <div class="wq-hero__stat">
+            <span class="wq-hero__stat-num">15 min</span>
+            <span class="wq-hero__stat-lbl">{{ call .T "wq.hero.stat_update" }}</span>
+          </div>
+          <div class="wq-hero__stat">
+            <span class="wq-hero__stat-num">100%</span>
+            <span class="wq-hero__stat-lbl">{{ call .T "wq.hero.stat_free" }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ① 搜索栏 -->
   <header class="wq-header">
     <div class="wq-container">
@@ -86,7 +112,15 @@
   </div>
 
   <!-- ② 主面板（数据就绪后整体显示） -->
-  <div class="wq-main hidden" id="wqMain">
+  <!-- 侧边栏广告布局 -->
+  <div class="wq-layout-with-sidebar">
+    <!-- 左侧广告 -->
+    <aside class="wq-sidebar wq-sidebar--left" aria-label="Advertisement">
+      {{- template "partials/ad_slot.html" (dict "SlotID" "weather-query-left" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
+    </aside>
+
+    <!-- 主内容 -->
+    <div class="wq-main hidden" id="wqMain">
 
     <!-- ── 当前天气横幅 ── -->
     <section class="wq-current" id="currentWeatherCard" aria-live="polite">
@@ -242,6 +276,12 @@
     {{- template "partials/ad_slot.html" (dict "SlotID" "weather-query-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
 
   </div><!-- /wq-main -->
+
+    <!-- 右侧广告 -->
+    <aside class="wq-sidebar wq-sidebar--right" aria-label="Advertisement">
+      {{- template "partials/ad_slot.html" (dict "SlotID" "weather-query-right" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
+    </aside>
+  </div><!-- /wq-layout-with-sidebar -->
 
   <!-- ③ 全球互动地图（独立于 wq-main，始终显示） -->
   <section class="wq-world-map-section" id="worldMapSection" aria-label="{{ call .T "wq.world_map.title" }}">

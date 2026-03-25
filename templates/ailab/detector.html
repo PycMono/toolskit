@@ -62,7 +62,13 @@
 
   <!-- TOOL dual-column -->
   <section class="aid-tool">
-    <div class="aid-tool__grid">
+    <div class="aid-tool__outer">
+      <!-- Left sidebar ad -->
+      <aside class="aid-sidebar aid-sidebar--left" aria-label="Advertisement">
+        {{- template "partials/ad_slot.html" (dict "SlotID" "ai-detector-left" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
+      </aside>
+
+      <div class="aid-tool__grid">
 
       <!-- LEFT: Input Panel -->
       <div class="aid-panel aid-panel--input" id="inputPanel">
@@ -249,24 +255,69 @@
             <div class="aid-verdict" id="aidVerdict"></div>
           </div>
 
+          <!-- AI / Assisted / Human Breakdown Bar -->
+          <div class="aid-breakdown" id="aidBreakdown">
+            <div class="aid-breakdown__bar">
+              <div class="aid-breakdown__seg aid-breakdown__seg--ai"    id="bdSegAI"     title="{{ call .T "ailab.detector.result.bd_ai" }}"></div>
+              <div class="aid-breakdown__seg aid-breakdown__seg--assisted" id="bdSegAssisted" title="{{ call .T "ailab.detector.result.bd_assisted" }}"></div>
+              <div class="aid-breakdown__seg aid-breakdown__seg--human" id="bdSegHuman"  title="{{ call .T "ailab.detector.result.bd_human" }}"></div>
+            </div>
+            <div class="aid-breakdown__labels">
+              <div class="aid-breakdown__lbl">
+                <span class="aid-breakdown__dot aid-breakdown__dot--ai"></span>
+                <span class="aid-breakdown__pct" id="bdPctAI">--%</span>
+                <span class="aid-breakdown__name">{{ call .T "ailab.detector.result.bd_ai" }}</span>
+              </div>
+              <div class="aid-breakdown__lbl">
+                <span class="aid-breakdown__dot aid-breakdown__dot--assisted"></span>
+                <span class="aid-breakdown__pct" id="bdPctAssisted">--%</span>
+                <span class="aid-breakdown__name">{{ call .T "ailab.detector.result.bd_assisted" }}</span>
+              </div>
+              <div class="aid-breakdown__lbl">
+                <span class="aid-breakdown__dot aid-breakdown__dot--human"></span>
+                <span class="aid-breakdown__pct" id="bdPctHuman">--%</span>
+                <span class="aid-breakdown__name">{{ call .T "ailab.detector.result.bd_human" }}</span>
+              </div>
+            </div>
+          </div>
+
           <!-- Multi-Detector Scores -->
           <div class="aid-detectors-section">
             <h3 class="aid-section-title">{{ call .T "ailab.detector.result.detectors_title" }}</h3>
             <div class="aid-detector-list" id="aidDetectorList"></div>
           </div>
 
-          <!-- Sentence Heatmap -->
+          <!-- Sentence Heatmap (Problem 5: improved paragraph-level UI) -->
           <div class="aid-highlight-section">
             <div class="aid-highlight-header">
-              <h3 class="aid-section-title">Sentence Analysis</h3>
+              <h3 class="aid-section-title">{{ call .T "ailab.detector.result.analysis_title" }}</h3>
               <div class="aid-legend">
-                <span class="aid-legend-item aid-legend-item--ai"><i class="fa-solid fa-circle"></i> {{ call .T "ailab.detector.result.highlight_ai" }}</span>
-                <span class="aid-legend-item aid-legend-item--mixed"><i class="fa-solid fa-circle"></i> {{ call .T "ailab.detector.result.highlight_mixed" }}</span>
-                <span class="aid-legend-item aid-legend-item--human"><i class="fa-solid fa-circle"></i> {{ call .T "ailab.detector.result.highlight_human" }}</span>
+                <span class="aid-legend-item aid-legend-item--ai">
+                  <span class="aid-legend-dot aid-legend-dot--ai"></span>
+                  {{ call .T "ailab.detector.result.highlight_ai" }}
+                </span>
+                <span class="aid-legend-item aid-legend-item--mixed">
+                  <span class="aid-legend-dot aid-legend-dot--mixed"></span>
+                  {{ call .T "ailab.detector.result.highlight_mixed" }}
+                </span>
+                <span class="aid-legend-item aid-legend-item--human">
+                  <span class="aid-legend-dot aid-legend-dot--human"></span>
+                  {{ call .T "ailab.detector.result.highlight_human" }}
+                </span>
               </div>
             </div>
             <div class="aid-highlight-text" id="aidHighlightText"></div>
-            <p class="aid-highlight-footer" id="aidHighlightFooter"></p>
+            <div class="aid-highlight-actions">
+              <p class="aid-highlight-footer" id="aidHighlightFooter"></p>
+              <!-- Problem 6: goto humanizer button -->
+              <button class="aid-btn aid-btn--outline aid-btn--sm aid-btn--goto-humanizer"
+                      id="aidGotoHumanizer"
+                      onclick="AID.goToHumanizer()"
+                      style="display:none">
+                <i class="fa-solid fa-wand-sparkles"></i>
+                {{ call .T "aid.action.goto_humanizer" }}
+              </button>
+            </div>
           </div>
 
           <!-- Stats Row -->
@@ -327,44 +378,78 @@
 
       </div><!-- /result panel -->
     </div><!-- /grid -->
+
+      <!-- Right sidebar ad -->
+      <aside class="aid-sidebar aid-sidebar--right" aria-label="Advertisement">
+        {{- template "partials/ad_slot.html" (dict "SlotID" "ai-detector-right" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
+      </aside>
+    </div><!-- /aid-tool__outer -->
   </section>
 
-  <!-- Features -->
-  <section class="aid-features">
-    <div class="aid-features__grid">
-      <div class="aid-feature-card">
-        <div class="aid-feature-card__icon aid-feature-card__icon--blue"><i class="fa-solid fa-lock"></i></div>
-        <h3>{{ call .T "ailab.detector.feature.privacy_title" }}</h3>
-        <p>{{ call .T "ailab.detector.feature.privacy_desc" }}</p>
-      </div>
-      <div class="aid-feature-card">
-        <div class="aid-feature-card__icon aid-feature-card__icon--purple"><i class="fa-solid fa-bolt"></i></div>
-        <h3>{{ call .T "ailab.detector.feature.speed_title" }}</h3>
-        <p>{{ call .T "ailab.detector.feature.speed_desc" }}</p>
-      </div>
-      <div class="aid-feature-card">
-        <div class="aid-feature-card__icon aid-feature-card__icon--green"><i class="fa-solid fa-circle-check"></i></div>
-        <h3>{{ call .T "ailab.detector.feature.free_title" }}</h3>
-        <p>{{ call .T "ailab.detector.feature.free_desc" }}</p>
-      </div>
-    </div>
-  </section>
+  <!-- Editorial section (humanizeai.pro style) -->
+  <section class="aid-editorial">
+    <div class="aid-page__container">
 
-  <!-- FAQ -->
-  <section class="aid-faq">
-    <div class="aid-faq__inner">
-      <h2 class="aid-faq__title">{{ call .T "ailab.detector.faq.title" }}</h2>
-      <div class="aid-faq-list">
-        {{ range $i, $faq := .FAQ }}
-        <div class="aid-faq-item" id="faq-{{ $i }}">
-          <button class="aid-faq-question" onclick="AID.toggleFAQ({{ $i }})" aria-expanded="false">
-            <span>{{ $faq.Q }}</span>
-            <i class="fa-solid fa-chevron-down aid-faq-chevron"></i>
-          </button>
-          <div class="aid-faq-answer" id="faq-answer-{{ $i }}"><p>{{ $faq.A }}</p></div>
+      <!-- CTA to humanizer -->
+      <div class="aid-cta-banner">
+        <div class="aid-cta-banner__text">
+          <h2>{{ call .T "aid.ed.cta.title" }}</h2>
+          <p>{{ call .T "aid.ed.cta.desc" }}</p>
         </div>
-        {{ end }}
+        <a href="/ai/humanizer{{ if ne .Lang "en" }}?lang={{ .Lang }}{{ end }}" class="aid-cta-btn">
+          <i class="fa-solid fa-wand-sparkles"></i>
+          {{ call .T "aid.ed.cta.btn" }}
+        </a>
       </div>
+
+      <!-- Stats row -->
+      <div class="aid-ed-stats">
+        <div class="aid-ed-stat">
+          <span class="aid-ed-stat__num">8</span>
+          <span class="aid-ed-stat__lbl">{{ call .T "aid.ed.stat_detectors" }}</span>
+        </div>
+        <div class="aid-ed-stat">
+          <span class="aid-ed-stat__num">99%</span>
+          <span class="aid-ed-stat__lbl">{{ call .T "aid.ed.stat_accuracy" }}</span>
+        </div>
+        <div class="aid-ed-stat">
+          <span class="aid-ed-stat__num">50+</span>
+          <span class="aid-ed-stat__lbl">{{ call .T "aid.ed.stat_langs" }}</span>
+        </div>
+        <div class="aid-ed-stat">
+          <span class="aid-ed-stat__num">100%</span>
+          <span class="aid-ed-stat__lbl">{{ call .T "aid.ed.stat_free" }}</span>
+        </div>
+      </div>
+
+      <!-- Content grid -->
+      <div class="aid-ed-grid">
+        <div class="aid-ed-card aid-ed-card--wide">
+          <h3>{{ call .T "aid.ed.h1" }}</h3>
+          <p>{{ call .T "aid.ed.p1" }}</p>
+        </div>
+        <div class="aid-ed-card">
+          <h3>{{ call .T "aid.ed.h2" }}</h3>
+          <p>{{ call .T "aid.ed.p2" }}</p>
+        </div>
+        <div class="aid-ed-card">
+          <h3>{{ call .T "aid.ed.h3" }}</h3>
+          <p>{{ call .T "aid.ed.p3" }}</p>
+        </div>
+        <div class="aid-ed-card">
+          <h3>{{ call .T "aid.ed.h4" }}</h3>
+          <p>{{ call .T "aid.ed.p4" }}</p>
+        </div>
+        <div class="aid-ed-card">
+          <h3>{{ call .T "aid.ed.h5" }}</h3>
+          <p>{{ call .T "aid.ed.p5" }}</p>
+        </div>
+        <div class="aid-ed-card">
+          <h3>{{ call .T "aid.ed.h6" }}</h3>
+          <p>{{ call .T "aid.ed.p6" }}</p>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -390,6 +475,8 @@ window.__AID_I18N__ = {
   "verdict.ai":             "{{ call .T `ailab.detector.result.verdict_ai` }}",
   "result.confidence":      "{{ call .T `ailab.detector.result.confidence` }}",
   "result.sentences":       "{{ call .T `ailab.detector.result.sentences_analyzed` }}",
+  "result.analysis_title":  "{{ call .T `ailab.detector.result.analysis_title` }}",
+  "action.goto_humanizer":  "{{ call .T `aid.action.goto_humanizer` }}",
   "compare.words":          "{{ call .T `ailab.detector.compare.words_changed` }}",
   "download.copy":          "{{ call .T `ailab.detector.download.copy_btn` }}",
   "download.copied":        "{{ call .T `ailab.detector.download.copy_success` }}",

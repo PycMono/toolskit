@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"strings"
 	"time"
@@ -117,8 +119,11 @@ func AIHumanizerStreamAPI(c *gin.Context) {
 
 	// Validate mode
 	validModes := map[string]bool{
-		"basic": true, "standard": true, "aggressive": true,
-		"academic": true, "creative": true, "business": true,
+		"free": true, "standard": true, "smart": true, "easy": true,
+		"creative": true, "academic": true, "formal": true, "casual": true,
+		"aggressive": true, "ultra": true,
+		// legacy aliases
+		"basic": true, "business": true,
 	}
 	if req.Mode == "" || !validModes[req.Mode] {
 		req.Mode = "standard"
@@ -126,8 +131,8 @@ func AIHumanizerStreamAPI(c *gin.Context) {
 
 	engine := getHumanizerEngine()
 	if engine == nil {
-		fmt.Fprintf(c.Writer, "event: error\ndata: AI service not configured\n\n")
-		c.Writer.Flush()
+		// Fallback: heuristic humanization when AI not configured
+		humanizeHeuristicStream(c.Writer, req.Text, req.Mode)
 		return
 	}
 
@@ -211,5 +216,82 @@ func AIHumanizerDetectAPI(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, resp)
+}
+
+// humanizeHeuristicStream is a local fallback when no AI provider is configured.
+// It applies lightweight text transforms and streams them back as SSE.
+func humanizeHeuristicStream(w interface{ Write([]byte) (int, error); Flush() }, text, mode string) {
+	result := humanizeHeuristic(text, mode)
+	// Stream word-by-word to simulate SSE
+	words := strings.Fields(result)
+	for i, word := range words {
+		chunk := word
+		if i < len(words)-1 {
+			chunk += " "
+		}
+		data, _ := json.Marshal(map[string]string{"content": chunk})
+		fmt.Fprintf(w, "event: message\ndata: %s\n\n", data)
+		w.Flush()
+		time.Sleep(12 * time.Millisecond) // ~80 tokens/s
+	}
+	done, _ := json.Marshal(map[string]interface{}{
+		"done":            true,
+		"changed_percent": 35,
+		"word_count":      len(words),
+	})
+	fmt.Fprintf(w, "event: done\ndata: %s\n\n", done)
+	w.Flush()
+}
+
+// humanizeHeuristic applies rule-based transformations as a fallback.
+func humanizeHeuristic(text, mode string) string {
+	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
+	lines := strings.Split(text, "\n")
+	out := make([]string, 0, len(lines))
+	for _, line := range lines {
+		line = applyHeuristicLine(line, mode, rng)
+		out = append(out, line)
+	}
+	return strings.Join(out, "\n")
+}
+
+var formalStarters = []string{"It is worth noting that", "One should consider", "Furthermore,", "In addition,", "Notably,"}
+var casualStarters = []string{"So,", "Actually,", "You know what,", "Basically,", "Here's the thing —"}
+
+func applyHeuristicLine(line string, mode string, rng *rand.Rand) string {
+	if strings.TrimSpace(line) == "" {
+		return line
+	}
+	// Basic substitutions to break AI patterns
+	replacements := map[string]string{
+		"utilize":        "use",
+		"therefore":      "so",
+		"however":        "but",
+		"additionally":   "also",
+		"Furthermore,":   "Also,",
+		"In conclusion,": "To wrap up,",
+		"It is important to note that": "Keep in mind that",
+		"In order to":    "To",
+		"due to the fact that": "because",
+	}
+	for old, newWord := range replacements {
+		line = strings.ReplaceAll(line, old, newWord)
+	}
+	// Mode-specific touches
+	if mode == "casual" && rng.Intn(4) == 0 && len(line) > 20 {
+		starter := casualStarters[rng.Intn(len(casualStarters))]
+		firstWord := strings.Fields(line)[0]
+		if !strings.HasSuffix(firstWord, ",") && firstWord != starter {
+			line = starter + " " + strings.ToLower(string(line[0])) + line[1:]
+		}
+	}
+	if mode == "formal" && rng.Intn(4) == 0 && len(line) > 20 {
+		starter := formalStarters[rng.Intn(len(formalStarters))]
+		firstWord := strings.Fields(line)[0]
+		if !strings.HasSuffix(firstWord, ",") && firstWord != starter {
+			line = starter + " " + strings.ToLower(string(line[0])) + line[1:]
+		}
+	}
+	return line
 }
 

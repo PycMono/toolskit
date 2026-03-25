@@ -5,6 +5,7 @@ import "github.com/jinzhu/configor"
 type Config struct {
 	// 服务基础
 	Port         string `json:"port"          default:"8086"                    env:"PORT"`
+	Debug        bool   `json:"debug"         default:"false"                   env:"DEBUG"`
 	SiteURL      string `json:"site_url"      default:"https://toolboxnova.com" env:"SITE_URL"`
 	AssetVersion string `json:"asset_version" default:"v1"                      env:"ASSET_VERSION"`
 
