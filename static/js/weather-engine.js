@@ -609,7 +609,7 @@ function renderCurrent() {
     }
   }
 
-  document.getElementById('currentWeatherCard')?.classList.remove('hidden');
+  // wqMain visibility is controlled by showSkeleton/hideSkeleton
 }
 
 // Simple moon phase calculation (no API needed)
@@ -629,25 +629,58 @@ function calcMoonPhase(date) {
 
 // ── Render: Forecast ──────────────────────────────────────────────
 function renderForecast() {
-  document.getElementById('forecastPanel')?.classList.remove('hidden');
+  // forecastPanel is always visible inside wqMain
   drawForecastChart(WeatherStore.activeForecastTab);
 }
 
-function drawForecastChart(tab) {
-  const chartEl = document.getElementById('forecastChart');
-  if (!chartEl) return;
+// Render hourly cards (OpenWeatherMap-style horizontal scroll)
+function renderHourlyCards() {
+  const h = WeatherStore.hourlyForecast;
+  const wrap = document.getElementById('hourlyCards');
+  if (!h || !wrap) return;
 
+  const nowISO = new Date().toISOString().slice(0, 13);
+  let startIdx = h.time.findIndex(t => t >= nowISO);
+  if (startIdx < 0) startIdx = 0;
+
+  const cards = [];
+  for (let i = startIdx; i < Math.min(startIdx + 48, h.time.length); i++) {
+    const time   = h.time[i].slice(11, 16);
+    const temp   = Math.round(cvtTemp(h.temperature_2m[i]));
+    const wmo    = h.weather_code ? h.weather_code[i] : 0;
+    const rain   = h.precipitation_probability ? (h.precipitation_probability[i] || 0) : 0;
+    const isNow  = i === startIdx;
+    cards.push(`<div class="wq-hour-card${isNow ? ' wq-hour-card--now' : ''}">
+      <span class="wq-hour-card__time">${isNow ? (isZH() ? '现在' : 'Now') : time}</span>
+      <div class="wq-hour-card__icon">${getWeatherIconSVG(wmo)}</div>
+      <span class="wq-hour-card__temp">${temp}${unitLabel('temp')}</span>
+      ${rain > 5 ? `<span class="wq-hour-card__rain">💧${rain}%</span>` : ''}
+    </div>`);
+  }
+  wrap.innerHTML = cards.join('');
+}
+
+function drawForecastChart(tab) {
+  const chartEl   = document.getElementById('forecastChart');
+  const chartWrap = document.getElementById('forecastChartWrap');
   const dailyList = document.getElementById('dailyForecastList');
+  const hourlyScroll = document.getElementById('hourlyScroll');
+  if (!chartEl) return;
 
   if (tab === 'daily14') {
     renderDailyCards();
     dailyList?.classList.remove('hidden');
-    chartEl.style.display = 'none';
+    if (chartWrap) chartWrap.style.display = 'none';
+    if (hourlyScroll) hourlyScroll.style.display = 'none';
     return;
   }
 
   dailyList?.classList.add('hidden');
-  chartEl.style.display = '';
+  if (chartWrap) chartWrap.style.display = '';
+  if (hourlyScroll) hourlyScroll.style.display = '';
+
+  // Render hourly cards when on hourly24 tab
+  if (tab === 'hourly24') renderHourlyCards();
 
   if (typeof echarts === 'undefined') return;
   if (!WeatherStore.forecastChartInstance) {
@@ -720,24 +753,24 @@ function buildHistoryOpt() {
 }
 
 function renderDailyCards() {
-  const d = WeatherStore.dailyForecast;
+  const d    = WeatherStore.dailyForecast;
   const list = document.getElementById('dailyForecastList');
   if (!d || !list) return;
-  const gMax = Math.max(...d.temperature_2m_max);
-  const gMin = Math.min(...d.temperature_2m_min);
+  const gMax  = Math.max(...d.temperature_2m_max);
+  const gMin  = Math.min(...d.temperature_2m_min);
   const range = (gMax - gMin) || 1;
   list.innerHTML = d.time.map((dateStr, i) => {
     const high  = Math.round(cvtTemp(d.temperature_2m_max[i]));
     const low   = Math.round(cvtTemp(d.temperature_2m_min[i]));
-    const rain  = d.precipitation_probability_max ? (d.precipitation_probability_max[i]||0) : 0;
+    const rain  = d.precipitation_probability_max ? (d.precipitation_probability_max[i] || 0) : 0;
     const wmo   = d.weather_code[i];
-    const left  = (((d.temperature_2m_min[i]-gMin)/range)*100).toFixed(1);
-    const width = (((d.temperature_2m_max[i]-d.temperature_2m_min[i])/range)*100).toFixed(1);
-    const color = getTempColor((d.temperature_2m_max[i]+d.temperature_2m_min[i])/2);
+    const left  = (((d.temperature_2m_min[i] - gMin) / range) * 100).toFixed(1);
+    const width = (((d.temperature_2m_max[i] - d.temperature_2m_min[i]) / range) * 100).toFixed(1);
+    const color = getTempColor((d.temperature_2m_max[i] + d.temperature_2m_min[i]) / 2);
     let label;
     try {
       if (i === 0) label = isZH() ? '今天' : 'Today';
-      else if (i === 1) label = isZH() ? '明天' : 'Tmrw';
+      else if (i === 1) label = isZH() ? '明天' : 'Tomorrow';
       else {
         const days = isZH()
           ? ['周日','周一','周二','周三','周四','周五','周六']
@@ -745,16 +778,14 @@ function renderDailyCards() {
         label = days[new Date(dateStr + 'T12:00').getDay()];
       }
     } catch { label = dateStr.slice(5); }
-    return `<div class="wq-day-card" style="--anim-delay:${i*40}ms">
-      <span class="day-name">${label}</span>
-      <div class="day-icon">${getWeatherIconSVG(wmo)}</div>
-      <span class="day-desc">${getWeatherDesc(wmo)}</span>
-      <div class="day-temp-row">
-        <span class="day-low">${low}°</span>
-        <div class="day-temp-track"><div class="day-temp-fill" style="left:${left}%;width:${width}%;background:${color}"></div></div>
-        <span class="day-high">${high}°</span>
-      </div>
-      ${rain > 0 ? `<span class="day-rain">💧${rain}%</span>` : ''}
+    return `<div class="wq-day-row">
+      <span class="wq-day-row__name">${label}</span>
+      <div class="wq-day-row__icon">${getWeatherIconSVG(wmo)}</div>
+      <div class="wq-day-row__desc">${getWeatherDesc(wmo)}</div>
+      <div class="wq-day-row__bar-wrap"><div class="wq-day-row__bar" style="left:${left}%;width:${width}%;background:${color}"></div></div>
+      <span class="wq-day-row__rain">${rain > 0 ? '💧' + rain + '%' : ''}</span>
+      <span class="wq-day-row__high">${high}°</span>
+      <span class="wq-day-row__low">${low}°</span>
     </div>`;
   }).join('');
 }
@@ -775,7 +806,7 @@ function renderAQI() {
         series: [{
           type:'gauge', startAngle:210, endAngle:-30, min:0, max:300,
           data:[{value:val}],
-          axisLine:{ lineStyle:{ width:14, color:aqiGradient() } },
+          axisLine:{ lineStyle:{ width:12, color:aqiGradient() } },
           pointer:{show:false}, detail:{show:false},
           axisTick:{show:false}, splitLine:{show:false}, axisLabel:{show:false},
         }],
@@ -830,11 +861,13 @@ function renderLife() {
 
   grid.innerHTML = items.map(it => {
     const color = LIFE_COLOR[it.lv.cls] || '#22c55e';
-    return `<div class="wq-life-card wq-life-card--${it.lv.cls}">
+    return `<div class="wq-life-card">
       <span class="wq-life-card__icon">${it.icon}</span>
-      <span class="wq-life-card__name">${i18n(it.key)}</span>
-      <span class="wq-life-card__level" style="color:${color}">${it.lv.lbl}</span>
-      <p class="wq-life-card__tip">${it.lv.tip}</p>
+      <div class="wq-life-card__body">
+        <span class="wq-life-card__name">${i18n(it.key)}</span>
+        <span class="wq-life-card__level" style="color:${color}">${it.lv.lbl}</span>
+        <p class="wq-life-card__tip">${it.lv.tip}</p>
+      </div>
     </div>`;
   }).join('');
 
@@ -848,12 +881,17 @@ function observeMap() {
   panel.classList.remove('hidden');
   if (!('IntersectionObserver' in window)) {
     initMap(WeatherStore.city.lat, WeatherStore.city.lon);
-    return;
+  } else {
+    const obs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) { obs.disconnect(); initMap(WeatherStore.city.lat, WeatherStore.city.lon); }
+    }, { threshold: 0.05 });
+    obs.observe(panel);
   }
-  const obs = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting) { obs.disconnect(); initMap(WeatherStore.city.lat, WeatherStore.city.lon); }
-  }, { threshold: 0.05 });
-  obs.observe(panel);
+  // Sync world map to newly loaded city
+  if (WorldMap.instance) {
+    WorldMap.instance.setView([WeatherStore.city.lat, WeatherStore.city.lon], 6, { animate: true });
+    setWorldMapMarker(WeatherStore.city.lat, WeatherStore.city.lon);
+  }
 }
 function initMap(lat, lon) {
   if (typeof L === 'undefined') return;
@@ -876,6 +914,188 @@ function switchMapLayer(layer) {
   ).addTo(map);
   document.querySelectorAll('.wq-map-layer').forEach(b => b.classList.toggle('active', b.dataset.layer === layer));
   if (typeof gaTrackLayerSwitch === 'function') gaTrackLayerSwitch(layer);
+}
+
+// ── World Interactive Map ──────────────────────────────────────
+const WorldMap = {
+  instance:    null,
+  layerTile:   null,
+  clickMarker: null,
+  activeLayer: 'temperature',
+  isLoading:   false,
+  currentLat:  null,
+  currentLon:  null,
+};
+
+function initWorldMap() {
+  if (typeof L === 'undefined') return;
+  if (WorldMap.instance) return;
+
+  const mapEl = document.getElementById('worldMap');
+  if (!mapEl) return;
+
+  // Initialize Leaflet world map centered on a neutral position
+  const map = L.map('worldMap', {
+    center: [20, 10],
+    zoom: 2,
+    zoomControl: true,
+    attributionControl: false,
+    minZoom: 1,
+    maxZoom: 14,
+  });
+  WorldMap.instance = map;
+
+  // Base tile layer (dark OpenStreetMap style)
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 19,
+    opacity: 0.85,
+  }).addTo(map);
+
+  // Default weather overlay
+  switchWorldMapLayer('temperature');
+
+  // Click handler
+  map.on('click', function(e) {
+    const { lat, lng } = e.latlng;
+    WorldMap.currentLat = lat;
+    WorldMap.currentLon = lng;
+    showWorldMapPopup(lat, lng);
+    loadWorldMapWeather(lat, lng);
+  });
+
+  // Sync the initial city marker if weather is loaded
+  if (WeatherStore.city.lat && WeatherStore.city.lon) {
+    setWorldMapMarker(WeatherStore.city.lat, WeatherStore.city.lon);
+    map.setView([WeatherStore.city.lat, WeatherStore.city.lon], 5);
+  }
+}
+
+function setWorldMapMarker(lat, lon) {
+  if (!WorldMap.instance || typeof L === 'undefined') return;
+  if (WorldMap.clickMarker) WorldMap.instance.removeLayer(WorldMap.clickMarker);
+  WorldMap.clickMarker = L.circleMarker([lat, lon], {
+    radius: 7, color: '#38bdf8', fillColor: '#38bdf8',
+    fillOpacity: 0.9, weight: 2,
+  }).addTo(WorldMap.instance);
+}
+
+function switchWorldMapLayer(layer) {
+  WorldMap.activeLayer = layer;
+  const map = WorldMap.instance;
+  if (!map || typeof L === 'undefined') return;
+  if (WorldMap.layerTile) { map.removeLayer(WorldMap.layerTile); WorldMap.layerTile = null; }
+  const layerNames = {
+    temperature:  'temp_new',
+    precipitation:'precipitation_new',
+    wind:         'wind_new',
+    clouds:       'clouds_new',
+    pressure:     'pressure_new',
+  };
+  WorldMap.layerTile = L.tileLayer(
+    `https://tile.openweathermap.org/map/${layerNames[layer] || 'temp_new'}/{z}/{x}/{y}.png?appid=439d4b804bc8187953eb36d2a8c26a02`,
+    { opacity: 0.70, maxZoom: 18 }
+  ).addTo(map);
+  document.querySelectorAll('.wq-wm-layer').forEach(b => b.classList.toggle('active', b.dataset.wmLayer === layer));
+}
+
+function showWorldMapPopup(lat, lon) {
+  const popup = document.getElementById('wmPopup');
+  if (!popup || !WorldMap.instance) return;
+
+  // Position popup relative to the map container
+  const mapEl = document.getElementById('worldMap');
+  const point = WorldMap.instance.latLngToContainerPoint([lat, lon]);
+
+  // Clamp to keep within map boundaries
+  const popupW = 260, popupH = 220;
+  const mapW = mapEl.offsetWidth, mapH = mapEl.offsetHeight;
+  let x = Math.max(popupW / 2 + 10, Math.min(mapW - popupW / 2 - 10, point.x));
+  let y = Math.max(popupH + 24, Math.min(mapH - 10, point.y));
+
+  popup.style.left = x + 'px';
+  popup.style.top  = y + 'px';
+  popup.classList.remove('hidden');
+  popup.querySelector('#wmPopupLoading').classList.remove('hidden');
+  popup.querySelector('#wmPopupContent').classList.add('hidden');
+
+  setWorldMapMarker(lat, lon);
+}
+
+async function loadWorldMapWeather(lat, lon) {
+  if (WorldMap.isLoading) return;
+  WorldMap.isLoading = true;
+  try {
+    const [wRes, gRes] = await Promise.allSettled([
+      fetchWeather(lat, lon),
+      reverseGeocode(lat, lon),
+    ]);
+
+    // Check if the popup still corresponds to this click
+    if (WorldMap.currentLat !== lat || WorldMap.currentLon !== lon) return;
+
+    const popup = document.getElementById('wmPopup');
+    if (!popup || popup.classList.contains('hidden')) return;
+
+    popup.querySelector('#wmPopupLoading').classList.add('hidden');
+    popup.querySelector('#wmPopupContent').classList.remove('hidden');
+
+    if (wRes.status === 'fulfilled') {
+      const w = wRes.value;
+      const c = w.current;
+      const daily = w.daily;
+      const tempC = c.temperature_2m;
+      const tempDisplay = WeatherStore.unitTemp === 'fahrenheit'
+        ? Math.round(tempC * 9/5 + 32) + '°F'
+        : Math.round(tempC) + '°C';
+
+      // Location name
+      let locName = `${lat.toFixed(2)}°, ${lon.toFixed(2)}°`;
+      if (gRes.status === 'fulfilled' && gRes.value?.name) {
+        locName = gRes.value.name + (gRes.value.country_code ? `, ${gRes.value.country_code}` : '');
+      }
+      const locEl = document.getElementById('wmPopupLocation');
+      if (locEl) {
+        locEl.innerHTML = `<svg viewBox="0 0 20 20" width="11" height="11" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg> ${locName}`;
+      }
+
+      const iconEl = document.getElementById('wmPopupIcon');
+      if (iconEl) iconEl.innerHTML = getWeatherIconSVG(c.weather_code);
+      const el = id => document.getElementById(id);
+      if (el('wmPopupTemp')) el('wmPopupTemp').textContent = tempDisplay;
+      if (el('wmPopupDesc')) el('wmPopupDesc').textContent = getWeatherDesc(c.weather_code);
+      if (el('wmPopupWind')) el('wmPopupWind').textContent = cvtWind(c.wind_speed_10m) + ' ' + unitLabel('wind');
+      if (el('wmPopupHumidity')) el('wmPopupHumidity').textContent = c.relative_humidity_2m + '%';
+      if (el('wmPopupAqi')) el('wmPopupAqi').textContent = '--'; // AQI loads separately
+
+      // Full forecast button
+      const fullBtn = document.getElementById('wmPopupFullBtn');
+      if (fullBtn) {
+        fullBtn._lat = lat; fullBtn._lon = lon;
+        fullBtn._name = gRes.status === 'fulfilled' && gRes.value?.name ? gRes.value.name : '';
+        fullBtn._country = gRes.status === 'fulfilled' && gRes.value?.country_code ? gRes.value.country_code : '';
+      }
+    } else {
+      // Error state
+      const contentEl = document.getElementById('wmPopupContent');
+      if (contentEl) contentEl.innerHTML = `<p style="color:var(--wq-text3);font-size:.8rem;text-align:center;padding:.5rem 0">Failed to load weather</p>`;
+    }
+  } catch (err) {
+    const loadingEl = document.getElementById('wmPopupLoading');
+    const contentEl = document.getElementById('wmPopupContent');
+    if (loadingEl) loadingEl.classList.add('hidden');
+    if (contentEl) {
+      contentEl.classList.remove('hidden');
+      contentEl.innerHTML = `<p style="color:var(--wq-text3);font-size:.8rem;text-align:center;padding:.5rem 0">Failed to load weather</p>`;
+    }
+  } finally {
+    WorldMap.isLoading = false;
+  }
+}
+
+function closeWorldMapPopup() {
+  document.getElementById('wmPopup')?.classList.add('hidden');
+  WorldMap.currentLat = null;
+  WorldMap.currentLon = null;
 }
 
 // ── Snapshot ──────────────────────────────────────────────────────
@@ -1053,10 +1273,12 @@ async function locateUser() {
 // ── Skeleton ──────────────────────────────────────────────────────
 function showSkeleton() {
   document.getElementById('loadingSkeleton')?.classList.remove('hidden');
-  ['currentWeatherCard','forecastPanel','aqiPanel','weatherMapPanel','lifeIndexPanel']
-    .forEach(id => document.getElementById(id)?.classList.add('hidden'));
+  document.getElementById('wqMain')?.classList.add('hidden');
 }
-function hideSkeleton() { document.getElementById('loadingSkeleton')?.classList.add('hidden'); }
+function hideSkeleton() {
+  document.getElementById('loadingSkeleton')?.classList.add('hidden');
+  document.getElementById('wqMain')?.classList.remove('hidden');
+}
 
 // ── Main Load ─────────────────────────────────────────────────────
 async function loadByCoords(lat, lon, nameOverride, countryCode) {
@@ -1178,8 +1400,26 @@ async function initEngine() {
   // Forecast tabs
   document.querySelectorAll('.wq-tab').forEach(t => t.addEventListener('click', () => switchTab(t.dataset.tab)));
 
-  // Map layers
+  // Map layers (small card)
   document.querySelectorAll('.wq-map-layer').forEach(b => b.addEventListener('click', () => switchMapLayer(b.dataset.layer)));
+
+  // World map layer buttons
+  document.querySelectorAll('.wq-wm-layer').forEach(b => b.addEventListener('click', () => switchWorldMapLayer(b.dataset.wmLayer)));
+
+  // World map popup close
+  document.getElementById('wmPopupClose')?.addEventListener('click', closeWorldMapPopup);
+
+  // World map popup full forecast button
+  document.getElementById('wmPopupFullBtn')?.addEventListener('click', function() {
+    const lat  = this._lat,  lon = this._lon;
+    const name = this._name, country = this._country;
+    if (lat == null || lon == null) return;
+    closeWorldMapPopup();
+    loadByCoords(lat, lon, name || undefined, country || undefined);
+    // Scroll to top of page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof gaTrackWeatherSearch === 'function') gaTrackWeatherSearch(name || `${lat},${lon}`, 'map_click');
+  });
 
   // Model compare
   document.getElementById('modelCompareToggle')?.addEventListener('change', e => { WeatherStore.modelCompareEnabled = e.target.checked; });
@@ -1199,6 +1439,30 @@ async function initEngine() {
       if (a) a.style.maxHeight = d.open ? a.scrollHeight + 'px' : '0';
     });
   });
+
+  // ── World map: lazy init via IntersectionObserver ────────────
+  const worldMapSection = document.getElementById('worldMapSection');
+  if (worldMapSection) {
+    const wmObsCallback = (entries, observer) => {
+      if (entries[0].isIntersecting) {
+        observer.disconnect();
+        // Wait for Leaflet to be available (it's loaded async)
+        const tryInit = (attempts) => {
+          if (typeof L !== 'undefined') {
+            initWorldMap();
+          } else if (attempts > 0) {
+            setTimeout(() => tryInit(attempts - 1), 300);
+          }
+        };
+        tryInit(20); // try up to 6 seconds
+      }
+    };
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(wmObsCallback, { threshold: 0.05 }).observe(worldMapSection);
+    } else {
+      setTimeout(() => initWorldMap(), 1500);
+    }
+  }
 
   // Determine initial city
   const params = new URLSearchParams(location.search);
@@ -1227,5 +1491,6 @@ window.WeatherEngine = {
   searchByName, locateUser, clearSearch,
   setUnit, switchTab, switchMapLayer, saveSnapshot,
   onSearchInput, onSearchKeydown,
+  initWorldMap, switchWorldMapLayer,
 };
 

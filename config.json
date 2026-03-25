@@ -2,7 +2,7 @@
   "port": "8989",
   "debug": false,
   "site_url": "https://toolboxnova.com",
-  "asset_version": "v20260324",
+  "asset_version": "v20260326",
   "sms_api_key": "",
   "email_api_key": "",
   "google_ads_id": "",

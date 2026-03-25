@@ -1,26 +1,19 @@
 {{ template "base" . }}
 
 {{ define "extraHead" }}
-<!-- ECharts 5 -->
 <script async src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
-<!-- Leaflet.js -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
 <script async src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
-<!-- html2canvas -->
 <script async src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<!-- Day.js + plugins -->
 <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/utc.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/timezone.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/relativeTime.js"></script>
 <link rel="stylesheet" href="/static/css/weather-query.css?v={{ .AssetVer }}">
-
-<!-- hreflang -->
 <link rel="alternate" hreflang="zh-CN" href="{{ .HreflangZH }}">
 <link rel="alternate" hreflang="en" href="{{ .HreflangEN }}">
 <link rel="alternate" hreflang="x-default" href="{{ .Canonical }}">
 <link rel="canonical" href="{{ .Canonical }}">
-<!-- OG -->
 <meta property="og:title" content="{{ .OGTitle }}">
 <meta property="og:description" content="{{ .OGDesc }}">
 <meta property="og:type" content="website">
@@ -28,70 +21,39 @@
 <meta property="og:image" content="https://toolboxnova.com/static/img/og-weather.png">
 <meta property="og:site_name" content="ToolboxNova">
 <meta property="og:locale" content="{{ if eq .Lang "zh" }}zh_CN{{ else }}en_US{{ end }}">
-<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ .OGTitle }}">
 <meta name="twitter:description" content="{{ .OGDesc }}">
 <meta name="twitter:image" content="https://toolboxnova.com/static/img/og-weather.png">
-
-<!-- JSON-LD: FAQPage -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {{ range $i, $faq := .FAQs }}{{ if $i }},{{ end }}{
-      "@type": "Question",
-      "name": "{{ $faq.Q }}",
-      "acceptedAnswer": { "@type": "Answer", "text": "{{ $faq.A }}" }
-    }{{ end }}
-  ]
-}
-</script>
 {{ end }}
 
 {{ define "content" }}
 <div class="wq-page" id="weatherQueryPage" data-lang="{{ .Lang }}">
 
-  <!-- ① 动态背景层 -->
+  <!-- 动态背景 -->
   <div class="wq-bg wq-bg--clear" id="wqBackground">
     <div class="wq-bg__particles" id="wqParticles"></div>
-    <div class="wq-bg__gradient"></div>
+    <div class="wq-bg__overlay"></div>
   </div>
 
-  <!-- ② 顶部广告 -->
+  <!-- 顶部广告 -->
   {{- template "partials/ad_slot.html" (dict "SlotID" "weather-query-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
 
-  <!-- ③ HERO 搜索区 -->
-  <section class="wq-hero" aria-label="Weather Search">
-    <div class="wq-hero__inner">
-      <h1 class="wq-hero__title">{{ call .T "wq.hero.title" }}</h1>
-      <p class="wq-hero__subtitle">{{ call .T "wq.hero.subtitle" }}</p>
-
-      <div class="wq-hero__badges" role="list">
-        <span class="wq-badge">{{ call .T "wq.hero.badge_free" }}</span>
-        <span class="wq-badge">{{ call .T "wq.hero.badge_no_key" }}</span>
-        <span class="wq-badge">{{ call .T "wq.hero.badge_realtime" }}</span>
-        <span class="wq-badge">{{ call .T "wq.hero.badge_global" }}</span>
-      </div>
-
+  <!-- ① 搜索栏 -->
+  <header class="wq-header">
+    <div class="wq-container">
       <div class="wq-search" role="search">
         <div class="wq-search__box" id="searchBox">
           <svg class="wq-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
-          <input
-            type="search"
-            id="citySearchInput"
-            class="wq-search__input"
+          <input type="search" id="citySearchInput" class="wq-search__input"
             placeholder="{{ call .T "wq.search.placeholder" }}"
             autocomplete="off" autocorrect="off" spellcheck="false"
-            aria-label="{{ call .T "wq.search.placeholder" }}"
-          />
+            aria-label="{{ call .T "wq.search.placeholder" }}"/>
           <button class="wq-search__locate" id="locateBtn" title="{{ call .T "wq.search.btn_locate" }}" aria-label="{{ call .T "wq.search.btn_locate" }}">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7z"/>
-              <circle cx="12" cy="9" r="2.5"/>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/>
             </svg>
           </button>
           <button class="wq-search__clear hidden" id="searchClearBtn" aria-label="Clear">✕</button>
@@ -103,249 +65,307 @@
         </div>
       </div>
     </div>
-  </section>
+  </header>
 
-  <!-- ④ 主内容双列布局 -->
-  <div class="wq-layout" id="weatherLayout">
+  <!-- 骨架屏 -->
+  <div class="wq-skeleton-wrap hidden" id="loadingSkeleton" aria-busy="true">
+    <div class="wq-container">
+      <div class="wq-sk-current wq-sk-shimmer"></div>
+      <div class="wq-sk-hourly wq-sk-shimmer"></div>
+      <div class="wq-sk-daily  wq-sk-shimmer"></div>
+    </div>
+  </div>
 
-    <!-- 左列主内容 -->
-    <main class="wq-main" id="weatherMain">
+  <!-- 天气预警 -->
+  <div class="wq-alert hidden" id="weatherAlertBanner" role="alert">
+    <div class="wq-container wq-alert__inner">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 3.5L21 19H3L12 5.5zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/></svg>
+      <div class="wq-alert__content"><strong id="alertTitle"></strong> <span id="alertDesc"></span></div>
+      <button class="wq-alert__close" onclick="this.closest('.wq-alert').classList.add('hidden')">✕</button>
+    </div>
+  </div>
 
-      <!-- 骨架屏 -->
-      <div class="wq-skeleton hidden" id="loadingSkeleton" aria-busy="true">
-        <div class="wq-skeleton__card wq-skeleton--shimmer">
-          <div class="wq-sk-row wq-sk-row--title"></div>
-          <div class="wq-sk-big-temp"></div>
-          <div class="wq-sk-grid">
-            <div class="wq-sk-cell" style="--i:0"></div><div class="wq-sk-cell" style="--i:1"></div>
-            <div class="wq-sk-cell" style="--i:2"></div><div class="wq-sk-cell" style="--i:3"></div>
-            <div class="wq-sk-cell" style="--i:4"></div><div class="wq-sk-cell" style="--i:5"></div>
-            <div class="wq-sk-cell" style="--i:6"></div><div class="wq-sk-cell" style="--i:7"></div>
-            <div class="wq-sk-cell" style="--i:8"></div><div class="wq-sk-cell" style="--i:9"></div>
-            <div class="wq-sk-cell" style="--i:10"></div><div class="wq-sk-cell" style="--i:11"></div>
-          </div>
-        </div>
-        <div class="wq-skeleton__card wq-skeleton__card--chart wq-skeleton--shimmer"></div>
-        <div class="wq-skeleton__card wq-skeleton__card--sm wq-skeleton--shimmer"></div>
-      </div>
+  <!-- ② 主面板（数据就绪后整体显示） -->
+  <div class="wq-main hidden" id="wqMain">
 
-      <!-- ❶ 当前天气主卡片 -->
-      <section class="wq-card wq-current hidden" id="currentWeatherCard" aria-live="polite">
-        <div class="wq-current__header">
-          <div class="wq-current__location">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-              <path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7zm0 9.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
-            </svg>
-            <span id="cityName">--</span>
-            <span id="countryCode" class="wq-current__country"></span>
-            <span id="localTime" class="wq-current__time"></span>
-          </div>
-          <div class="wq-units" id="unitSwitcher">
-            <button class="wq-units__btn active" data-unit-temp="celsius">°C</button>
-            <button class="wq-units__btn" data-unit-temp="fahrenheit">°F</button>
-            <span class="wq-units__sep">|</span>
-            <button class="wq-units__btn active" data-unit-wind="kmh">km/h</button>
-            <button class="wq-units__btn" data-unit-wind="mph">mph</button>
-            <button class="wq-units__btn" data-unit-wind="ms">m/s</button>
-          </div>
-        </div>
+    <!-- ── 当前天气横幅 ── -->
+    <section class="wq-current" id="currentWeatherCard" aria-live="polite">
+      <div class="wq-container">
+        <div class="wq-current__inner">
 
-        <div class="wq-current__main">
-          <div class="wq-current__temp-wrap">
-            <div class="wq-current__weather-icon" id="currentWeatherIcon"></div>
-            <div class="wq-current__temp-group">
-              <span class="wq-current__temp" id="currentTemp">--</span>
-              <span class="wq-current__temp-unit" id="currentTempUnit">°C</span>
-              <div class="wq-current__feels">
-                <span>{{ call .T "wq.current.feels_like" }}</span>
-                <strong id="feelsLike">--</strong>
+          <!-- 左：图标 + 温度 + 描述 -->
+          <div class="wq-current__primary">
+            <div class="wq-current__icon" id="currentWeatherIcon"></div>
+            <div class="wq-current__temps">
+              <div class="wq-current__big-temp">
+                <span id="currentTemp">--</span><span class="wq-current__unit" id="currentTempUnit">°C</span>
+              </div>
+              <div class="wq-current__desc" id="weatherDesc">--</div>
+              <div class="wq-current__hl">
+                <span class="wq-hl-high" id="tempHigh">↑ --</span>
+                <span class="wq-hl-low"  id="tempLow">↓ --</span>
               </div>
             </div>
           </div>
-          <div class="wq-current__desc-group">
-            <p class="wq-current__desc" id="weatherDesc">--</p>
-            <p class="wq-current__high-low">
-              <span id="tempHigh" class="high">↑ --</span>
-              <span id="tempLow" class="low">↓ --</span>
-            </p>
+
+          <!-- 中：城市 + 时间 + 8个指标 -->
+          <div class="wq-current__middle">
+            <div class="wq-current__location">
+              <svg viewBox="0 0 20 20" width="13" height="13" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+              <span id="cityName">--</span>
+              <span id="countryCode" class="wq-current__country"></span>
+              <span id="localTime" class="wq-current__time"></span>
+            </div>
+            <div class="wq-stats-grid">
+              <div class="wq-stat"><span class="wq-stat__lbl">{{ call .T "wq.current.feels_like" }}</span><span class="wq-stat__val" id="feelsLike">--</span></div>
+              <div class="wq-stat"><span class="wq-stat__lbl">{{ call .T "wq.current.humidity" }}</span><span class="wq-stat__val" id="val-humidity">--</span></div>
+              <div class="wq-stat"><span class="wq-stat__lbl">{{ call .T "wq.current.wind" }}</span><span class="wq-stat__val" id="val-wind">--</span><span class="wq-stat__sub" id="val-wind-dir"></span></div>
+              <div class="wq-stat"><span class="wq-stat__lbl">{{ call .T "wq.current.pressure" }}</span><span class="wq-stat__val" id="val-pressure">--</span></div>
+              <div class="wq-stat"><span class="wq-stat__lbl">{{ call .T "wq.current.visibility" }}</span><span class="wq-stat__val" id="val-visibility">--</span></div>
+              <div class="wq-stat"><span class="wq-stat__lbl">{{ call .T "wq.current.uv_index" }}</span><span class="wq-stat__val" id="val-uv">--</span><span class="wq-stat__sub" id="val-uv-level"></span></div>
+              <div class="wq-stat"><span class="wq-stat__lbl">{{ call .T "wq.current.dew_point" }}</span><span class="wq-stat__val" id="val-dew">--</span></div>
+              <div class="wq-stat"><span class="wq-stat__lbl">{{ call .T "wq.current.cloud_cover" }}</span><span class="wq-stat__val" id="val-clouds">--</span></div>
+            </div>
           </div>
-        </div>
 
-        <!-- 太阳弧线 -->
-        <div class="wq-sun-arc" id="sunArcWrap">
-          <svg class="wq-sun-arc__svg" viewBox="0 0 320 100" aria-hidden="true">
-            <path class="wq-sun-arc__track" d="M 20 90 Q 160 -30 300 90" fill="none"/>
-            <path class="wq-sun-arc__progress" id="sunArcProgress" d="M 20 90 Q 160 -30 300 90" fill="none"/>
-            <circle class="wq-sun-arc__sun" id="sunDot" cx="20" cy="90" r="8"/>
-          </svg>
-          <div class="wq-sun-arc__labels">
-            <span id="sunriseTime">--:--</span>
-            <span id="sunsetTime">--:--</span>
+          <!-- 右：单位切换 + 日出落 + 太阳弧 + 截图 -->
+          <div class="wq-current__right">
+            <div class="wq-units" id="unitSwitcher">
+              <button class="wq-units__btn active" data-unit-temp="celsius">°C</button>
+              <button class="wq-units__btn" data-unit-temp="fahrenheit">°F</button>
+              <span class="wq-units__sep">|</span>
+              <button class="wq-units__btn active" data-unit-wind="kmh">km/h</button>
+              <button class="wq-units__btn" data-unit-wind="mph">mph</button>
+              <button class="wq-units__btn" data-unit-wind="ms">m/s</button>
+            </div>
+            <div class="wq-sunrise-row">
+              <span>🌅 <span id="sunriseTime">--:--</span></span>
+              <span>🌇 <span id="sunsetTime">--:--</span></span>
+            </div>
+            <div class="wq-sun-arc" id="sunArcWrap">
+              <svg class="wq-sun-arc__svg" viewBox="0 0 200 64" aria-hidden="true">
+                <path class="wq-sun-arc__track"    d="M 10 58 Q 100 -5 190 58" fill="none"/>
+                <path class="wq-sun-arc__progress" id="sunArcProgress" d="M 10 58 Q 100 -5 190 58" fill="none"/>
+                <circle class="wq-sun-arc__sun" id="sunDot" cx="10" cy="58" r="5"/>
+              </svg>
+            </div>
+            <button class="wq-snapshot-btn" id="shareSnapshotBtn">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                <polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>
+              </svg>
+              {{ call .T "wq.share.btn" }}
+            </button>
           </div>
+
         </div>
-
-        <!-- 12 指标 Grid -->
-        <div class="wq-metrics" id="metricsGrid">
-          <div class="wq-metric"><span class="wq-metric__icon">💧</span><span class="wq-metric__label">{{ call .T "wq.current.humidity" }}</span><strong class="wq-metric__val" id="val-humidity">--%</strong></div>
-          <div class="wq-metric"><span class="wq-metric__icon">🌬️</span><span class="wq-metric__label">{{ call .T "wq.current.wind" }}</span><strong class="wq-metric__val" id="val-wind">-- km/h</strong><small class="wq-metric__sub" id="val-wind-dir"></small></div>
-          <div class="wq-metric"><span class="wq-metric__icon">🔽</span><span class="wq-metric__label">{{ call .T "wq.current.pressure" }}</span><strong class="wq-metric__val" id="val-pressure">-- hPa</strong></div>
-          <div class="wq-metric"><span class="wq-metric__icon">👁️</span><span class="wq-metric__label">{{ call .T "wq.current.visibility" }}</span><strong class="wq-metric__val" id="val-visibility">-- km</strong></div>
-          <div class="wq-metric"><span class="wq-metric__icon">☀️</span><span class="wq-metric__label">{{ call .T "wq.current.uv_index" }}</span><strong class="wq-metric__val" id="val-uv">--</strong><small class="wq-metric__sub" id="val-uv-level"></small></div>
-          <div class="wq-metric"><span class="wq-metric__icon">☁️</span><span class="wq-metric__label">{{ call .T "wq.current.cloud_cover" }}</span><strong class="wq-metric__val" id="val-clouds">--%</strong></div>
-          <div class="wq-metric"><span class="wq-metric__icon">🌡️</span><span class="wq-metric__label">{{ call .T "wq.current.dew_point" }}</span><strong class="wq-metric__val" id="val-dew">--°C</strong></div>
-          <div class="wq-metric"><span class="wq-metric__icon">🌧️</span><span class="wq-metric__label">{{ call .T "wq.current.precipitation" }}</span><strong class="wq-metric__val" id="val-precip">-- mm</strong></div>
-          <div class="wq-metric"><span class="wq-metric__icon" id="moonPhaseIcon">🌕</span><span class="wq-metric__label">{{ call .T "wq.current.moon_phase" }}</span><strong class="wq-metric__val" id="val-moonphase">--</strong></div>
-          <div class="wq-metric"><span class="wq-metric__icon">🌙</span><span class="wq-metric__label">{{ call .T "wq.current.moonrise" }}</span><strong class="wq-metric__val" id="val-moonrise">--:--</strong></div>
-          <div class="wq-metric"><span class="wq-metric__icon">🌑</span><span class="wq-metric__label">{{ call .T "wq.current.moonset" }}</span><strong class="wq-metric__val" id="val-moonset">--:--</strong></div>
-          <div class="wq-metric"><span class="wq-metric__icon">🔄</span><span class="wq-metric__label">{{ call .T "wq.current.last_updated" }}</span><strong class="wq-metric__val" id="val-updated">--</strong></div>
-        </div>
-
-        <button class="wq-share-btn" id="shareSnapshotBtn">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-            <polyline points="16 6 12 2 8 6"/>
-            <line x1="12" y1="2" x2="12" y2="15"/>
-          </svg>
-          {{ call .T "wq.share.btn" }}
-        </button>
-      </section>
-
-      <!-- ❷ 天气预警 -->
-      <div class="wq-alert hidden" id="weatherAlertBanner" role="alert">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 3.5L21 19H3L12 5.5zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/></svg>
-        <div class="wq-alert__content"><strong id="alertTitle"></strong><p id="alertDesc"></p></div>
-        <button class="wq-alert__close" onclick="this.parentElement.classList.add('hidden')">✕</button>
       </div>
+    </section>
 
-      <!-- ❸ 预报面板 -->
-      <section class="wq-card wq-forecast hidden" id="forecastPanel">
+    <!-- ── 预报面板 ── -->
+    <section class="wq-forecast-section" id="forecastPanel">
+      <div class="wq-container">
+
         <div class="wq-tabs" role="tablist">
           <button class="wq-tab active" role="tab" data-tab="hourly24">{{ call .T "wq.forecast.tab_hourly" }}</button>
           <button class="wq-tab" role="tab" data-tab="daily14">{{ call .T "wq.forecast.tab_daily" }}</button>
           <button class="wq-tab" role="tab" data-tab="history">{{ call .T "wq.forecast.tab_history" }}</button>
-          <label class="wq-model-compare">
-            <input type="checkbox" id="modelCompareToggle">
-            <span>{{ call .T "wq.forecast.model_compare" }}</span>
-          </label>
         </div>
-        <div class="wq-chart-wrap">
-          <div id="forecastChart" class="wq-chart" style="height:300px"></div>
-        </div>
-        <div class="wq-daily-list hidden" id="dailyForecastList"></div>
-      </section>
 
-      <!-- ❹ AQI 面板 -->
-      <section class="wq-card wq-aqi hidden" id="aqiPanel">
-        <h2 class="wq-card__title">{{ call .T "wq.aqi.title" }}</h2>
-        <div class="wq-aqi__main">
-          <div class="wq-aqi__gauge-wrap">
-            <div id="aqiGaugeChart" style="width:180px;height:180px"></div>
-            <div class="wq-aqi__gauge-center">
-              <span class="wq-aqi__value" id="aqiValue">--</span>
-              <span class="wq-aqi__label" id="aqiLevel">--</span>
+        <!-- 小时预报横向卡片 -->
+        <div class="wq-hourly-scroll" id="hourlyScroll">
+          <div class="wq-hourly-cards" id="hourlyCards"></div>
+        </div>
+
+        <!-- ECharts 折线图 -->
+        <div class="wq-chart-wrap" id="forecastChartWrap">
+          <div id="forecastChart" class="wq-chart" style="height:200px"></div>
+        </div>
+
+        <!-- 14天每日预报表格 -->
+        <div class="wq-daily-table hidden" id="dailyForecastList"></div>
+
+      </div>
+    </section>
+
+    <!-- ── 底部三列：AQI / 生活指数 / 地图 ── -->
+    <div class="wq-bottom-row">
+      <div class="wq-container">
+        <div class="wq-bottom-row__grid">
+
+          <!-- AQI -->
+          <section class="wq-card wq-aqi hidden" id="aqiPanel">
+            <h2 class="wq-card__title">{{ call .T "wq.aqi.title" }}</h2>
+            <div class="wq-aqi__body">
+              <div class="wq-aqi__gauge-wrap">
+                <div id="aqiGaugeChart" class="wq-aqi__gauge"></div>
+                <div class="wq-aqi__center">
+                  <span class="wq-aqi__num" id="aqiValue">--</span>
+                  <span class="wq-aqi__lbl" id="aqiLevel">--</span>
+                </div>
+              </div>
+              <p class="wq-aqi__advice" id="aqiAdviceText"></p>
+            </div>
+            <div class="wq-pollutants" id="pollutantsGrid">
+              <div class="wq-pol"><span class="wq-pol__name">PM2.5</span><div class="wq-pol__bar"><div class="wq-pol__fill" id="bar-pm25"></div></div><span class="wq-pol__val" id="val-pm25">--</span></div>
+              <div class="wq-pol"><span class="wq-pol__name">PM10</span><div class="wq-pol__bar"><div class="wq-pol__fill" id="bar-pm10"></div></div><span class="wq-pol__val" id="val-pm10">--</span></div>
+              <div class="wq-pol"><span class="wq-pol__name">O₃</span><div class="wq-pol__bar"><div class="wq-pol__fill" id="bar-o3"></div></div><span class="wq-pol__val" id="val-o3">--</span></div>
+              <div class="wq-pol"><span class="wq-pol__name">NO₂</span><div class="wq-pol__bar"><div class="wq-pol__fill" id="bar-no2"></div></div><span class="wq-pol__val" id="val-no2">--</span></div>
+              <div class="wq-pol"><span class="wq-pol__name">SO₂</span><div class="wq-pol__bar"><div class="wq-pol__fill" id="bar-so2"></div></div><span class="wq-pol__val" id="val-so2">--</span></div>
+              <div class="wq-pol"><span class="wq-pol__name">CO</span><div class="wq-pol__bar"><div class="wq-pol__fill" id="bar-co"></div></div><span class="wq-pol__val" id="val-co">--</span></div>
+            </div>
+          </section>
+
+          <!-- 生活指数 -->
+          <section class="wq-card wq-life hidden" id="lifeIndexPanel">
+            <h2 class="wq-card__title">{{ call .T "wq.life.title" }}</h2>
+            <div class="wq-life__grid" id="lifeIndexGrid"></div>
+          </section>
+
+          <!-- 地图 -->
+          <section class="wq-card wq-map-card hidden" id="weatherMapPanel">
+            <h2 class="wq-card__title">{{ call .T "wq.map.title" }}</h2>
+            <div class="wq-map__layers" role="group">
+              <button class="wq-map-layer active" data-layer="temperature">{{ call .T "wq.map.layer_temp" }}</button>
+              <button class="wq-map-layer" data-layer="precipitation">{{ call .T "wq.map.layer_precip" }}</button>
+              <button class="wq-map-layer" data-layer="wind">{{ call .T "wq.map.layer_wind" }}</button>
+              <button class="wq-map-layer" data-layer="clouds">{{ call .T "wq.map.layer_clouds" }}</button>
+            </div>
+            <div id="weatherMap" class="wq-map__container"></div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部广告 -->
+    {{- template "partials/ad_slot.html" (dict "SlotID" "weather-query-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
+
+  </div><!-- /wq-main -->
+
+  <!-- ③ 全球互动地图（独立于 wq-main，始终显示） -->
+  <section class="wq-world-map-section" id="worldMapSection" aria-label="{{ call .T "wq.world_map.title" }}">
+    <div class="wq-world-map__header">
+      <div class="wq-container">
+        <h2 class="wq-world-map__title">{{ call .T "wq.world_map.title" }}</h2>
+        <p class="wq-world-map__subtitle">{{ call .T "wq.world_map.subtitle" }}</p>
+        <div class="wq-world-map__layers" role="group" aria-label="Map layers">
+          <button class="wq-wm-layer active" data-wm-layer="temperature">🌡 {{ call .T "wq.map.layer_temp" }}</button>
+          <button class="wq-wm-layer" data-wm-layer="precipitation">🌧 {{ call .T "wq.map.layer_precip" }}</button>
+          <button class="wq-wm-layer" data-wm-layer="wind">💨 {{ call .T "wq.map.layer_wind" }}</button>
+          <button class="wq-wm-layer" data-wm-layer="clouds">☁️ {{ call .T "wq.map.layer_clouds" }}</button>
+          <button class="wq-wm-layer" data-wm-layer="pressure">🔵 {{ call .T "wq.map.layer_pressure" }}</button>
+        </div>
+      </div>
+    </div>
+    <div class="wq-world-map__map-wrap">
+      <div id="worldMap" class="wq-world-map__map"></div>
+      <!-- Click-to-weather popup -->
+      <div class="wq-wm-popup hidden" id="wmPopup">
+        <button class="wq-wm-popup__close" id="wmPopupClose" aria-label="Close">✕</button>
+        <div class="wq-wm-popup__loading hidden" id="wmPopupLoading">
+          <div class="wq-wm-popup__spinner"></div>
+          <span>{{ call .T "wq.world_map.loading" }}</span>
+        </div>
+        <div class="wq-wm-popup__content hidden" id="wmPopupContent">
+          <div class="wq-wm-popup__location" id="wmPopupLocation"></div>
+          <div class="wq-wm-popup__main">
+            <div class="wq-wm-popup__icon" id="wmPopupIcon"></div>
+            <div class="wq-wm-popup__temp-wrap">
+              <span class="wq-wm-popup__temp" id="wmPopupTemp">--</span>
+              <span class="wq-wm-popup__desc" id="wmPopupDesc">--</span>
             </div>
           </div>
-          <div class="wq-aqi__advice" id="aqiAdvice"><p id="aqiAdviceText"></p></div>
+          <div class="wq-wm-popup__stats">
+            <div class="wq-wm-popup__stat"><span class="wq-wm-popup__stat-lbl">{{ call .T "wq.world_map.popup.wind" }}</span><span class="wq-wm-popup__stat-val" id="wmPopupWind">--</span></div>
+            <div class="wq-wm-popup__stat"><span class="wq-wm-popup__stat-lbl">{{ call .T "wq.world_map.popup.humidity" }}</span><span class="wq-wm-popup__stat-val" id="wmPopupHumidity">--</span></div>
+            <div class="wq-wm-popup__stat"><span class="wq-wm-popup__stat-lbl">{{ call .T "wq.world_map.popup.aqi" }}</span><span class="wq-wm-popup__stat-val" id="wmPopupAqi">--</span></div>
+          </div>
+          <button class="wq-wm-popup__full-btn" id="wmPopupFullBtn">{{ call .T "wq.world_map.popup.view_full" }}</button>
         </div>
-        <div class="wq-pollutants" id="pollutantsGrid">
-          <div class="wq-pollutant"><span class="wq-pollutant__name">PM2.5</span><div class="wq-pollutant__bar"><div class="wq-pollutant__fill" id="bar-pm25"></div></div><span class="wq-pollutant__val" id="val-pm25">--</span></div>
-          <div class="wq-pollutant"><span class="wq-pollutant__name">PM10</span><div class="wq-pollutant__bar"><div class="wq-pollutant__fill" id="bar-pm10"></div></div><span class="wq-pollutant__val" id="val-pm10">--</span></div>
-          <div class="wq-pollutant"><span class="wq-pollutant__name">O₃</span><div class="wq-pollutant__bar"><div class="wq-pollutant__fill" id="bar-o3"></div></div><span class="wq-pollutant__val" id="val-o3">--</span></div>
-          <div class="wq-pollutant"><span class="wq-pollutant__name">NO₂</span><div class="wq-pollutant__bar"><div class="wq-pollutant__fill" id="bar-no2"></div></div><span class="wq-pollutant__val" id="val-no2">--</span></div>
-          <div class="wq-pollutant"><span class="wq-pollutant__name">SO₂</span><div class="wq-pollutant__bar"><div class="wq-pollutant__fill" id="bar-so2"></div></div><span class="wq-pollutant__val" id="val-so2">--</span></div>
-          <div class="wq-pollutant"><span class="wq-pollutant__name">CO</span><div class="wq-pollutant__bar"><div class="wq-pollutant__fill" id="bar-co"></div></div><span class="wq-pollutant__val" id="val-co">--</span></div>
-        </div>
-      </section>
-
-      <!-- ❺ 天气地图 -->
-      <section class="wq-card wq-map hidden" id="weatherMapPanel">
-        <h2 class="wq-card__title">{{ call .T "wq.map.title" }}</h2>
-        <div class="wq-map__layers" role="group">
-          <button class="wq-map-layer active" data-layer="temperature">{{ call .T "wq.map.layer_temp" }}</button>
-          <button class="wq-map-layer" data-layer="precipitation">{{ call .T "wq.map.layer_precip" }}</button>
-          <button class="wq-map-layer" data-layer="wind">{{ call .T "wq.map.layer_wind" }}</button>
-          <button class="wq-map-layer" data-layer="clouds">{{ call .T "wq.map.layer_clouds" }}</button>
-          <button class="wq-map-layer" data-layer="pressure">{{ call .T "wq.map.layer_pressure" }}</button>
-        </div>
-        <div id="weatherMap" class="wq-map__container" style="height:400px"></div>
-      </section>
-
-      <!-- ❻ 生活指数 -->
-      <section class="wq-card wq-life hidden" id="lifeIndexPanel">
-        <h2 class="wq-card__title">{{ call .T "wq.life.title" }}</h2>
-        <div class="wq-life__grid" id="lifeIndexGrid"></div>
-      </section>
-
-    </main>
-
-    <!-- 右列侧边广告 -->
-    <aside class="wq-sidebar">
-      {{- template "partials/ad_slot.html" (dict "SlotID" "weather-query-sidebar" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
-    </aside>
-
-  </div>
-
-  <!-- ⑤ 三特性卡片 -->
-  <section class="wq-features">
-    <div class="wq-features__grid">
-      <div class="wq-feature-card">
-        <div class="wq-feature-card__icon">🎯</div>
-        <h3>{{ call .T "wq.feature.accurate_title" }}</h3>
-        <p>{{ call .T "wq.feature.accurate_desc" }}</p>
       </div>
-      <div class="wq-feature-card">
-        <div class="wq-feature-card__icon">⚡</div>
-        <h3>{{ call .T "wq.feature.fast_title" }}</h3>
-        <p>{{ call .T "wq.feature.fast_desc" }}</p>
-      </div>
-      <div class="wq-feature-card">
-        <div class="wq-feature-card__icon">🆓</div>
-        <h3>{{ call .T "wq.feature.free_title" }}</h3>
-        <p>{{ call .T "wq.feature.free_desc" }}</p>
+      <div class="wq-world-map__hint" id="wmHint">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        {{ call .T "wq.world_map.click_hint" }}
       </div>
     </div>
   </section>
 
-  <!-- ⑥ FAQ -->
-  <section class="wq-faq">
-    <div class="wq-faq__inner">
-      <h2 class="wq-faq__title">{{ call .T "wq.faq.section_title" }}</h2>
-      <p class="wq-faq__subtitle">{{ call .T "wq.faq.section_subtitle" }}</p>
-      <div class="wq-faq__grid">
-      {{ range .FAQs }}
-      <details class="wq-faq__item">
-        <summary class="wq-faq__q">{{ .Q }}</summary>
-        <div class="wq-faq__a"><p>{{ .A }}</p></div>
-      </details>
-      {{ end }}
+  <!-- ④ 天气知识内容区 -->
+  <section class="wq-content-section" id="weatherContent" aria-label="Weather Knowledge">
+    <div class="wq-container">
+
+      <!-- Stats bar -->
+      <div class="wq-content-stats">
+        <div class="wq-cs-stat">
+          <span class="wq-cs-stat__num">93%</span>
+          <span class="wq-cs-stat__lbl">{{ call .T "wq.content.stats_accuracy" }}</span>
+        </div>
+        <div class="wq-cs-stat">
+          <span class="wq-cs-stat__num">3M+</span>
+          <span class="wq-cs-stat__lbl">{{ call .T "wq.content.stats_cities" }}</span>
+        </div>
+        <div class="wq-cs-stat">
+          <span class="wq-cs-stat__num">15min</span>
+          <span class="wq-cs-stat__lbl">{{ call .T "wq.content.stats_update" }}</span>
+        </div>
+        <div class="wq-cs-stat">
+          <span class="wq-cs-stat__num">ECMWF + GFS</span>
+          <span class="wq-cs-stat__lbl">{{ call .T "wq.content.stats_models" }}</span>
+        </div>
+      </div>
+
+      <!-- Article grid -->
+      <div class="wq-content-grid">
+
+        <article class="wq-content-card wq-content-card--wide">
+          <div class="wq-content-card__icon">🌐</div>
+          <h3 class="wq-content-card__title">{{ call .T "wq.content.section1_title" }}</h3>
+          <p class="wq-content-card__body">{{ call .T "wq.content.section1_body" }}</p>
+        </article>
+
+        <article class="wq-content-card">
+          <div class="wq-content-card__icon">🛰️</div>
+          <h3 class="wq-content-card__title">{{ call .T "wq.content.section2_title" }}</h3>
+          <p class="wq-content-card__body">{{ call .T "wq.content.section2_body" }}</p>
+        </article>
+
+        <article class="wq-content-card">
+          <div class="wq-content-card__icon">🫁</div>
+          <h3 class="wq-content-card__title">{{ call .T "wq.content.section3_title" }}</h3>
+          <p class="wq-content-card__body">{{ call .T "wq.content.section3_body" }}</p>
+        </article>
+
+        <article class="wq-content-card">
+          <div class="wq-content-card__icon">💨</div>
+          <h3 class="wq-content-card__title">{{ call .T "wq.content.section4_title" }}</h3>
+          <p class="wq-content-card__body">{{ call .T "wq.content.section4_body" }}</p>
+        </article>
+
+        <article class="wq-content-card">
+          <div class="wq-content-card__icon">🌧️</div>
+          <h3 class="wq-content-card__title">{{ call .T "wq.content.section5_title" }}</h3>
+          <p class="wq-content-card__body">{{ call .T "wq.content.section5_body" }}</p>
+        </article>
+
+        <article class="wq-content-card">
+          <div class="wq-content-card__icon">☀️</div>
+          <h3 class="wq-content-card__title">{{ call .T "wq.content.section6_title" }}</h3>
+          <p class="wq-content-card__body">{{ call .T "wq.content.section6_body" }}</p>
+        </article>
+
       </div>
     </div>
   </section>
 
-  <!-- ⑦ 底部广告 -->
-  {{- template "partials/ad_slot.html" (dict "SlotID" "weather-query-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
-
-  <!-- Toast 容器 -->
+  <!-- Toast -->
   <div class="wq-toast-container" id="toastContainer" aria-live="assertive"></div>
-
-  <!-- JS 模板片段 -->
-  <template id="cityItemTpl">
-    <li class="wq-search__item" role="option" tabindex="-1">
-      <span class="city-flag"></span>
-      <span class="city-name"></span>
-      <span class="city-country"></span>
-    </li>
-  </template>
-  <template id="recentChipTpl">
-    <button class="wq-recent-chip"><span class="chip-name"></span></button>
-  </template>
 
 </div>
 {{ end }}
 
 {{ define "extraScript" }}
 <script>
-// i18n bridge — expose Go translation strings to JS
 window.WQ_I18N = {{ toJSON (dict
   "searchPlaceholder" (call .T "wq.search.placeholder")
   "searchRecent"      (call .T "wq.search.recent")
@@ -389,21 +409,27 @@ window.WQ_I18N = {{ toJSON (dict
   "mapTitle"          (call .T "wq.map.title")
   "lifeTitle"         (call .T "wq.life.title")
   "lang"              .Lang
+  "wmTitle"           (call .T "wq.world_map.title")
+  "wmClickHint"       (call .T "wq.world_map.click_hint")
+  "wmLoading"         (call .T "wq.world_map.loading")
+  "wmPopupWind"       (call .T "wq.world_map.popup.wind")
+  "wmPopupHumidity"   (call .T "wq.world_map.popup.humidity")
+  "wmPopupAqi"        (call .T "wq.world_map.popup.aqi")
+  "wmPopupViewFull"   (call .T "wq.world_map.popup.view_full")
 ) }};
 window.WQ_CITY = {{ toJSON .DefaultCity }};
 </script>
 <script src="/static/js/weather-engine.js?v={{ .AssetVer }}"></script>
 <script>
-// GA events
-(function() {
-  var TOOL = 'weather-query';
-  window.gaTrackWeatherSearch = function(city, method) { gaTrackSettingChange(TOOL, 'search_method', method); gaTrack(TOOL, 'search', city); };
-  window.gaTrackWeatherLoaded = function(city, ms) { gaTrackProcessDone(TOOL, 1, ms); };
-  window.gaTrackLayerSwitch   = function(layer)   { gaTrackSettingChange(TOOL, 'map_layer', layer); };
-  window.gaTrackForecastTab   = function(tab)     { gaTrackSettingChange(TOOL, 'forecast_tab', tab); };
-  window.gaTrackUnitChange    = function(t, v)    { gaTrackSettingChange(TOOL, 'unit_'+t, v); };
-  window.gaTrackSnapshot      = function()        { if(typeof gaTrackDownload==='function') gaTrackDownload(TOOL,'image/png'); };
-  window.gaTrackWeatherError  = function(t, m)    { if(typeof gaTrackError==='function') gaTrackError(TOOL, t, m); };
+(function(){
+  var T='weather-query';
+  window.gaTrackWeatherSearch=function(c,m){gaTrackSettingChange(T,'search_method',m);gaTrack(T,'search',c);};
+  window.gaTrackWeatherLoaded=function(c,ms){gaTrackProcessDone(T,1,ms);};
+  window.gaTrackLayerSwitch  =function(l){gaTrackSettingChange(T,'map_layer',l);};
+  window.gaTrackForecastTab  =function(t){gaTrackSettingChange(T,'forecast_tab',t);};
+  window.gaTrackUnitChange   =function(t,v){gaTrackSettingChange(T,'unit_'+t,v);};
+  window.gaTrackSnapshot     =function(){if(typeof gaTrackDownload==='function')gaTrackDownload(T,'image/png');};
+  window.gaTrackWeatherError =function(t,m){if(typeof gaTrackError==='function')gaTrackError(T,t,m);};
 })();
 </script>
 {{ end }}
