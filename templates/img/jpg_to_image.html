@@ -19,8 +19,7 @@
   <section class="itb-hero"><div class="itb-container">
     <h1 class="itb-hero__title">{{ call .T "hero.jpg_to.title" }}</h1>
     <p class="itb-hero__subtitle">{{ call .T "hero.jpg_to.subtitle" }}</p>
-    <div class="itb-hero__badges"><span class="itb-badge itb-badge--green">✔ {{ call .T "hero.crop.badge1" }}</span><span class="itb-badge itb-badge--blue">🔒 {{ call .T "hero.crop.badge2" }}</span><span class="itb-badge itb-badge--orange">⚡ {{ call .T "hero.crop.badge3" }}</span></div>
-  </div></section>
+      </div></section>
   <div class="itb-ad-top itb-container">{{- template "partials/ad_slot.html" dict "SlotID" "img-jpg-to-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}</div>
   <div class="itb-container"><div class="itb-layout"><div>
     <div id="itbUploadZone" class="itb-upload-zone" ondragover="itbDragOver(event)" ondragleave="itbDragLeave(event)" ondrop="itbDrop(event)" onclick="document.getElementById('itbFileInput').click()" role="button" tabindex="0">
@@ -50,7 +49,14 @@
   <aside class="itb-sidebar">{{- template "partials/ad_slot.html" dict "SlotID" "img-jpg-to-sidebar" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}</aside>
   </div>
   <section class="itb-features"><div class="itb-features__grid"><div class="itb-feature-card"><div class="itb-feature-card__icon">🔒</div><h3 class="itb-feature-card__title">{{ call .T "feature.common.privacy_title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.common.privacy_desc" }}</p></div><div class="itb-feature-card"><div class="itb-feature-card__icon">⚡</div><h3 class="itb-feature-card__title">{{ call .T "feature.common.speed_title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.common.speed_desc" }}</p></div><div class="itb-feature-card"><div class="itb-feature-card__icon">🎁</div><h3 class="itb-feature-card__title">{{ call .T "feature.common.free_title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.common.free_desc" }}</p></div></div></section>
-  <section class="itb-faq"><h2 class="itb-faq__title">FAQ</h2>{{ range $i,$f := .FAQs }}<div class="itb-faq-item" id="itbFaq-{{ $i }}"><button class="itb-faq-item__q" onclick="itbToggleFAQ({{ $i }})" aria-expanded="false">{{ $f.Q }}<span class="itb-faq-item__arrow">▾</span></button><div class="itb-faq-item__a"><p>{{ $f.A }}</p></div></div>{{ end }}</section>
+      <section class="itb-about">
+      <span class="itb-about__label">{{ call .T "hero.jpg_to.about.label" }}</span>
+      <h2 class="itb-about__title">{{ call .T "hero.jpg_to.about.title" }}</h2>
+      <p class="itb-about__body">{{ call .T "hero.jpg_to.about.body1" }}</p>
+      <p class="itb-about__body">{{ call .T "hero.jpg_to.about.body2" }}</p>
+      <p class="itb-about__body">{{ call .T "hero.jpg_to.about.body3" }}</p>
+    </section>
+    <section class="itb-faq"><h2 class="itb-faq__title">FAQ</h2>{{ range $i,$f := .FAQs }}<div class="itb-faq-item" id="itbFaq-{{ $i }}"><button class="itb-faq-item__q" onclick="itbToggleFAQ({{ $i }})" aria-expanded="false">{{ $f.Q }}<span class="itb-faq-item__arrow">▾</span></button><div class="itb-faq-item__a"><p>{{ $f.A }}</p></div></div>{{ end }}</section>
   <div class="itb-ad-bottom">{{- template "partials/ad_slot.html" dict "SlotID" "img-jpg-to-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}</div>
   </div>
   <div id="itbPreviewModal" hidden onclick="itbClosePreview(event)"><div class="itb-modal-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(4px)"><div class="itb-modal" onclick="event.stopPropagation()"><div class="itb-modal__header"><h3 class="itb-modal__title">Before / After</h3><button class="itb-modal__close" onclick="itbClosePreview()">×</button></div><div class="itb-modal__size-labels"><span id="itbBeforeLbl"></span><span id="itbAfterLbl"></span></div><div class="itb-compare" id="itbCompareArea" style="height:400px"><div class="itb-compare__after"><img id="itbAfterImg" src="" alt="after"></div><div class="itb-compare__before" id="itbBeforeWrap"><img id="itbBeforeImg" src="" alt="before"><span class="itb-compare__lbl itb-compare__lbl--before">Before</span></div><span class="itb-compare__lbl itb-compare__lbl--after">After</span><div class="itb-compare__divider" id="itbDivider"></div></div><div class="itb-modal__footer"><button class="itb-btn-primary" style="width:auto;margin-top:0" id="itbModalDlBtn">⬇ Download</button></div></div></div></div>

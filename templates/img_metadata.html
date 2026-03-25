@@ -57,11 +57,6 @@
     <div class="im-hero__text">
       <h1 class="im-hero__title">{{ call .T "img.metadata.hero.title" }}</h1>
       <p class="im-hero__subtitle">{{ call .T "img.metadata.hero.subtitle" }}</p>
-      <div class="im-hero__badges">
-        <span class="im-badge">🔒 {{ call .T "img.metadata.hero.badge1" }}</span>
-        <span class="im-badge">📍 {{ call .T "img.metadata.hero.badge2" }}</span>
-        <span class="im-badge">✅ {{ call .T "img.metadata.hero.badge3" }}</span>
-      </div>
     </div>
 
     <!-- 超大拖拽上传区 -->
@@ -257,6 +252,17 @@
         <p>{{ call .T "img.metadata.feature.export.desc" }}</p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ── About ────────────────────────────────── -->
+<section class="im-about-section">
+  <div class="im-container">
+    <span class="im-section-label">{{ call .T "img.metadata.about.label" }}</span>
+    <h2 class="im-section-title">{{ call .T "img.metadata.about.title" }}</h2>
+    <p class="im-about-body">{{ call .T "img.metadata.about.body1" }}</p>
+    <p class="im-about-body">{{ call .T "img.metadata.about.body2" }}</p>
+    <p class="im-about-body">{{ call .T "img.metadata.about.body3" }}</p>
   </div>
 </section>
 

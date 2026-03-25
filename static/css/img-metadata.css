@@ -439,3 +439,26 @@ body.img-metadata-page {
   .im-field-label            { grid-column: 1 / -1; font-size: 0.75rem; margin-bottom: -6px; }
 }
 
+
+/* ── About section ── */
+.im-about-section {
+  padding: 56px 0;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+.im-about-section .im-container { max-width: 860px; }
+.im-section-label {
+  display: inline-block;
+  background: #e0f2fe; color: #0369a1;
+  font-size: .8125rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 20px; margin-bottom: 14px;
+}
+.im-about-section .im-section-title {
+  font-size: clamp(1.35rem, 2.5vw, 1.9rem);
+  font-weight: 800; color: #0f172a;
+  margin: 0 0 20px; line-height: 1.25; text-align: left;
+}
+.im-about-body {
+  font-size: 1rem; color: #475569;
+  line-height: 1.8; margin: 0 0 14px; max-width: 820px;
+}

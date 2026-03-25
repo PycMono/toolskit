@@ -60,11 +60,6 @@
     <div class="qr-hero__text">
       <h1 class="qr-hero__title">{{ call .T "qr.hero.title" }}</h1>
       <p class="qr-hero__subtitle">{{ call .T "qr.hero.subtitle" }}</p>
-      <div class="qr-hero__badges">
-        <span class="qr-badge">✅ {{ call .T "qr.hero.badge1" }}</span>
-        <span class="qr-badge">🚀 {{ call .T "qr.hero.badge2" }}</span>
-        <span class="qr-badge">⬇ {{ call .T "qr.hero.badge3" }}</span>
-      </div>
     </div>
   </div>
 </section>
@@ -253,6 +248,17 @@
         <p>{{ call .T "qr.feature.types.desc" }}</p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section class="qr-about-section">
+  <div class="qr-container">
+    <span class="qr-section-label">{{ call .T "qr.about.label" }}</span>
+    <h2 class="qr-section-title">{{ call .T "qr.about.title" }}</h2>
+    <p class="qr-about-body">{{ call .T "qr.about.body1" }}</p>
+    <p class="qr-about-body">{{ call .T "qr.about.body2" }}</p>
+    <p class="qr-about-body">{{ call .T "qr.about.body3" }}</p>
   </div>
 </section>
 

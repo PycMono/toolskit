@@ -28,11 +28,6 @@
     <div class="itb-container">
       <h1 class="itb-hero__title">{{ call .T "hero.to_jpg.title" }}</h1>
       <p class="itb-hero__subtitle">{{ call .T "hero.to_jpg.subtitle" }}</p>
-      <div class="itb-hero__badges">
-        <span class="itb-badge itb-badge--green">✔ {{ call .T "hero.crop.badge1" }}</span>
-        <span class="itb-badge itb-badge--blue">🔒 {{ call .T "hero.crop.badge2" }}</span>
-        <span class="itb-badge itb-badge--orange">⚡ {{ call .T "hero.crop.badge3" }}</span>
-      </div>
     </div>
   </section>
   <div class="itb-ad-top itb-container">
@@ -82,6 +77,13 @@
       <div class="itb-feature-card"><div class="itb-feature-card__icon">⚡</div><h3 class="itb-feature-card__title">{{ call .T "feature.common.speed_title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.common.speed_desc" }}</p></div>
       <div class="itb-feature-card"><div class="itb-feature-card__icon">🎁</div><h3 class="itb-feature-card__title">{{ call .T "feature.common.free_title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.common.free_desc" }}</p></div>
     </div></section>
+        <section class="itb-about">
+      <span class="itb-about__label">{{ call .T "hero.to_jpg.about.label" }}</span>
+      <h2 class="itb-about__title">{{ call .T "hero.to_jpg.about.title" }}</h2>
+      <p class="itb-about__body">{{ call .T "hero.to_jpg.about.body1" }}</p>
+      <p class="itb-about__body">{{ call .T "hero.to_jpg.about.body2" }}</p>
+      <p class="itb-about__body">{{ call .T "hero.to_jpg.about.body3" }}</p>
+    </section>
     <section class="itb-faq"><h2 class="itb-faq__title">FAQ</h2>{{ range $i,$f := .FAQs }}<div class="itb-faq-item" id="itbFaq-{{ $i }}"><button class="itb-faq-item__q" onclick="itbToggleFAQ({{ $i }})" aria-expanded="false">{{ $f.Q }}<span class="itb-faq-item__arrow">▾</span></button><div class="itb-faq-item__a"><p>{{ $f.A }}</p></div></div>{{ end }}</section>
     <div class="itb-ad-bottom">{{- template "partials/ad_slot.html" dict "SlotID" "img-to-jpg-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}</div>
   </div>

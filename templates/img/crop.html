@@ -31,11 +31,6 @@
     <div class="itb-container">
       <h1 class="itb-hero__title">{{ call .T "hero.crop.title" }}</h1>
       <p class="itb-hero__subtitle">{{ call .T "hero.crop.subtitle" }}</p>
-      <div class="itb-hero__badges">
-        <span class="itb-badge itb-badge--green">✔ {{ call .T "hero.crop.badge1" }}</span>
-        <span class="itb-badge itb-badge--blue">🔒 {{ call .T "hero.crop.badge2" }}</span>
-        <span class="itb-badge itb-badge--orange">⚡ {{ call .T "hero.crop.badge3" }}</span>
-      </div>
     </div>
   </section>
 
@@ -138,6 +133,15 @@
         <div class="itb-feature-card"><div class="itb-feature-card__icon">⚡</div><h3 class="itb-feature-card__title">{{ call .T "feature.common.speed_title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.common.speed_desc" }}</p></div>
         <div class="itb-feature-card"><div class="itb-feature-card__icon">🎁</div><h3 class="itb-feature-card__title">{{ call .T "feature.common.free_title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.common.free_desc" }}</p></div>
       </div>
+    </section>
+
+    <!-- About -->
+    <section class="itb-about">
+      <span class="itb-about__label">{{ call .T "hero.crop.about.label" }}</span>
+      <h2 class="itb-about__title">{{ call .T "hero.crop.about.title" }}</h2>
+      <p class="itb-about__body">{{ call .T "hero.crop.about.body1" }}</p>
+      <p class="itb-about__body">{{ call .T "hero.crop.about.body2" }}</p>
+      <p class="itb-about__body">{{ call .T "hero.crop.about.body3" }}</p>
     </section>
 
     <!-- FAQ -->

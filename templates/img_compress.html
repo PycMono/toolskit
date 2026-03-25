@@ -60,6 +60,17 @@
     {{- template "partials/ad_slot.html" dict "SlotID" "img-compress-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
   </div>
 
+  <!-- ══ MAIN LAYOUT (center + side ads) ══ -->
+  <div class="ic-main-layout">
+
+    <!-- Left sidebar ad -->
+    <div class="ic-sidebar ic-sidebar--left">
+      {{- template "partials/ad_slot.html" dict "SlotID" "img-compress-left" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+    </div>
+
+    <!-- Center content -->
+    <div class="ic-main-center">
+
   <!-- ══ DROP ZONE ══ -->
   <div class="ic-drop-wrap">
     <div class="ic-drop-zone" id="dropZone"
@@ -125,6 +136,15 @@
     </div>
   </div>
 
+
+    </div><!-- /ic-main-center -->
+
+    <!-- Right sidebar ad -->
+    <div class="ic-sidebar ic-sidebar--right">
+      {{- template "partials/ad_slot.html" dict "SlotID" "img-compress-right" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+    </div>
+
+  </div><!-- /ic-main-layout -->
 
   <!-- ══ SECTION 1: How it works ══ -->
   <section class="ic-section ic-section--alt">
@@ -241,11 +261,22 @@
     </div>
   </section>
 
+  <!-- ══ SECTION 6: SEO Description ══ -->
+  <section class="ic-section ic-section--alt">
+    <div class="ic-section-inner">
+      <span class="ic-section-label">{{ call .T "img.compress.s6.label" }}</span>
+      <h2 class="ic-section-title">{{ call .T "img.compress.s6.title" }}</h2>
+      <p class="ic-section-body">{{ call .T "img.compress.s6.body1" }}</p>
+      <p class="ic-section-body">{{ call .T "img.compress.s6.body2" }}</p>
+      <p class="ic-section-body">{{ call .T "img.compress.s6.body3" }}</p>
+    </div>
+  </section>
+
   <!-- ══ FAQ ══ -->
   <section class="ic-section">
     <div class="ic-section-inner">
       <span class="ic-section-label">FAQ</span>
-      <h2 class="ic-section-title">Frequently asked <em>questions</em></h2>
+      <h2 class="ic-section-title">{{ safeHTML (call .T "img.compress.faq.title") }}</h2>
       <div class="ic-faq-list">
         {{ range $i, $faq := .FAQs }}
         <div class="ic-faq-item" id="faq-{{ $i }}">
