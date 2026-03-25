@@ -1,17 +1,22 @@
 package handlers
+
 import (
-"context"
-"encoding/json"
-"fmt"
-"io"
-"net/http"
-"strings"
-"time"
-"PycMono/github/toolskit/internal/aiservice"
-"github.com/gin-gonic/gin"
+	"PycMono/github/toolskit/internal/aiservice"
+	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
+	"strings"
+	"time"
+
+	"github.com/gin-gonic/gin"
 )
+
 // ─────────────────────────────────────────────────────────────
-//  Page Handlers
+//
+//	Page Handlers
+//
 // ─────────────────────────────────────────────────────────────
 // AIDetectorPage renders the AI content detector page (full new design)
 func AIDetectorPage(c *gin.Context) {
@@ -27,31 +32,35 @@ func AIDetectorPage(c *gin.Context) {
 		{"Q": t("ailab.detector.faq.q7"), "A": t("ailab.detector.faq.a7")},
 	}
 	data := baseData(c, gin.H{
-"Title":         t("ailab.detector.seo.title"),
-"Description":   t("ailab.detector.seo.desc"),
-"Keywords":      t("ailab.detector.seo.keywords"),
-"PageClass":     "page-ai-detector",
-"ToolName":      "ai-detector",
-"Lang":          lang,
-"FAQ":           faqData,
-"HreflangEN":    "https://toolboxnova.com/ai/detector?lang=en",
-"HreflangZH":    "https://toolboxnova.com/ai/detector?lang=zh",
-"HreflangJA":    "https://toolboxnova.com/ai/detector?lang=ja",
-"HreflangKO":    "https://toolboxnova.com/ai/detector?lang=ko",
-"HreflangES":    "https://toolboxnova.com/ai/detector?lang=es",
-"FreeWordLimit": 15000,
-})
+		"Title":         t("ailab.detector.seo.title"),
+		"Description":   t("ailab.detector.seo.desc"),
+		"Keywords":      t("ailab.detector.seo.keywords"),
+		"PageClass":     "page-ai-detector",
+		"ToolName":      "ai-detector",
+		"Lang":          lang,
+		"FAQ":           faqData,
+		"HreflangEN":    "https://toolboxnova.com/ai/detector?lang=en",
+		"HreflangZH":    "https://toolboxnova.com/ai/detector?lang=zh",
+		"HreflangJA":    "https://toolboxnova.com/ai/detector?lang=ja",
+		"HreflangKO":    "https://toolboxnova.com/ai/detector?lang=ko",
+		"HreflangES":    "https://toolboxnova.com/ai/detector?lang=es",
+		"FreeWordLimit": 15000,
+	})
 	render(c, "ailab/detector.html", data)
 }
+
 // AIHumanizePage is now in ai_humanizer.go
 // ─────────────────────────────────────────────────────────────
-//  Request / Response Structs
+//
+//	Request / Response Structs
+//
 // ─────────────────────────────────────────────────────────────
 // AIDetectRequest incoming detect request
 type AIDetectRequest struct {
 	Text     string `json:"text" binding:"required,min=50"`
 	Language string `json:"language"`
 }
+
 // SentenceResult sentence-level analysis result
 type SentenceResult struct {
 	Text    string   `json:"text"`
@@ -59,6 +68,7 @@ type SentenceResult struct {
 	Type    string   `json:"type"` // human|mixed|ai
 	Signals []string `json:"signals"`
 }
+
 // AnalysisScores 4-dimension analysis
 type AnalysisScores struct {
 	LexicalScore   int `json:"lexical_score"`
@@ -66,11 +76,13 @@ type AnalysisScores struct {
 	SemanticScore  int `json:"semantic_score"`
 	PragmaticScore int `json:"pragmatic_score"`
 }
+
 // ReadabilityResult readability info
 type ReadabilityResult struct {
 	FleschScore int    `json:"flesch_score"`
 	Grade       string `json:"grade"`
 }
+
 // AIDetectResponse full detection result
 type AIDetectResponse struct {
 	Success     bool              `json:"success"`
@@ -87,6 +99,7 @@ type AIDetectResponse struct {
 	WordCount   int               `json:"word_count"`
 	CharCount   int               `json:"char_count"`
 }
+
 // AIHumanizeRequest humanize request
 type AIHumanizeRequest struct {
 	Text     string `json:"text" binding:"required,min=50"`
@@ -95,6 +108,7 @@ type AIHumanizeRequest struct {
 	Mode     string `json:"mode"`
 	Language string `json:"language"`
 }
+
 // AIHumanizeAPIResponse humanize response
 type AIHumanizeAPIResponse struct {
 	Success       bool   `json:"success"`
@@ -103,6 +117,7 @@ type AIHumanizeAPIResponse struct {
 	WordsChanged  int    `json:"words_changed"`
 	ScoreAfter    int    `json:"score_after"`
 }
+
 // DetectionResult legacy struct
 type DetectionResult struct {
 	AIScore    float64 `json:"ai_score"`
@@ -111,6 +126,7 @@ type DetectionResult struct {
 	Confidence float64 `json:"confidence"`
 	Provider   string  `json:"provider"`
 }
+
 // SentenceAnalysis legacy sentence analysis
 type SentenceAnalysis struct {
 	Text       string  `json:"text"`
@@ -119,6 +135,7 @@ type SentenceAnalysis struct {
 	Label      string  `json:"label"`
 	Confidence float64 `json:"confidence"`
 }
+
 // DetectionStatistics legacy statistics
 type DetectionStatistics struct {
 	TotalWords     int   `json:"total_words"`
@@ -127,17 +144,20 @@ type DetectionStatistics struct {
 	HumanSentences int   `json:"human_sentences"`
 	AnalysisTimeMs int64 `json:"analysis_time_ms"`
 }
+
 // ─────────────────────────────────────────────────────────────
-//  API Handlers
+//
+//	API Handlers
+//
 // ─────────────────────────────────────────────────────────────
 // AIDetectAPI handles POST /api/ai/detect
 func AIDetectAPI(c *gin.Context) {
 	var req AIDetectRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, AIDetectResponse{
-Success: false,
-Message: fmt.Sprintf("Invalid request: %v", err),
-})
+			Success: false,
+			Message: fmt.Sprintf("Invalid request: %v", err),
+		})
 		return
 	}
 	factory := aiservice.GetFactory()
@@ -155,14 +175,15 @@ Message: fmt.Sprintf("Invalid request: %v", err),
 	response.Success = true
 	c.JSON(http.StatusOK, response)
 }
+
 // AIHumanizeNewAPI handles POST /api/ai/humanize
 func AIHumanizeNewAPI(c *gin.Context) {
 	var req AIHumanizeRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, AIHumanizeAPIResponse{
-Success: false,
-Message: fmt.Sprintf("Invalid request: %v", err),
-})
+			Success: false,
+			Message: fmt.Sprintf("Invalid request: %v", err),
+		})
 		return
 	}
 	if req.Purpose == "" {
@@ -180,24 +201,24 @@ Message: fmt.Sprintf("Invalid request: %v", err),
 	factory := aiservice.GetFactory()
 	if factory == nil {
 		c.JSON(http.StatusServiceUnavailable, AIHumanizeAPIResponse{
-Success: false,
-Message: "AI service not available",
-})
+			Success: false,
+			Message: "AI service not available",
+		})
 		return
 	}
 	provider, err := factory.GetProviderForTask("humanize")
 	if err != nil {
 		c.JSON(http.StatusServiceUnavailable, AIHumanizeAPIResponse{
-Success: false,
-Message: "No AI provider available",
-})
+			Success: false,
+			Message: "No AI provider available",
+		})
 		return
 	}
 	systemPrompt := buildHumanizeSystemPrompt(req.Purpose, req.Tone, req.Mode)
 	userMsg := fmt.Sprintf(
-"Transform the following AI-generated text into authentic human writing.\n\nParameters:\n- Purpose: %s\n- Tone: %s\n- Mode: %s\n- Language: %s\n\n---TEXT TO HUMANIZE---\n%s\n---END TEXT---\n\nReturn ONLY the humanized text.",
-req.Purpose, req.Tone, req.Mode, req.Language, req.Text,
-)
+		"Transform the following AI-generated text into authentic human writing.\n\nParameters:\n- Purpose: %s\n- Tone: %s\n- Mode: %s\n- Language: %s\n\n---TEXT TO HUMANIZE---\n%s\n---END TEXT---\n\nReturn ONLY the humanized text.",
+		req.Purpose, req.Tone, req.Mode, req.Language, req.Text,
+	)
 	chatReq := aiservice.ChatRequest{
 		SystemPrompt: systemPrompt,
 		Messages:     []aiservice.Message{{Role: "user", Content: userMsg}},
@@ -207,9 +228,9 @@ req.Purpose, req.Tone, req.Mode, req.Language, req.Text,
 	resp, err := provider.Chat(c.Request.Context(), chatReq)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, AIHumanizeAPIResponse{
-Success: false,
-Message: "Humanize failed",
-})
+			Success: false,
+			Message: "Humanize failed",
+		})
 		return
 	}
 	humanized := strings.TrimSpace(resp.Content)
@@ -220,12 +241,13 @@ Message: "Humanize failed",
 		diff = -diff
 	}
 	c.JSON(http.StatusOK, AIHumanizeAPIResponse{
-Success:       true,
-HumanizedText: humanized,
-WordsChanged:  diff,
-ScoreAfter:    0,
-})
+		Success:       true,
+		HumanizedText: humanized,
+		WordsChanged:  diff,
+		ScoreAfter:    0,
+	})
 }
+
 // AIDetectFileAPI handles file upload detection
 func AIDetectFileAPI(c *gin.Context) {
 	startTime := time.Now()
@@ -277,6 +299,7 @@ func AIDetectFileAPI(c *gin.Context) {
 	_ = startTime
 	c.JSON(http.StatusOK, response)
 }
+
 // AIDetectURLAPI handles URL text fetch
 func AIDetectURLAPI(c *gin.Context) {
 	var req struct {
@@ -302,6 +325,7 @@ func AIDetectURLAPI(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"success": true, "text": text, "char_count": len(text)})
 }
+
 // HumanizeStream handles the legacy humanize endpoint
 func HumanizeStream(c *gin.Context) {
 	var req struct {
@@ -338,12 +362,15 @@ func HumanizeStream(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-"success": true,
-"result":  strings.TrimSpace(resp.Content),
-})
+		"success": true,
+		"result":  strings.TrimSpace(resp.Content),
+	})
 }
+
 // ─────────────────────────────────────────────────────────────
-//  Core Detection Logic
+//
+//	Core Detection Logic
+//
 // ─────────────────────────────────────────────────────────────
 func detectWithAI(ctx context.Context, provider aiservice.AIProvider, text, language string) (*AIDetectResponse, error) {
 	if language == "" {
@@ -351,9 +378,9 @@ func detectWithAI(ctx context.Context, provider aiservice.AIProvider, text, lang
 	}
 	systemPrompt := buildDetectSystemPrompt()
 	userMsg := fmt.Sprintf(
-"Please analyze the following text:\n\n---TEXT START---\n%s\n---TEXT END---\n\nLanguage hint: %s",
-text, language,
-)
+		"Please analyze the following text:\n\n---TEXT START---\n%s\n---TEXT END---\n\nLanguage hint: %s",
+		text, language,
+	)
 	chatReq := aiservice.ChatRequest{
 		SystemPrompt: systemPrompt,
 		Messages:     []aiservice.Message{{Role: "user", Content: userMsg}},
@@ -366,13 +393,13 @@ text, language,
 	}
 	content := cleanJSONStr(resp.Content)
 	var parsed struct {
-		Score      int              `json:"score"`
-		Verdict    string           `json:"verdict"`
-		Confidence int              `json:"confidence"`
-		Language   string           `json:"language"`
-		Sentences  []SentenceResult `json:"sentences"`
-		Analysis   AnalysisScores   `json:"analysis"`
-		KeySignals []string         `json:"key_signals"`
+		Score       int              `json:"score"`
+		Verdict     string           `json:"verdict"`
+		Confidence  int              `json:"confidence"`
+		Language    string           `json:"language"`
+		Sentences   []SentenceResult `json:"sentences"`
+		Analysis    AnalysisScores   `json:"analysis"`
+		KeySignals  []string         `json:"key_signals"`
 		Readability struct {
 			FleschScore int    `json:"flesch_score"`
 			Grade       string `json:"grade"`
@@ -422,10 +449,10 @@ func detectHeuristic(text string) *AIDetectResponse {
 			stype = "mixed"
 		}
 		sentResults = append(sentResults, SentenceResult{
-Text:  sent,
-Score: score,
-Type:  stype,
-})
+			Text:  sent,
+			Score: score,
+			Type:  stype,
+		})
 		totalScore += score
 	}
 	avgScore := 50
@@ -479,8 +506,11 @@ func simulateDetectors(overallScore int) map[string]int {
 	}
 	return result
 }
+
 // ─────────────────────────────────────────────────────────────
-//  Prompt Builders
+//
+//	Prompt Builders
+//
 // ─────────────────────────────────────────────────────────────
 func buildDetectSystemPrompt() string {
 	return `You are an advanced AI content detection expert. Analyze the provided text to determine the probability it was generated by an AI (ChatGPT, Claude, Gemini, etc.).
@@ -515,22 +545,25 @@ Rules:
 NEVER change facts, data, numbers, proper nouns.
 Return ONLY the humanized text.`, purpose, tone, mode, intensity)
 }
+
 // ─────────────────────────────────────────────────────────────
-//  Utility Functions
+//
+//	Utility Functions
+//
 // ─────────────────────────────────────────────────────────────
 func cleanJSONStr(s string) string {
 	s = strings.TrimSpace(s)
 	if strings.HasPrefix(s, "```") {
-lines := strings.Split(s, "\n")
+		lines := strings.Split(s, "\n")
 		var inner []string
 		for i, l := range lines {
 			if i == 0 && strings.HasPrefix(l, "```") {
 				continue
 			}
 			if i == len(lines)-1 && strings.TrimSpace(l) == "```" {
-continue
-}
-inner = append(inner, l)
+				continue
+			}
+			inner = append(inner, l)
 		}
 		s = strings.Join(inner, "\n")
 	}
@@ -539,155 +572,156 @@ inner = append(inner, l)
 func splitIntoSentences(text string) []string {
 	text = strings.TrimSpace(text)
 	delimiters := []string{"。", "！", "？", ". ", "! ", "? ", ".\n", "!\n", "?\n"}
-sentences := []string{text}
-for _, delim := range delimiters {
-var newSentences []string
-for _, sent := range sentences {
-parts := strings.Split(sent, delim)
-for _, part := range parts {
-part = strings.TrimSpace(part)
-if len(part) > 0 {
-newSentences = append(newSentences, part)
-}
-}
-}
-sentences = newSentences
-}
-return sentences
+	sentences := []string{text}
+	for _, delim := range delimiters {
+		var newSentences []string
+		for _, sent := range sentences {
+			parts := strings.Split(sent, delim)
+			for _, part := range parts {
+				part = strings.TrimSpace(part)
+				if len(part) > 0 {
+					newSentences = append(newSentences, part)
+				}
+			}
+		}
+		sentences = newSentences
+	}
+	return sentences
 }
 func analyzesentence(sentence string) float64 {
-score := 50.0
-aiIndicators := []string{
-"furthermore", "moreover", "additionally", "consequently",
-"in conclusion", "it is important to note", "it should be noted",
-"it is worth noting", "in today's world", "in recent years",
-"综上所述", "因此", "总而言之", "值得注意的是",
-}
-lowerSent := strings.ToLower(sentence)
-for _, indicator := range aiIndicators {
-if strings.Contains(lowerSent, strings.ToLower(indicator)) {
-score += 10.0
-}
-}
-wordCount := len(strings.Fields(sentence))
-if wordCount >= 15 && wordCount <= 30 {
-score += 5.0
-}
-if score > 100 {
-score = 100
-}
-if score < 0 {
-score = 0
-}
-return score
+	score := 50.0
+	aiIndicators := []string{
+		"furthermore", "moreover", "additionally", "consequently",
+		"in conclusion", "it is important to note", "it should be noted",
+		"it is worth noting", "in today's world", "in recent years",
+		"综上所述", "因此", "总而言之", "值得注意的是",
+	}
+	lowerSent := strings.ToLower(sentence)
+	for _, indicator := range aiIndicators {
+		if strings.Contains(lowerSent, strings.ToLower(indicator)) {
+			score += 10.0
+		}
+	}
+	wordCount := len(strings.Fields(sentence))
+	if wordCount >= 15 && wordCount <= 30 {
+		score += 5.0
+	}
+	if score > 100 {
+		score = 100
+	}
+	if score < 0 {
+		score = 0
+	}
+	return score
 }
 func countWords(text string) int {
-return len(strings.Fields(text))
+	return len(strings.Fields(text))
 }
 func extractTextFromPDF(_ []byte) (string, error) {
-return "", fmt.Errorf("PDF parsing not yet implemented")
+	return "", fmt.Errorf("PDF parsing not yet implemented")
 }
 func extractTextFromDOCX(_ []byte) (string, error) {
-return "", fmt.Errorf("DOCX parsing not yet implemented")
+	return "", fmt.Errorf("DOCX parsing not yet implemented")
 }
 func fetchAndExtractText(url string) (string, error) {
-client := &http.Client{Timeout: 10 * time.Second}
-resp, err := client.Get(url)
-if err != nil {
-return "", fmt.Errorf("failed to fetch URL: %w", err)
-}
-defer resp.Body.Close()
-if resp.StatusCode != http.StatusOK {
-return "", fmt.Errorf("HTTP error: %d", resp.StatusCode)
-}
-body, err := io.ReadAll(resp.Body)
-if err != nil {
-return "", fmt.Errorf("failed to read response: %w", err)
-}
-return extractTextFromHTML(string(body)), nil
+	client := &http.Client{Timeout: 10 * time.Second}
+	resp, err := client.Get(url)
+	if err != nil {
+		return "", fmt.Errorf("failed to fetch URL: %w", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("HTTP error: %d", resp.StatusCode)
+	}
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", fmt.Errorf("failed to read response: %w", err)
+	}
+	return extractTextFromHTML(string(body)), nil
 }
 func extractTextFromHTML(html string) string {
-text := html
-text = removeTagAndContent(text, "script")
-text = removeTagAndContent(text, "style")
-text = removeTagAndContent(text, "nav")
-text = removeTagAndContent(text, "header")
-text = removeTagAndContent(text, "footer")
-text = strings.ReplaceAll(text, "<br>", "\n")
-text = strings.ReplaceAll(text, "<br/>", "\n")
-text = strings.ReplaceAll(text, "</p>", "\n")
-inTag := false
-var result strings.Builder
-for _, char := range text {
-if char == '<' {
-inTag = true
-} else if char == '>' {
-inTag = false
-} else if !inTag {
-result.WriteRune(char)
-}
-}
-cleaned := strings.TrimSpace(result.String())
-for strings.Contains(cleaned, "\n\n\n") {
-cleaned = strings.ReplaceAll(cleaned, "\n\n\n", "\n\n")
-}
-return cleaned
+	text := html
+	text = removeTagAndContent(text, "script")
+	text = removeTagAndContent(text, "style")
+	text = removeTagAndContent(text, "nav")
+	text = removeTagAndContent(text, "header")
+	text = removeTagAndContent(text, "footer")
+	text = strings.ReplaceAll(text, "<br>", "\n")
+	text = strings.ReplaceAll(text, "<br/>", "\n")
+	text = strings.ReplaceAll(text, "</p>", "\n")
+	inTag := false
+	var result strings.Builder
+	for _, char := range text {
+		if char == '<' {
+			inTag = true
+		} else if char == '>' {
+			inTag = false
+		} else if !inTag {
+			result.WriteRune(char)
+		}
+	}
+	cleaned := strings.TrimSpace(result.String())
+	for strings.Contains(cleaned, "\n\n\n") {
+		cleaned = strings.ReplaceAll(cleaned, "\n\n\n", "\n\n")
+	}
+	return cleaned
 }
 func removeTagAndContent(text, tag string) string {
-startTag := "<" + tag
-endTag := "</" + tag + ">"
-for {
-start := strings.Index(strings.ToLower(text), startTag)
-if start == -1 {
-break
+	startTag := "<" + tag
+	endTag := "</" + tag + ">"
+	for {
+		start := strings.Index(strings.ToLower(text), startTag)
+		if start == -1 {
+			break
+		}
+		end := strings.Index(strings.ToLower(text[start:]), endTag)
+		if end == -1 {
+			break
+		}
+		text = text[:start] + text[start+end+len(endTag):]
+	}
+	return text
 }
-end := strings.Index(strings.ToLower(text[start:]), endTag)
-if end == -1 {
-break
-}
-text = text[:start] + text[start+end+len(endTag):]
-}
-return text
-}
+
 // performDetection legacy wrapper
 func performDetection(ctx context.Context, text string) (*DetectionResult, []SentenceAnalysis, DetectionStatistics) {
-return performHeuristicAnalysis(text)
+	return performHeuristicAnalysis(text)
 }
 func performHeuristicAnalysis(text string) (*DetectionResult, []SentenceAnalysis, DetectionStatistics) {
-sentences := splitIntoSentences(text)
-sentenceAnalyses := make([]SentenceAnalysis, 0, len(sentences))
-aiCount := 0
-totalScore := 0.0
-for i, sent := range sentences {
-score := analyzesentence(sent)
-label := "human"
-if score > 80 {
-label = "ai_high"
-aiCount++
-} else if score > 40 {
-label = "ai_medium"
-}
-sentenceAnalyses = append(sentenceAnalyses, SentenceAnalysis{
-Text: sent, Index: i, AIScore: score, Label: label, Confidence: 75.0,
-})
-totalScore += score
-}
-if len(sentences) == 0 {
-return &DetectionResult{}, nil, DetectionStatistics{}
-}
-avgScore := totalScore / float64(len(sentences))
-humanScore := 100.0 - avgScore
-conclusion := "mixed"
-if avgScore > 70 {
-conclusion = "likely_ai"
-} else if avgScore < 30 {
-conclusion = "likely_human"
-}
-return &DetectionResult{
-AIScore: avgScore, HumanScore: humanScore,
-Conclusion: conclusion, Confidence: 75.0, Provider: "heuristic",
-}, sentenceAnalyses, DetectionStatistics{
-TotalWords: countWords(text), TotalSentences: len(sentences),
-AISentences: aiCount, HumanSentences: len(sentences) - aiCount,
-}
+	sentences := splitIntoSentences(text)
+	sentenceAnalyses := make([]SentenceAnalysis, 0, len(sentences))
+	aiCount := 0
+	totalScore := 0.0
+	for i, sent := range sentences {
+		score := analyzesentence(sent)
+		label := "human"
+		if score > 80 {
+			label = "ai_high"
+			aiCount++
+		} else if score > 40 {
+			label = "ai_medium"
+		}
+		sentenceAnalyses = append(sentenceAnalyses, SentenceAnalysis{
+			Text: sent, Index: i, AIScore: score, Label: label, Confidence: 75.0,
+		})
+		totalScore += score
+	}
+	if len(sentences) == 0 {
+		return &DetectionResult{}, nil, DetectionStatistics{}
+	}
+	avgScore := totalScore / float64(len(sentences))
+	humanScore := 100.0 - avgScore
+	conclusion := "mixed"
+	if avgScore > 70 {
+		conclusion = "likely_ai"
+	} else if avgScore < 30 {
+		conclusion = "likely_human"
+	}
+	return &DetectionResult{
+			AIScore: avgScore, HumanScore: humanScore,
+			Conclusion: conclusion, Confidence: 75.0, Provider: "heuristic",
+		}, sentenceAnalyses, DetectionStatistics{
+			TotalWords: countWords(text), TotalSentences: len(sentences),
+			AISentences: aiCount, HumanSentences: len(sentences) - aiCount,
+		}
 }

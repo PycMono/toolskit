@@ -752,25 +752,37 @@
 
   // ─── Theme ───────────────────────────────────────────────
   function toggleTheme() {
+    // Delegate to global applyTheme (defined in base.html) for site-wide theme switching
+    if (typeof window.applyTheme === 'function') {
+      const themes = ['light','dark','forest','ocean','sunset'];
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = current === 'dark' ? 'light' : 'dark'; // simple toggle: light ↔ dark
+      window.applyTheme(next);
+      return;
+    }
+    // Fallback (standalone, no base.html)
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     const newTheme = isDark ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('aid-theme', newTheme);
+    localStorage.setItem('tbn-theme', newTheme);
     const icon = $id('aidThemeIcon');
     if (icon) icon.className = newTheme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-    // Refresh gauge colors if visible
     if (State.detectResult && State.gaugeChart) {
       updateGauge(State.detectResult.score, State.detectResult.verdict);
     }
   }
 
   function initTheme() {
-    const saved = localStorage.getItem('aid-theme')
+    // Read from unified key 'tbn-theme' (set by global applyTheme in base.html)
+    const saved = localStorage.getItem('tbn-theme')
+      || localStorage.getItem('aid-theme')  // migrate legacy key
       || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    if (saved === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      const icon = $id('aidThemeIcon');
-      if (icon) icon.className = 'fa-solid fa-sun';
+    // Sync icon to current theme
+    const icon = $id('aidThemeIcon');
+    if (icon) icon.className = saved === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    // Refresh gauge if already rendered
+    if (State.detectResult && State.gaugeChart) {
+      updateGauge(State.detectResult.score, State.detectResult.verdict);
     }
   }
 

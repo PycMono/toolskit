@@ -38,24 +38,24 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 	r.GET("/sms/history", handlers.SMSHistoryPage)
 
 	// Privacy Check routes
-        privacy := r.Group("/privacy")
-        {
-                privacy.GET("/check", handlers.PrivacyCheckPage)
-        }
+	privacy := r.Group("/privacy")
+	{
+		privacy.GET("/check", handlers.PrivacyCheckPage)
+	}
 
-        // ── Weather Tools ─────────────────────────────────────────────
-        weather := r.Group("/weather")
-        {
-                weather.GET("/query", handlers.WeatherQueryPage)
-        }
-        privacyAPI := r.Group("/api/privacy")
-        {
-                privacyAPI.POST("/check-email", handlers.PrivacyCheckEmail)
-                privacyAPI.GET("/password-range/:prefix", handlers.PrivacyPasswordRange)
-                privacyAPI.GET("/breaches", handlers.PrivacyBreaches)
-                // Proxy breach logos so frontend never directly loads from external sites
-                privacyAPI.GET("/logo/:name", handlers.PrivacyBreachLogo)
-        }
+	// ── Weather Tools ─────────────────────────────────────────────
+	weather := r.Group("/weather")
+	{
+		weather.GET("/query", handlers.WeatherQueryPage)
+	}
+	privacyAPI := r.Group("/api/privacy")
+	{
+		privacyAPI.POST("/check-email", handlers.PrivacyCheckEmail)
+		privacyAPI.GET("/password-range/:prefix", handlers.PrivacyPasswordRange)
+		privacyAPI.GET("/breaches", handlers.PrivacyBreaches)
+		// Proxy breach logos so frontend never directly loads from external sites
+		privacyAPI.GET("/logo/:name", handlers.PrivacyBreachLogo)
+	}
 
 	r.GET("/virtual-address", handlers.VirtualAddressPage)
 	r.GET("/password-generator", handlers.PasswordPage)
@@ -173,20 +173,20 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 		jt.GET("/learn", handlers.JSONLearnHub)
 		jt.GET("/learn/:slug", handlers.JSONLearnArticle)
 	}
-        // AI Lab routes (legacy /ailab/* - kept for backward compat)
-        ailab := r.Group("/ailab")
-        {
-                ailab.GET("/detector", handlers.AIDetectorPage)
-                // Redirect old humanize URL to new spec-compliant URL
-                ailab.GET("/humanize", func(c *gin.Context) {
-                        lang := c.Query("lang")
-                        target := "/ai/humanizer"
-                        if lang != "" {
-                                target += "?lang=" + lang
-                        }
-                        c.Redirect(301, target)
-                })
-        }
+	// AI Lab routes (legacy /ailab/* - kept for backward compat)
+	ailab := r.Group("/ailab")
+	{
+		ailab.GET("/detector", handlers.AIDetectorPage)
+		// Redirect old humanize URL to new spec-compliant URL
+		ailab.GET("/humanize", func(c *gin.Context) {
+			lang := c.Query("lang")
+			target := "/ai/humanizer"
+			if lang != "" {
+				target += "?lang=" + lang
+			}
+			c.Redirect(301, target)
+		})
+	}
 
 	// AI Lab routes (new /ai/* - spec-compliant)
 	ai := r.Group("/ai")
@@ -225,28 +225,28 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 	// ── Color Tools Suite — /color/* ──────────────────────────────
 	color := r.Group("/color")
 	{
-		color.GET("/tools",        handlers.ColorToolsHub)
-		color.GET("/picker",       handlers.ColorPickerPage)
-		color.GET("/palette",      handlers.ColorPalettePage)
-		color.GET("/wheel",        handlers.ColorWheelPage)
-		color.GET("/converter",    handlers.ColorConverterV2Page)
-		color.GET("/contrast",     handlers.ColorContrastPage)
-		color.GET("/gradient",     handlers.ColorGradientPage)
+		color.GET("/tools", handlers.ColorToolsHub)
+		color.GET("/picker", handlers.ColorPickerPage)
+		color.GET("/palette", handlers.ColorPalettePage)
+		color.GET("/wheel", handlers.ColorWheelPage)
+		color.GET("/converter", handlers.ColorConverterV2Page)
+		color.GET("/contrast", handlers.ColorContrastPage)
+		color.GET("/gradient", handlers.ColorGradientPage)
 		color.GET("/image-picker", handlers.ColorImagePickerPage)
-		color.GET("/blindness",    handlers.ColorBlindnessPage)
-		color.GET("/names",        handlers.ColorNamesPage)
-		color.GET("/mixer",        handlers.ColorMixerPage)
-		color.GET("/tailwind",     handlers.ColorTailwindPage)
+		color.GET("/blindness", handlers.ColorBlindnessPage)
+		color.GET("/names", handlers.ColorNamesPage)
+		color.GET("/mixer", handlers.ColorMixerPage)
+		color.GET("/tailwind", handlers.ColorTailwindPage)
 	}
 
 	// Developer Tools Suite — /dev/*
 	dev := r.Group("/dev")
 	{
-		dev.GET("/hash",         handlers.DevHashPage)
-		dev.GET("/base64",       handlers.DevBase64Page)
-		dev.GET("/url-encode",   handlers.DevURLEncodePage)
-		dev.GET("/ip",           handlers.DevIPPage)
-		dev.GET("/whois",        handlers.DevWhoisPage)
+		dev.GET("/hash", handlers.DevHashPage)
+		dev.GET("/base64", handlers.DevBase64Page)
+		dev.GET("/url-encode", handlers.DevURLEncodePage)
+		dev.GET("/ip", handlers.DevIPPage)
+		dev.GET("/whois", handlers.DevWhoisPage)
 		dev.GET("/word-counter", handlers.DevWordCounterPage)
 	}
 

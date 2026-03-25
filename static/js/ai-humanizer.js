@@ -78,10 +78,12 @@ var AIHumanizer = {
 
   // ── Init ──────────────────────────────────────────────────
   init: function() {
-    // Restore theme
-    var savedTheme = localStorage.getItem('ah-theme') || 'dark';
+    // Restore theme — use unified 'tbn-theme' key (migrate legacy 'ah-theme')
+    var savedTheme = localStorage.getItem('tbn-theme')
+      || localStorage.getItem('ah-theme')
+      || 'light';
     STATE.themeMode = savedTheme;
-    document.documentElement.setAttribute('data-theme', savedTheme);
+    // The FOUC script in base.html already set data-theme; just sync the local icon
     var sunIcon  = document.getElementById('ah-icon-sun');
     var moonIcon = document.getElementById('ah-icon-moon');
     if (sunIcon)  sunIcon.style.display  = savedTheme === 'dark' ? '' : 'none';
@@ -374,9 +376,16 @@ var AIHumanizer = {
 
   // ── Theme ────────────────────────────────────────────────
   toggleTheme: function() {
+    // Delegate to global applyTheme (base.html) for site-wide switching
+    if (typeof window.applyTheme === 'function') {
+      var cur = document.documentElement.getAttribute('data-theme') || 'light';
+      window.applyTheme(cur === 'dark' ? 'light' : 'dark');
+      return;
+    }
+    // Fallback: local toggle
     STATE.themeMode = STATE.themeMode === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', STATE.themeMode);
-    localStorage.setItem('ah-theme', STATE.themeMode);
+    localStorage.setItem('tbn-theme', STATE.themeMode);
     var sunIcon  = document.getElementById('ah-icon-sun');
     var moonIcon = document.getElementById('ah-icon-moon');
     if (sunIcon)  sunIcon.style.display  = STATE.themeMode === 'dark' ? '' : 'none';

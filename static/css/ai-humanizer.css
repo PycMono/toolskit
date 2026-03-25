@@ -45,6 +45,68 @@
   --ah-tx3:     #9080c0;
 }
 
+[data-theme="dark"] {
+  --ah-bg:      #0f0e17;
+  --ah-surface: #1a1830;
+  --ah-elevated:#252340;
+  --ah-border:  rgba(255,255,255,0.08);
+  --ah-border-h:rgba(255,255,255,0.16);
+  --ah-tx:      #f0eeff;
+  --ah-tx2:     #a89fd8;
+  --ah-tx3:     #6b63a1;
+}
+
+[data-theme="forest"] {
+  --ah-bg:      #f0fdf4;
+  --ah-surface: #ffffff;
+  --ah-elevated:#dcfce7;
+  --ah-border:  rgba(22,163,74,0.15);
+  --ah-border-h:rgba(22,163,74,0.30);
+  --ah-tx:      #14532d;
+  --ah-tx2:     #166534;
+  --ah-tx3:     #4ade80;
+  --ah-primary:        #16a34a;
+  --ah-primary-light:  #22c55e;
+  --ah-primary-dark:   #15803d;
+  --ah-primary-glow:   rgba(22,163,74,0.18);
+  --ah-primary-border: rgba(22,163,74,0.35);
+  --ah-gradient:       linear-gradient(135deg,#16a34a 0%,#4ade80 100%);
+}
+
+[data-theme="ocean"] {
+  --ah-bg:      #f0f9ff;
+  --ah-surface: #ffffff;
+  --ah-elevated:#e0f2fe;
+  --ah-border:  rgba(2,132,199,0.15);
+  --ah-border-h:rgba(2,132,199,0.30);
+  --ah-tx:      #0c4a6e;
+  --ah-tx2:     #075985;
+  --ah-tx3:     #38bdf8;
+  --ah-primary:        #0284c7;
+  --ah-primary-light:  #38bdf8;
+  --ah-primary-dark:   #0369a1;
+  --ah-primary-glow:   rgba(2,132,199,0.18);
+  --ah-primary-border: rgba(2,132,199,0.35);
+  --ah-gradient:       linear-gradient(135deg,#0284c7 0%,#38bdf8 100%);
+}
+
+[data-theme="sunset"] {
+  --ah-bg:      #fff7ed;
+  --ah-surface: #ffffff;
+  --ah-elevated:#ffedd5;
+  --ah-border:  rgba(234,88,12,0.15);
+  --ah-border-h:rgba(234,88,12,0.30);
+  --ah-tx:      #7c2d12;
+  --ah-tx2:     #9a3412;
+  --ah-tx3:     #fb923c;
+  --ah-primary:        #ea580c;
+  --ah-primary-light:  #f97316;
+  --ah-primary-dark:   #c2410c;
+  --ah-primary-glow:   rgba(234,88,12,0.18);
+  --ah-primary-border: rgba(234,88,12,0.35);
+  --ah-gradient:       linear-gradient(135deg,#ea580c 0%,#f97316 100%);
+}
+
 /* ── Base ──────────────────────────────────────────────────── */
 .page-ai-humanizer { background: var(--ah-bg); color: var(--ah-tx); }
 .page-ai-humanizer .main-content { background: var(--ah-bg); }
@@ -52,7 +114,7 @@
 
 /* ── Hero ──────────────────────────────────────────────────── */
 .ah-hero {
-  background: linear-gradient(160deg,#0f0a1e 0%,#1a1035 50%,#0d1b2a 100%);
+  background: linear-gradient(160deg, var(--ah-bg) 0%, var(--ah-elevated, #1a1035) 50%, var(--ah-bg) 100%);
   position: relative; overflow: hidden;
   padding: 72px 0 52px;
 }
