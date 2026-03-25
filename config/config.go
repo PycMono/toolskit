@@ -19,6 +19,10 @@ type Config struct {
 	GAMeasurementID string `json:"ga_measurement_id" default:"" env:"GA_MEASUREMENT_ID"`
 	EnableGA        bool   `json:"enable_ga"         default:"true" env:"ENABLE_GA"`
 
+	// Cookie Consent (GDPR / CCPA)
+	ConsentCookieName string `json:"consent_cookie_name" default:"cky_consent"     env:"CONSENT_COOKIE_NAME"`
+	Domain            string `json:"domain"              default:"toolboxnova.com" env:"DOMAIN"`
+
 	// AI
 	AI AIConfig `json:"ai"`
 }

@@ -642,6 +642,8 @@
   "img.compress.options.format.jpg": "JPGに変換",
   "img.compress.options.format.png": "PNGに変換",
   "img.compress.options.format.webp": "WebPに変換",
+  "img.compress.options.format.gif": "GIFに変換",
+  "img.compress.options.format.bmp": "BMPに変換",
   "img.compress.options.maxwidth.label": "最大幅（任意）",
   "img.compress.options.maxwidth.hint": "空欄の場合はリサイズなし、入力すると画像幅がこの値を超えません",
   "img.compress.download.all": "すべてをまとめてダウンロード",
@@ -1744,5 +1746,28 @@
   "aid.ed.h6": "ファイル・URL検出",
   "aid.ed.p6": "PDF/DOCX/TXTファイルのアップロードやURL入力でも検出可能。最大15,000文字まで無料対応。",
 
-  "aid.action.goto_humanizer": "このテキストを人間化 →"
+  "aid.action.goto_humanizer": "このテキストを人間化 →",
+
+  "consent.banner.title": "プライバシーを大切に",
+  "consent.banner.desc": "当サイトはCookieを使用して、利用体験の向上、トラフィック分析、広告配信を行っています。許可するCookieを選択できます。",
+  "consent.banner.learnmore": "詳細を見る",
+
+  "consent.btn.accept_all": "すべて承認",
+  "consent.btn.reject_all": "すべて拒否",
+  "consent.btn.customize": "設定を管理",
+  "consent.btn.save": "設定を保存",
+  "consent.btn.close": "閉じる",
+
+  "consent.modal.title": "Cookie設定",
+  "consent.modal.desc": "許可するCookieを選択してください。設定は1年間保存されます。",
+
+  "consent.category.always_active": "常に有効",
+  "consent.category.necessary.name": "必須",
+  "consent.category.necessary.desc": "サイトの基本機能に必要で、無効にできません。",
+  "consent.category.analytics.name": "分析",
+  "consent.category.analytics.desc": "訪問者がサイトをどのように利用しているかを把握するために使用します（Google Analytics）。",
+  "consent.category.ads.name": "広告",
+  "consent.category.ads.desc": "関連する広告の表示と広告効果の測定に使用します（Google Ads）。",
+
+  "consent.toast.saved": "設定を保存しました"
 }

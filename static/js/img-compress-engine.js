@@ -27,29 +27,25 @@ const IC_CONCURRENCY = 4; // 并发压缩数
    文件入口：校验 + 去重 + 入队
 ═══════════════════════════════════════════════ */
 function addFiles(fileList) {
-  const allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+  const allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif', 'image/bmp'];
   let added = 0;
 
   for (const file of Array.from(fileList)) {
     // 数量上限
     if (ICState.files.length >= IC_MAX_FILES) {
-      showToast(`最多同时处理 ${IC_MAX_FILES} 张图片`, 'error');
+      showToast(`Max ${IC_MAX_FILES} images at once`, 'error');
       break;
     }
 
-    // 格式检查
+    // Format check
     if (!allowed.includes(file.type)) {
-      if (file.type === 'image/gif') {
-        showToast(`${file.name}：暂不支持 GIF，请转为 PNG 后上传`, 'error');
-      } else {
-        showToast(`${file.name}：不支持的格式`, 'error');
-      }
+      showToast(`${file.name}: unsupported format`, 'error');
       continue;
     }
 
-    // 大小检查
+    // Size check
     if (file.size > IC_MAX_SIZE_MB * 1024 * 1024) {
-      showToast(`${file.name} 超过 ${IC_MAX_SIZE_MB}MB 限制`, 'error');
+      showToast(`${file.name} exceeds ${IC_MAX_SIZE_MB}MB limit`, 'error');
       continue;
     }
 
@@ -75,7 +71,22 @@ async function startCompress() {
 
   // 读取当前选项
   ICState.quality      = parseInt(document.getElementById('qualitySlider')?.value || 80);
-  ICState.outputFormat = document.querySelector('input[name="outputFormat"]:checked')?.value || 'original';
+  // Support both radio buttons and <select id="outputFormat">
+  var _radioFmt = document.querySelector('input[name="outputFormat"]:checked');
+  var _selectFmt = document.getElementById('outputFormat');
+  if (_radioFmt) {
+    ICState.outputFormat = _radioFmt.value || 'original';
+  } else if (_selectFmt) {
+    var _sv = _selectFmt.value;
+    ICState.outputFormat =
+      _sv === 'auto'  ? 'original'   :
+      _sv === 'jpg'   ? 'image/jpeg' :
+      _sv === 'png'   ? 'image/png'  :
+      _sv === 'webp'  ? 'image/webp' :
+      _sv === 'gif'   ? 'image/gif'  :
+      _sv === 'bmp'   ? 'image/bmp'  : 'original';
+  }
+  // else: keep whatever was already set in ICState.outputFormat
   ICState.maxWidth     = parseInt(document.getElementById('maxWidth')?.value) || null;
 
   // 找出尚未压缩的文件
@@ -85,7 +96,7 @@ async function startCompress() {
 
   if (pending.length === 0) {
     ICState.isRunning = false;
-    showToast('所有文件已处理完成', 'success');
+    showToast('All files already processed', 'success');
     return;
   }
 
@@ -98,9 +109,11 @@ async function startCompress() {
     upsertResultCard({
       id:       file._icId,
       name:     file.name,
+      origName: file.name,
       origSize: file.size,
       origType: file.type,
       status:   'compressing',
+      origUrl:  URL.createObjectURL(file),
     });
   }
 
@@ -111,7 +124,7 @@ async function startCompress() {
       ICState.results.push(result);
       upsertResultCard(result);
     } catch (err) {
-      console.error('压缩失败:', file.name, err);
+      console.error('Compression failed:', file.name, err);
       upsertResultCard({
         id:       file._icId,
         name:     file.name,
@@ -126,29 +139,33 @@ async function startCompress() {
   ICState.isRunning = false;
   setCompressBtnState('idle');
   updateSummaryStats();
-  showToast(`成功压缩 ${ICState.results.filter(r => r.status === 'done').length} 张图片`, 'success');
+  showToast(`Compressed ${ICState.results.filter(r => r.status === 'done').length} image(s) successfully`, 'success');
 }
 
 /* ═══════════════════════════════════════════════
    单张图片压缩核心
 ═══════════════════════════════════════════════ */
 async function compressOne(file) {
-  const quality      = ICState.quality / 100;          // 0.0~1.0
+  const quality      = ICState.quality / 100;
   const outputFormat = ICState.outputFormat;
   const maxWidth     = ICState.maxWidth;
 
-  // 确定最终输出 MIME
+  // Determine final output MIME
   let targetMime = file.type;
   if (outputFormat !== 'original') targetMime = outputFormat;
 
-  // PNG 有损压缩仍用 JPEG 引擎，除非用户显式选 PNG
+  // Normalise: browsers may not support image/bmp toBlob → convert to jpeg
+  if (targetMime === 'image/bmp') targetMime = 'image/jpeg';
+  // GIF: canvas only renders first frame → treat as jpeg unless target is explicitly gif
+  // If file is gif and target is gif (keep original), convert to png to avoid blank output
+  if (targetMime === 'image/gif') targetMime = 'image/png';
+
+  // Use browser-image-compression for PNG-to-PNG (lossy)
   if (targetMime === 'image/png' && outputFormat === 'original' && quality < 0.85) {
-    // 保持 PNG 格式时使用 browser-image-compression（支持 PNG 有损）
     return await compressPNG(file, quality, maxWidth, targetMime);
-  } else {
-    // JPEG / WebP / 格式转换 → 用 Canvas
-    return await compressViaCanvas(file, quality, maxWidth, targetMime);
   }
+  // All other cases: Canvas
+  return await compressViaCanvas(file, quality, maxWidth, targetMime);
 }
 
 /* ── Canvas 压缩（JPEG / WebP / 格式转换）──── */
@@ -185,7 +202,7 @@ async function compressViaCanvas(file, quality, maxWidth, targetMime) {
       // 导出为目标格式
       const q = targetMime === 'image/png' ? undefined : quality;
       canvas.toBlob(blob => {
-        if (!blob) { reject(new Error('Canvas toBlob 失败')); return; }
+        if (!blob) { reject(new Error('Canvas toBlob failed')); return; }
 
         const ext     = mimeToExt(targetMime);
         const outName = replaceExt(file.name, ext);
@@ -212,7 +229,7 @@ async function compressViaCanvas(file, quality, maxWidth, targetMime) {
 
     img.onerror = () => {
       URL.revokeObjectURL(url);
-      reject(new Error('图片加载失败，文件可能已损坏'));
+      reject(new Error('Image load failed — file may be corrupt'));
     };
 
     img.src = url;
@@ -222,7 +239,7 @@ async function compressViaCanvas(file, quality, maxWidth, targetMime) {
 /* ── browser-image-compression（PNG 有损）─── */
 async function compressPNG(file, quality, maxWidth, targetMime) {
   if (typeof imageCompression === 'undefined') {
-    console.warn('browser-image-compression 未加载，降级使用 Canvas');
+    console.warn('browser-image-compression not loaded — falling back to Canvas');
     return await compressViaCanvas(file, quality, maxWidth, targetMime);
   }
 
@@ -311,19 +328,19 @@ function downloadOne(id) {
 async function downloadAll() {
   const doneResults = ICState.results.filter(r => r.status === 'done' && r.outputBlob);
   if (doneResults.length === 0) {
-    showToast('没有可下载的文件', 'info');
+    showToast('No compressed images to download', 'info');
     return;
   }
 
   if (typeof JSZip === 'undefined') {
-    showToast('JSZip 未加载，无法打包下载', 'error');
+    showToast('JSZip not loaded — cannot create ZIP', 'error');
     return;
   }
 
   const btn = document.getElementById('downloadAllBtn');
   if (btn) {
     btn.disabled = true;
-    btn.textContent = '打包中...';
+    btn.textContent = 'Packing…';
   }
 
   try {
@@ -337,7 +354,7 @@ async function downloadAll() {
     const zipBlob = await zip.generateAsync({
       type:               'blob',
       compression:        'DEFLATE',
-      compressionOptions: { level: 1 }, // 图片已压缩，ZIP 只做打包
+      compressionOptions: { level: 1 },
     });
 
     const timestamp = new Date().toISOString().slice(0, 10);
@@ -346,7 +363,6 @@ async function downloadAll() {
     if (typeof saveAs !== 'undefined') {
       saveAs(zipBlob, zipName);
     } else {
-      // Fallback
       const url = URL.createObjectURL(zipBlob);
       const a = document.createElement('a');
       a.href = url;
@@ -357,14 +373,14 @@ async function downloadAll() {
       URL.revokeObjectURL(url);
     }
 
-    showToast(`已打包 ${doneResults.length} 张图片`, 'success');
+    showToast(`Downloaded ${doneResults.length} image(s) as ZIP`, 'success');
   } catch (err) {
-    console.error('打包失败:', err);
-    showToast('打包失败：' + err.message, 'error');
+    console.error('ZIP error:', err);
+    showToast('ZIP failed: ' + err.message, 'error');
   } finally {
     if (btn) {
       btn.disabled = false;
-      btn.textContent = '⬇ 打包下载全部';
+      btn.textContent = '⬇ Download All (ZIP)';
     }
   }
 }
@@ -373,7 +389,7 @@ async function downloadAll() {
    清空全部状态
 ═══════════════════════════════════════════════ */
 function clearAll() {
-  // 释放 ObjectURL 防内存泄漏
+  // Release ObjectURLs to prevent memory leaks
   for (const r of ICState.results) {
     if (r.previewUrl) URL.revokeObjectURL(r.previewUrl);
     if (r.origUrl)    URL.revokeObjectURL(r.origUrl);
@@ -382,15 +398,16 @@ function clearAll() {
   ICState.files   = [];
   ICState.results = [];
 
-  document.getElementById('resultsList').innerHTML = '';
+  const list = document.getElementById('resultsList');
+  if (list) list.innerHTML = '';
   const resultsSection = document.getElementById('resultsSection');
   if (resultsSection) resultsSection.style.display = 'none';
 
-  const optionsPanel = document.getElementById('optionsPanel');
-  if (optionsPanel) optionsPanel.style.display = 'none';
+  const optsBar = document.getElementById('optsBar');
+  if (optsBar) optsBar.style.display = 'none';
 
   setCompressBtnState('idle');
-  showToast('已清空全部文件', 'info');
+  showToast('Cleared all images', 'info');
 }
 
 /* ═══════════════════════════════════════════════
@@ -401,6 +418,8 @@ function mimeToExt(mime) {
     'image/jpeg': 'jpg',
     'image/png':  'png',
     'image/webp': 'webp',
+    'image/gif':  'gif',
+    'image/bmp':  'bmp',
   };
   return map[mime] || 'jpg';
 }
@@ -424,11 +443,11 @@ function setCompressBtnState(state) {
   if (!btn) return;
 
   if (state === 'running') {
-    btn.disabled    = true;
-    text.textContent = '压缩中...';
+    btn.disabled     = true;
+    if (text) text.textContent = 'Compressing…';
   } else {
-    btn.disabled    = false;
-    text.textContent = '开始压缩';
+    btn.disabled     = false;
+    if (text) text.textContent = 'Compress';
   }
 }
 
@@ -442,25 +461,14 @@ function updateSummaryStats() {
   const headerEl = document.getElementById('resultsHeader');
   if (!headerEl) return;
 
+  if (done.length === 0) { headerEl.innerHTML = ''; return; }
+
   headerEl.innerHTML = `
-    <div class="ic-stat">
-      <span class="ic-stat__label">已处理</span>
-      <span class="ic-stat__value">${done.length} 张</span>
-    </div>
-    <div class="ic-stat">
-      <span class="ic-stat__label">原始大小</span>
-      <span class="ic-stat__value">${formatFileSize(totalOrig)}</span>
-    </div>
-    <div class="ic-stat">
-      <span class="ic-stat__label">压缩后</span>
-      <span class="ic-stat__value">${formatFileSize(totalOut)}</span>
-    </div>
-    <div class="ic-stat">
-      <span class="ic-stat__label">共节省</span>
-      <span class="ic-stat__value ic-stat__value--green">
-        ${formatFileSize(totalOrig - totalOut)} (-${savedPct}%)
-      </span>
-    </div>
+    <span class="ic-results-stat">${done.length} image${done.length !== 1 ? 's' : ''} compressed</span>
+    <span style="color:#94a3b8">·</span>
+    <span>${formatFileSize(totalOrig)} → <strong>${formatFileSize(totalOut)}</strong></span>
+    <span style="color:#94a3b8">·</span>
+    <span class="ic-savings-badge">-${savedPct}%</span>
   `;
 }
 

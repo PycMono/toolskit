@@ -11,8 +11,14 @@ import (
 )
 
 func Setup(r *gin.Engine, cfg *config.Config) {
-	// Apply i18n + Ads + GA middleware globally
+	// Apply i18n + Consent + Ads + GA middleware globally
+	// Order is important: I18n → Consent → Ads → GA
 	r.Use(middleware.I18nMiddleware())
+	r.Use(middleware.ConsentMiddleware(middleware.ConsentConfig{
+		CookieName:   cfg.ConsentCookieName,
+		CookieMaxAge: 365 * 24 * 3600,
+		Domain:       cfg.Domain,
+	}))
 	r.Use(middleware.AdsConfig(cfg))
 	r.Use(middleware.GAConfig(cfg))
 

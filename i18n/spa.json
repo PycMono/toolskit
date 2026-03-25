@@ -634,6 +634,8 @@
   "img.compress.options.format.jpg": "Convertir a JPG",
   "img.compress.options.format.png": "Convertir a PNG",
   "img.compress.options.format.webp": "Convertir a WebP",
+  "img.compress.options.format.gif": "Convertir a GIF",
+  "img.compress.options.format.bmp": "Convertir a BMP",
   "img.compress.options.maxwidth.label": "Ancho máximo (opcional)",
   "img.compress.options.maxwidth.hint": "Déjalo vacío para no escalar. Si se rellena, el ancho de la imagen no superará este valor.",
   "img.compress.download.all": "Descargar todo (ZIP)",
@@ -1744,5 +1746,28 @@
   "aid.ed.h6": "Detección de archivos y URL",
   "aid.ed.p6": "Sube archivos PDF/DOCX/TXT o introduce una URL. Hasta 15,000 caracteres gratis.",
 
-  "aid.action.goto_humanizer": "Humanizar Este Texto →"
+  "aid.action.goto_humanizer": "Humanizar Este Texto →",
+
+  "consent.banner.title": "Valoramos tu privacidad",
+  "consent.banner.desc": "Utilizamos cookies para mejorar tu experiencia, analizar el tráfico y mostrar anuncios relevantes. Puedes elegir qué cookies permitir.",
+  "consent.banner.learnmore": "Más información",
+
+  "consent.btn.accept_all": "Aceptar todo",
+  "consent.btn.reject_all": "Rechazar todo",
+  "consent.btn.customize": "Gestionar preferencias",
+  "consent.btn.save": "Guardar preferencias",
+  "consent.btn.close": "Cerrar",
+
+  "consent.modal.title": "Preferencias de cookies",
+  "consent.modal.desc": "Elige qué cookies permites. Tu elección se guardará durante 1 año.",
+
+  "consent.category.always_active": "Siempre activo",
+  "consent.category.necessary.name": "Necesarias",
+  "consent.category.necessary.desc": "Esenciales para el funcionamiento del sitio web. No se pueden desactivar.",
+  "consent.category.analytics.name": "Analítica",
+  "consent.category.analytics.desc": "Nos ayudan a entender cómo los visitantes interactúan con el sitio (Google Analytics).",
+  "consent.category.ads.name": "Publicidad",
+  "consent.category.ads.desc": "Se usan para mostrar anuncios relevantes y medir su rendimiento (Google Ads).",
+
+  "consent.toast.saved": "Preferencias guardadas"
 }

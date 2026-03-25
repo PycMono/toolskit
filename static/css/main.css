@@ -253,7 +253,6 @@ a { color: var(--t-primary); }
   box-shadow: var(--shadow-lg); z-index: 9999;
   overflow: hidden;
 }
-.lang-switcher:hover .lang-dropdown,
 .lang-switcher.open .lang-dropdown { display: block; }
 .lang-opt {
   display: block; padding: 10px 16px;
@@ -2320,3 +2319,168 @@ mark.rx-match { border-radius:2px; padding:0 1px; }
 .ad-slot[data-size="320x50"]  .ad-placeholder { height: 50px;  max-width: 320px; }
 .ad-slot[data-size="300x250"] .ad-placeholder { height: 250px; max-width: 300px; }
 .ad-slot[data-size="160x600"] .ad-placeholder { height: 600px; max-width: 160px; }
+
+/* ══════════════════════════════════════════════════
+   Global Theme Overrides
+   Force all cards, panels and inputs to respect theme
+   tokens regardless of which tool CSS file they come from.
+══════════════════════════════════════════════════ */
+
+/* Dark / non-light themes: override hardcoded white backgrounds on common UI primitives */
+[data-theme="dark"] body,
+[data-theme="dark"] .main-content { background: var(--t-bg); color: var(--t-text); }
+
+[data-theme="dark"] .card,
+[data-theme="dark"] .status-card,
+[data-theme="dark"] .json-dual-box,
+[data-theme="dark"] .json-editor-area,
+[data-theme="dark"] .number-card,
+[data-theme="dark"] .message-card,
+[data-theme="dark"] .phone-info-bar,
+[data-theme="dark"] .tool-card,
+[data-theme="dark"] .feature-item,
+[data-theme="dark"] .code-editor { background: var(--t-surface); border-color: var(--t-border); color: var(--t-text); }
+
+[data-theme="dark"] .code-editor { background: #0f172a; color: #e2e8f0; }
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .form-input,
+[data-theme="dark"] .dual-textarea,
+[data-theme="dark"] .url-input { background: var(--t-surface); border-color: var(--t-border); color: var(--t-text); }
+
+[data-theme="dark"] .tab-item { color: var(--t-text2); }
+[data-theme="dark"] .tab-item:hover { background: var(--t-bg); color: var(--t-primary); }
+[data-theme="dark"] .tool-tabs-wrapper { background: var(--t-surface); border-color: var(--t-border); }
+[data-theme="dark"] .dropdown-menu { background: var(--t-surface); border-color: var(--t-border); }
+[data-theme="dark"] .dropdown-item { color: var(--t-text2); }
+[data-theme="dark"] .dropdown-item:hover { background: var(--t-bg); color: var(--t-text); }
+
+/* Forest / Ocean / Sunset: apply same surface overrides */
+[data-theme="forest"] body,
+[data-theme="ocean"]  body,
+[data-theme="sunset"] body { background: var(--t-bg); color: var(--t-text); }
+
+[data-theme="forest"] .card,
+[data-theme="ocean"]  .card,
+[data-theme="sunset"] .card,
+[data-theme="forest"] .tool-card,
+[data-theme="ocean"]  .tool-card,
+[data-theme="sunset"] .tool-card { border-color: var(--t-border); }
+
+[data-theme="forest"] .form-select,
+[data-theme="forest"] .form-input,
+[data-theme="ocean"]  .form-select,
+[data-theme="ocean"]  .form-input,
+[data-theme="sunset"] .form-select,
+[data-theme="sunset"] .form-input { border-color: var(--t-border); color: var(--t-text); }
+
+/* Nav / Footer always respect theme */
+.navbar { background: var(--t-nav-bg) !important; border-color: var(--t-border) !important; }
+.site-footer { background: var(--t-footer-bg) !important; color: var(--t-footer-tx) !important; }
+.site-footer a { color: var(--t-footer-tx) !important; }
+.site-footer h4,
+.site-footer .footer-desc,
+.site-footer .footer-tag { color: var(--t-footer-tx) !important; }
+
+/* ── Override tool-scoped CSS variable namespaces for non-light themes ── */
+/* Each tool defines its own :root variables (--ir-*, --im-*, etc.).
+   We override them at [data-theme] level so they cascade into the tool pages. */
+
+[data-theme="dark"] {
+  /* img-resize */
+  --ir-bg:         #0f172a;
+  --ir-surface:    #1e293b;
+  --ir-border:     #334155;
+  --ir-text:       #f1f5f9;
+  --ir-text-muted: #94a3b8;
+  --ir-blue-light: #1e3a5f;
+  /* img-metadata */
+  --im-bg:         #0f172a;
+  --im-surface:    #1e293b;
+  --im-border:     #334155;
+  --im-text:       #f1f5f9;
+  --im-text-muted: #94a3b8;
+  --im-amber-light:#451a03;
+  --im-amber-mid:  #3d1a0a;
+  /* img-toolbox */
+  --itb-bg:             #0f172a;
+  --itb-surface:        #1e293b;
+  --itb-border:         #334155;
+  --itb-text-primary:   #f1f5f9;
+  --itb-text-secondary: #94a3b8;
+  --itb-text-muted:     #475569;
+  --itb-primary-bg:     rgba(255,107,53,.12);
+  /* media-qr */
+  --qr-bg:         #0f172a;
+  --qr-surface:    #1e293b;
+  --qr-border:     #334155;
+  /* json tools */
+  --jt-bg:         #0f172a;
+  --jt-surface:    #1e293b;
+  --jt-border:     #334155;
+}
+
+[data-theme="forest"] {
+  --ir-bg:         #f0fdf4;
+  --ir-surface:    #ffffff;
+  --ir-border:     #bbf7d0;
+  --ir-text:       #14532d;
+  --ir-text-muted: #166534;
+  --im-bg:         #f0fdf4;
+  --im-surface:    #ffffff;
+  --im-border:     #bbf7d0;
+  --im-text:       #14532d;
+  --im-text-muted: #166534;
+}
+
+[data-theme="ocean"] {
+  --ir-bg:         #f0f9ff;
+  --ir-surface:    #ffffff;
+  --ir-border:     #bae6fd;
+  --ir-text:       #0c4a6e;
+  --ir-text-muted: #075985;
+  --im-bg:         #f0f9ff;
+  --im-surface:    #ffffff;
+  --im-border:     #bae6fd;
+  --im-text:       #0c4a6e;
+  --im-text-muted: #075985;
+}
+
+[data-theme="sunset"] {
+  --ir-bg:         #fff7ed;
+  --ir-surface:    #ffffff;
+  --ir-border:     #fed7aa;
+  --ir-text:       #7c2d12;
+  --ir-text-muted: #9a3412;
+  --im-bg:         #fff7ed;
+  --im-surface:    #ffffff;
+  --im-border:     #fed7aa;
+  --im-text:       #7c2d12;
+  --im-text-muted: #9a3412;
+}
+
+/* Dark theme: additional element-level fixes for tool pages */
+[data-theme="dark"] .img-resize-page,
+[data-theme="dark"] .img-metadata-page,
+[data-theme="dark"] .page-img-compress { background: var(--t-bg) !important; color: var(--t-text) !important; }
+
+[data-theme="dark"] .ir-upload-zone,
+[data-theme="dark"] .ir-result-card,
+[data-theme="dark"] .ir-settings-panel,
+[data-theme="dark"] .ir-stat-box { background: var(--t-surface) !important; border-color: var(--t-border) !important; color: var(--t-text) !important; }
+
+[data-theme="dark"] .im-card,
+[data-theme="dark"] .im-section,
+[data-theme="dark"] .im-upload-zone { background: var(--t-surface) !important; border-color: var(--t-border) !important; }
+
+[data-theme="dark"] .itb-upload-zone,
+[data-theme="dark"] .itb-card,
+[data-theme="dark"] .itb-panel,
+[data-theme="dark"] .itb-settings { background: var(--t-surface) !important; border-color: var(--t-border) !important; color: var(--t-text) !important; }
+
+[data-theme="dark"] .ic-page { background: var(--t-bg) !important; }
+[data-theme="dark"] .ic-opts-inner { background: var(--t-surface) !important; border-color: var(--t-border) !important; }
+[data-theme="dark"] .ic-faq-item,
+[data-theme="dark"] .ic-format-card { background: var(--t-surface) !important; border-color: var(--t-border) !important; }
+[data-theme="dark"] .ic-section--alt { background: var(--t-bg) !important; }
+
+

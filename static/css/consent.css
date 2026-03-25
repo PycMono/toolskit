@@ -1,0 +1,373 @@
+/* ================================================================
+   consent.css — Cookie Consent Banner + Modal + Toast
+   Follows site CSS-variable conventions (--color-primary, etc.)
+   ================================================================ */
+
+:root {
+  --cky-primary:        var(--color-primary, #1a9b6c);
+  --cky-primary-hover:  #158a5e;
+  --cky-bg:             #1e1e2e;
+  --cky-text:           #f0f0f0;
+  --cky-text-muted:     #a0a0b0;
+  --cky-border:         rgba(255, 255, 255, 0.12);
+  --cky-radius-sm:      8px;
+  --cky-radius-md:      14px;
+  --cky-shadow-banner:  0 -4px 24px rgba(0, 0, 0, 0.35);
+  --cky-shadow-modal:   0 8px 48px rgba(0, 0, 0, 0.55);
+  --cky-toggle-w:       44px;
+  --cky-toggle-h:       24px;
+  --cky-toggle-off:     #4a4a5a;
+  --cky-toggle-on:      var(--cky-primary);
+  --cky-z-banner:       9000;
+  --cky-z-modal:        9001;
+  --cky-z-toast:        9002;
+}
+
+/* ── Banner ──────────────────────────────────────────────────── */
+.cky-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--cky-z-banner);
+  background: var(--cky-bg);
+  border-top: 1px solid var(--cky-border);
+  box-shadow: var(--cky-shadow-banner);
+  animation: cky-slide-up 0.3s ease-out;
+}
+
+@keyframes cky-slide-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.cky-banner__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.cky-banner__content {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.cky-banner__title {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--cky-text);
+}
+
+.cky-banner__desc {
+  margin: 0;
+  font-size: 13px;
+  color: var(--cky-text-muted);
+  line-height: 1.5;
+}
+
+.cky-banner__link {
+  color: var(--cky-primary);
+  text-decoration: underline;
+  margin-left: 4px;
+}
+
+.cky-banner__actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ── Buttons ──────────────────────────────────────────────────── */
+.cky-btn {
+  padding: 9px 18px;
+  border-radius: var(--cky-radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  white-space: nowrap;
+  line-height: 1.4;
+  border: 2px solid transparent;
+}
+
+.cky-btn--primary {
+  background: var(--cky-primary);
+  color: #fff;
+  border-color: var(--cky-primary);
+}
+.cky-btn--primary:hover {
+  background: var(--cky-primary-hover);
+  border-color: var(--cky-primary-hover);
+}
+
+.cky-btn--ghost {
+  background: transparent;
+  color: var(--cky-text);
+  border-color: var(--cky-border);
+}
+.cky-btn--ghost:hover {
+  border-color: var(--cky-text-muted);
+}
+
+/* ── Modal ───────────────────────────────────────────────────── */
+.cky-modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--cky-z-modal);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+@media (min-width: 640px) {
+  .cky-modal { align-items: center; }
+}
+
+.cky-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.cky-modal__box {
+  position: relative;
+  background: var(--cky-bg);
+  border-radius: var(--cky-radius-md) var(--cky-radius-md) 0 0;
+  box-shadow: var(--cky-shadow-modal);
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+@media (min-width: 640px) {
+  .cky-modal__box {
+    border-radius: var(--cky-radius-md);
+  }
+}
+
+.cky-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.cky-modal__title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--cky-text);
+}
+
+.cky-modal__close {
+  background: none;
+  border: none;
+  color: var(--cky-text-muted);
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+.cky-modal__close:hover { color: var(--cky-text); }
+
+.cky-modal__desc {
+  margin: 0 0 18px;
+  font-size: 13px;
+  color: var(--cky-text-muted);
+  line-height: 1.5;
+}
+
+.cky-modal__categories {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  border: 1px solid var(--cky-border);
+  border-radius: var(--cky-radius-sm);
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.cky-category {
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+.cky-category + .cky-category {
+  border-top: 1px solid var(--cky-border);
+}
+
+.cky-category__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cky-category__info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cky-category__name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cky-text);
+}
+
+.cky-category__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 20px;
+}
+
+.cky-category__badge--locked {
+  background: rgba(26, 155, 108, 0.2);
+  color: var(--cky-primary);
+}
+
+.cky-category__desc {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--cky-text-muted);
+  line-height: 1.5;
+}
+
+/* ── Toggle Switch ───────────────────────────────────────────── */
+.cky-toggle {
+  display: inline-block;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.cky-toggle__input {
+  display: none;
+}
+
+.cky-toggle__track {
+  width: var(--cky-toggle-w);
+  height: var(--cky-toggle-h);
+  background: var(--cky-toggle-off);
+  border-radius: 999px;
+  position: relative;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.cky-toggle__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: calc(var(--cky-toggle-h) - 4px);
+  height: calc(var(--cky-toggle-h) - 4px);
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.cky-toggle__input:checked + .cky-toggle__track {
+  background: var(--cky-toggle-on);
+}
+
+.cky-toggle__input:checked + .cky-toggle__track .cky-toggle__thumb {
+  transform: translateX(calc(var(--cky-toggle-w) - var(--cky-toggle-h)));
+}
+
+.cky-toggle--locked {
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+.cky-toggle--locked .cky-toggle__track {
+  cursor: not-allowed;
+}
+
+/* locked toggle is always on */
+.cky-toggle__track--on {
+  background: var(--cky-toggle-on) !important;
+}
+
+/* ── Modal Footer ────────────────────────────────────────────── */
+.cky-modal__footer {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+/* ── Toast ───────────────────────────────────────────────────── */
+.cky-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: var(--cky-z-toast);
+  background: var(--cky-primary);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: var(--cky-radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+}
+
+.cky-toast--show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 639px) {
+  .cky-banner__inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .cky-banner__actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cky-btn {
+    width: 100%;
+    text-align: center;
+    padding: 11px 16px;
+  }
+
+  .cky-toast {
+    bottom: 12px;
+    right: 12px;
+    left: 12px;
+    justify-content: center;
+  }
+}
+
+/* ── Body scroll lock when modal is open ─────────────────────── */
+body.cky-modal-open {
+  overflow: hidden;
+}
+

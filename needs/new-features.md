@@ -1,38 +1,23 @@
+下面几个问题需要调整
+
 ## 问题一
-
-"enable_ads": false，才展示广告占位符，如果"enable_ads": true,不展示广告占位符，展示真的广告位。占位符样式为灰色背景，白色边框，居中显示文字"广告位"，尺寸与真实广告位一致。如果没审核通过没有拿到真实的广告就不展示。
-
+·在线图片压缩工具要支持国际化，中、英、日、韩、西班牙语。需要修复
 
 ## 问题二
-
-主题的切换在网站的最左下角，太不显眼了，一般情况下用户很难发现这个功能，建议将主题切换按钮放在网站的顶部导航栏中，靠近语言切换的位置，这样用户更容易找到和使用这个功能。同时，确保主题切换按钮的设计与整体风格一致，使用明显的图标或文字提示来增强可见性（可以参考改成圆形，下拉选择，切换后展示对应的图标）。
-
-另外在现有的基础上增加dark和light模式
+·在线图片压缩工具功能丢失了，主要是上传图片压缩后，没有选择jpg、png、webp、gif、bmp格式了，需要修复
 
 ## 问题三
+·在线图片压缩工具功能丢失了，上传图片后把整个大图展示出来了，以前是一列，左边展示的是缩率图，紧接着是名称，名称下面展示的格式，右边是压缩后的大小，压缩百分比等，你参考下https://tinypng.com/，
 
-AI 路由规划有点乱，希望统一下，现在的路由如下，希望吧路由统一，另外AI相关不要的代码删除，保留使用的代码，谨慎调整。
+## 问题四
+上传图片压缩后，download、remove按钮太丑了，整个非常长。需要优化一下样式，参考https://tinypng.com/的设计
 
-```txt
-// AI Lab routes (legacy /ailab/* - kept for backward compat)
-	ailab := r.Group("/ailab")
-	{
-		ailab.GET("/detector", handlers.AIDetectorPage)
-		// Redirect old humanize URL to new spec-compliant URL
-		ailab.GET("/humanize", func(c *gin.Context) {
-			lang := c.Query("lang")
-			target := "/ai/humanizer"
-			if lang != "" {
-				target += "?lang=" + lang
-			}
-			c.Redirect(301, target)
-		})
-	}
 
-	// AI Lab routes (new /ai/* - spec-compliant)
-	ai := r.Group("/ai")
-	{
-		ai.GET("/detector", handlers.AIDetectorPage)
-		ai.GET("/humanizer", handlers.AIHumanizerPage)
-	}
-```
+## 问题五
+我把代码发布到线上后，我发现，主题颜色切换按钮变成横向全部展示出来了，不是下拉展示，我用的cdn cloudflare，不知道是不是这个问题导致的
+
+
+## 问题六
+主题切换只有部分功能支持，其他功能都不支持，你检查下什么情况？
+
+所有功能都需要验证前端UI是否符合预期

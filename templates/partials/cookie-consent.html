@@ -1,0 +1,114 @@
+{{ define "partials/cookie-consent.html" }}
+{{/* ─── Cookie Consent Banner & Modal ───────────────────────── */}}
+
+<!-- ① Cookie Banner（底部固定，首次访问显示）-->
+<div
+  id="cky-banner"
+  class="cky-banner"
+  role="dialog"
+  aria-live="polite"
+  aria-label="{{ call .T "consent.banner.title" }}"
+  {{ if .ConsentHasDecision }}style="display:none"{{ end }}
+>
+  <div class="cky-banner__inner">
+    <div class="cky-banner__content">
+      <p class="cky-banner__title">{{ call .T "consent.banner.title" }}</p>
+      <p class="cky-banner__desc">
+        {{ call .T "consent.banner.desc" }}
+        <a href="/privacy-policy?lang={{ .Lang }}" class="cky-banner__link" target="_blank" rel="noopener">{{ call .T "consent.banner.learnmore" }}</a>
+      </p>
+    </div>
+    <div class="cky-banner__actions">
+      <button id="cky-btn-reject"    class="cky-btn cky-btn--ghost"   onclick="CKY.rejectAll()"  aria-label="{{ call .T "consent.btn.reject_all" }}">{{ call .T "consent.btn.reject_all" }}</button>
+      <button id="cky-btn-customize" class="cky-btn cky-btn--ghost"   onclick="CKY.openModal()" aria-label="{{ call .T "consent.btn.customize" }}">{{ call .T "consent.btn.customize" }}</button>
+      <button id="cky-btn-accept"    class="cky-btn cky-btn--primary" onclick="CKY.acceptAll()" aria-label="{{ call .T "consent.btn.accept_all" }}">{{ call .T "consent.btn.accept_all" }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- ② 自定义偏好 Modal -->
+<div id="cky-modal" class="cky-modal" role="dialog" aria-modal="true" aria-labelledby="cky-modal-title" hidden>
+  <div class="cky-modal__backdrop" onclick="CKY.closeModal()"></div>
+  <div class="cky-modal__box">
+    <div class="cky-modal__header">
+      <h2 id="cky-modal-title" class="cky-modal__title">{{ call .T "consent.modal.title" }}</h2>
+      <button class="cky-modal__close" onclick="CKY.closeModal()" aria-label="{{ call .T "consent.btn.close" }}">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <p class="cky-modal__desc">{{ call .T "consent.modal.desc" }}</p>
+    <div class="cky-modal__categories">
+
+      <!-- 必要 Cookie（始终启用，不可关闭）-->
+      <div class="cky-category">
+        <div class="cky-category__row">
+          <div class="cky-category__info">
+            <span class="cky-category__name">{{ call .T "consent.category.necessary.name" }}</span>
+            <span class="cky-category__badge cky-category__badge--locked">
+              <svg width="12" height="12" viewBox="0 0 12 12"><path d="M9 5V3.5a3 3 0 0 0-6 0V5H2v6h8V5H9zm-4-1.5a1 1 0 0 1 2 0V5H5V3.5z" fill="currentColor"/></svg>
+              {{ call .T "consent.category.always_active" }}
+            </span>
+          </div>
+          <div class="cky-toggle cky-toggle--locked" aria-disabled="true">
+            <div class="cky-toggle__track cky-toggle__track--on"><div class="cky-toggle__thumb"></div></div>
+          </div>
+        </div>
+        <p class="cky-category__desc">{{ call .T "consent.category.necessary.desc" }}</p>
+      </div>
+
+      <!-- 分析 Cookie -->
+      <div class="cky-category">
+        <div class="cky-category__row">
+          <div class="cky-category__info">
+            <span class="cky-category__name">{{ call .T "consent.category.analytics.name" }}</span>
+          </div>
+          <label class="cky-toggle" aria-label="{{ call .T "consent.category.analytics.name" }}">
+            <input type="checkbox" id="cky-toggle-analytics" class="cky-toggle__input" name="analytics">
+            <div class="cky-toggle__track"><div class="cky-toggle__thumb"></div></div>
+          </label>
+        </div>
+        <p class="cky-category__desc">{{ call .T "consent.category.analytics.desc" }}</p>
+      </div>
+
+      <!-- 广告 Cookie -->
+      <div class="cky-category">
+        <div class="cky-category__row">
+          <div class="cky-category__info">
+            <span class="cky-category__name">{{ call .T "consent.category.ads.name" }}</span>
+          </div>
+          <label class="cky-toggle" aria-label="{{ call .T "consent.category.ads.name" }}">
+            <input type="checkbox" id="cky-toggle-ads" class="cky-toggle__input" name="ads">
+            <div class="cky-toggle__track"><div class="cky-toggle__thumb"></div></div>
+          </label>
+        </div>
+        <p class="cky-category__desc">{{ call .T "consent.category.ads.desc" }}</p>
+      </div>
+
+    </div><!-- /.cky-modal__categories -->
+    <div class="cky-modal__footer">
+      <button class="cky-btn cky-btn--ghost"   onclick="CKY.rejectAll()">{{ call .T "consent.btn.reject_all" }}</button>
+      <button class="cky-btn cky-btn--primary" onclick="CKY.savePreferences()">{{ call .T "consent.btn.save" }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- ③ Toast 提示（保存成功）-->
+<div id="cky-toast" class="cky-toast" aria-live="assertive" hidden>
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  <span>{{ call .T "consent.toast.saved" }}</span>
+</div>
+
+<!-- 向 consent-engine.js 传递服务端配置 -->
+<script>
+window.CKY_CONFIG = {
+  cookieName:  '{{ .ConsentCookieName }}',
+  gaEnabled:   {{ .EnableGA }},
+  gaId:        '{{ .GAMeasurementID }}',
+  adsEnabled:  {{ .AdsEnabled }},
+  hasDecision: {{ .ConsentHasDecision }},
+  analytics:   '{{ .ConsentAnalytics }}',
+  ads:         '{{ .ConsentAds }}'
+};
+</script>
+{{ end }}
+

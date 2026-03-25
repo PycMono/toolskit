@@ -54,6 +54,11 @@ func baseData(c *gin.Context, extraData gin.H) gin.H {
 		"EnableGA":        c.GetBool("EnableGA"),
 		// Asset version for cache busting (injected by middleware.AdsConfig or set globally)
 		"AssetVer": c.GetString("AssetVersion"),
+		// Cookie Consent (injected by middleware.ConsentMiddleware)
+		"ConsentHasDecision": c.GetBool("ConsentHasDecision"),
+		"ConsentAnalytics":   c.GetString("ConsentAnalytics"),
+		"ConsentAds":         c.GetString("ConsentAds"),
+		"ConsentCookieName":  c.GetString("ConsentCookieName"),
 	}
 	for k, v := range extraData {
 		data[k] = v

@@ -6,11 +6,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Theme init: must run before CSS renders to avoid FOUC -->
   <script>(function(){var t=localStorage.getItem('tbn-theme')||'light';document.documentElement.setAttribute('data-theme',t);})()</script>
-  {{- template "partials/ga.html" . }}
+
+  {{/* ── Consent Mode v2 defaults — must be FIRST script, before any GA/Ads ── */}}
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      ad_storage:            '{{ if .ConsentAds }}{{ .ConsentAds }}{{ else }}denied{{ end }}',
+      ad_user_data:          '{{ if .ConsentAds }}{{ .ConsentAds }}{{ else }}denied{{ end }}',
+      ad_personalization:    '{{ if .ConsentAds }}{{ .ConsentAds }}{{ else }}denied{{ end }}',
+      analytics_storage:     '{{ if .ConsentAnalytics }}{{ .ConsentAnalytics }}{{ else }}denied{{ end }}',
+      functionality_storage: 'granted',
+      security_storage:      'granted',
+      wait_for_update:       500
+    });
+    gtag('js', new Date());
+  </script>
+
+  {{/* ── GA Script (Consent Mode v2 controls data sending) ── */}}
+  {{ if .EnableGA }}
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ .GAMeasurementID }}"></script>
+  <script>
+    gtag('config', '{{ .GAMeasurementID }}', {
+      send_page_view: {{ if eq .ConsentAnalytics "granted" }}true{{ else }}false{{ end }},
+      anonymize_ip: true
+    });
+  </script>
+  {{ end }}
+
+  {{/* ── AdSense SDK ── */}}
   {{ if .AdsEnabled }}
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ .AdsClientID }}"
     crossorigin="anonymous"></script>
   {{ end }}
+
+  {{/* ── Consent CSS ── */}}
+  <link rel="stylesheet" href="/static/css/consent.css">
+
   <title>{{ .Title }}</title>
   <meta name="description" content="{{ .Description }}">
   <meta name="keywords" content="{{ .Keywords }}">
@@ -175,6 +207,7 @@
         <li><a href="/contact?lang={{ .Lang }}">{{ call .T "footer.link.contact" }}</a></li>
         <li><a href="/sitemap?lang={{ .Lang }}">{{ call .T "footer.link.sitemap" }}</a></li>
         <li><a href="/sitemap.xml" target="_blank">sitemap.xml</a></li>
+        <li><a href="javascript:void(0)" id="cky-reopen-btn">🍪 {{ call .T "consent.btn.customize" }}</a></li>
       </ul>
     </div>
   </div>
@@ -193,6 +226,11 @@
 <script src="/static/js/ga-events.js"></script>
 <script src="/static/js/main.js"></script>
 {{ template "extraScript" . }}
+
+{{/* ── Cookie Consent Banner + Modal ── */}}
+{{ template "partials/cookie-consent.html" . }}
+{{/* ── Consent Engine (must be after partial so CKY_CONFIG is ready) ── */}}
+<script src="/static/js/consent-engine.js"></script>
 <script>
 /* ── Global Theme Switcher (Navbar) ── */
 (function(){
@@ -203,15 +241,13 @@
     if (THEMES.indexOf(name) < 0) name = 'light';
     document.documentElement.setAttribute('data-theme', name);
     localStorage.setItem('tbn-theme', name);
-    // Update navbar icon
     var ic = document.getElementById('navThemeIcon');
     if (ic) ic.textContent = ICONS[name];
-    // Mark active option
     document.querySelectorAll('.nav-theme-opt').forEach(function(b) {
       b.classList.toggle('active', b.dataset.theme === name);
     });
-    closeMenu();
-    // Bridge: sync humanizer sun/moon icon
+    closeThemeMenu();
+    // Sync humanizer icons if present
     var sunIcon  = document.getElementById('ah-icon-sun');
     var moonIcon = document.getElementById('ah-icon-moon');
     if (sunIcon && moonIcon) {
@@ -220,9 +256,9 @@
     }
   }
 
-  function closeMenu() {
+  function closeThemeMenu() {
     var d = document.getElementById('navThemeDropdown');
-    if (d) d.classList.remove('open');
+    if (d) d.style.display = 'none';
     var sw = document.getElementById('navThemeSwitcher');
     if (sw) sw.classList.remove('open');
   }
@@ -230,17 +266,27 @@
   window.applyTheme = applyTheme;
 
   document.addEventListener('DOMContentLoaded', function() {
+    // Force dropdown hidden via inline style (Cloudflare-proof)
+    var dropdown = document.getElementById('navThemeDropdown');
+    if (dropdown) dropdown.style.display = 'none';
+
     var saved = localStorage.getItem('tbn-theme') || 'light';
     applyTheme(saved);
 
     var btn = document.getElementById('navThemeBtn');
-    if (btn) btn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      var sw = document.getElementById('navThemeSwitcher');
-      if (sw) sw.classList.toggle('open');
-    });
+    if (btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var d = document.getElementById('navThemeDropdown');
+        if (!d) return;
+        var isOpen = d.style.display === 'block';
+        d.style.display = isOpen ? 'none' : 'block';
+        var sw = document.getElementById('navThemeSwitcher');
+        if (sw) sw.classList.toggle('open', !isOpen);
+      });
+    }
     document.addEventListener('click', function(e) {
-      if (!e.target.closest('#navThemeSwitcher')) closeMenu();
+      if (!e.target.closest('#navThemeSwitcher')) closeThemeMenu();
     });
   });
 })();
