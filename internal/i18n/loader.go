@@ -36,6 +36,11 @@ func (l *Loader) LoadAll() (map[string]Messages, error) {
 	for _, entry := range entries {
 		name := entry.Name()
 
+		// Skip macOS shadow / metadata files (e.g. ._en.json, .DS_Store)
+		if strings.HasPrefix(name, ".") {
+			continue
+		}
+
 		if entry.IsDir() {
 			// 布局B: {dir}/{lang}/ 子目录 → 合并目录内所有 .json 文件
 			lang := name
@@ -78,6 +83,10 @@ func (l *Loader) loadDir(langDir string) (Messages, error) {
 	}
 
 	for _, f := range files {
+		// Skip macOS shadow / metadata files (e.g. ._common.json, .DS_Store)
+		if strings.HasPrefix(f.Name(), ".") {
+			continue
+		}
 		if f.IsDir() || filepath.Ext(f.Name()) != ".json" {
 			continue
 		}

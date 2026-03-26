@@ -397,6 +397,151 @@ func TestTranslator_IsRTL(t *testing.T) {
 	}
 }
 
+func TestTranslator_TFN(t *testing.T) {
+	dir := setupLocales(t)
+	m := newManager(t, dir)
+	tr := m.Translator("en")
+
+	// n=1: uses .one form
+	if got := tr.TFN("items", 1); got != "1 item" {
+		t.Errorf("TFN(1) = %q, want %q", got, "1 item")
+	}
+	// n=5: uses .other form
+	if got := tr.TFN("items", 5); got != "5 items" {
+		t.Errorf("TFN(5) = %q, want %q", got, "5 items")
+	}
+	// with extra args (extra format tokens)
+	dir2 := t.TempDir()
+	os.WriteFile(filepath.Join(dir2, "en.json"), []byte(`{
+		"order.one":   "order #%s: %d item",
+		"order.other": "order #%s: %d items"
+	}`), 0o644)
+	m2 := newManager(t, dir2)
+	tr2 := m2.Translator("en")
+	if got := tr2.TFN("order", 2, "ABC123", 2); got != "order #ABC123: 2 items" {
+		t.Errorf("TFN extra args: got %q", got)
+	}
+}
+
+func TestTranslator_TWith(t *testing.T) {
+	dir := setupLocales(t)
+	m := newManager(t, dir)
+	tr := m.Translator("en")
+
+	// TWith("button", "submit") should equal T("button.submit")
+	if got, want := tr.TWith("button", "submit"), tr.T("button.submit"); got != want {
+		t.Errorf("TWith: got %q, want %q", got, want)
+	}
+	// missing key returns "namespace.key"
+	if got := tr.TWith("nonexistent", "key"); got != "nonexistent.key" {
+		t.Errorf("TWith missing: got %q, want %q", got, "nonexistent.key")
+	}
+	// chinese
+	trZh := m.Translator("zh")
+	if got := trZh.TWith("button", "submit"); got != "提交" {
+		t.Errorf("TWith zh: got %q", got)
+	}
+}
+
+func TestTranslator_All(t *testing.T) {
+	dir := setupLocales(t)
+	m := newManager(t, dir)
+
+	tr := m.Translator("zh")
+	all := tr.All()
+
+	// zh has its own button.submit
+	if all["button.submit"] != "提交" {
+		t.Errorf("All zh button.submit = %q, want %q", all["button.submit"], "提交")
+	}
+	// zh does NOT have img.resize.hero.title in our fixture, so fallback en should fill it
+	// (all() merges the whole fallback chain, low-priority first)
+	if all["img.resize.hero.title"] != "图片调整大小" {
+		t.Errorf("All zh img.resize.hero.title = %q, want zh value", all["img.resize.hero.title"])
+	}
+
+	// The returned map must be non-empty and must not be shared with internal state
+	// (modifications must not affect subsequent calls)
+	all["__test_mutation__"] = "mutated"
+	all2 := tr.All()
+	if _, found := all2["__test_mutation__"]; found {
+		t.Error("All() appears to return the internal map (not a copy)")
+	}
+}
+
+func TestDetector_PrefixMatch(t *testing.T) {
+	// Covers the prefix-match branch in resolve() that was previously uncovered.
+	// "pt-BR" is not in supported list directly, but "pt" prefix should match "pt-PT".
+	d := i18n.NewDetector([]string{"en", "zh", "pt-PT"}, "en")
+
+	req, _ := http.NewRequest("GET", "/?lang=pt-BR", nil)
+	if got := d.Detect(req); got != "pt-PT" {
+		t.Errorf("prefix match: got %q, want pt-PT", got)
+	}
+
+	// Accept-Language prefix fallback
+	req2, _ := http.NewRequest("GET", "/", nil)
+	req2.Header.Set("Accept-Language", "pt-BR,pt;q=0.9")
+	if got := d.Detect(req2); got != "pt-PT" {
+		t.Errorf("Accept-Language prefix match: got %q, want pt-PT", got)
+	}
+}
+
+func TestWatcher_StopViaClose(t *testing.T) {
+	// Covers the stopCh branch inside watch() goroutine.
+	dir := setupLocales(t)
+	m := newManager(t, dir)
+
+	w, err := i18n.NewWatcher(m, dir)
+	if err != nil {
+		t.Fatalf("NewWatcher: %v", err)
+	}
+	if err := w.Start(); err != nil {
+		t.Fatalf("Start: %v", err)
+	}
+	// Closing sends on stopCh; give goroutine a moment to exit cleanly
+	if err := w.Close(); err != nil {
+		t.Errorf("Close: %v", err)
+	}
+	// Closing a second time must not panic
+	_ = w.Close()
+}
+
+func TestConcurrentReloadAndRead(t *testing.T) {
+	// Verifies that concurrent reads + a Reload() trigger no data race.
+	// This covers the RWMutex path under simultaneous load.
+	dir := setupLocales(t)
+	m := newManager(t, dir)
+
+	const goroutines = 50
+	done := make(chan struct{}, goroutines+1)
+
+	// Start readers
+	for i := 0; i < goroutines; i++ {
+		go func() {
+			tr := m.Translator("zh")
+			for j := 0; j < 200; j++ {
+				_ = tr.T("button.submit")
+				_ = tr.All()
+			}
+			done <- struct{}{}
+		}()
+	}
+
+	// Trigger a Reload while readers are running
+	go func() {
+		newContent := `{"button.submit": "提交(重载)", "site.title": "工具箱"}`
+		_ = os.WriteFile(filepath.Join(dir, "zh.json"), []byte(newContent), 0o644)
+		_ = m.Reload()
+		done <- struct{}{}
+	}()
+
+	for i := 0; i <= goroutines; i++ {
+		<-done
+	}
+}
+
+
 // ─── Detector tests ──────────────────────────────────────────────────────────
 
 func newDetector(langs []string, def string) *i18n.Detector {

@@ -121,6 +121,9 @@ func I18nMiddleware() gin.HandlerFunc {
 		c.Set("translations", tr.All())  // map[string]string  — JS injection unchanged
 		c.Set("translator", tr)          // *i18n.Translator   — new: handlers can use TF/TN directly
 
+		// 5. Set Content-Language response header (I-04 requirement)
+		c.Header("Content-Language", lang)
+
 		c.Next()
 	}
 }

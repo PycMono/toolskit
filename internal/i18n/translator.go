@@ -80,6 +80,17 @@ func (t *Translator) TFN(key string, n int, args ...interface{}) string {
 	return fmt.Sprintf(val, args...)
 }
 
+// TWith 指定命名空间翻译。与 T() 的区别是：T() 用完整 key（含命名空间前缀）查找，
+// 而 TWith() 允许传入独立的 namespace + subKey，适合动态拼接场景。
+// 示例: TWith("common", "button.submit") 等价于 T("common.button.submit")
+func (t *Translator) TWith(namespace, key string) string {
+	fullKey := namespace + "." + key
+	if val, ok := t.manager.lookup(t.chain, fullKey); ok {
+		return val
+	}
+	return fullKey
+}
+
 // Has 检查 key 是否存在于当前语言链中（不触发 fallback 返回 key 本身的逻辑）
 func (t *Translator) Has(key string) bool {
 	_, ok := t.manager.lookup(t.chain, key)

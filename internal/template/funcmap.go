@@ -52,11 +52,19 @@ func BuildFuncMap() template.FuncMap {
 		// dict creates a map from alternating key-value pairs.
 		// Useful for passing multiple values into a sub-template.
 		// {{ template "widget" (dict "Title" .Title "Lang" .Lang) }}
+		// dict creates a map from alternating key-value pairs.
+		// Useful for passing multiple values into a sub-template.
+		// {{ template "widget" (dict "Title" .Title "Lang" .Lang) }}
+		// Odd number of args: the lone trailing key is stored with a nil value.
 		"dict": func(values ...interface{}) map[string]interface{} {
-			d := make(map[string]interface{}, len(values)/2)
-			for i := 0; i+1 < len(values); i += 2 {
+			d := make(map[string]interface{}, (len(values)+1)/2)
+			for i := 0; i < len(values); i += 2 {
 				key, _ := values[i].(string)
-				d[key] = values[i+1]
+				if i+1 < len(values) {
+					d[key] = values[i+1]
+				} else {
+					d[key] = nil // lone trailing key
+				}
 			}
 			return d
 		},
@@ -78,7 +86,11 @@ func BuildFuncMap() template.FuncMap {
 
 		// seq returns a slice of ints [start, start+1, ..., end-1].
 		// Useful for pagination: {{ range seq 1 .TotalPages }}
+		// Returns empty slice when start >= end (no panic on inverted range).
 		"seq": func(start, end int) []int {
+			if end <= start {
+				return []int{}
+			}
 			s := make([]int, 0, end-start)
 			for i := start; i < end; i++ {
 				s = append(s, i)

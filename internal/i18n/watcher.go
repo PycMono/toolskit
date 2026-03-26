@@ -4,6 +4,7 @@ import (
 	"io/fs"
 	"log"
 	"path/filepath"
+	"sync"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
@@ -17,6 +18,7 @@ type Watcher struct {
 	fsWatcher  *fsnotify.Watcher
 	debounceMs int
 	stopCh     chan struct{}
+	closeOnce  sync.Once
 }
 
 // NewWatcher 创建文件监听器，绑定到指定 Manager。
@@ -91,9 +93,13 @@ func (w *Watcher) watch() {
 	}
 }
 
-// Close 停止监听并释放资源。
+// Close 停止监听并释放资源。可安全多次调用。
 func (w *Watcher) Close() error {
-	close(w.stopCh)
-	return w.fsWatcher.Close()
+	var fsErr error
+	w.closeOnce.Do(func() {
+		close(w.stopCh)
+		fsErr = w.fsWatcher.Close()
+	})
+	return fsErr
 }
 
