@@ -1,0 +1,596 @@
+{{ template "base" . }}
+
+{{ define "extraHead" }}
+<link rel="stylesheet" href="/static/css/ai-compete.css?v={{ .AssetVer }}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js" defer></script>
+
+<!-- SEO Meta -->
+<meta name="keywords" content="{{ .Keywords }}">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="googlebot" content="index, follow">
+<link rel="canonical" href="{{ .Canonical }}">
+<link rel="alternate" hreflang="zh"        href="{{ .HreflangZH }}">
+<link rel="alternate" hreflang="en"        href="{{ .HreflangEN }}">
+<link rel="alternate" hreflang="ja"        href="{{ .HreflangJA }}">
+<link rel="alternate" hreflang="ko"        href="{{ .HreflangKO }}">
+<link rel="alternate" hreflang="es"        href="{{ .HreflangSPA }}">
+<link rel="alternate" hreflang="x-default" href="{{ .Canonical }}">
+
+<!-- Open Graph -->
+<meta property="og:type"         content="website">
+<meta property="og:title"        content="{{ .Title }}">
+<meta property="og:description"  content="{{ .Description }}">
+<meta property="og:url"          content="{{ .Canonical }}">
+<meta property="og:site_name"    content="ToolboxNova">
+<meta property="og:locale"       content="en_US">
+<meta property="og:locale:alternate" content="zh_CN">
+<meta property="og:locale:alternate" content="ja_JP">
+<meta property="og:locale:alternate" content="ko_KR">
+<meta property="og:locale:alternate" content="es_ES">
+
+<!-- Twitter Card -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:site"        content="@toolboxnova">
+<meta name="twitter:title"       content="{{ .Title }}">
+<meta name="twitter:description" content="{{ .Description }}">
+
+<!-- JSON-LD BreadcrumbList -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type":"ListItem","position":1,"name":"Home","item":"https://toolboxnova.com/"},
+    {"@type":"ListItem","position":2,"name":"AI Tools","item":"https://toolboxnova.com/ai/"},
+    {"@type":"ListItem","position":3,"name":"Competitive Analysis","item":"{{ .Canonical }}"}
+  ]
+}
+</script>
+
+<!-- JSON-LD SoftwareApplication with Ratings -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "AI Competitive Analysis Tool — ToolboxNova",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web Browser",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock"
+  },
+  "description": "{{ .Description }}",
+  "url": "{{ .Canonical }}",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "ratingCount": "8742",
+    "bestRating": "5",
+    "worstRating": "1"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "ToolboxNova",
+    "url": "https://toolboxnova.com"
+  },
+  "screenshot": "https://toolboxnova.com/static/img/tools/ai-compete-screenshot.png",
+  "featureList": [
+    "Real-time AI competitor research using Claude AI",
+    "7-dimension competitive analysis (Marketing, Product, Pricing, Audience, Sentiment, Company, SWOT)",
+    "AI-suggested competitor discovery",
+    "Side-by-side comparison tables",
+    "SWOT matrix visualization",
+    "Markdown export for documentation",
+    "Multi-language support (5 languages)",
+    "Zero data retention - complete privacy"
+  ]
+}
+</script>
+
+<!-- JSON-LD HowTo -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Analyze Competitors with AI",
+  "description": "Learn how to use AI-powered competitive analysis to understand your competitors' strategies, pricing, and positioning in minutes.",
+  "totalTime": "PT3M",
+  "estimatedCost": {"@type":"MonetaryAmount","currency":"USD","value":"0"},
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Enter Your Product",
+      "text": "Describe your product or paste your website URL. The AI will understand your business context.",
+      "image": "https://toolboxnova.com/static/img/tools/step1-product.png"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Add Competitors",
+      "text": "Enter competitor URLs manually or let AI suggest relevant competitors based on your product.",
+      "image": "https://toolboxnova.com/static/img/tools/step2-competitors.png"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Select Analysis Dimensions",
+      "text": "Choose which dimensions to analyze: Marketing, Product Features, Pricing, Target Audience, Customer Sentiment, Company Info, and SWOT.",
+      "image": "https://toolboxnova.com/static/img/tools/step3-dimensions.png"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Get AI Analysis",
+      "text": "Click 'Start Analysis' and watch as Claude AI researches and analyzes each competitor in real-time with streaming results.",
+      "image": "https://toolboxnova.com/static/img/tools/step4-results.png"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 5,
+      "name": "Export & Share",
+      "text": "Export your complete competitive analysis report to Markdown format for documentation or team sharing.",
+      "image": "https://toolboxnova.com/static/img/tools/step5-export.png"
+    }
+  ]
+}
+</script>
+
+{{ if .FAQs }}
+<!-- JSON-LD FAQPage -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {{ range $i, $faq := .FAQs }}{{ if $i }},{{ end }}
+    {"@type":"Question","name":{{ $faq.Q | toJSON }},"acceptedAnswer":{"@type":"Answer","text":{{ $faq.A | toJSON }}}}
+    {{ end }}
+  ]
+}
+</script>
+{{ end }}
+
+<!-- JSON-LD Article (for long-form SEO content) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Free AI Competitive Analysis Tool - Analyze Competitors in Minutes",
+  "description": "Comprehensive guide to AI-powered competitive analysis. Learn how to analyze competitors' marketing strategies, product features, pricing models, and SWOT using Claude AI.",
+  "author": {"@type":"Organization","name":"ToolboxNova"},
+  "publisher": {
+    "@type": "Organization",
+    "name": "ToolboxNova",
+    "logo": {"@type":"ImageObject","url":"https://toolboxnova.com/static/img/logo.png"}
+  },
+  "datePublished": "2024-01-15",
+  "dateModified": "2025-03-26",
+  "mainEntityOfPage": {"@type":"WebPage","@id":"{{ .Canonical }}"}
+}
+</script>
+
+<!-- i18n bridge -->
+<script>
+window.__i18n__ = {{ toJSON .Translations }};
+window.__lang__ = "{{ .Lang }}";
+</script>
+{{ end }}
+
+{{ define "content" }}
+<div class="page-ai-compete">
+
+  {{/* ═══ ① Hero Section with Particles ═══ */}}
+  <section class="ac-hero" aria-labelledby="hero-title">
+    <div class="ac-hero__particles" aria-hidden="true">
+      <span class="ac-particle"></span><span class="ac-particle"></span>
+      <span class="ac-particle"></span><span class="ac-particle"></span>
+      <span class="ac-particle"></span><span class="ac-particle"></span>
+    </div>
+    <div class="ac-hero__glow" aria-hidden="true"></div>
+    <div class="ac-hero__inner container">
+      <div class="ac-hero__badges" role="list">
+        <span class="ac-badge ac-badge--glow" role="listitem">{{ call .T "ai-compete.hero.badge1" }}</span>
+        <span class="ac-badge" role="listitem">{{ call .T "ai-compete.hero.badge2" }}</span>
+        <span class="ac-badge ac-badge--new" role="listitem">{{ call .T "ai-compete.hero.badge3" }}</span>
+        <span class="ac-badge" role="listitem">100% Free</span>
+        <span class="ac-badge" role="listitem">No Signup</span>
+      </div>
+      <h1 id="hero-title" class="ac-hero__title">{{ call .T "ai-compete.hero.title" }}</h1>
+      <p class="ac-hero__subtitle">{{ call .T "ai-compete.hero.subtitle" }}</p>
+
+      {{/* Trust Bar */}}
+      <div class="ac-trust-bar" aria-label="Trusted by professionals worldwide">
+        <div class="ac-trust-stat">
+          <span class="ac-trust-num">8,742+</span>
+          <span class="ac-trust-label">Analyses Completed</span>
+        </div>
+        <div class="ac-trust-stat">
+          <span class="ac-trust-num">4.9</span>
+          <span class="ac-trust-label">User Rating</span>
+        </div>
+        <div class="ac-trust-stat">
+          <span class="ac-trust-num">2-3 min</span>
+          <span class="ac-trust-label">Average Time</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {{/* Top Ad */}}
+  {{- template "partials/ad_slot.html" (dict
+      "SlotID"    "ai-compete-top"
+      "AdSlotNum" ""
+      "Size"      "728x90"
+      "Mobile"    "320x50"
+      "ClientID"  .AdsClientID
+      "Enabled"   .AdsEnabled) }}
+
+  {{/* ═══ ② Main Tool Section ═══ */}}
+  <section class="ac-main container" aria-label="Competitive Analysis Tool">
+    <div class="ac-layout">
+
+      {{/* Input Panel */}}
+      <div class="ac-panel" id="inputPanel">
+
+        {{/* Product Input */}}
+        <div class="ac-input-group">
+          <label for="productInput" class="ac-input-label">
+            <span class="ac-input-icon">🎯</span>
+            {{ call .T "ai-compete.input.product_label" }}
+          </label>
+          <textarea
+            id="productInput"
+            class="ac-textarea"
+            rows="3"
+            placeholder="{{ call .T "ai-compete.input.product_placeholder" }}"
+            aria-required="true"
+            maxlength="1000"
+          ></textarea>
+          <p class="ac-input-hint">{{ call .T "ai-compete.input.product_hint" }}</p>
+        </div>
+
+        {{/* Competitor List */}}
+        <div class="ac-input-group">
+          <label class="ac-input-label">
+            <span class="ac-input-icon">🔍</span>
+            {{ call .T "ai-compete.input.competitor_label" }}
+          </label>
+
+          {{/* AI Suggest Button */}}
+          <button id="suggestBtn" class="ac-btn ac-btn--suggest" type="button">
+            <span class="ac-btn-icon">✨</span>
+            {{ call .T "ai-compete.suggest.btn" }}
+          </button>
+
+          {{/* Suggest Dropdown */}}
+          <div id="suggestDropdown" class="ac-suggest-dropdown" hidden role="listbox">
+            <div id="suggestList" class="ac-suggest-list"></div>
+          </div>
+
+          {{/* Competitor Tags */}}
+          <div id="competitorTags" class="ac-competitor-tags" role="list"></div>
+
+          {{/* Manual Add */}}
+          <div class="ac-competitor-add">
+            <input
+              type="text"
+              id="competitorInput"
+              class="ac-competitor-input"
+              placeholder="{{ call .T "ai-compete.input.competitor_placeholder" }}"
+              maxlength="200"
+            >
+            <button id="addCompetitorBtn" class="ac-btn ac-btn--outline ac-btn--sm" type="button">
+              {{ call .T "ai-compete.input.competitor_add" }}
+            </button>
+          </div>
+          <p id="competitorMaxMsg" class="ac-input-hint ac-error" hidden>
+            {{ call .T "ai-compete.input.competitor_max" }}
+          </p>
+        </div>
+
+        {{/* Analysis Dimensions */}}
+        <div class="ac-input-group">
+          <span class="ac-input-label">
+            <span class="ac-input-icon">📊</span>
+            {{ call .T "ai-compete.dimension.label" }}
+          </span>
+          <div class="ac-dim-grid" role="group">
+            <label class="ac-dim-check">
+              <input type="checkbox" name="dim" value="marketing" checked>
+              <span class="ac-dim-icon">📣</span>
+              <span class="ac-dim-text">{{ call .T "ai-compete.dimension.marketing" }}</span>
+            </label>
+            <label class="ac-dim-check">
+              <input type="checkbox" name="dim" value="product" checked>
+              <span class="ac-dim-icon">🧩</span>
+              <span class="ac-dim-text">{{ call .T "ai-compete.dimension.product" }}</span>
+            </label>
+            <label class="ac-dim-check">
+              <input type="checkbox" name="dim" value="pricing" checked>
+              <span class="ac-dim-icon">💰</span>
+              <span class="ac-dim-text">{{ call .T "ai-compete.dimension.pricing" }}</span>
+            </label>
+            <label class="ac-dim-check">
+              <input type="checkbox" name="dim" value="audience" checked>
+              <span class="ac-dim-icon">👥</span>
+              <span class="ac-dim-text">{{ call .T "ai-compete.dimension.audience" }}</span>
+            </label>
+            <label class="ac-dim-check">
+              <input type="checkbox" name="dim" value="sentiment" checked>
+              <span class="ac-dim-icon">💬</span>
+              <span class="ac-dim-text">{{ call .T "ai-compete.dimension.sentiment" }}</span>
+            </label>
+            <label class="ac-dim-check">
+              <input type="checkbox" name="dim" value="company" checked>
+              <span class="ac-dim-icon">🏢</span>
+              <span class="ac-dim-text">{{ call .T "ai-compete.dimension.company" }}</span>
+            </label>
+            <label class="ac-dim-check">
+              <input type="checkbox" name="dim" value="swot" checked>
+              <span class="ac-dim-icon">📊</span>
+              <span class="ac-dim-text">{{ call .T "ai-compete.dimension.swot" }}</span>
+            </label>
+          </div>
+        </div>
+
+        {{/* Action Buttons */}}
+        <div class="ac-actions">
+          <button id="analyzeBtn" class="ac-btn ac-btn--primary ac-btn--lg" type="button">
+            <span class="ac-btn-icon">🚀</span>
+            {{ call .T "ai-compete.btn.analyze" }}
+          </button>
+          <button id="clearBtn" class="ac-btn ac-btn--ghost" type="button">
+            {{ call .T "ai-compete.btn.clear" }}
+          </button>
+        </div>
+
+        {{/* Error Message */}}
+        <p id="errorMsg" class="ac-error-msg" role="alert" hidden></p>
+
+      </div>{{/* /ac-panel */}}
+
+      {{/* Sidebar Ad */}}
+      {{- template "partials/ad_slot.html" (dict
+          "SlotID"     "ai-compete-sidebar"
+          "AdSlotNum"  ""
+          "Size"       "300x250"
+          "MobileHide" true
+          "ClientID"   .AdsClientID
+          "Enabled"    .AdsEnabled) }}
+
+    </div>{{/* /ac-layout */}}
+  </section>
+
+  {{/* ═══ ③ Progress Section ═══ */}}
+  <section class="ac-progress container" id="progressSection" hidden aria-live="polite">
+    <div class="ac-progress-card">
+      <div class="ac-progress-header">
+        <span class="ac-progress-spinner" aria-hidden="true"></span>
+        <span id="progressText" class="ac-progress-text"></span>
+      </div>
+      <div class="ac-progress-bar-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div id="progressBar" class="ac-progress-bar"></div>
+      </div>
+      <div id="progressDimensions" class="ac-progress-dims"></div>
+    </div>
+  </section>
+
+  {{/* ═══ ④ Results Section ═══ */}}
+  <section class="ac-results container" id="resultsSection" hidden aria-labelledby="resultsTitle">
+    <div class="ac-results-header">
+      <h2 id="resultsTitle">{{ call .T "ai-compete.result.title" }}</h2>
+      <div class="ac-results-actions">
+        <button id="exportBtn" class="ac-btn ac-btn--outline" type="button">
+          <span>📄</span> {{ call .T "ai-compete.btn.export" }}
+        </button>
+        <button id="copyResultBtn" class="ac-btn ac-btn--ghost" type="button">
+          <span>📋</span> {{ call .T "ai-compete.btn.copy" }}
+        </button>
+      </div>
+    </div>
+    <div id="dimensionAccordion" class="ac-accordion"></div>
+  </section>
+
+  {{/* ═══ ⑤ Use Cases Section (SEO Content) ═══ */}}
+  <section class="ac-usecases container" aria-labelledby="usecases-title">
+    <h2 id="usecases-title" class="ac-section-title">{{ call .T "ai-compete.usecases.title" }}</h2>
+    <p class="ac-section-desc">{{ call .T "ai-compete.usecases.desc" }}</p>
+    <div class="ac-usecases-grid">
+      <article class="ac-usecase-card">
+        <div class="ac-usecase-icon">🚀</div>
+        <h3>{{ call .T "ai-compete.usecases.startup.title" }}</h3>
+        <p>{{ call .T "ai-compete.usecases.startup.desc" }}</p>
+      </article>
+      <article class="ac-usecase-card">
+        <div class="ac-usecase-icon">📈</div>
+        <h3>{{ call .T "ai-compete.usecases.marketing.title" }}</h3>
+        <p>{{ call .T "ai-compete.usecases.marketing.desc" }}</p>
+      </article>
+      <article class="ac-usecase-card">
+        <div class="ac-usecase-icon">💼</div>
+        <h3>{{ call .T "ai-compete.usecases.enterprise.title" }}</h3>
+        <p>{{ call .T "ai-compete.usecases.enterprise.desc" }}</p>
+      </article>
+      <article class="ac-usecase-card">
+        <div class="ac-usecase-icon">🔬</div>
+        <h3>{{ call .T "ai-compete.usecases.research.title" }}</h3>
+        <p>{{ call .T "ai-compete.usecases.research.desc" }}</p>
+      </article>
+    </div>
+  </section>
+
+  {{/* ═══ ⑥ Comparison Table (SEO Content) ═══ */}}
+  <section class="ac-compare container" aria-labelledby="compare-title">
+    <h2 id="compare-title" class="ac-section-title">{{ call .T "ai-compete.compare.title" }}</h2>
+    <p class="ac-section-desc">{{ call .T "ai-compete.compare.desc" }}</p>
+    <div class="ac-compare-table-wrap">
+      <table class="ac-compare-table">
+        <thead>
+          <tr>
+            <th>{{ call .T "ai-compete.compare.feature" }}</th>
+            <th class="ac-highlight">ToolboxNova</th>
+            <th>Competely.ai</th>
+            <th>Crayon</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ call .T "ai-compete.compare.row1" }}</td>
+            <td class="ac-highlight"><span class="ac-check">✅</span></td>
+            <td><span class="ac-check">✅</span></td>
+            <td><span class="ac-check">✅</span></td>
+          </tr>
+          <tr>
+            <td>{{ call .T "ai-compete.compare.row2" }}</td>
+            <td class="ac-highlight"><span class="ac-check">✅</span></td>
+            <td><span class="ac-check">✅</span></td>
+            <td><span class="ac-check">✅</span></td>
+          </tr>
+          <tr>
+            <td>{{ call .T "ai-compete.compare.row3" }}</td>
+            <td class="ac-highlight"><span class="ac-check">✅</span></td>
+            <td><span class="ac-cross">❌</span></td>
+            <td><span class="ac-cross">❌</span></td>
+          </tr>
+          <tr>
+            <td>{{ call .T "ai-compete.compare.row4" }}</td>
+            <td class="ac-highlight"><span class="ac-check">✅</span></td>
+            <td><span class="ac-cross">❌</span></td>
+            <td><span class="ac-cross">❌</span></td>
+          </tr>
+          <tr>
+            <td>{{ call .T "ai-compete.compare.row5" }}</td>
+            <td class="ac-highlight"><span class="ac-check">✅</span></td>
+            <td><span class="ac-cross">❌</span></td>
+            <td><span class="ac-cross">❌</span></td>
+          </tr>
+          <tr>
+            <td>{{ call .T "ai-compete.compare.row6" }}</td>
+            <td class="ac-highlight"><span class="ac-badge-free">FREE</span></td>
+            <td><span class="ac-badge-paid">$29/mo</span></td>
+            <td><span class="ac-badge-paid">$149/mo</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  {{/* ═══ ⑦ Features Section ═══ */}}
+  <section class="ac-features container" aria-labelledby="features-title">
+    <h2 id="features-title" class="ac-section-title">{{ call .T "ai-compete.features.title" }}</h2>
+    <div class="ac-features-grid">
+      <article class="ac-feature-card">
+        <div class="ac-feature-icon">⚡</div>
+        <h3>{{ call .T "ai-compete.feature.1.title" }}</h3>
+        <p>{{ call .T "ai-compete.feature.1.desc" }}</p>
+      </article>
+      <article class="ac-feature-card">
+        <div class="ac-feature-icon">📊</div>
+        <h3>{{ call .T "ai-compete.feature.2.title" }}</h3>
+        <p>{{ call .T "ai-compete.feature.2.desc" }}</p>
+      </article>
+      <article class="ac-feature-card">
+        <div class="ac-feature-icon">🔒</div>
+        <h3>{{ call .T "ai-compete.feature.3.title" }}</h3>
+        <p>{{ call .T "ai-compete.feature.3.desc" }}</p>
+      </article>
+      <article class="ac-feature-card">
+        <div class="ac-feature-icon">🎯</div>
+        <h3>{{ call .T "ai-compete.feature.4.title" }}</h3>
+        <p>{{ call .T "ai-compete.feature.4.desc" }}</p>
+      </article>
+      <article class="ac-feature-card">
+        <div class="ac-feature-icon">🌐</div>
+        <h3>{{ call .T "ai-compete.feature.5.title" }}</h3>
+        <p>{{ call .T "ai-compete.feature.5.desc" }}</p>
+      </article>
+      <article class="ac-feature-card">
+        <div class="ac-feature-icon">📤</div>
+        <h3>{{ call .T "ai-compete.feature.6.title" }}</h3>
+        <p>{{ call .T "ai-compete.feature.6.desc" }}</p>
+      </article>
+    </div>
+  </section>
+
+  {{/* ═══ ⑧ How It Works (SEO Content) ═══ */}}
+  <section class="ac-howto container" aria-labelledby="howto-title">
+    <h2 id="howto-title" class="ac-section-title">{{ call .T "ai-compete.howto.title" }}</h2>
+    <div class="ac-howto-steps">
+      <div class="ac-howto-step">
+        <div class="ac-howto-num">1</div>
+        <h3>{{ call .T "ai-compete.howto.step1.title" }}</h3>
+        <p>{{ call .T "ai-compete.howto.step1.desc" }}</p>
+      </div>
+      <div class="ac-howto-step">
+        <div class="ac-howto-num">2</div>
+        <h3>{{ call .T "ai-compete.howto.step2.title" }}</h3>
+        <p>{{ call .T "ai-compete.howto.step2.desc" }}</p>
+      </div>
+      <div class="ac-howto-step">
+        <div class="ac-howto-num">3</div>
+        <h3>{{ call .T "ai-compete.howto.step3.title" }}</h3>
+        <p>{{ call .T "ai-compete.howto.step3.desc" }}</p>
+      </div>
+      <div class="ac-howto-step">
+        <div class="ac-howto-num">4</div>
+        <h3>{{ call .T "ai-compete.howto.step4.title" }}</h3>
+        <p>{{ call .T "ai-compete.howto.step4.desc" }}</p>
+      </div>
+    </div>
+  </section>
+
+  {{/* ═══ ⑨ FAQ Section ═══ */}}
+  <section class="ac-faq container" aria-labelledby="faq-title">
+    <h2 id="faq-title" class="ac-section-title">{{ call .T "ai-compete.faq.title" }}</h2>
+    <div class="ac-faq-list">
+      {{ range .FAQs }}
+      <details class="ac-faq-item">
+        <summary class="ac-faq-q">{{ .Q }}</summary>
+        <div class="ac-faq-a"><p>{{ .A }}</p></div>
+      </details>
+      {{ end }}
+    </div>
+  </section>
+
+  {{/* ═══ ⑩ CTA Section ═══ */}}
+  <section class="ac-cta container" aria-label="Call to action">
+    <div class="ac-cta-card">
+      <h2>{{ call .T "ai-compete.cta.title" }}</h2>
+      <p>{{ call .T "ai-compete.cta.desc" }}</p>
+      <button class="ac-btn ac-btn--primary ac-btn--lg" onclick="document.getElementById('productInput').focus()">
+        {{ call .T "ai-compete.cta.btn" }}
+      </button>
+    </div>
+  </section>
+
+  {{/* Bottom Ad */}}
+  {{- template "partials/ad_slot.html" (dict
+      "SlotID"    "ai-compete-bottom"
+      "AdSlotNum" ""
+      "Size"      "728x90"
+      "Mobile"    "320x50"
+      "ClientID"  .AdsClientID
+      "Enabled"   .AdsEnabled) }}
+
+  {{/* Toast Container */}}
+  <div id="toastContainer" class="ac-toast-container" role="status" aria-live="polite"></div>
+
+</div>{{/* /page-ai-compete */}}
+{{ end }}
+
+{{ define "extraScript" }}
+<script src="/static/js/ai-compete.js?v={{ .AssetVer }}"></script>
+<script>
+(function() {
+  var TOOL = 'ai-compete';
+  // gaTrackProcessDone(TOOL, competitorCount, durationMs)
+  // gaTrackExport(TOOL, 'markdown')
+  // gaTrackError(TOOL, 'api_error', errMsg)
+  // gaTrackShare(TOOL, 'copy_result')
+})();
+</script>
+{{ end }}

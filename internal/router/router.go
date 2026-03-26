@@ -215,6 +215,7 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 	{
 		ai.GET("/detector", handlers.AIDetectorPage)
 		ai.GET("/humanizer", handlers.AIHumanizerPage)
+		ai.GET("/compete", handlers.AiCompetePage)
 	}
 
 	// Image/Multimedia tools
@@ -294,6 +295,10 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 			aiAPI.POST("/humanize",    handlers.AIHumanizerStreamAPI)
 			aiAPI.POST("/fetch-url",   handlers.AIDetectURLAPI)
 		}
+
+		// AI Compete API
+		api.POST("/ai-compete/analyze", handlers.AiCompeteAnalyze)
+		api.POST("/ai-compete/suggest", handlers.AiCompeteSuggest)
 
 		// SMS API (S-05, S-06, S-07, S-08, S-09)
 		sms := api.Group("/sms")

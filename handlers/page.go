@@ -163,6 +163,10 @@ func SitemapXML(c *gin.Context) {
 		"/ai/humanizer",
 		"/ai/humanizer?lang=en", "/ai/humanizer?lang=zh",
 		"/ai/humanizer?lang=ja", "/ai/humanizer?lang=ko", "/ai/humanizer?lang=spa",
+		// AI Competitive Analysis
+		"/ai/compete",
+		"/ai/compete?lang=en", "/ai/compete?lang=zh",
+		"/ai/compete?lang=ja", "/ai/compete?lang=ko", "/ai/compete?lang=spa",
 
 		// Dev Tools
 		"/tools", "/tools/json", "/tools/json-formatter", "/tools/json-validator",
@@ -379,6 +383,9 @@ func SearchAPI(c *gin.Context) {
 		{"name_zh": "JWT 解码", "name_en": "JWT Decoder", "description": "Decode and inspect JWT tokens", "url": "/json/jwt", "search": "jwt decode token header payload"},
 		{"name_zh": "JSON Schema 验证", "name_en": "JSON Schema Validator", "description": "Validate JSON against a schema", "url": "/json/schema-validate", "search": "json schema validate 验证"},
 		{"name_zh": "JSON 工具箱", "name_en": "JSON Toolkit", "description": "40+ free online JSON tools", "url": "/json", "search": "json tools 工具箱 toolkit all"},
+		{"name_zh": "AI 检测器", "name_en": "AI Content Detector", "description": "Detect AI-generated content", "url": "/ai/detector", "search": "ai detector detect ai检测 检测器 gptzero"},
+		{"name_zh": "AI 人性化改写", "name_en": "AI Humanizer", "description": "Humanize AI-generated text to bypass detection", "url": "/ai/humanizer", "search": "ai humanize 人性化 bypass humanize rewrite"},
+		{"name_zh": "AI 竞品分析", "name_en": "AI Competitive Analysis", "description": "Analyze competitors across 7 dimensions with AI", "url": "/ai/compete", "search": "competitive analysis 竞品分析 swot marketing pricing competitor"},
 		// Developer Tools Suite
 		{"name_zh": "哈希计算器", "name_en": "Hash Generator", "description": "MD5 SHA-1 SHA-256 SHA-512 HMAC hash calculator, client-side", "url": "/dev/hash", "search": "hash md5 sha256 sha512 hmac 哈希 摘要 加密 generator"},
 		{"name_zh": "Base64 编解码", "name_en": "Base64 Encoder Decoder", "description": "Encode or decode Base64 text and files up to 50MB", "url": "/dev/base64", "search": "base64 encode decode 编码 解码 base64url mime"},
