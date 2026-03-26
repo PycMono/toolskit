@@ -249,6 +249,55 @@
   </div>
 </section>
 
+<!-- How It Works Section -->
+<section class="qr-how-section">
+  <div class="qr-container">
+    <span class="qr-section-label">{{ call .T "qr.how.label" }}</span>
+    <h2 class="qr-section-title">{{ call .T "qr.how.title" }}</h2>
+    <div class="qr-steps">
+      <div class="qr-step">
+        <div class="qr-step__num">1</div>
+        <h3 class="qr-step__title">{{ call .T "qr.step1.title" }}</h3>
+        <p class="qr-step__desc">{{ call .T "qr.step1.desc" }}</p>
+      </div>
+      <div class="qr-step">
+        <div class="qr-step__num">2</div>
+        <h3 class="qr-step__title">{{ call .T "qr.step2.title" }}</h3>
+        <p class="qr-step__desc">{{ call .T "qr.step2.desc" }}</p>
+      </div>
+      <div class="qr-step">
+        <div class="qr-step__num">3</div>
+        <h3 class="qr-step__title">{{ call .T "qr.step3.title" }}</h3>
+        <p class="qr-step__desc">{{ call .T "qr.step3.desc" }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Privacy Section -->
+<section class="qr-privacy-section">
+  <div class="qr-container">
+    <div class="qr-privacy-split">
+      <div class="qr-privacy-text">
+        <span class="qr-section-label">{{ call .T "qr.privacy.label" }}</span>
+        <h2 class="qr-section-title">{{ call .T "qr.privacy.title" }}</h2>
+        <p class="qr-privacy-body">{{ call .T "qr.privacy.body1" }}</p>
+        <p class="qr-privacy-body">{{ call .T "qr.privacy.body2" }}</p>
+      </div>
+      <div class="qr-privacy-visual">
+        <div class="qr-privacy-box">
+          <div class="qr-privacy-box__icon">🔒</div>
+          <div class="qr-privacy-stat">
+            <span class="qr-privacy-stat__num">0 bytes</span>
+            <span class="qr-privacy-stat__lbl">{{ call .T "qr.privacy.stat.lbl" }}</span>
+          </div>
+          <div class="qr-privacy-box__label">{{ call .T "qr.privacy.stat.sub" }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- About Section -->
 <section class="qr-about-section">
   <div class="qr-container">

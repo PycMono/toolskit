@@ -407,17 +407,35 @@ func SearchAPI(c *gin.Context) {
 // PasswordPage renders password generator page
 func PasswordPage(c *gin.Context) {
 	t := getT(c)
+
+	// Build FAQ data
+	type FAQ struct {
+		Q string
+		A string
+	}
+	faqs := []FAQ{
+		{Q: t("password.faq.q1"), A: t("password.faq.a1")},
+		{Q: t("password.faq.q2"), A: t("password.faq.a2")},
+		{Q: t("password.faq.q3"), A: t("password.faq.a3")},
+		{Q: t("password.faq.q4"), A: t("password.faq.a4")},
+		{Q: t("password.faq.q5"), A: t("password.faq.a5")},
+	}
+
 	data := baseData(c, gin.H{
 		"Title":       t("password.title"),
 		"Description": t("password.meta_desc"),
 		"Keywords":    "password generator, random password, secure password, strong password",
 		"PageClass":   "page-password",
+		"FAQs":        faqs,
 		"JSONLD": template.JS(`{
   "@context": "https://schema.org",
-  "@type": "WebApplication",
+  "@type": "SoftwareApplication",
   "name": "Random Password Generator",
-  "url": "https://toolboxnova.com/password-generator",
-  "description": "Generate cryptographically secure random passwords instantly."
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Web Browser",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Generate cryptographically secure random passwords instantly.",
+  "url": "https://toolboxnova.com/password-generator"
 }`),
 	})
 	render(c, "password.html", data)
@@ -426,17 +444,35 @@ func PasswordPage(c *gin.Context) {
 // VirtualAddressPage renders virtual address generator page
 func VirtualAddressPage(c *gin.Context) {
 	t := getT(c)
+
+	// Build FAQ data
+	type FAQ struct {
+		Q string
+		A string
+	}
+	faqs := []FAQ{
+		{Q: t("address.faq.q1"), A: t("address.faq.a1")},
+		{Q: t("address.faq.q2"), A: t("address.faq.a2")},
+		{Q: t("address.faq.q3"), A: t("address.faq.a3")},
+		{Q: t("address.faq.q4"), A: t("address.faq.a4")},
+		{Q: t("address.faq.q5"), A: t("address.faq.a5")},
+	}
+
 	data := baseData(c, gin.H{
 		"Title":       t("address.title"),
 		"Description": t("address.meta_desc"),
 		"Keywords":    "fake address generator, virtual address, fake identity, random address",
 		"PageClass":   "page-address",
+		"FAQs":        faqs,
 		"JSONLD": template.JS(`{
   "@context": "https://schema.org",
-  "@type": "WebApplication",
+  "@type": "SoftwareApplication",
   "name": "Virtual Address Generator",
-  "url": "https://toolboxnova.com/virtual-address",
-  "description": "Generate realistic fake addresses and identity info."
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Web Browser",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Generate realistic fake addresses and identity info.",
+  "url": "https://toolboxnova.com/virtual-address"
 }`),
 	})
 	render(c, "virtual_address.html", data)

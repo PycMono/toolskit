@@ -1,24 +1,16 @@
 {{ template "base" . }}
 
 {{ define "extraHead" }}
-<title>{{ .Title }}</title>
-<meta name="description" content="{{ .Description }}">
-<meta name="keywords"    content="{{ .Keywords }}">
-<meta property="og:title"       content="{{ .Title }}">
-<meta property="og:description" content="{{ .Description }}">
-<meta property="og:type"        content="website">
-<meta property="og:url"         content="https://toolboxnova.com/img/convert-to-jpg">
-<meta property="og:image"       content="https://toolboxnova.com/static/img/og.png">
-<link rel="canonical"      href="https://toolboxnova.com/img/convert-to-jpg">
-<link rel="alternate" hreflang="zh"        href="https://toolboxnova.com/img/convert-to-jpg?lang=zh">
-<link rel="alternate" hreflang="en"        href="https://toolboxnova.com/img/convert-to-jpg?lang=en">
-<link rel="alternate" hreflang="ja"        href="https://toolboxnova.com/img/convert-to-jpg?lang=ja">
-<link rel="alternate" hreflang="ko"        href="https://toolboxnova.com/img/convert-to-jpg?lang=ko">
-<link rel="alternate" hreflang="es"        href="https://toolboxnova.com/img/convert-to-jpg?lang=spa">
+<link rel="canonical" href="https://toolboxnova.com/img/convert-to-jpg">
+<link rel="alternate" hreflang="zh" href="https://toolboxnova.com/img/convert-to-jpg?lang=zh">
+<link rel="alternate" hreflang="en" href="https://toolboxnova.com/img/convert-to-jpg?lang=en">
+<link rel="alternate" hreflang="ja" href="https://toolboxnova.com/img/convert-to-jpg?lang=ja">
+<link rel="alternate" hreflang="ko" href="https://toolboxnova.com/img/convert-to-jpg?lang=ko">
+<link rel="alternate" hreflang="spa" href="https://toolboxnova.com/img/convert-to-jpg?lang=spa">
 <link rel="alternate" hreflang="x-default" href="https://toolboxnova.com/img/convert-to-jpg">
 <link rel="stylesheet" href="/static/css/img-toolbox.css?v={{ .AssetVer }}">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareApplication","name":"{{ .Title }}","applicationCategory":"MultimediaApplication","operatingSystem":"Web Browser","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"{{ .Description }}","url":"https://toolboxnova.com/img/convert-to-jpg"}
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"{{ .Title }}","applicationCategory":"MultimediaApplication","operatingSystem":"Web Browser","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"{{ .Description }}","url":"https://toolboxnova.com/img/convert-to-jpg","featureList":["Convert PNG, WebP, GIF, BMP, SVG, TIFF to JPG","Quality slider (1-100%)","Automatic transparent background fill with white","Batch convert up to 30 images","Browser-side processing - no upload required"]}
 </script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{{- range $i,$f := .FAQs }}{{if $i}},{{end}}{"@type":"Question","name":{{ $f.Q | html }},"acceptedAnswer":{"@type":"Answer","text":{{ $f.A | html }}}}{{- end}}]}
@@ -80,6 +72,56 @@
       <div class="itb-feature-card"><div class="itb-feature-card__icon">🎚️</div><h3 class="itb-feature-card__title">{{ call .T "feature.to_jpg.f2.title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.to_jpg.f2.desc" }}</p></div>
       <div class="itb-feature-card"><div class="itb-feature-card__icon">📦</div><h3 class="itb-feature-card__title">{{ call .T "feature.to_jpg.f3.title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.to_jpg.f3.desc" }}</p></div>
     </div></section>
+
+    <!-- How It Works -->
+    <section class="itb-section itb-section--alt">
+      <div class="itb-section-inner">
+        <span class="itb-section-label">{{ call .T "hero.to_jpg.how.label" }}</span>
+        <h2 class="itb-section-title">{{ call .T "hero.to_jpg.how.title" }}</h2>
+        <div class="itb-steps">
+          <div class="itb-step">
+            <div class="itb-step__num">1</div>
+            <h3 class="itb-step__title">{{ call .T "hero.to_jpg.step1.title" }}</h3>
+            <p class="itb-step__desc">{{ call .T "hero.to_jpg.step1.desc" }}</p>
+          </div>
+          <div class="itb-step">
+            <div class="itb-step__num">2</div>
+            <h3 class="itb-step__title">{{ call .T "hero.to_jpg.step2.title" }}</h3>
+            <p class="itb-step__desc">{{ call .T "hero.to_jpg.step2.desc" }}</p>
+          </div>
+          <div class="itb-step">
+            <div class="itb-step__num">3</div>
+            <h3 class="itb-step__title">{{ call .T "hero.to_jpg.step3.title" }}</h3>
+            <p class="itb-step__desc">{{ call .T "hero.to_jpg.step3.desc" }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy & Safety -->
+    <section class="itb-section">
+      <div class="itb-section-inner">
+        <div class="itb-split">
+          <div class="itb-split-text">
+            <span class="itb-section-label">{{ call .T "hero.to_jpg.privacy.label" }}</span>
+            <h2 class="itb-section-title">{{ call .T "hero.to_jpg.privacy.title" }}</h2>
+            <p class="itb-section-body">{{ call .T "hero.to_jpg.privacy.body1" }}</p>
+            <p class="itb-section-body">{{ call .T "hero.to_jpg.privacy.body2" }}</p>
+          </div>
+          <div class="itb-split-visual">
+            <div class="itb-visual-box">
+              <div class="itb-visual-box__icon">🔒</div>
+              <div class="itb-visual-stat">
+                <span class="itb-visual-stat__num">0 bytes</span>
+                <span class="itb-visual-stat__lbl">{{ call .T "hero.to_jpg.privacy.stat.lbl" }}</span>
+              </div>
+              <div class="itb-visual-box__label">{{ call .T "hero.to_jpg.privacy.stat.sub" }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
         <section class="itb-about">
       <span class="itb-about__label">{{ call .T "hero.to_jpg.about.label" }}</span>
       <h2 class="itb-about__title">{{ call .T "hero.to_jpg.about.title" }}</h2>

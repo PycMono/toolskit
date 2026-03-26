@@ -242,5 +242,19 @@
   "img.metadata.about.body2": "사진작가와 사진 아카이브 관리자에게 EXIF 데이터는 완전한 기술적 세부 사항을 보여줍니다: 카메라 제조사 및 모델, ISO 감도, 조리개(f 값), 셔터 스피드, 초점 거리, 플래시 상태, 화이트 밸런스, 정확한 촬영 일시. 렌즈 모델과 시리얼 번호 데이터는 수천 장의 사진에 걸쳐 장비 사용 추적에 도움이 됩니다.",
   "img.metadata.about.body3": "개인정보를 중시하는 사용자와 기자에게, 스마트폰 사진에 내장된 GPS 좌표는 자택 주소, 직장, 의료 기관 등 민감한 위치를 노출할 수 있습니다. 이 도구로 이미지를 공개 공유하기 전에 GPS 데이터를 확인하고, 어떤 이미지를 공유하고 어떤 것을 제거할지 정보에 근거한 결정을 내릴 수 있습니다.",
   "img.metadata.about.body4": "IPTC 메타데이터는 저작권과 편집 정보의 전문 표준입니다: 작성자 이름, 저작권 표시, 이미지 설명, 키워드, 도시, 국가, 사용 권한. 사진 에이전시, 스톡 라이브러리, 디지털 자산 관리 시스템은 소유권과 라이선스 추적에 IPTC 필드를 사용합니다. Adobe가 개발한 XMP 데이터는 별점 평가, 색상 레이블, 편집 소프트웨어 내역, 색상 공간 등의 워크플로우 정보를 담고 있습니다.",
-  "img.metadata.about.body5": "최대 10장을 동시 처리하고 사이드바 목록에서 전환하며 메타데이터를 나란히 비교할 수 있습니다. 개발자 통합용 JSON, Excel이나 스프레드시트 분석용 CSV, 간단한 TXT 보고서로 내보내기 가능. 모든 결과를 단일 ZIP 아카이브로 다운로드. exifr.js를 사용한 로컬 처리로 민감한 GPS 좌표와 개인 정보를 포함한 이미지가 기기를 벗어나지 않습니다."
+  "img.metadata.about.body5": "최대 10장을 동시 처리하고 사이드바 목록에서 전환하며 메타데이터를 나란히 비교할 수 있습니다. 개발자 통합용 JSON, Excel이나 스프레드시트 분석용 CSV, 간단한 TXT 보고서로 내보내기 가능. 모든 결과를 단일 ZIP 아카이브로 다운로드. exifr.js를 사용한 로컬 처리로 민감한 GPS 좌표와 개인 정보를 포함한 이미지가 기기를 벗어나지 않습니다.",
+  "img.metadata.how.label": "사용 방법",
+  "img.metadata.how.title": "이미지 메타데이터를 세 단계로 확인하세요",
+  "img.metadata.step1.title": "이미지 업로드",
+  "img.metadata.step1.desc": "JPG, PNG, WebP, TIFF, HEIC 파일을 드래그 앤 드롭하거나 클릭하여 선택하세요. 최대 10장까지 동시 분석 가능.",
+  "img.metadata.step2.title": "메타데이터 카테고리 탐색",
+  "img.metadata.step2.desc": "추출된 데이터를 6가지 카테고리로 정리하여 확인하세요: 기본 정보, 카메라 설정, GPS 위치, IPTC 저작권, XMP 태그, 원시 데이터.",
+  "img.metadata.step3.title": "분석 결과 내보내기",
+  "img.metadata.step3.desc": "메타데이터를 JSON, CSV 또는 TXT로 내보내세요. 모든 결과를 ZIP으로 일괄 다운로드할 수 있습니다.",
+  "img.metadata.privacy.label": "100% 프라이빗",
+  "img.metadata.privacy.title": "이미지는 브라우저를 벗어나지 않습니다",
+  "img.metadata.privacy.body1": "모든 메타데이터 파싱은 브라우저 내에서 로컬로 수행됩니다. 외부 서버로 전송되는 데이터가 없어 개인 사진, 기밀 문서의 메타데이터도 완전히 안전합니다.",
+  "img.metadata.privacy.body2": "공개 공유 전에 사진에 포함된 GPS 좌표, 장비 정보, 저작권 데이터를 검사하세요. 민감한 위치 정보 노출을 방지할 수 있습니다.",
+  "img.metadata.privacy.stat.lbl": "서버에 업로드됨",
+  "img.metadata.privacy.stat.sub": "100% 브라우저 내 파싱"
 }

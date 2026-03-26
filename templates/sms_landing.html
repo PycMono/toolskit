@@ -1,7 +1,27 @@
 {{ template "base" . }}
 
 {{- define "extraHead" }}
+<link rel="canonical" href="https://toolboxnova.com/sms">
+<link rel="alternate" hreflang="zh" href="https://toolboxnova.com/sms?lang=zh">
+<link rel="alternate" hreflang="en" href="https://toolboxnova.com/sms?lang=en">
+<link rel="alternate" hreflang="ja" href="https://toolboxnova.com/sms?lang=ja">
+<link rel="alternate" hreflang="ko" href="https://toolboxnova.com/sms?lang=ko">
+<link rel="alternate" hreflang="es" href="https://toolboxnova.com/sms?lang=spa">
+<link rel="alternate" hreflang="x-default" href="https://toolboxnova.com/sms">
 <link rel="stylesheet" href="/static/css/sms.css?v={{ .AssetVer }}">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {{- range $i, $faq := .FAQs }}
+    {{- if $i }},{{ end }}
+    { "@type": "Question", "name": {{ $faq.Q | printf "%q" }},
+      "acceptedAnswer": { "@type": "Answer", "text": {{ $faq.A | printf "%q" }} } }
+    {{- end }}
+  ]
+}
+</script>
 {{- end }}
 
 {{- define "content" }}
@@ -148,61 +168,54 @@
   <div class="sms-container">
     <h2 class="sms-section-title">{{ call .T "sms.faq.title" }}</h2>
     <div class="faq-list">
-      <div class="faq-item" id="sms-faq-0">
-        <button class="faq-question" onclick="toggleFAQ('sms-faq-0')">
-          <span>What is SMS Receiver?</span>
+      {{ range $i, $faq := .FAQs }}
+      <div class="faq-item" id="sms-faq-{{ $i }}">
+        <button class="faq-question" onclick="toggleFAQ('sms-faq-{{ $i }}')">
+          <span>{{ $faq.Q }}</span>
           <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24"
                fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="6 9 12 15 18 9"/>
           </svg>
         </button>
-        <div class="faq-answer"><p>SMS Receiver provides virtual phone numbers to receive SMS verification codes online. No real phone number required.</p></div>
+        <div class="faq-answer"><p>{{ $faq.A }}</p></div>
       </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
 
-      <div class="faq-item" id="sms-faq-1">
-        <button class="faq-question" onclick="toggleFAQ('sms-faq-1')">
-          <span>How much does it cost?</span>
-          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24"
-               fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </button>
-        <div class="faq-answer"><p>Prices start from $0.01 per SMS depending on the service and country. Check our pricing page for details.</p></div>
+<!-- ── Privacy Section ─────────────────────────── -->
+<section class="sms-privacy-section" style="padding:64px 24px;background:#f8fafb">
+  <div class="sms-container" style="max-width:900px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
+      <div>
+        <span style="display:inline-block;background:#e8f5ee;color:#1a3a2e;font-size:.8125rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:16px">{{ call .T "sms.privacy.label" }}</span>
+        <h2 style="font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;margin:0 0 16px;line-height:1.2">{{ call .T "sms.privacy.title" }}</h2>
+        <p style="font-size:1.0625rem;color:#475569;line-height:1.75;margin:0">{{ call .T "sms.privacy.body1" }}</p>
+        <p style="font-size:1.0625rem;color:#475569;line-height:1.75;margin:14px 0 0">{{ call .T "sms.privacy.body2" }}</p>
       </div>
-
-      <div class="faq-item" id="sms-faq-2">
-        <button class="faq-question" onclick="toggleFAQ('sms-faq-2')">
-          <span>Which services are supported?</span>
-          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24"
-               fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </button>
-        <div class="faq-answer"><p>We support 700+ services including WhatsApp, Telegram, Google, Facebook, TikTok, Instagram, Twitter/X, and many more.</p></div>
-      </div>
-
-      <div class="faq-item" id="sms-faq-3">
-        <button class="faq-question" onclick="toggleFAQ('sms-faq-3')">
-          <span>How long do I have to receive the SMS?</span>
-          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24"
-               fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </button>
-        <div class="faq-answer"><p>You have 20 minutes to receive the verification code. If you don't receive it within this time, you can cancel the order and get a refund.</p></div>
-      </div>
-
-      <div class="faq-item" id="sms-faq-4">
-        <button class="faq-question" onclick="toggleFAQ('sms-faq-4')">
-          <span>Can I use the same number multiple times?</span>
-          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24"
-               fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 12 15 18 9"/>
-          </svg>
-        </button>
-        <div class="faq-answer"><p>No, each number is for single use only. After receiving the SMS, the number is released back to the pool.</p></div>
+      <div style="display:flex;align-items:center;justify-content:center">
+        <div style="background:#1a3a2e;border-radius:20px;padding:40px;display:flex;flex-direction:column;align-items:center;gap:16px;min-height:220px;max-width:280px;width:100%">
+          <div style="font-size:3.5rem">🔒</div>
+          <div style="display:flex;flex-direction:column;align-items:center;background:rgba(255,255,255,.12);border-radius:12px;padding:14px 28px">
+            <span style="font-size:2rem;font-weight:800;color:#4ade80;line-height:1">100%</span>
+            <span style="font-size:.8125rem;color:rgba(255,255,255,.7);margin-top:4px">{{ call .T "sms.privacy.stat.lbl" }}</span>
+          </div>
+          <div style="color:rgba(255,255,255,.85);font-size:.9375rem;font-weight:600;text-align:center">{{ call .T "sms.privacy.stat.sub" }}</div>
+        </div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ── About Section ──────────────────────────── -->
+<section class="sms-about-section" style="padding:64px 24px">
+  <div class="sms-container" style="max-width:900px;margin:0 auto">
+    <span style="display:inline-block;background:#e8f5ee;color:#1a3a2e;font-size:.8125rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:16px">{{ call .T "sms.about.label" }}</span>
+    <h2 style="font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;margin:0 0 16px;line-height:1.2">{{ call .T "sms.about.title" }}</h2>
+    <p style="font-size:1.0625rem;color:#475569;line-height:1.75;margin:0">{{ call .T "sms.about.body1" }}</p>
+    <p style="font-size:1.0625rem;color:#475569;line-height:1.75;margin:14px 0 0">{{ call .T "sms.about.body2" }}</p>
+    <p style="font-size:1.0625rem;color:#475569;line-height:1.75;margin:14px 0 0">{{ call .T "sms.about.body3" }}</p>
   </div>
 </section>
 

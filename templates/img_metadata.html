@@ -236,7 +236,7 @@
   </div>
 </section>
 
-<!-- ── 三特性 ──────────────────────────────── -->
+<!-- ── Three Features ──────────────────────────────── -->
 <section class="im-features-section">
   <div class="im-container">
     <div class="im-features-grid">
@@ -254,6 +254,55 @@
         <div class="im-feature-icon" style="background:#f0fdf4">📊</div>
         <h3>{{ call .T "img.metadata.feature.export.title" }}</h3>
         <p>{{ call .T "img.metadata.feature.export.desc" }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── How It Works ────────────────────────────────── -->
+<section class="im-how-section">
+  <div class="im-container">
+    <span class="im-section-label">{{ call .T "img.metadata.how.label" }}</span>
+    <h2 class="im-section-title">{{ call .T "img.metadata.how.title" }}</h2>
+    <div class="im-steps">
+      <div class="im-step">
+        <div class="im-step__num">1</div>
+        <h3 class="im-step__title">{{ call .T "img.metadata.step1.title" }}</h3>
+        <p class="im-step__desc">{{ call .T "img.metadata.step1.desc" }}</p>
+      </div>
+      <div class="im-step">
+        <div class="im-step__num">2</div>
+        <h3 class="im-step__title">{{ call .T "img.metadata.step2.title" }}</h3>
+        <p class="im-step__desc">{{ call .T "img.metadata.step2.desc" }}</p>
+      </div>
+      <div class="im-step">
+        <div class="im-step__num">3</div>
+        <h3 class="im-step__title">{{ call .T "img.metadata.step3.title" }}</h3>
+        <p class="im-step__desc">{{ call .T "img.metadata.step3.desc" }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Privacy ─────────────────────────────────────── -->
+<section class="im-privacy-section">
+  <div class="im-container">
+    <div class="im-privacy-split">
+      <div class="im-privacy-text">
+        <span class="im-section-label">{{ call .T "img.metadata.privacy.label" }}</span>
+        <h2 class="im-section-title">{{ call .T "img.metadata.privacy.title" }}</h2>
+        <p class="im-privacy-body">{{ call .T "img.metadata.privacy.body1" }}</p>
+        <p class="im-privacy-body">{{ call .T "img.metadata.privacy.body2" }}</p>
+      </div>
+      <div class="im-privacy-visual">
+        <div class="im-privacy-box">
+          <div class="im-privacy-box__icon">🔒</div>
+          <div class="im-privacy-stat">
+            <span class="im-privacy-stat__num">0 bytes</span>
+            <span class="im-privacy-stat__lbl">{{ call .T "img.metadata.privacy.stat.lbl" }}</span>
+          </div>
+          <div class="im-privacy-box__label">{{ call .T "img.metadata.privacy.stat.sub" }}</div>
+        </div>
       </div>
     </div>
   </div>

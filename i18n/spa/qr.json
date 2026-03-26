@@ -51,5 +51,19 @@
   "qr.about.body2": "Elige entre ocho tipos de contenido: URL (enlace a cualquier sitio web), vCard (tarjeta de visita digital que los destinatarios pueden guardar directamente en sus contactos del teléfono), texto plano (muestra un mensaje de hasta 300 caracteres), SMS (pre-rellena un mensaje de texto a un número específico), Email (pre-rellena destinatario, asunto y cuerpo), WiFi (conecta automáticamente a tu red — sin necesidad de escribir contraseña), Twitter/X (pre-compone un tweet) y Bitcoin (genera un código QR de pago de criptomoneda con dirección y cantidad opcional).",
   "qr.about.body3": "Personaliza cada aspecto visual de tu código QR. Elige entre cinco formas de puntos — Cuadrado, Redondeado, Puntos, Elegante y Elegante Redondeado — para que coincida con la estética de tu marca. Selecciona estilos de marcos de esquinas para crear una apariencia distintiva. Configura cualquier color de primer plano y fondo, o aplica un gradiente de múltiples paradas para un acabado moderno. Sube tu logo corporativo o icono de marca para incrustarlo en el centro del código QR. La vista previa en tiempo real se actualiza instantáneamente al ajustar los ajustes.",
   "qr.about.body4": "Descarga tu código QR terminado en cuatro formatos: PNG a resoluciones de hasta 2000×2000 píxeles para uso digital nítido, SVG para salida vectorial infinitamente escalable ideal para impresión en gran formato, JPG para máxima compatibilidad, o EPS para flujos de trabajo de impresión profesional en Adobe Illustrator e InDesign. Toda la generación ocurre localmente en tu navegador — ningún dato se envía a ningún servidor, manteniendo tus contraseñas WiFi, URLs de negocio y detalles de contacto completamente privados.",
-  "qr.about.body5": "Los códigos QR generados por esta herramienta siguen el estándar ISO/IEC 18004 y son compatibles con todas las aplicaciones modernas de cámara de smartphones en iOS y Android — no se necesita ninguna aplicación de escáner QR de terceros. Funcionan de forma fiable en el nivel de corrección de errores H (30% de tolerancia a daños), lo que significa que siguen escaneándose correctamente incluso si un logo, elemento decorativo o imperfección de impresión menor oscurece parcialmente el código."
+  "qr.about.body5": "Los códigos QR generados por esta herramienta siguen el estándar ISO/IEC 18004 y son compatibles con todas las aplicaciones modernas de cámara de smartphones en iOS y Android — no se necesita ninguna aplicación de escáner QR de terceros. Funcionan de forma fiable en el nivel de corrección de errores H (30% de tolerancia a daños), lo que significa que siguen escaneándose correctamente incluso si un logo, elemento decorativo o imperfección de impresión menor oscurece parcialmente el código.",
+  "qr.how.label": "Cómo funciona",
+  "qr.how.title": "Genera un código QR en tres sencillos pasos",
+  "qr.step1.title": "Elige el tipo de contenido",
+  "qr.step1.desc": "Selecciona entre 8 tipos: URL, vCard, Texto, SMS, Email, WiFi, Twitter/X o Bitcoin. Cada tipo tiene su propio formulario de entrada personalizado.",
+  "qr.step2.title": "Personaliza el diseño",
+  "qr.step2.desc": "Elige formas de puntos, estilos de esquinas, colores y degradados. Añade un logo en el centro y previsualiza los cambios en tiempo real.",
+  "qr.step3.title": "Descarga el código QR",
+  "qr.step3.desc": "Descarga como PNG (hasta 2000×2000), SVG, JPG o EPS. Disponible en vectorial para impresión y formatos de alta calidad para web.",
+  "qr.privacy.label": "100% Privado",
+  "qr.privacy.title": "Tus datos nunca salen del navegador",
+  "qr.privacy.body1": "Toda la generación de códigos QR ocurre localmente en tu navegador. Las contraseñas WiFi, contactos, URLs y otra información sensible nunca se envían a servidores externos.",
+  "qr.privacy.body2": "Genera códigos QR para información sensible con total tranquilidad. Sin registro, sin almacenamiento de datos, privacidad completa garantizada.",
+  "qr.privacy.stat.lbl": "enviado a ningún servidor",
+  "qr.privacy.stat.sub": "100% generación en el navegador"
 }

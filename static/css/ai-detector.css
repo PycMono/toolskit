@@ -614,3 +614,131 @@
   .aid-breakdown__labels { gap: 4px; }
 }
 
+/* ============================================================
+   AI Detector 响应式增强补全 — 追加至文件末尾
+   ============================================================ */
+
+/* ── 手机端 <768px 增强 ── */
+@media (max-width: 768px) {
+  /* 1. Gauge 宽度自适应 */
+  .aid-gauge-wrap {
+    width: min(220px, 68vw);
+    height: auto;
+    aspect-r: 220 / 130;
+  }
+  .aid-gauge-score { font-size: 2.2rem; }
+
+  /* 2. 检测器列表：隐藏进度条，保留名称+分数 */
+  .aid-detector-item {
+    justify-content: space-between;
+    padding: 8px 12px;
+  }
+  .aid-detector-name {
+    flex: 1;
+    font-size: 0.85rem;
+  }
+  .aid-detector-score {
+    flex: 0 0 auto;
+    font-size: 0.85rem;
+  }
+
+  /* 3. 统计三格 */
+  .aid-stats-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .aid-stat-card { padding: 8px; gap: 6px; }
+  .aid-stat-val  { font-size: 0.8rem; }
+  .aid-stat-lbl  { font-size: 0.65rem; }
+
+  /* 4. 操作按钮 sticky 底部 */
+  .aid-actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 100;
+    background: var(--aid-surface);
+    padding: 12px 16px;
+    margin: 0 -20px -20px;
+    border-top: 1px solid var(--aid-border);
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+    border-radius: 0 0 var(--aid-radius-lg) var(--aid-radius-lg);
+  }
+
+  /* 5. 输入 Tab 横向滚动 */
+  .aid-input-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+  .aid-input-tabs::-webkit-scrollbar { display: none; }
+
+  /* 6. 高亮文本段落：修复左侧 padding 遮字 */
+  .aid-highlight-para {
+    padding-left: 8px;
+    padding-top: 28px;
+  }
+  .aid-para-label {
+    position: static;
+    display: inline-flex;
+    margin-bottom: 6px;
+  }
+  .aid-highlight-text { max-height: 240px; }
+
+  /* 7. Toast 避开 sticky 操作栏 */
+  .aid-toast-container {
+    left: 12px;
+    right: 12px;
+    bottom: 76px;
+  }
+  .aid-toast { min-width: 0; width: 100%; }
+
+  /* 8. 主题按钮避开操作栏 */
+  .aid-theme-toggle { bottom: 86px; right: 16px; }
+
+  /* 9. Editorial 区 */
+  .aid-ed-grid  { grid-template-columns: 1fr; }
+  .aid-ed-stats { grid-template-columns: repeat(2, 1fr); }
+  .aid-ed-card--wide { grid-column: auto; }
+  .aid-cta-banner {
+    flex-direction: column;
+    padding: 20px 16px;
+    text-align: center;
+  }
+
+  /* 10. 断点标签 */
+  .aid-breakdown__lbl { font-size: 0.72rem; }
+}
+
+/* ── 小手机端 <480px ── */
+@media (max-width: 480px) {
+  /* 统计改为两列 */
+  .aid-stats-row { grid-template-columns: repeat(2, 1fr); }
+
+  /* 选项面板：单列 */
+  .aid-opt-row { grid-template-columns: 1fr; }
+
+  /* Purpose Tab 横向滚动 */
+  .aid-purpose-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .aid-purpose-tabs::-webkit-scrollbar { display: none; }
+
+  /* Gauge 分数 */
+  .aid-gauge-score { font-size: 1.8rem; }
+
+  /* Textarea 最小高度 */
+  .aid-textarea { min-height: 180px; }
+
+  /* Hero */
+  .aid-hero { padding: 20px 12px 14px; }
+  .aid-tool { padding: 0 12px 24px; }
+
+  /* 选项面板 padding */
+  .aid-panel--input { padding: 14px; }
+}
+

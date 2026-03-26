@@ -114,6 +114,19 @@ func SMSLandingPage(c *gin.Context) {
 	t := getT(c)
 	lang := c.GetString("lang")
 
+	// Build FAQ data
+	type FAQ struct {
+		Q string
+		A string
+	}
+	faqs := []FAQ{
+		{Q: t("sms.faq.q1"), A: t("sms.faq.a1")},
+		{Q: t("sms.faq.q2"), A: t("sms.faq.a2")},
+		{Q: t("sms.faq.q3"), A: t("sms.faq.a3")},
+		{Q: t("sms.faq.q4"), A: t("sms.faq.a4")},
+		{Q: t("sms.faq.q5"), A: t("sms.faq.a5")},
+	}
+
 	data := baseData(c, gin.H{
 		"Title":       t("sms.seo.landing.title"),
 		"Description": t("sms.seo.landing.desc"),
@@ -122,6 +135,7 @@ func SMSLandingPage(c *gin.Context) {
 		"Path":        "/sms",
 		"Countries":   countries,
 		"Services":    services,
+		"FAQs":        faqs,
 		"JSONLD": template.JS(`{
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",

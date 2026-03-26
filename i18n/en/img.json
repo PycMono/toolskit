@@ -242,42 +242,47 @@
   "img.metadata.about.body3": "For privacy-conscious users and journalists, GPS coordinates embedded in smartphone photos can expose sensitive locations — home addresses, workplace locations, visited medical facilities. This tool lets you inspect GPS data before sharing images publicly, helping you make informed decisions about which images to share and which to scrub. For GPS-tagged images, an interactive OpenStreetMap preview shows the precise shooting location at a glance.",
   "img.metadata.about.body4": "IPTC metadata is the professional standard for copyright and editorial information: author name, copyright notice, image description, keywords, city, country, and usage rights. Photo agencies, stock libraries, and digital asset management systems rely on IPTC fields to track ownership and licensing. XMP data, originally developed by Adobe, carries workflow information like star ratings, colour labels, editing software history, and colour space — essential for cross-application workflows in Lightroom, Capture One and similar tools.",
   "img.metadata.about.body5": "Process up to 10 images simultaneously and switch between them in a sidebar list to compare metadata side by side — ideal for auditing large photo libraries or verifying consistent settings across a shoot. Export metadata in JSON format for developer integrations, CSV for spreadsheet analysis in Excel or Google Sheets, or plain TXT for quick human-readable reports. Download all results as a single ZIP archive. Because all processing happens locally using the exifr.js library, your images — including sensitive GPS coordinates and personal information — never leave your device.",
+  "img.metadata.how.label": "How It Works",
+  "img.metadata.how.title": "View image metadata in three simple steps",
+  "img.metadata.step1.title": "Upload images",
+  "img.metadata.step1.desc": "Drag & drop or click to select JPG, PNG, WebP, TIFF or HEIC files. Upload up to 10 images at once for side-by-side comparison.",
+  "img.metadata.step2.title": "Explore metadata categories",
+  "img.metadata.step2.desc": "Browse extracted data organised into six categories: Basic Info, Camera Settings, GPS Location, IPTC Copyright, XMP Data, and Raw JSON.",
+  "img.metadata.step3.title": "Export findings",
+  "img.metadata.step3.desc": "Export metadata as JSON, CSV or TXT. Download individual files or grab all results in a single ZIP archive.",
+  "img.metadata.privacy.label": "100% Private",
+  "img.metadata.privacy.title": "Your images never leave your browser",
+  "img.metadata.privacy.body1": "All metadata parsing is performed locally using the exifr.js library. Your images — including sensitive GPS coordinates, personal information, and copyright data — are never uploaded to any server.",
+  "img.metadata.privacy.body2": "Inspect confidential photos, verify metadata before sharing, and audit your photo library with complete confidence. No account required, no data stored.",
+  "img.metadata.privacy.stat.lbl": "uploaded to any server",
+  "img.metadata.privacy.stat.sub": "100% browser-side parsing",
   "img.metadata.raw.toggle_show": "Show Raw Data",
   "img.metadata.raw.toggle_hide": "Hide Raw Data",
   "img.metadata.raw.copy_all": "Copy All JSON",
-
   "seo.crop.title": "Image Cropping Tool - Free Online Crop JPG/PNG/WebP | Tool Box Nova",
   "seo.crop.description": "Free online image cropping tool, supports free cropping, fixed size cropping and batch processing, no server upload required, all operations completed in browser, supports JPG/PNG/WebP multi-format output.",
   "seo.crop.keywords": "image cropping, online crop, free cropping, image trim, custom size, batch cropping, smart cropping",
-
   "seo.to_jpg.title": "Image to JPG - Free Online Convert PNG/WebP/BMP to JPG | Tool Box Nova",
   "seo.to_jpg.description": "Free online image to JPG converter, supports PNG, WebP, BMP, GIF, TIFF formats converted to JPG, adjustable compression quality, batch processing multiple images, all operations completed in browser, no server upload required.",
   "seo.to_jpg.keywords": "convert to JPG, JPG conversion, image format converter, online JPG converter, PNG to JPG, WebP to JPG, BMP to JPG",
-
   "seo.jpg_to.title": "JPG to Image - Free Online Convert JPG to PNG/WebP/BMP | Tool Box Nova",
   "seo.jpg_to.description": "Free online JPG to image converter, supports converting JPG to PNG, WebP, BMP formats, supports transparent background conversion, batch processing multiple images, all operations completed in browser, no server upload required.",
   "seo.jpg_to.keywords": "JPG to image, JPG conversion, JPG to PNG, JPG to WebP, JPG to BMP, JPG to format",
-
   "seo.editor.title": "Online Image Editor - Free Adjust Brightness/Contrast/Saturation | Tool Box Nova",
   "seo.editor.description": "Free online image editor, supports adjusting brightness, contrast, saturation, sharpness, blur and more parameters, real-time preview effect, batch processing multiple images, all operations completed in browser, no server upload required.",
   "seo.editor.keywords": "image editor, online image editing, free image editing, adjust brightness, adjust contrast, adjust saturation, image enhancement",
-
   "seo.remove_bg.title": "AI Background Removal - Free Smart Remove Image Background | Tool Box Nova",
   "seo.remove_bg.description": "Free AI background removal tool, uses advanced AI technology for smart image extraction, supports portraits, products, logos and more image types, real-time processing in browser, no server upload required, output PNG with transparent background.",
   "seo.remove_bg.keywords": "AI background removal, smart cutout, background removal, image extraction, portrait cutout, product cutout, logo cutout, free background removal",
-
   "seo.watermark.title": "Image Watermark Tool - Free Add Text/Image Watermark | Tool Box Nova",
   "seo.watermark.description": "Free online image watermark tool, supports adding text watermarks and image watermarks, customizable position, size, transparency, batch processing multiple images, all operations completed in browser, no server upload required.",
   "seo.watermark.keywords": "image watermark, add watermark, text watermark, image watermark, watermark creation, copyright watermark, batch watermark, online watermark",
-
   "seo.rotate.title": "Image Rotation Tool - Free Online Rotate and Flip Images | Tool Box Nova",
   "seo.rotate.description": "Free online image rotation tool, supports rotation at any angle, horizontal flip, vertical flip, automatic edge cropping to maintain completeness, batch processing multiple images, all operations completed in browser, no server upload required.",
   "seo.rotate.keywords": "image rotation, rotate image, flip image, horizontal flip, vertical flip, arbitrary angle rotation, image flip tool",
-
   "seo.qr.title": "QR Code Generator - Free Online Generate Multiple Types of QR Codes | Tool Box Nova",
   "seo.qr.description": "Free online QR code generator, supports URL, vCard, WiFi, SMS, Email, Bitcoin and more types, customizable colors, shapes, logos, download PNG/SVG/JPG/EPS, all operations completed in browser, no server upload required.",
   "seo.qr.keywords": "QR code generator, QR code generation, online QR code, free QR code, custom QR code, URL QR code, WiFi QR code, vCard QR code",
-
   "crop.name": "Image Cropping Tool",
   "crop.hero.title": "Free Online Image Cropping",
   "crop.hero.subtitle": "Free cropping, precise size, batch processing, smart algorithm automatically optimizes cropping results, Canvas API driven, files don't leave your device",
@@ -704,3 +709,4 @@
   "rotate.s6.body1": "This free online image rotation tool supports direct rotation and flipping of JPG, PNG, WebP, GIF, BMP, SVG images in your browser without uploading to any server. Whether correcting slanted photos taken with phones, special angles for creative composition, or batch processing大量图片 orientation, it can be done instantly without installing any software.",
   "rotate.s6.body2": "Unlike cloud tools that upload files to remote servers, all rotation processing is done locally in your browser through Canvas API, image files never leave your device. For personal private photos, confidential files or proprietary design assets, this tool is the safest choice, no registration required, no file size limits, no daily usage limits.",
   "rotate.s6.body3": "Main features include: arbitrary angle rotation (-360° to 360°), 90° quick rotation, horizontal and vertical flipping, automatic edge cropping, custom fill color, batch processing up to 20 images at once, multi-format output, one-click ZIP download. Start rotating your images for free now - upload, set, download, three steps done."
+}

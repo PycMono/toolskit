@@ -492,10 +492,35 @@
 /* ── 响应式 ──────────────────────────────── */
 @media (max-width: 768px) {
   .sms-hero__title { font-size: 2rem; }
+  .sms-hero { padding: 48px 0 40px; }
+  .sms-hero__subtitle { font-size: 1rem; padding: 0 16px; }
   .sms-stats-grid  { grid-template-columns: repeat(2, 1fr); }
   .sms-steps       { flex-direction: column; }
   .step-card--arrow { display: none; }
   .sms-navbar__links a:not(.sms-nav-btn) { display: none; }
   .dropdown-list { grid-template-columns: 1fr; }
+  .sms-container { padding: 0 12px; }
+  .hero-search-box { flex-direction: column; padding: 12px; gap: 10px; }
+  .hero-search-input { width: 100%; padding: 12px; }
+  .hero-search-btn { width: 100%; justify-content: center; }
+  .sms-section-title { font-size: 1.5rem; }
+  .faq-question { padding: 14px 16px; font-size: 0.9rem; }
+  .faq-answer p { padding: 0 16px 14px; font-size: 0.875rem; }
+}
+
+@media (max-width: 480px) {
+  .sms-hero { padding: 32px 0 28px; }
+  .sms-hero__title { font-size: 1.6rem; }
+  .sms-hero__badges { gap: 8px; }
+  .sms-badge { font-size: 0.75rem; padding: 4px 12px; }
+  .sms-stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .stat-card { padding: 16px; }
+  .stat-card__number { font-size: 1.75rem; }
+  .stat-card__label { font-size: 0.75rem; }
+  .marquee-item { min-width: 70px; padding: 10px 12px; }
+  .marquee-item img, .marquee-item .service-icon { width: 28px; height: 28px; font-size: 24px; }
+  .step-card { padding: 20px 16px; }
+  .step-card h3 { font-size: 0.9rem; }
+  .step-card p { font-size: 0.8rem; }
 }
 

@@ -1,19 +1,15 @@
 {{ template "base" . }}
 
 {{ define "extraHead" }}
-<title>{{ .Title }}</title>
-<meta name="description" content="{{ .Description }}">
-<meta name="keywords"    content="{{ .Keywords }}">
-<meta property="og:title" content="{{ .Title }}"><meta property="og:description" content="{{ .Description }}"><meta property="og:type" content="website"><meta property="og:url" content="https://toolboxnova.com/img/photo-editor"><meta property="og:image" content="https://toolboxnova.com/static/img/og.png">
 <link rel="canonical" href="https://toolboxnova.com/img/photo-editor">
 <link rel="alternate" hreflang="zh" href="https://toolboxnova.com/img/photo-editor?lang=zh">
 <link rel="alternate" hreflang="en" href="https://toolboxnova.com/img/photo-editor?lang=en">
 <link rel="alternate" hreflang="ja" href="https://toolboxnova.com/img/photo-editor?lang=ja">
 <link rel="alternate" hreflang="ko" href="https://toolboxnova.com/img/photo-editor?lang=ko">
-<link rel="alternate" hreflang="es" href="https://toolboxnova.com/img/photo-editor?lang=spa">
+<link rel="alternate" hreflang="spa" href="https://toolboxnova.com/img/photo-editor?lang=spa">
 <link rel="alternate" hreflang="x-default" href="https://toolboxnova.com/img/photo-editor">
 <link rel="stylesheet" href="/static/css/img-toolbox.css?v={{ .AssetVer }}">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"{{ .Title }}","applicationCategory":"MultimediaApplication","operatingSystem":"Web Browser","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"{{ .Description }}","url":"https://toolboxnova.com/img/photo-editor"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"{{ .Title }}","applicationCategory":"MultimediaApplication","operatingSystem":"Web Browser","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"{{ .Description }}","url":"https://toolboxnova.com/img/photo-editor","featureList":["Brightness adjustment","Contrast adjustment","Saturation adjustment","Sharpness and blur effects","Non-destructive editing","Browser-side processing - no upload required"]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{{- range $i,$f := .FAQs }}{{if $i}},{{end}}{"@type":"Question","name":{{ $f.Q | html }},"acceptedAnswer":{"@type":"Answer","text":{{ $f.A | html }}}}{{- end}}]}</script>
 {{ end }}
 
@@ -65,6 +61,56 @@
   <aside class="itb-sidebar">{{- template "partials/ad_slot.html" dict "SlotID" "img-editor-sidebar" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}</aside>
   </div>
   <section class="itb-features"><div class="itb-features__grid"><div class="itb-feature-card"><div class="itb-feature-card__icon">🎨</div><h3 class="itb-feature-card__title">{{ call .T "feature.editor.f1.title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.editor.f1.desc" }}</p></div><div class="itb-feature-card"><div class="itb-feature-card__icon">🔄</div><h3 class="itb-feature-card__title">{{ call .T "feature.editor.f2.title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.editor.f2.desc" }}</p></div><div class="itb-feature-card"><div class="itb-feature-card__icon">📦</div><h3 class="itb-feature-card__title">{{ call .T "feature.editor.f3.title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.editor.f3.desc" }}</p></div></div></section>
+
+    <!-- How It Works -->
+    <section class="itb-section itb-section--alt">
+      <div class="itb-section-inner">
+        <span class="itb-section-label">{{ call .T "hero.editor.how.label" }}</span>
+        <h2 class="itb-section-title">{{ call .T "hero.editor.how.title" }}</h2>
+        <div class="itb-steps">
+          <div class="itb-step">
+            <div class="itb-step__num">1</div>
+            <h3 class="itb-step__title">{{ call .T "hero.editor.step1.title" }}</h3>
+            <p class="itb-step__desc">{{ call .T "hero.editor.step1.desc" }}</p>
+          </div>
+          <div class="itb-step">
+            <div class="itb-step__num">2</div>
+            <h3 class="itb-step__title">{{ call .T "hero.editor.step2.title" }}</h3>
+            <p class="itb-step__desc">{{ call .T "hero.editor.step2.desc" }}</p>
+          </div>
+          <div class="itb-step">
+            <div class="itb-step__num">3</div>
+            <h3 class="itb-step__title">{{ call .T "hero.editor.step3.title" }}</h3>
+            <p class="itb-step__desc">{{ call .T "hero.editor.step3.desc" }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy & Safety -->
+    <section class="itb-section">
+      <div class="itb-section-inner">
+        <div class="itb-split">
+          <div class="itb-split-text">
+            <span class="itb-section-label">{{ call .T "hero.editor.privacy.label" }}</span>
+            <h2 class="itb-section-title">{{ call .T "hero.editor.privacy.title" }}</h2>
+            <p class="itb-section-body">{{ call .T "hero.editor.privacy.body1" }}</p>
+            <p class="itb-section-body">{{ call .T "hero.editor.privacy.body2" }}</p>
+          </div>
+          <div class="itb-split-visual">
+            <div class="itb-visual-box">
+              <div class="itb-visual-box__icon">🔒</div>
+              <div class="itb-visual-stat">
+                <span class="itb-visual-stat__num">0 bytes</span>
+                <span class="itb-visual-stat__lbl">{{ call .T "hero.editor.privacy.stat.lbl" }}</span>
+              </div>
+              <div class="itb-visual-box__label">{{ call .T "hero.editor.privacy.stat.sub" }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
       <section class="itb-about">
       <span class="itb-about__label">{{ call .T "hero.editor.about.label" }}</span>
       <h2 class="itb-about__title">{{ call .T "hero.editor.about.title" }}</h2>

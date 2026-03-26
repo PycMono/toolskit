@@ -16,17 +16,35 @@ import (
 // ProxyPage renders the proxy page
 func ProxyPage(c *gin.Context) {
 	t := getT(c)
+
+	// Build FAQ data
+	type FAQ struct {
+		Q string
+		A string
+	}
+	faqs := []FAQ{
+		{Q: t("proxy.faq.q1"), A: t("proxy.faq.a1")},
+		{Q: t("proxy.faq.q2"), A: t("proxy.faq.a2")},
+		{Q: t("proxy.faq.q3"), A: t("proxy.faq.a3")},
+		{Q: t("proxy.faq.q4"), A: t("proxy.faq.a4")},
+		{Q: t("proxy.faq.q5"), A: t("proxy.faq.a5")},
+	}
+
 	data := baseData(c, gin.H{
 		"Title":       t("proxy.title"),
 		"Description": t("proxy.meta_desc"),
 		"Keywords":    "free proxy, anonymous proxy, web proxy, hide IP, online proxy",
 		"PageClass":   "page-proxy",
+		"FAQs":        faqs,
 		"JSONLD": template.JS(`{
   "@context": "https://schema.org",
-  "@type": "WebApplication",
+  "@type": "SoftwareApplication",
   "name": "Anonymous Web Proxy",
-  "url": "https://toolboxnova.com/proxy",
-  "description": "Browse the web anonymously with our free online proxy."
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Web Browser",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Browse the web anonymously with our free online proxy.",
+  "url": "https://toolboxnova.com/proxy"
 }`),
 	})
 	render(c, "proxy.html", data)

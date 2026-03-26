@@ -944,3 +944,55 @@
   min-height: 20px;
 }
 
+/* ============================================================
+   Dev Tools 响应式增强补全 — 追加至文件末尾
+   ============================================================ */
+
+/* ── 手机端 <768px ── */
+@media (max-width: 768px) {
+  /* IP 面板：双栏变单栏 */
+  .ip-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Leaflet 地图高度限制 */
+  #ipMap {
+    height: 240px !important;
+    width: 100%;
+    border-radius: 12px;
+  }
+
+  /* 查询行：换行排列 */
+  .ip-lookup-row {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .ip-lookup-row .text-input { width: 100%; flex: none; }
+  .ip-lookup-row .btn { flex: 1; min-width: 0; }
+
+  /* IP 大号显示 */
+  .ip-my-value { font-size: 1.4rem; word-break: break-all; }
+
+  /* Whois tabs 横向滚动 */
+  .whois-tabs { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
+  .whois-tab { white-space: nowrap; }
+}
+
+/* ── 小手机端 <480px ── */
+@media (max-width: 480px) {
+  #ipMap { height: 180px !important; }
+  .ip-field {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .ip-field__value { font-size: 0.875rem; word-break: break-all; }
+
+  /* Hash card 字号缩小 */
+  .hash-card { padding: 10px; }
+  .hash-card__label { font-size: 12px; }
+  .hash-value { font-size: 11px; }
+}
+

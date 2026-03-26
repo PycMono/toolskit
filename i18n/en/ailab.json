@@ -429,5 +429,18 @@
   "aid.ed.p5": "Your text is never stored, logged, or shared. Detection happens in real time with zero data retention. No account required — just paste and detect.",
   "aid.ed.h6": "File & URL Detection",
   "aid.ed.p6": "Paste text, upload a PDF/DOCX/TXT file, or enter a URL to scan any webpage. Supports documents up to 10MB and text up to 15,000 characters — the highest free limit available.",
-  "aid.action.goto_humanizer": "Humanize This Text →"
+  "aid.action.goto_humanizer": "Humanize This Text →",
+  "pc.how.label": "How It Works",
+  "pc.how.title": "Check your account security in three steps",
+  "pc.step1.title": "Enter your email",
+  "pc.step1.desc": "Type your email address into the search field. We use secure k-anonymity protocols so your full email is never sent to any external server.",
+  "pc.step2.title": "View breach results",
+  "pc.step2.desc": "Our tool checks against known data breach databases. If your email appears in any breaches, you'll see details including the breach date, affected data types, and severity level.",
+  "pc.step3.title": "Take protective action",
+  "pc.step3.desc": "Based on the results, receive personalised security recommendations. Change compromised passwords, enable two-factor authentication, and monitor your accounts for suspicious activity.",
+  "pc.about.label": "About",
+  "pc.about.title": "Free data breach checker — protect your digital identity",
+  "pc.about.body1": "This privacy checker allows you to verify whether your email address or password has been exposed in known data breaches. By checking your accounts regularly, you can take proactive steps to protect your digital identity before attackers exploit leaked credentials.",
+  "pc.about.body2": "The tool uses the k-anonymity protocol for password checks, meaning only a partial hash of your password is ever transmitted — your full password never leaves your browser. For email checks, we query the breach database directly while maintaining minimal data retention.",
+  "pc.about.body3": "Data breaches are increasingly common and can expose sensitive information including passwords, email addresses, phone numbers, and more. Regular monitoring helps you stay ahead of potential threats and take timely action to secure your accounts."
 }

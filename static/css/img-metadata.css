@@ -462,3 +462,50 @@ body.img-metadata-page {
   font-size: 1rem; color: #475569;
   line-height: 1.8; margin: 0 0 14px; max-width: 820px;
 }
+
+/* ── Editorial: How It Works ── */
+.im-how-section {
+  padding: 56px 0;
+  background: #fff;
+  border-top: 1px solid #e2e8f0;
+}
+.im-how-section .im-container { max-width: 860px; }
+.im-how-section .im-section-title { margin-bottom: 28px; }
+.im-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.im-step { text-align: center; padding: 20px 16px; }
+.im-step__num {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: #e0f2fe; color: #0369a1;
+  font-size: 1.25rem; font-weight: 800;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-bottom: 12px;
+}
+.im-step__title { font-size: 1rem; font-weight: 700; color: #0f172a; margin: 0 0 8px; }
+.im-step__desc { font-size: .875rem; color: #64748b; line-height: 1.6; margin: 0; }
+
+/* ── Editorial: Privacy ── */
+.im-privacy-section {
+  padding: 56px 0;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+.im-privacy-section .im-container { max-width: 860px; }
+.im-privacy-split { display: flex; gap: 40px; align-items: center; }
+.im-privacy-text { flex: 1; min-width: 0; }
+.im-privacy-text .im-section-title { margin-bottom: 16px; }
+.im-privacy-body { font-size: 1rem; color: #475569; line-height: 1.8; margin: 0 0 12px; }
+.im-privacy-visual { flex-shrink: 0; width: 220px; }
+.im-privacy-box {
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  border-radius: 16px; padding: 32px 24px; text-align: center;
+}
+.im-privacy-box__icon { font-size: 2.5rem; margin-bottom: 16px; }
+.im-privacy-stat__num { display: block; font-size: 1.75rem; font-weight: 800; color: #0f172a; }
+.im-privacy-stat__lbl { display: block; font-size: .875rem; color: #64748b; margin-top: 4px; }
+.im-privacy-box__label { font-size: .8125rem; color: #0369a1; font-weight: 600; margin-top: 12px; }
+
+@media (max-width: 640px) {
+  .im-steps { grid-template-columns: 1fr; }
+  .im-privacy-split { flex-direction: column; }
+  .im-privacy-visual { width: 100%; }
+}

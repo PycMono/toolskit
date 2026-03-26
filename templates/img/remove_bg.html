@@ -1,18 +1,15 @@
 {{ template "base" . }}
 
 {{ define "extraHead" }}
-<title>{{ .Title }}</title>
-<meta name="description" content="{{ .Description }}"><meta name="keywords" content="{{ .Keywords }}">
-<meta property="og:title" content="{{ .Title }}"><meta property="og:description" content="{{ .Description }}"><meta property="og:type" content="website"><meta property="og:url" content="https://toolboxnova.com/img/remove-bg"><meta property="og:image" content="https://toolboxnova.com/static/img/og.png">
 <link rel="canonical" href="https://toolboxnova.com/img/remove-bg">
 <link rel="alternate" hreflang="zh" href="https://toolboxnova.com/img/remove-bg?lang=zh">
 <link rel="alternate" hreflang="en" href="https://toolboxnova.com/img/remove-bg?lang=en">
 <link rel="alternate" hreflang="ja" href="https://toolboxnova.com/img/remove-bg?lang=ja">
 <link rel="alternate" hreflang="ko" href="https://toolboxnova.com/img/remove-bg?lang=ko">
-<link rel="alternate" hreflang="es" href="https://toolboxnova.com/img/remove-bg?lang=spa">
+<link rel="alternate" hreflang="spa" href="https://toolboxnova.com/img/remove-bg?lang=spa">
 <link rel="alternate" hreflang="x-default" href="https://toolboxnova.com/img/remove-bg">
 <link rel="stylesheet" href="/static/css/img-toolbox.css?v={{ .AssetVer }}">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"{{ .Title }}","applicationCategory":"MultimediaApplication","operatingSystem":"Web Browser","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"{{ .Description }}","url":"https://toolboxnova.com/img/remove-bg"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"{{ .Title }}","applicationCategory":"MultimediaApplication","operatingSystem":"Web Browser","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"{{ .Description }}","url":"https://toolboxnova.com/img/remove-bg","featureList":["AI-powered background removal","Sub-pixel precision edge detection","Works with portraits, products, animals","Transparent PNG output","Browser-side AI - no upload required"]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{{- range $i,$f := .FAQs }}{{if $i}},{{end}}{"@type":"Question","name":{{ $f.Q | html }},"acceptedAnswer":{"@type":"Answer","text":{{ $f.A | html }}}}{{- end}}]}</script>
 {{ end }}
 
@@ -43,6 +40,56 @@
   <aside class="itb-sidebar">{{- template "partials/ad_slot.html" dict "SlotID" "img-remove-bg-sidebar" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}</aside>
   </div>
   <section class="itb-features"><div class="itb-features__grid"><div class="itb-feature-card"><div class="itb-feature-card__icon">🤖</div><h3 class="itb-feature-card__title">{{ call .T "feature.remove_bg.f1.title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.remove_bg.f1.desc" }}</p></div><div class="itb-feature-card"><div class="itb-feature-card__icon">🎚️</div><h3 class="itb-feature-card__title">{{ call .T "feature.remove_bg.f2.title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.remove_bg.f2.desc" }}</p></div><div class="itb-feature-card"><div class="itb-feature-card__icon">🪟</div><h3 class="itb-feature-card__title">{{ call .T "feature.remove_bg.f3.title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.remove_bg.f3.desc" }}</p></div></div></section>
+
+    <!-- How It Works -->
+    <section class="itb-section itb-section--alt">
+      <div class="itb-section-inner">
+        <span class="itb-section-label">{{ call .T "hero.remove_bg.how.label" }}</span>
+        <h2 class="itb-section-title">{{ call .T "hero.remove_bg.how.title" }}</h2>
+        <div class="itb-steps">
+          <div class="itb-step">
+            <div class="itb-step__num">1</div>
+            <h3 class="itb-step__title">{{ call .T "hero.remove_bg.step1.title" }}</h3>
+            <p class="itb-step__desc">{{ call .T "hero.remove_bg.step1.desc" }}</p>
+          </div>
+          <div class="itb-step">
+            <div class="itb-step__num">2</div>
+            <h3 class="itb-step__title">{{ call .T "hero.remove_bg.step2.title" }}</h3>
+            <p class="itb-step__desc">{{ call .T "hero.remove_bg.step2.desc" }}</p>
+          </div>
+          <div class="itb-step">
+            <div class="itb-step__num">3</div>
+            <h3 class="itb-step__title">{{ call .T "hero.remove_bg.step3.title" }}</h3>
+            <p class="itb-step__desc">{{ call .T "hero.remove_bg.step3.desc" }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy & Safety -->
+    <section class="itb-section">
+      <div class="itb-section-inner">
+        <div class="itb-split">
+          <div class="itb-split-text">
+            <span class="itb-section-label">{{ call .T "hero.remove_bg.privacy.label" }}</span>
+            <h2 class="itb-section-title">{{ call .T "hero.remove_bg.privacy.title" }}</h2>
+            <p class="itb-section-body">{{ call .T "hero.remove_bg.privacy.body1" }}</p>
+            <p class="itb-section-body">{{ call .T "hero.remove_bg.privacy.body2" }}</p>
+          </div>
+          <div class="itb-split-visual">
+            <div class="itb-visual-box">
+              <div class="itb-visual-box__icon">🔒</div>
+              <div class="itb-visual-stat">
+                <span class="itb-visual-stat__num">0 bytes</span>
+                <span class="itb-visual-stat__lbl">{{ call .T "hero.remove_bg.privacy.stat.lbl" }}</span>
+              </div>
+              <div class="itb-visual-box__label">{{ call .T "hero.remove_bg.privacy.stat.sub" }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
       <section class="itb-about">
       <span class="itb-about__label">{{ call .T "hero.remove_bg.about.label" }}</span>
       <h2 class="itb-about__title">{{ call .T "hero.remove_bg.about.title" }}</h2>

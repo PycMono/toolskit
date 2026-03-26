@@ -426,5 +426,18 @@
   "aid.ed.p5": "Tu texto nunca se almacena ni se comparte. No se requiere cuenta.",
   "aid.ed.h6": "Detección de archivos y URL",
   "aid.ed.p6": "Sube archivos PDF/DOCX/TXT o introduce una URL. Hasta 15,000 caracteres gratis.",
-  "aid.action.goto_humanizer": "Humanizar Este Texto →"
+  "aid.action.goto_humanizer": "Humanizar Este Texto →",
+  "pc.how.label": "Cómo funciona",
+  "pc.how.title": "Verifica la seguridad de tu cuenta en tres pasos",
+  "pc.step1.title": "Ingresa tu email",
+  "pc.step1.desc": "Escribe tu dirección de email en el campo de búsqueda. Usamos protocolos seguros de k-anonimato para que tu email completo nunca se envíe a ningún servidor externo.",
+  "pc.step2.title": "Ver resultados de filtraciones",
+  "pc.step2.desc": "Nuestra herramienta verifica contra bases de datos de filtraciones conocidas. Si tu email aparece en alguna, verás detalles incluyendo la fecha, tipos de datos afectados y nivel de severidad.",
+  "pc.step3.title": "Toma medidas de protección",
+  "pc.step3.desc": "Basado en los resultados, recibe recomendaciones personalizadas de seguridad. Cambia contraseñas comprometidas, habilita autenticación de dos factores y monitorea tus cuentas.",
+  "pc.about.label": "Acerca de",
+  "pc.about.title": "Verificador gratuito de filtraciones de datos — protege tu identidad digital",
+  "pc.about.body1": "Este verificador de privacidad te permite verificar si tu email o contraseña ha sido expuesto en filtraciones de datos conocidas. Al verificar tus cuentas regularmente, puedes tomar medidas proactivas para proteger tu identidad digital.",
+  "pc.about.body2": "La herramienta usa el protocolo de k-anonimato para verificaciones de contraseña, lo que significa que solo un hash parcial se transmite — tu contraseña completa nunca sale de tu navegador.",
+  "pc.about.body3": "Las filtraciones de datos son cada vez más comunes y pueden exponer información sensible incluyendo contraseñas, emails, números de teléfono y más. El monitoreo regular te ayuda a mantenerte ahead de amenazas potenciales."
 }

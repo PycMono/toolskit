@@ -91,6 +91,8 @@ const DevIP = (() => {
       .bindPopup('<b>' + (city || '') + '</b><br>' + (country || ''))
       .openPopup();
     map.flyTo([lat, lon], 10, { duration: 1.5 });
+    // Fix tile rendering after animation
+    setTimeout(() => { if (map) map.invalidateSize(); }, 400);
   }
 
   function setStatus(msg) {
@@ -102,4 +104,15 @@ const DevIP = (() => {
 })();
 
 document.addEventListener('DOMContentLoaded', () => DevIP.loadMyIP());
+
+// Fix map tiles on window resize
+window.addEventListener('resize', () => {
+  if (typeof L !== 'undefined' && DevIP) {
+    const mapEl = document.getElementById('ipMap');
+    if (mapEl && mapEl._leaflet_id) {
+      // Leaflet map was initialized; trigger resize via private ref
+      try { L.Util.requestAnimFrame(() => { mapEl._leaflet_id && window._ipMap && window._ipMap.invalidateSize(); }); } catch(e) {}
+    }
+  }
+});
 

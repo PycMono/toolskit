@@ -1,5 +1,29 @@
 {{ template "base" . }}
 
+{{ define "extraHead" }}
+<link rel="canonical" href="https://toolboxnova.com/proxy">
+<link rel="alternate" hreflang="zh" href="https://toolboxnova.com/proxy?lang=zh">
+<link rel="alternate" hreflang="en" href="https://toolboxnova.com/proxy?lang=en">
+<link rel="alternate" hreflang="ja" href="https://toolboxnova.com/proxy?lang=ja">
+<link rel="alternate" hreflang="ko" href="https://toolboxnova.com/proxy?lang=ko">
+<link rel="alternate" hreflang="es" href="https://toolboxnova.com/proxy?lang=spa">
+<link rel="alternate" hreflang="x-default" href="https://toolboxnova.com/proxy">
+<link rel="stylesheet" href="/static/css/tools-editorial.css?v={{ .AssetVer }}">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {{- range $i, $faq := .FAQs }}
+    {{- if $i }},{{ end }}
+    { "@type": "Question", "name": {{ $faq.Q | printf "%q" }},
+      "acceptedAnswer": { "@type": "Answer", "text": {{ $faq.A | printf "%q" }} } }
+    {{- end }}
+  ]
+}
+</script>
+{{ end }}
+
 {{ define "content" }}
 
   <!-- Top Ad -->
@@ -77,12 +101,12 @@
 
     <!-- How to use -->
     <div class="card orange-card">
-      <h3>How to Use</h3>
+      <h3>{{ call .T "proxy.how.card_title" }}</h3>
       <ol class="how-to-list">
-        <li>Enter the target URL in the address bar above (e.g. google.com)</li>
-        <li>Select your preferred proxy node and options</li>
-        <li>Click the "Visit" button to browse through the proxy</li>
-        <li>When finished, click "Close Proxy" to disconnect</li>
+        <li>{{ call .T "proxy.how.step1" }}</li>
+        <li>{{ call .T "proxy.how.step2" }}</li>
+        <li>{{ call .T "proxy.how.step3" }}</li>
+        <li>{{ call .T "proxy.how.step4" }}</li>
       </ol>
     </div>
 
@@ -122,6 +146,63 @@
     </div>
   </div>
 </div>
+
+<!-- Privacy -->
+<section class="te-section te-section--alt">
+  <div class="te-section-inner">
+    <div class="te-split">
+      <div class="te-split-text">
+        <span class="te-section-label">{{ call .T "proxy.privacy.label" }}</span>
+        <h2 class="te-section-title">{{ call .T "proxy.privacy.title" }}</h2>
+        <p class="te-section-body">{{ call .T "proxy.privacy.body1" }}</p>
+        <p class="te-section-body">{{ call .T "proxy.privacy.body2" }}</p>
+      </div>
+      <div class="te-split-visual">
+        <div class="te-visual-box">
+          <div class="te-visual-box__icon">🛡️</div>
+          <div class="te-visual-stat">
+            <span class="te-visual-stat__num">AES</span>
+            <span class="te-visual-stat__lbl">{{ call .T "proxy.privacy.stat.lbl" }}</span>
+          </div>
+          <div class="te-visual-box__label">{{ call .T "proxy.privacy.stat.sub" }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section class="te-section">
+  <div class="te-section-inner">
+    <span class="te-section-label">{{ call .T "proxy.about.label" }}</span>
+    <h2 class="te-section-title">{{ call .T "proxy.about.seo.title" }}</h2>
+    <p class="te-section-body">{{ call .T "proxy.about.body1" }}</p>
+    <p class="te-section-body">{{ call .T "proxy.about.body2" }}</p>
+    <p class="te-section-body">{{ call .T "proxy.about.body3" }}</p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="te-section te-section--alt">
+  <div class="te-section-inner">
+    <h2 class="te-section-title">{{ call .T "proxy.faq.title" }}</h2>
+    <div class="te-faq-list">
+      {{ range $i, $faq := .FAQs }}
+      <div class="te-faq-item" id="proxy-faq-{{ $i }}">
+        <button class="te-faq-q" onclick="toggleFAQ('proxy-faq-{{ $i }}')">
+          <span>{{ $faq.Q }}</span>
+          <svg class="te-faq-chevron" width="16" height="16" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="te-faq-a"><p>{{ $faq.A }}</p></div>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+<script>function toggleFAQ(id){var item=document.getElementById(id);var open=item.classList.contains('open');document.querySelectorAll('.te-faq-item.open').forEach(function(el){el.classList.remove('open')});if(!open)item.classList.add('open')}</script>
 
 <!-- Bottom Ad -->
 <div style="text-align:center;margin:24px 0">

@@ -23,17 +23,35 @@ func randomString(n int) string {
 // TempEmailPage renders the temporary email page
 func TempEmailPage(c *gin.Context) {
 	t := getT(c)
+
+	// Build FAQ data
+	type FAQ struct {
+		Q string
+		A string
+	}
+	faqs := []FAQ{
+		{Q: t("email.faq.q1"), A: t("email.faq.a1")},
+		{Q: t("email.faq.q2"), A: t("email.faq.a2")},
+		{Q: t("email.faq.q3"), A: t("email.faq.a3")},
+		{Q: t("email.faq.q4"), A: t("email.faq.a4")},
+		{Q: t("email.faq.q5"), A: t("email.faq.a5")},
+	}
+
 	data := baseData(c, gin.H{
 		"Title":       t("email.title"),
 		"Description": t("email.meta_desc"),
 		"Keywords":    "temporary email, temp mail, disposable email, 10 minute mail, fake email",
 		"PageClass":   "page-email",
+		"FAQs":        faqs,
 		"JSONLD": template.JS(`{
   "@context": "https://schema.org",
-  "@type": "WebApplication",
+  "@type": "SoftwareApplication",
   "name": "Temporary Email",
-  "url": "https://toolboxnova.com/temp-email",
-  "description": "Free disposable temporary email address, auto-expires in 10 minutes."
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Web Browser",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Free disposable temporary email address, auto-expires in 10 minutes.",
+  "url": "https://toolboxnova.com/temp-email"
 }`),
 	})
 	render(c, "temp_email.html", data)

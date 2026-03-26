@@ -2,3 +2,4 @@ debug.md
 .idea/
 dist/*
 toolskit
+.DS_Store

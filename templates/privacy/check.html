@@ -399,7 +399,7 @@
 <!-- FAQ -->
 <section class="pc-faq">
   <h2>FAQ</h2>
-  {{ range .FAQ }}
+  {{ range .FAQs }}
   <div class="pc-fi">
     <button class="pc-fq" onclick="pcFAQ(this)" aria-expanded="false">
       <span>{{ .Q }}</span>
@@ -408,6 +408,42 @@
     <div class="pc-fa"><p>{{ .A }}</p></div>
   </div>
   {{ end }}
+</section>
+
+<!-- How It Works -->
+<section class="pc-how" style="padding:56px 24px">
+  <div style="max-width:860px;margin:0 auto;text-align:center">
+    <span style="display:inline-block;background:rgba(6,182,212,.15);color:#06b6d4;font-size:.8125rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:16px">{{ call .T "pc.how.label" }}</span>
+    <h2 style="font-size:clamp(1.5rem,3vw,2rem);font-weight:800;margin:0 0 44px;line-height:1.25;color:var(--tx)">{{ call .T "pc.how.title" }}</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:32px">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="width:44px;height:44px;border-radius:50%;background:rgba(6,182,212,.15);color:#06b6d4;font-size:1.125rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto">1</div>
+        <h3 style="font-size:1.0625rem;font-weight:700;margin:0;color:var(--tx)">{{ call .T "pc.step1.title" }}</h3>
+        <p style="font-size:.9375rem;color:var(--tx2);line-height:1.65;margin:0">{{ call .T "pc.step1.desc" }}</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="width:44px;height:44px;border-radius:50%;background:rgba(16,185,129,.15);color:#10b981;font-size:1.125rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto">2</div>
+        <h3 style="font-size:1.0625rem;font-weight:700;margin:0;color:var(--tx)">{{ call .T "pc.step2.title" }}</h3>
+        <p style="font-size:.9375rem;color:var(--tx2);line-height:1.65;margin:0">{{ call .T "pc.step2.desc" }}</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="width:44px;height:44px;border-radius:50%;background:rgba(245,158,11,.15);color:#f59e0b;font-size:1.125rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto">3</div>
+        <h3 style="font-size:1.0625rem;font-weight:700;margin:0;color:var(--tx)">{{ call .T "pc.step3.title" }}</h3>
+        <p style="font-size:.9375rem;color:var(--tx2);line-height:1.65;margin:0">{{ call .T "pc.step3.desc" }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section class="pc-about" style="padding:56px 24px;background:var(--surf)">
+  <div style="max-width:860px;margin:0 auto">
+    <span style="display:inline-block;background:rgba(16,185,129,.15);color:#10b981;font-size:.8125rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:16px">{{ call .T "pc.about.label" }}</span>
+    <h2 style="font-size:clamp(1.5rem,3vw,2rem);font-weight:800;margin:0 0 16px;line-height:1.25;color:var(--tx)">{{ call .T "pc.about.title" }}</h2>
+    <p style="font-size:1.0625rem;color:var(--tx2);line-height:1.75;margin:0">{{ call .T "pc.about.body1" }}</p>
+    <p style="font-size:1.0625rem;color:var(--tx2);line-height:1.75;margin:14px 0 0">{{ call .T "pc.about.body2" }}</p>
+    <p style="font-size:1.0625rem;color:var(--tx2);line-height:1.75;margin:14px 0 0">{{ call .T "pc.about.body3" }}</p>
+  </div>
 </section>
 {{- template "partials/ad_slot.html" dict "SlotID" "privacy-check-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
 <div class="pc-ts" id="pcToasts"></div>

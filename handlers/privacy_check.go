@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io"
 	"net/http"
 	"regexp"
@@ -63,8 +64,18 @@ func PrivacyCheckPage(c *gin.Context) {
 			"OGDesc":    t("pc.seo.og_desc"),
 			"Canonical": canonical,
 		},
-		"FAQ":              faqs,
+		"FAQs":             faqs,
 		"TurnstileSiteKey": "",
+		"JSONLD": template.JS(`{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Privacy Account Checker",
+  "applicationCategory": "SecurityApplication",
+  "operatingSystem": "Web Browser",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Check if your email and password have been compromised in data breaches.",
+  "url": "https://toolboxnova.com/privacy/check"
+}`),
 	})
 
 	render(c, "privacy/check.html", data)
@@ -311,4 +322,3 @@ func localBreachFallback() []map[string]interface{} {
 		},
 	}
 }
-

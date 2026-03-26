@@ -3,7 +3,7 @@
 <html lang="{{ .Lang }}">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <!-- Theme init: must run before CSS renders to avoid FOUC -->
   <script>(function(){var t=localStorage.getItem('tbn-theme')||'light';document.documentElement.setAttribute('data-theme',t);})()</script>
 
@@ -168,6 +168,54 @@
       <button class="hamburger" id="hamburger" aria-label="menu">☰</button>
     </div>
   </div>
+  <!-- Mobile Menu Overlay -->
+  <div class="nav-mobile-menu" id="navMobileMenu" aria-hidden="true">
+    <div class="nav-mobile-inner">
+      <div class="nav-mobile-group">
+        <span class="nav-mobile-group__label">{{ call .T "nav.privacy" }}</span>
+        <a href="/sms?lang={{ .Lang }}">{{ call .T "home.tool_sms" }}</a>
+        <a href="/virtual-address?lang={{ .Lang }}">{{ call .T "home.tool_address" }}</a>
+        <a href="/password-generator?lang={{ .Lang }}">{{ call .T "home.tool_password" }}</a>
+        <a href="/temp-email?lang={{ .Lang }}">{{ call .T "home.tool_email" }}</a>
+        <a href="/proxy?lang={{ .Lang }}">{{ call .T "home.tool_proxy" }}</a>
+        <a href="/privacy/check?lang={{ .Lang }}">{{ call .T "nav.breach_checker" }}</a>
+      </div>
+      <div class="nav-mobile-group">
+        <span class="nav-mobile-group__label">{{ call .T "nav.dev" }}</span>
+        <a href="/json?lang={{ .Lang }}">{{ call .T "nav.dev_json" }}</a>
+        <a href="/tools/regex?lang={{ .Lang }}">{{ call .T "nav.dev_regex" }}</a>
+        <a href="/tools/markdown?lang={{ .Lang }}">{{ call .T "nav.dev_markdown" }}</a>
+        <a href="/tools/timestamp?lang={{ .Lang }}">{{ call .T "nav.dev_timestamp" }}</a>
+        <a href="/tools/base-converter?lang={{ .Lang }}">{{ call .T "nav.dev_base" }}</a>
+        <a href="/tools/case-converter?lang={{ .Lang }}">{{ call .T "nav.dev_case" }}</a>
+        <a href="/dev/hash?lang={{ .Lang }}">{{ call .T "nav.dev_hash" }}</a>
+        <a href="/dev/base64?lang={{ .Lang }}">{{ call .T "nav.dev_base64" }}</a>
+        <a href="/dev/url-encode?lang={{ .Lang }}">{{ call .T "nav.dev_url_encode" }}</a>
+        <a href="/dev/word-counter?lang={{ .Lang }}">{{ call .T "nav.dev_word_counter" }}</a>
+      </div>
+      <div class="nav-mobile-group">
+        <span class="nav-mobile-group__label">{{ call .T "nav.media" }}</span>
+        <a href="/media/image-compress?lang={{ .Lang }}">{{ call .T "img.compress.name" }}</a>
+        <a href="/media/image-resize?lang={{ .Lang }}">{{ call .T "img.resize.name" }}</a>
+        <a href="/img/metadata?lang={{ .Lang }}">{{ call .T "img.metadata.name" }}</a>
+        <a href="/media/qr?lang={{ .Lang }}">{{ call .T "qr.name" }}</a>
+        <a href="/img/crop?lang={{ .Lang }}">{{ call .T "nav.img_crop" }}</a>
+        <a href="/img/remove-bg?lang={{ .Lang }}">{{ call .T "nav.remove_bg" }}</a>
+        <a href="/img/watermark?lang={{ .Lang }}">{{ call .T "nav.watermark" }}</a>
+      </div>
+      <div class="nav-mobile-group">
+        <span class="nav-mobile-group__label">{{ call .T "nav.realtime" }}</span>
+        <a href="/weather/query?lang={{ .Lang }}">{{ call .T "nav.weather_query" }}</a>
+        <a href="/dev/ip?lang={{ .Lang }}">{{ call .T "nav.dev_ip" }}</a>
+        <a href="/dev/whois?lang={{ .Lang }}">{{ call .T "nav.dev_whois" }}</a>
+      </div>
+      <div class="nav-mobile-group">
+        <span class="nav-mobile-group__label">{{ call .T "nav.ai" }}</span>
+        <a href="/ai/humanizer?lang={{ .Lang }}">{{ call .T "ah.nav.name" }}</a>
+        <a href="/ai/detector?lang={{ .Lang }}">{{ call .T "ailab.detector.name" }}</a>
+      </div>
+    </div>
+  </div>
 </nav>
 
 <main class="main-content">
@@ -232,6 +280,37 @@
 {{/* ── Consent Engine (must be after partial so CKY_CONFIG is ready) ── */}}
 <script src="/static/js/consent-engine.js?v={{ .AssetVer }}"></script>
 <script src="/static/js/theme.js?v={{ .AssetVer }}"></script>
+<script>
+(function() {
+  var btn  = document.getElementById('hamburger');
+  var menu = document.getElementById('navMobileMenu');
+  if (!btn || !menu) return;
+
+  btn.addEventListener('click', function() {
+    var isOpen = menu.classList.toggle('is-open');
+    btn.setAttribute('aria-expanded', String(isOpen));
+    menu.setAttribute('aria-hidden', String(!isOpen));
+    document.body.classList.toggle('nav-open', isOpen);
+  });
+
+  // Click overlay to close
+  menu.addEventListener('click', function(e) {
+    if (e.target === menu) {
+      menu.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      menu.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('nav-open');
+    }
+  });
+
+  // ESC to close
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && menu.classList.contains('is-open')) {
+      btn.click();
+    }
+  });
+})();
+</script>
 </body>
 </html>
 {{ end }}
