@@ -12,9 +12,12 @@
 <link rel="canonical"      href="https://toolboxnova.com/img/crop">
 <link rel="alternate" hreflang="zh"        href="https://toolboxnova.com/img/crop?lang=zh">
 <link rel="alternate" hreflang="en"        href="https://toolboxnova.com/img/crop?lang=en">
+<link rel="alternate" hreflang="ja"        href="https://toolboxnova.com/img/crop?lang=ja">
+<link rel="alternate" hreflang="ko"        href="https://toolboxnova.com/img/crop?lang=ko">
+<link rel="alternate" hreflang="es"        href="https://toolboxnova.com/img/crop?lang=spa">
 <link rel="alternate" hreflang="x-default" href="https://toolboxnova.com/img/crop">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
-<link rel="stylesheet" href="/static/css/img-toolbox.css">
+<link rel="stylesheet" href="/static/css/img-toolbox.css?v={{ .AssetVer }}">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"SoftwareApplication","name":"{{ .Title }}","applicationCategory":"MultimediaApplication","operatingSystem":"Web Browser","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"{{ .Description }}","url":"https://toolboxnova.com/img/crop"}
 </script>
@@ -129,9 +132,9 @@
     <!-- Features -->
     <section class="itb-features">
       <div class="itb-features__grid">
-        <div class="itb-feature-card"><div class="itb-feature-card__icon">🔒</div><h3 class="itb-feature-card__title">{{ call .T "feature.common.privacy_title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.common.privacy_desc" }}</p></div>
-        <div class="itb-feature-card"><div class="itb-feature-card__icon">⚡</div><h3 class="itb-feature-card__title">{{ call .T "feature.common.speed_title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.common.speed_desc" }}</p></div>
-        <div class="itb-feature-card"><div class="itb-feature-card__icon">🎁</div><h3 class="itb-feature-card__title">{{ call .T "feature.common.free_title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.common.free_desc" }}</p></div>
+        <div class="itb-feature-card"><div class="itb-feature-card__icon">✂️</div><h3 class="itb-feature-card__title">{{ call .T "feature.crop.f1.title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.crop.f1.desc" }}</p></div>
+        <div class="itb-feature-card"><div class="itb-feature-card__icon">📦</div><h3 class="itb-feature-card__title">{{ call .T "feature.crop.f2.title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.crop.f2.desc" }}</p></div>
+        <div class="itb-feature-card"><div class="itb-feature-card__icon">🔒</div><h3 class="itb-feature-card__title">{{ call .T "feature.crop.f3.title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.crop.f3.desc" }}</p></div>
       </div>
     </section>
 
@@ -188,7 +191,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-<script src="/static/js/img-toolbox-engine.js"></script>
+<script src="/static/js/img-toolbox-engine.js?v={{ .AssetVer }}"></script>
 <script>
 const ITB_TOOL = 'crop';
 window.ITB_LANG = '{{ .Lang }}';

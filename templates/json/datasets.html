@@ -394,7 +394,7 @@ body { background: var(--ds-bg); color: var(--ds-text); font-family: -apple-syst
 {{ end }}
 
 {{ define "json_scripts" }}
-<script src="/static/js/datasets-meta.js"></script>
-<script src="/static/js/json-datasets.js"></script>
+<script src="/static/js/datasets-meta.js?v={{ .AssetVer }}"></script>
+<script src="/static/js/json-datasets.js?v={{ .AssetVer }}"></script>
 {{ end }}
 

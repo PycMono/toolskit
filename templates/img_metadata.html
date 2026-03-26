@@ -2,15 +2,20 @@
 
 {{ define "extraHead" }}
 
+<link rel="canonical" href="https://toolboxnova.com/img/metadata">
 <link rel="alternate" hreflang="zh" href="https://toolboxnova.com/img/metadata?lang=zh">
 <link rel="alternate" hreflang="en" href="https://toolboxnova.com/img/metadata?lang=en">
+<link rel="alternate" hreflang="ja" href="https://toolboxnova.com/img/metadata?lang=ja">
+<link rel="alternate" hreflang="ko" href="https://toolboxnova.com/img/metadata?lang=ko">
+<link rel="alternate" hreflang="es" href="https://toolboxnova.com/img/metadata?lang=spa">
+<link rel="alternate" hreflang="x-default" href="https://toolboxnova.com/img/metadata">
 
 <!-- exifr.js for metadata parsing -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exifr/7.1.3/full.umd.js"></script>
 <!-- JSZip + FileSaver for export -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-<link rel="stylesheet" href="/static/css/img-metadata.css">
+<link rel="stylesheet" href="/static/css/img-metadata.css?v={{ .AssetVer }}">
 
 <script type="application/ld+json">
 {
@@ -122,8 +127,7 @@
       </aside>
 
       <!-- 右侧：元数据详情 -->
-      <main class="im-metadata-main" id="metadataMain">
-        <!-- 顶部：缩略图 + 文件概览 + 导出按钮 -->
+      <main class="im-metadata-main" id="metadataMain">        <!-- 顶部：缩略图 + 文件概览 + 导出按钮 -->
         <div class="im-result-header" id="resultHeader" style="display:none">
           <div class="im-result-header__thumb-wrap">
             <img class="im-result-header__thumb" id="resultThumb" src="" alt="">
@@ -258,13 +262,25 @@
 <!-- ── About ────────────────────────────────── -->
 <section class="im-about-section">
   <div class="im-container">
-    <span class="im-section-label">{{ call .T "img.metadata.about.label" }}</span>
-    <h2 class="im-section-title">{{ call .T "img.metadata.about.title" }}</h2>
-    <p class="im-about-body">{{ call .T "img.metadata.about.body1" }}</p>
-    <p class="im-about-body">{{ call .T "img.metadata.about.body2" }}</p>
-    <p class="im-about-body">{{ call .T "img.metadata.about.body3" }}</p>
-    <p class="im-about-body">{{ call .T "img.metadata.about.body4" }}</p>
-    <p class="im-about-body">{{ call .T "img.metadata.about.body5" }}</p>
+    <div style="display:flex;gap:32px;align-items:flex-start">
+      <!-- Left Ad -->
+      <div style="flex-shrink:0;width:160px" class="im-about-ad-left">
+        {{- template "partials/ad_slot.html" dict "SlotID" "img-metadata-about-left" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+      </div>
+      <div style="flex:1;min-width:0">
+        <span class="im-section-label">{{ call .T "img.metadata.about.label" }}</span>
+        <h2 class="im-section-title">{{ call .T "img.metadata.about.title" }}</h2>
+        <p class="im-about-body">{{ call .T "img.metadata.about.body1" }}</p>
+        <p class="im-about-body">{{ call .T "img.metadata.about.body2" }}</p>
+        <p class="im-about-body">{{ call .T "img.metadata.about.body3" }}</p>
+        <p class="im-about-body">{{ call .T "img.metadata.about.body4" }}</p>
+        <p class="im-about-body">{{ call .T "img.metadata.about.body5" }}</p>
+      </div>
+      <!-- Right Ad -->
+      <div style="flex-shrink:0;width:160px" class="im-about-ad-right">
+        {{- template "partials/ad_slot.html" dict "SlotID" "img-metadata-about-right" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+      </div>
+    </div>
   </div>
 </section>
 
@@ -298,6 +314,6 @@
 {{ end }}
 
 {{ define "extraScript" }}
-<script src="/static/js/img-metadata-engine.js"></script>
-<script src="/static/js/img-metadata-ui.js"></script>
+<script src="/static/js/img-metadata-engine.js?v={{ .AssetVer }}"></script>
+<script src="/static/js/img-metadata-ui.js?v={{ .AssetVer }}"></script>
 {{ end }}

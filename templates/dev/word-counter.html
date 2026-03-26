@@ -1,7 +1,7 @@
 {{ template "base" . }}
 
 {{ define "extraHead" }}
-<link rel="stylesheet" href="/static/css/dev-tools.css">
+<link rel="stylesheet" href="/static/css/dev-tools.css?v={{ .AssetVer }}">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="alternate" hreflang="zh" href="{{ .HreflangZH }}">
 <link rel="alternate" hreflang="en" href="{{ .HreflangEN }}">
@@ -178,7 +178,7 @@
 
 {{ define "extraScript" }}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" crossorigin="anonymous"></script>
-<script src="/static/js/dev-word-counter.js"></script>
+<script src="/static/js/dev-word-counter.js?v={{ .AssetVer }}"></script>
 <script>
 function toggleDevFAQ(i) {
   var btn = document.querySelector('#faq-' + i + ' .faq-question');

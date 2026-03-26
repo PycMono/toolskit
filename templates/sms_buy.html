@@ -1,8 +1,8 @@
 {{ template "base" . }}
 
 {{- define "extraHead" }}
-<link rel="stylesheet" href="/static/css/sms-buy.css">
-<link rel="stylesheet" href="/static/css/sms-order.css">
+<link rel="stylesheet" href="/static/css/sms-buy.css?v={{ .AssetVer }}">
+<link rel="stylesheet" href="/static/css/sms-order.css?v={{ .AssetVer }}">
 {{- end }}
 
 {{- define "content" }}
@@ -275,8 +275,8 @@
   </div><!-- /sms-container -->
 </div><!-- /buy-page -->
 
-<script src="/static/js/sms-buy.js"></script>
-<script src="/static/js/sms-order.js"></script>
+<script src="/static/js/sms-buy.js?v={{ .AssetVer }}"></script>
+<script src="/static/js/sms-order.js?v={{ .AssetVer }}"></script>
 
 <!-- Bottom Ad -->
 <div style="text-align:center;margin:24px 0">

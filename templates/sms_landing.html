@@ -1,7 +1,7 @@
 {{ template "base" . }}
 
 {{- define "extraHead" }}
-<link rel="stylesheet" href="/static/css/sms.css">
+<link rel="stylesheet" href="/static/css/sms.css?v={{ .AssetVer }}">
 {{- end }}
 
 {{- define "content" }}
@@ -206,7 +206,7 @@
   </div>
 </section>
 
-<script src="/static/js/sms-landing.js"></script>
+<script src="/static/js/sms-landing.js?v={{ .AssetVer }}"></script>
 
 <!-- Bottom Ad -->
 <div style="text-align:center;margin:24px 0">

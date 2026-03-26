@@ -4,9 +4,12 @@
 <link rel="canonical" href="https://toolboxnova.com/media/qr">
 <link rel="alternate" hreflang="zh" href="https://toolboxnova.com/media/qr?lang=zh">
 <link rel="alternate" hreflang="en" href="https://toolboxnova.com/media/qr?lang=en">
+<link rel="alternate" hreflang="ja" href="https://toolboxnova.com/media/qr?lang=ja">
+<link rel="alternate" hreflang="ko" href="https://toolboxnova.com/media/qr?lang=ko">
+<link rel="alternate" hreflang="es" href="https://toolboxnova.com/media/qr?lang=spa">
 <link rel="alternate" hreflang="x-default" href="https://toolboxnova.com/media/qr">
 
-<link rel="stylesheet" href="/static/css/media-qr.css">
+<link rel="stylesheet" href="/static/css/media-qr.css?v={{ .AssetVer }}">
 
 <script type="application/ld+json">
 {
@@ -238,19 +241,9 @@
         <p>{{ call .T "qr.feature.custom.desc" }}</p>
       </div>
       <div class="qr-feature-card">
-        <div class="qr-feature-icon" style="background:#eff6ff">📱</div>
-        <h3>{{ call .T "qr.feature.free.title" }}</h3>
-        <p>{{ call .T "qr.feature.free.desc" }}</p>
-      </div>
-      <div class="qr-feature-card">
-        <div class="qr-feature-icon" style="background:#f0fdf4">📐</div>
+        <div class="qr-feature-icon" style="background:#f0fdf4">📱</div>
         <h3>{{ call .T "qr.feature.hd.title" }}</h3>
         <p>{{ call .T "qr.feature.hd.desc" }}</p>
-      </div>
-      <div class="qr-feature-card">
-        <div class="qr-feature-icon" style="background:#fdf2f8">🔢</div>
-        <h3>{{ call .T "qr.feature.types.title" }}</h3>
-        <p>{{ call .T "qr.feature.types.desc" }}</p>
       </div>
     </div>
   </div>
@@ -259,13 +252,23 @@
 <!-- About Section -->
 <section class="qr-about-section">
   <div class="qr-container">
-    <span class="qr-section-label">{{ call .T "qr.about.label" }}</span>
-    <h2 class="qr-section-title">{{ call .T "qr.about.title" }}</h2>
-    <p class="qr-about-body">{{ call .T "qr.about.body1" }}</p>
-    <p class="qr-about-body">{{ call .T "qr.about.body2" }}</p>
-    <p class="qr-about-body">{{ call .T "qr.about.body3" }}</p>
-    <p class="qr-about-body">{{ call .T "qr.about.body4" }}</p>
-    <p class="qr-about-body">{{ call .T "qr.about.body5" }}</p>
+    <div style="display:flex;gap:32px;align-items:flex-start">
+      <div style="flex-shrink:0;width:160px" class="qr-about-ad-left">
+        {{- template "partials/ad_slot.html" dict "SlotID" "media-qr-about-left" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+      </div>
+      <div style="flex:1;min-width:0">
+        <span class="qr-section-label">{{ call .T "qr.about.label" }}</span>
+        <h2 class="qr-section-title">{{ call .T "qr.about.title" }}</h2>
+        <p class="qr-about-body">{{ call .T "qr.about.body1" }}</p>
+        <p class="qr-about-body">{{ call .T "qr.about.body2" }}</p>
+        <p class="qr-about-body">{{ call .T "qr.about.body3" }}</p>
+        <p class="qr-about-body">{{ call .T "qr.about.body4" }}</p>
+        <p class="qr-about-body">{{ call .T "qr.about.body5" }}</p>
+      </div>
+      <div style="flex-shrink:0;width:160px" class="qr-about-ad-right">
+        {{- template "partials/ad_slot.html" dict "SlotID" "media-qr-about-right" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+      </div>
+    </div>
   </div>
 </section>
 
@@ -304,10 +307,10 @@
   window.QR_LANG = "{{ .Lang }}";
   window.QR_TYPE = "{{ .CurrentType }}";
 </script>
-<script src="/static/js/media-qr-ui.js"></script>
-<script src="/static/js/media-qr-forms.js"></script>
-<script src="/static/js/media-qr-engine.js"></script>
-<script src="/static/js/media-qr-design.js"></script>
-<script src="/static/js/media-qr-frames.js"></script>
+<script src="/static/js/media-qr-ui.js?v={{ .AssetVer }}"></script>
+<script src="/static/js/media-qr-forms.js?v={{ .AssetVer }}"></script>
+<script src="/static/js/media-qr-engine.js?v={{ .AssetVer }}"></script>
+<script src="/static/js/media-qr-design.js?v={{ .AssetVer }}"></script>
+<script src="/static/js/media-qr-frames.js?v={{ .AssetVer }}"></script>
 {{ end }}
 

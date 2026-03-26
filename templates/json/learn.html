@@ -1,12 +1,12 @@
 
 {{ define "json_head" }}
 {{ if .Article }}
-<script src="/static/js/learn-articles/basics.js"></script>
-<script src="/static/js/learn-articles/language-guides.js"></script>
-<script src="/static/js/learn-articles/debugging.js"></script>
-<script src="/static/js/learn-articles/comparison.js"></script>
-<script src="/static/js/learn-articles/advanced.js"></script>
-<script src="/static/js/learn-articles/security-practical.js"></script>
+<script src="/static/js/learn-articles/basics.js?v={{ .AssetVer }}"></script>
+<script src="/static/js/learn-articles/language-guides.js?v={{ .AssetVer }}"></script>
+<script src="/static/js/learn-articles/debugging.js?v={{ .AssetVer }}"></script>
+<script src="/static/js/learn-articles/comparison.js?v={{ .AssetVer }}"></script>
+<script src="/static/js/learn-articles/advanced.js?v={{ .AssetVer }}"></script>
+<script src="/static/js/learn-articles/security-practical.js?v={{ .AssetVer }}"></script>
 {{ end }}
 <meta property="og:type" content="website">
 <meta property="og:title" content="{{ .Title }}">

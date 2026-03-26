@@ -73,11 +73,11 @@ function doNavSearch(q) {
     .catch(() => {});
 }
 
-// ---- Force dropdowns hidden on load (Cloudflare-proof) ----
+// ---- Force lang dropdown hidden on load (Cloudflare-proof) ----
 // We set inline style display:none so Cloudflare CSS minification can never override it.
 (function() {
   function hideDropdowns() {
-    document.querySelectorAll('.lang-dropdown, .nav-theme-dropdown').forEach(function(el) {
+    document.querySelectorAll('.lang-dropdown').forEach(function(el) {
       el.style.display = 'none';
     });
   }

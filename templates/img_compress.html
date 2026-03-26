@@ -13,7 +13,7 @@
 <link rel="alternate" hreflang="zh"        href="https://toolboxnova.com/img/compress?lang=zh">
 <link rel="alternate" hreflang="en"        href="https://toolboxnova.com/img/compress?lang=en">
 <link rel="alternate" hreflang="x-default" href="https://toolboxnova.com/img/compress">
-<link rel="stylesheet" href="/static/css/img-compress.css">
+<link rel="stylesheet" href="/static/css/img-compress.css?v={{ .AssetVer }}">
 
 <script type="application/ld+json">
 {
@@ -60,18 +60,7 @@
     {{- template "partials/ad_slot.html" dict "SlotID" "img-compress-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
   </div>
 
-  <!-- ══ MAIN LAYOUT (center + side ads) ══ -->
-  <div class="ic-main-layout">
-
-    <!-- Left sidebar ad -->
-    <div class="ic-sidebar ic-sidebar--left">
-      {{- template "partials/ad_slot.html" dict "SlotID" "img-compress-left" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
-    </div>
-
-    <!-- Center content -->
-    <div class="ic-main-center">
-
-  <!-- ══ DROP ZONE ══ -->
+  <!-- ══ DROP ZONE (full-width, outside grid) ══ -->
   <div class="ic-drop-wrap">
     <div class="ic-drop-zone" id="dropZone"
          ondragover="ICDrop.over(event)"
@@ -92,8 +81,8 @@
     </div>
   </div>
 
-  <!-- ══ OPTIONS BAR ══ -->
-  <div class="ic-opts-bar" id="optsBar">
+  <!-- ══ OPTIONS BAR (full-width, outside grid) ══ -->
+  <div class="ic-opts-bar" id="optsBar" style="display:none">
     <div class="ic-opts-inner">
       <div class="ic-opt-group">
         <label class="ic-opt-label">{{ call .T "img.compress.options.quality.label" }}</label>
@@ -119,6 +108,17 @@
       </div>
     </div>
   </div>
+
+  <!-- ══ MAIN LAYOUT (results + side ads) ══ -->
+  <div class="ic-main-layout">
+
+    <!-- Left sidebar ad -->
+    <div class="ic-sidebar ic-sidebar--left">
+      {{- template "partials/ad_slot.html" dict "SlotID" "img-compress-left" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+    </div>
+
+    <!-- Center content -->
+    <div class="ic-main-center">
 
   <!-- ══ RESULTS ══ -->
   <div class="ic-results-wrap" id="resultsSection" style="display:none">
@@ -307,8 +307,8 @@
 <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-<script src="/static/js/img-compress-engine.js"></script>
-<script src="/static/js/img-compress.js"></script>
+<script src="/static/js/img-compress-engine.js?v={{ .AssetVer }}"></script>
+<script src="/static/js/img-compress.js?v={{ .AssetVer }}"></script>
 
 <!-- Drag-and-drop shim: drop zone uses ondrop="ICDrop.drop(event)" -->
 <script>
@@ -361,10 +361,32 @@ window.ICDrop = {
 <script>
 function toggleFAQ(idx) {
   var item = document.getElementById('faq-' + idx);
+  var answerEl = item.querySelector('.ic-faq-a');
   var open = item.classList.contains('open');
-  document.querySelectorAll('.ic-faq-item.open').forEach(function(el){ el.classList.remove('open'); });
-  if (!open) item.classList.add('open');
+  // Close all
+  document.querySelectorAll('.ic-faq-item.open').forEach(function(el) {
+    el.classList.remove('open');
+    var a = el.querySelector('.ic-faq-a');
+    if (a) a.style.display = 'none';
+  });
+  if (!open) {
+    item.classList.add('open');
+    if (answerEl) answerEl.style.display = 'block';
+  }
 }
+// Init: force all FAQ answers hidden via inline style (Cloudflare CSS-safe)
+(function() {
+  function initFAQ() {
+    document.querySelectorAll('.ic-faq-a').forEach(function(el) {
+      el.style.display = 'none';
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFAQ);
+  } else {
+    initFAQ();
+  }
+})();
 </script>
 {{ end }}
 

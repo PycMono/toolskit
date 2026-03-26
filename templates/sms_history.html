@@ -1,8 +1,8 @@
 {{ template "base" . }}
 
 {{- define "extraHead" }}
-<link rel="stylesheet" href="/static/css/sms-history.css">
-<script src="/static/js/platform-icons.js"></script>
+<link rel="stylesheet" href="/static/css/sms-history.css?v={{ .AssetVer }}">
+<script src="/static/js/platform-icons.js?v={{ .AssetVer }}"></script>
 {{- end }}
 
 {{- define "content" }}
@@ -55,7 +55,7 @@
   </div>
 </div>
 
-<script src="/static/js/sms-history.js"></script>
+<script src="/static/js/sms-history.js?v={{ .AssetVer }}"></script>
 
 <!-- Bottom Ad -->
 <div style="text-align:center;margin:24px 0">

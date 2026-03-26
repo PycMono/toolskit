@@ -1,7 +1,7 @@
 {{ template "base" . }}
 
 {{ define "extraHead" }}
-<link rel="stylesheet" href="/static/css/dev-tools.css">
+<link rel="stylesheet" href="/static/css/dev-tools.css?v={{ .AssetVer }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="alternate" hreflang="zh" href="{{ .HreflangZH }}">
@@ -187,7 +187,7 @@
 {{ end }}
 
 {{ define "extraScript" }}
-<script src="/static/js/dev-base64.js"></script>
+<script src="/static/js/dev-base64.js?v={{ .AssetVer }}"></script>
 <script>
 function toggleDevFAQ(i) {
   var btn = document.querySelector('#faq-' + i + ' .faq-question');

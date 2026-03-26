@@ -14,10 +14,14 @@
 <link rel="canonical" href="https://toolboxnova.com/img/resize">
 <link rel="alternate" hreflang="zh" href="https://toolboxnova.com/img/resize?lang=zh">
 <link rel="alternate" hreflang="en" href="https://toolboxnova.com/img/resize?lang=en">
+<link rel="alternate" hreflang="ja" href="https://toolboxnova.com/img/resize?lang=ja">
+<link rel="alternate" hreflang="ko" href="https://toolboxnova.com/img/resize?lang=ko">
+<link rel="alternate" hreflang="es" href="https://toolboxnova.com/img/resize?lang=spa">
+<link rel="alternate" hreflang="x-default" href="https://toolboxnova.com/img/resize">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-<link rel="stylesheet" href="/static/css/img-resize.css">
+<link rel="stylesheet" href="/static/css/img-resize.css?v={{ .AssetVer }}">
 
 <script type="application/ld+json">
 {
@@ -301,7 +305,7 @@
     <div class="ir-container">
       <div style="display:flex;gap:32px;align-items:flex-start">
         <!-- Left Ad -->
-        <div style="flex-shrink:0;width:160px;display:none" class="ir-about-ad-left">
+        <div style="flex-shrink:0;width:160px" class="ir-about-ad-left">
           {{- template "partials/ad_slot.html" dict "SlotID" "img-resize-about-left" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
         </div>
         <div style="flex:1;min-width:0">
@@ -314,7 +318,7 @@
           <p class="ir-about-body">{{ call .T "img.resize.about.body5" }}</p>
         </div>
         <!-- Right Ad -->
-        <div style="flex-shrink:0;width:160px;display:none" class="ir-about-ad-right">
+        <div style="flex-shrink:0;width:160px" class="ir-about-ad-right">
           {{- template "partials/ad_slot.html" dict "SlotID" "img-resize-about-right" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
         </div>
       </div>
@@ -347,8 +351,8 @@
 </div><!-- /img-resize-page -->
 <div id="toastContainer"></div>
 
-<script src="/static/js/img-resize-engine.js"></script>
-<script src="/static/js/img-resize-ui.js"></script>
+<script src="/static/js/img-resize-engine.js?v={{ .AssetVer }}"></script>
+<script src="/static/js/img-resize-ui.js?v={{ .AssetVer }}"></script>
 {{ end }}
 
 

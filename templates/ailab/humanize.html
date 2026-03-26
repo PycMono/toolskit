@@ -25,7 +25,7 @@
 <link rel="alternate" hreflang="x-default" href="https://toolboxnova.com/ailab/humanize">
 
 <!-- Humanize CSS -->
-<link rel="stylesheet" href="/static/css/humanize.css">
+<link rel="stylesheet" href="/static/css/humanize.css?v={{ .AssetVer }}">
 
 <!-- JSON-LD Structured Data -->
 <script type="application/ld+json">
@@ -299,7 +299,7 @@
 
 </div>
 
-<script src="/static/js/humanize.js"></script>
+<script src="/static/js/humanize.js?v={{ .AssetVer }}"></script>
 {{ end }}
 
 {{ define "extraScript" }}

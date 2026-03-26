@@ -31,7 +31,7 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/static/css/color-tools.css">
+<link rel="stylesheet" href="/static/css/color-tools.css?v={{ .AssetVer }}">
 <!-- CDN dependencies (deferred) -->
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.6.0/chroma.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/colorjs.io@0.5.2/dist/color.global.min.js"></script>
@@ -600,6 +600,6 @@
 {{ end }}
 
 {{ define "extraScript" }}
-<script src="/static/js/color-tools.js"></script>
+<script src="/static/js/color-tools.js?v={{ .AssetVer }}"></script>
 {{ end }}
 

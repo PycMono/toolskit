@@ -8,8 +8,11 @@
 <link rel="canonical" href="https://toolboxnova.com/img/photo-editor">
 <link rel="alternate" hreflang="zh" href="https://toolboxnova.com/img/photo-editor?lang=zh">
 <link rel="alternate" hreflang="en" href="https://toolboxnova.com/img/photo-editor?lang=en">
+<link rel="alternate" hreflang="ja" href="https://toolboxnova.com/img/photo-editor?lang=ja">
+<link rel="alternate" hreflang="ko" href="https://toolboxnova.com/img/photo-editor?lang=ko">
+<link rel="alternate" hreflang="es" href="https://toolboxnova.com/img/photo-editor?lang=spa">
 <link rel="alternate" hreflang="x-default" href="https://toolboxnova.com/img/photo-editor">
-<link rel="stylesheet" href="/static/css/img-toolbox.css">
+<link rel="stylesheet" href="/static/css/img-toolbox.css?v={{ .AssetVer }}">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"{{ .Title }}","applicationCategory":"MultimediaApplication","operatingSystem":"Web Browser","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"{{ .Description }}","url":"https://toolboxnova.com/img/photo-editor"}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{{- range $i,$f := .FAQs }}{{if $i}},{{end}}{"@type":"Question","name":{{ $f.Q | html }},"acceptedAnswer":{"@type":"Answer","text":{{ $f.A | html }}}}{{- end}}]}</script>
 {{ end }}
@@ -61,7 +64,7 @@
   </div>
   <aside class="itb-sidebar">{{- template "partials/ad_slot.html" dict "SlotID" "img-editor-sidebar" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}</aside>
   </div>
-  <section class="itb-features"><div class="itb-features__grid"><div class="itb-feature-card"><div class="itb-feature-card__icon">🔒</div><h3 class="itb-feature-card__title">{{ call .T "feature.common.privacy_title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.common.privacy_desc" }}</p></div><div class="itb-feature-card"><div class="itb-feature-card__icon">⚡</div><h3 class="itb-feature-card__title">{{ call .T "feature.common.speed_title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.common.speed_desc" }}</p></div><div class="itb-feature-card"><div class="itb-feature-card__icon">🎁</div><h3 class="itb-feature-card__title">{{ call .T "feature.common.free_title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.common.free_desc" }}</p></div></div></section>
+  <section class="itb-features"><div class="itb-features__grid"><div class="itb-feature-card"><div class="itb-feature-card__icon">🎨</div><h3 class="itb-feature-card__title">{{ call .T "feature.editor.f1.title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.editor.f1.desc" }}</p></div><div class="itb-feature-card"><div class="itb-feature-card__icon">🔄</div><h3 class="itb-feature-card__title">{{ call .T "feature.editor.f2.title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.editor.f2.desc" }}</p></div><div class="itb-feature-card"><div class="itb-feature-card__icon">📦</div><h3 class="itb-feature-card__title">{{ call .T "feature.editor.f3.title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.editor.f3.desc" }}</p></div></div></section>
       <section class="itb-about">
       <span class="itb-about__label">{{ call .T "hero.editor.about.label" }}</span>
       <h2 class="itb-about__title">{{ call .T "hero.editor.about.title" }}</h2>
@@ -82,7 +85,7 @@
 {{ define "extraScript" }}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-<script src="/static/js/img-toolbox-engine.js"></script>
+<script src="/static/js/img-toolbox-engine.js?v={{ .AssetVer }}"></script>
 <script>
 const ITB_TOOL = 'photo-editor';
 window.ITB_LANG = '{{ .Lang }}';

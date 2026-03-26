@@ -21,8 +21,11 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 	}))
 	r.Use(middleware.AdsConfig(cfg))
 	r.Use(middleware.GAConfig(cfg))
+	r.Use(middleware.NoCacheHTML())
 
-	// Static files
+	// Static files — serve with long-lived Cache-Control so Cloudflare caches
+	// versioned assets (CSS/JS use ?v=... for cache-busting).
+	r.Use(middleware.StaticCacheHeaders())
 	r.Static("/static", "./static")
 
 	// SEO files
@@ -102,7 +105,14 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 
 		// Media tools
 		tools.GET("/media", handlers.MediaToolsPage)
-		tools.GET("/media/image-compress", handlers.ImageCompressPage)
+		tools.GET("/media/image-compress", func(c *gin.Context) {
+			lang := c.Query("lang")
+			target := "/media/image-compress"
+			if lang != "" {
+				target += "?lang=" + lang
+			}
+			c.Redirect(301, target)
+		})
 		tools.GET("/media/color-converter", handlers.ColorConverterPage)
 		tools.GET("/media/unit-converter", handlers.UnitConverterPage)
 		tools.GET("/media/qr-generator", handlers.QRGeneratorPage)

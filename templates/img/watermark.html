@@ -7,8 +7,11 @@
 <link rel="canonical" href="https://toolboxnova.com/img/watermark">
 <link rel="alternate" hreflang="zh" href="https://toolboxnova.com/img/watermark?lang=zh">
 <link rel="alternate" hreflang="en" href="https://toolboxnova.com/img/watermark?lang=en">
+<link rel="alternate" hreflang="ja" href="https://toolboxnova.com/img/watermark?lang=ja">
+<link rel="alternate" hreflang="ko" href="https://toolboxnova.com/img/watermark?lang=ko">
+<link rel="alternate" hreflang="es" href="https://toolboxnova.com/img/watermark?lang=spa">
 <link rel="alternate" hreflang="x-default" href="https://toolboxnova.com/img/watermark">
-<link rel="stylesheet" href="/static/css/img-toolbox.css">
+<link rel="stylesheet" href="/static/css/img-toolbox.css?v={{ .AssetVer }}">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"{{ .Title }}","applicationCategory":"MultimediaApplication","operatingSystem":"Web Browser","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"{{ .Description }}","url":"https://toolboxnova.com/img/watermark"}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{{- range $i,$f := .FAQs }}{{if $i}},{{end}}{"@type":"Question","name":{{ $f.Q | html }},"acceptedAnswer":{"@type":"Answer","text":{{ $f.A | html }}}}{{- end}}]}</script>
 {{ end }}
@@ -71,15 +74,25 @@
   </div>
   <aside class="itb-sidebar">{{- template "partials/ad_slot.html" dict "SlotID" "img-watermark-sidebar" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}</aside>
   </div>
-  <section class="itb-features"><div class="itb-features__grid"><div class="itb-feature-card"><div class="itb-feature-card__icon">🔒</div><h3 class="itb-feature-card__title">{{ call .T "feature.common.privacy_title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.common.privacy_desc" }}</p></div><div class="itb-feature-card"><div class="itb-feature-card__icon">⚡</div><h3 class="itb-feature-card__title">{{ call .T "feature.common.speed_title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.common.speed_desc" }}</p></div><div class="itb-feature-card"><div class="itb-feature-card__icon">🎁</div><h3 class="itb-feature-card__title">{{ call .T "feature.common.free_title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.common.free_desc" }}</p></div></div></section>
-      <section class="itb-about">
-      <span class="itb-about__label">{{ call .T "hero.watermark.about.label" }}</span>
-      <h2 class="itb-about__title">{{ call .T "hero.watermark.about.title" }}</h2>
-      <p class="itb-about__body">{{ call .T "hero.watermark.about.body1" }}</p>
-      <p class="itb-about__body">{{ call .T "hero.watermark.about.body2" }}</p>
-      <p class="itb-about__body">{{ call .T "hero.watermark.about.body3" }}</p>
-      <p class="itb-about__body">{{ call .T "hero.watermark.about.body4" }}</p>
-      <p class="itb-about__body">{{ call .T "hero.watermark.about.body5" }}</p>
+  <section class="itb-features"><div class="itb-features__grid"><div class="itb-feature-card"><div class="itb-feature-card__icon">💧</div><h3 class="itb-feature-card__title">{{ call .T "feature.watermark.f1.title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.watermark.f1.desc" }}</p></div><div class="itb-feature-card"><div class="itb-feature-card__icon">📍</div><h3 class="itb-feature-card__title">{{ call .T "feature.watermark.f2.title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.watermark.f2.desc" }}</p></div><div class="itb-feature-card"><div class="itb-feature-card__icon">📦</div><h3 class="itb-feature-card__title">{{ call .T "feature.watermark.f3.title" }}</h3><p class="itb-feature-card__desc">{{ call .T "feature.watermark.f3.desc" }}</p></div></div></section>
+    <section class="itb-about">
+      <div style="display:flex;gap:24px;align-items:flex-start">
+        <div style="flex-shrink:0;width:120px" class="itb-about-ad-left">
+          {{- template "partials/ad_slot.html" dict "SlotID" "img-watermark-about-left" "Size" "120x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+        </div>
+        <div style="flex:1;min-width:0">
+          <span class="itb-about__label">{{ call .T "hero.watermark.about.label" }}</span>
+          <h2 class="itb-about__title">{{ call .T "hero.watermark.about.title" }}</h2>
+          <p class="itb-about__body">{{ call .T "hero.watermark.about.body1" }}</p>
+          <p class="itb-about__body">{{ call .T "hero.watermark.about.body2" }}</p>
+          <p class="itb-about__body">{{ call .T "hero.watermark.about.body3" }}</p>
+          <p class="itb-about__body">{{ call .T "hero.watermark.about.body4" }}</p>
+          <p class="itb-about__body">{{ call .T "hero.watermark.about.body5" }}</p>
+        </div>
+        <div style="flex-shrink:0;width:120px" class="itb-about-ad-right">
+          {{- template "partials/ad_slot.html" dict "SlotID" "img-watermark-about-right" "Size" "120x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+        </div>
+      </div>
     </section>
     <section class="itb-faq"><h2 class="itb-faq__title">FAQ</h2>{{ range $i,$f := .FAQs }}<div class="itb-faq-item" id="itbFaq-{{ $i }}"><button class="itb-faq-item__q" onclick="itbToggleFAQ({{ $i }})" aria-expanded="false">{{ $f.Q }}<span class="itb-faq-item__arrow">▾</span></button><div class="itb-faq-item__a"><p>{{ $f.A }}</p></div></div>{{ end }}</section>
   <div class="itb-ad-bottom">{{- template "partials/ad_slot.html" dict "SlotID" "img-watermark-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}</div>
@@ -92,7 +105,7 @@
 {{ define "extraScript" }}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-<script src="/static/js/img-toolbox-engine.js"></script>
+<script src="/static/js/img-toolbox-engine.js?v={{ .AssetVer }}"></script>
 <script>
 const ITB_TOOL = 'watermark';
 window.ITB_LANG = '{{ .Lang }}';
