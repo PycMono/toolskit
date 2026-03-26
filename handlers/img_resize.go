@@ -97,7 +97,7 @@ func ImgResizePage(c *gin.Context) {
 	data := baseData(c, gin.H{
 		"Title":       t("img.resize.seo.title"),
 		"Description": t("img.resize.seo.desc"),
-		"Keywords":    "image resizer,resize jpg,resize png,resize webp,resize image online,batch image resize,social media image sizes,no upload,browser image resize,free image resizer",
+		"Keywords":    "image resizer,resize image online,resize jpg,resize png,resize webp,social media image sizes,instagram resize,facebook resize,twitter resize,batch image resize,free image resizer,browser image resize,no upload,image format converter,aspect ratio resize,percentage resize,tiktok resize,youtube resize,linkedin resize,pinterest resize,webp converter",
 		"PageClass":   "page-img-resize",
 		"FAQs":        faqs,
 	})

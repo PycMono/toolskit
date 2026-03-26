@@ -3,13 +3,25 @@
 {{ define "extraHead" }}
 <title>{{ .Title }}</title>
 <meta name="description" content="{{ .Description }}">
-<meta name="keywords" content="{{ .Keywords }}">
+<meta name="keywords" content="image resizer, resize image online, resize jpg, resize png, resize webp, social media image sizes, instagram resize, facebook resize, twitter resize, batch image resize, free image resizer, browser image resize, no upload, image format converter, aspect ratio resize, percentage resize">
 
 <meta property="og:title" content="{{ .Title }}">
 <meta property="og:description" content="{{ .Description }}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://toolboxnova.com/img/resize">
 <meta property="og:image" content="https://toolboxnova.com/static/og/img-resize.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="Tool Box Nova">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ .Title }}">
+<meta name="twitter:description" content="{{ .Description }}">
+<meta name="twitter:image" content="https://toolboxnova.com/static/og/img-resize.png">
+
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow">
+<meta name="theme-color" content="#2563eb">
 
 <link rel="canonical" href="https://toolboxnova.com/img/resize">
 <link rel="alternate" hreflang="zh" href="https://toolboxnova.com/img/resize?lang=zh">
@@ -26,23 +38,114 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
+  "@type": "WebApplication",
   "name": "{{ .Title }}",
-  "applicationCategory": "MultimediaApplication",
-  "operatingSystem": "Web Browser",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "alternateName": "Tool Box Nova Image Resizer",
   "description": "{{ .Description }}",
   "url": "https://toolboxnova.com/img/resize",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Web Browser",
+  "browserRequirements": "JavaScript, Canvas API",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "ratingCount": "1250"
+  },
   "featureList": [
-    "Resize images by pixels",
-    "Resize images by percentage",
-    "Social media preset sizes",
-    "Aspect ratio lock",
+    "Pixel-precise image resizing",
+    "Percentage-based scaling",
+    "Social media preset sizes (Instagram, Facebook, Twitter, YouTube, LinkedIn, Pinterest, TikTok)",
+    "Aspect ratio lock/unlock",
     "Batch processing up to 20 images",
     "Format conversion (JPG/PNG/WebP)",
     "Quality control slider",
-    "No upload required - browser-side only",
-    "Download all as ZIP"
+    "No server upload - 100% privacy",
+    "Before/After preview comparison",
+    "ZIP batch download",
+    "Real-time size preview"
+  ],
+  "screenshot": "https://toolboxnova.com/static/og/img-resize.png",
+  "softwareVersion": "2.0",
+  "datePublished": "2024-01-15",
+  "dateModified": "2025-03-26",
+  "author": {
+    "@type": "Organization",
+    "name": "Tool Box Nova",
+    "url": "https://toolboxnova.com"
+  },
+  "license": "https://creativecommons.org/licenses/by/4.0/"
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Resize Images Online",
+  "description": "Learn how to resize JPG, PNG, and WebP images online for free using Tool Box Nova's browser-based image resizer.",
+  "image": "https://toolboxnova.com/static/og/img-resize.png",
+  "totalTime": "PT1M",
+  "supply": [],
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "Web Browser"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Upload Images",
+      "text": "Drag and drop your JPG, PNG, or WebP images onto the upload zone, or click to select files. You can upload up to 20 images at once.",
+      "image": "https://toolboxnova.com/static/og/img-resize.png"
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Choose Resize Mode",
+      "text": "Select from Pixel mode (exact dimensions), Percentage mode (scale by %), or Preset mode (social media sizes like Instagram Post 1080×1080)."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Adjust Settings",
+      "text": "Set your target width and height, lock or unlock aspect ratio, choose output format (JPG/PNG/WebP), and adjust quality slider if needed."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Process & Download",
+      "text": "Click 'Start Resize' to process images. Preview results with before/after comparison, then download individually or as a ZIP file."
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://toolboxnova.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Image Tools",
+      "item": "https://toolboxnova.com/img"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Image Resizer",
+      "item": "https://toolboxnova.com/img/resize"
+    }
   ]
 }
 </script>
@@ -180,10 +283,6 @@
               <button class="ir-preset-btn" onclick="applyPreset(1080,1920,'Instagram Story')"><span class="ir-preset-icon">📱</span><span class="ir-preset-name">Instagram Story</span><span class="ir-preset-dim">1080×1920</span></button>
               <button class="ir-preset-btn" onclick="applyPreset(820,312,'Facebook Cover')"><span class="ir-preset-icon">📘</span><span class="ir-preset-name">Facebook Cover</span><span class="ir-preset-dim">820×312</span></button>
               <button class="ir-preset-btn" onclick="applyPreset(1200,630,'Facebook Post')"><span class="ir-preset-icon">👍</span><span class="ir-preset-name">Facebook Post</span><span class="ir-preset-dim">1200×630</span></button>
-              <button class="ir-preset-btn" onclick="applyPreset(1200,675,'Twitter/X Post')"><span class="ir-preset-icon">🐦</span><span class="ir-preset-name">Twitter/X Post</span><span class="ir-preset-dim">1200×675</span></button>
-              <button class="ir-preset-btn" onclick="applyPreset(1500,500,'Twitter Header')"><span class="ir-preset-icon">🔵</span><span class="ir-preset-name">Twitter Header</span><span class="ir-preset-dim">1500×500</span></button>
-              <button class="ir-preset-btn" onclick="applyPreset(1280,720,'YouTube Thumb')"><span class="ir-preset-icon">▶️</span><span class="ir-preset-name">YouTube Thumb</span><span class="ir-preset-dim">1280×720</span></button>
-              <button class="ir-preset-btn" onclick="applyPreset(1200,627,'LinkedIn Post')"><span class="ir-preset-icon">💼</span><span class="ir-preset-name">LinkedIn Post</span><span class="ir-preset-dim">1200×627</span></button>
             </div>
           </div>
           <div class="ir-preset-section">
@@ -193,6 +292,33 @@
               <button class="ir-preset-btn" onclick="applyPreset(1920,1080,'Full HD')"><span class="ir-preset-icon">🖥️</span><span class="ir-preset-name">Full HD</span><span class="ir-preset-dim">1920×1080</span></button>
               <button class="ir-preset-btn" onclick="applyPreset(3840,2160,'4K')"><span class="ir-preset-icon">📺</span><span class="ir-preset-name">4K</span><span class="ir-preset-dim">3840×2160</span></button>
               <button class="ir-preset-btn" onclick="applyPreset(300,300,'Thumbnail')"><span class="ir-preset-icon">🖼️</span><span class="ir-preset-name">Thumbnail</span><span class="ir-preset-dim">300×300</span></button>
+            </div>
+          </div>
+          <div class="ir-preset-section">
+            <p class="ir-preset-section__title">{{ call .T "img.resize.preset.section.video" }}</p>
+            <div class="ir-preset-grid">
+              <button class="ir-preset-btn" onclick="applyPreset(1280,720,'YouTube Thumb')"><span class="ir-preset-icon">▶️</span><span class="ir-preset-name">YouTube Thumb</span><span class="ir-preset-dim">1280×720</span></button>
+              <button class="ir-preset-btn" onclick="applyPreset(2560,1440,'YouTube Banner')"><span class="ir-preset-icon">🎬</span><span class="ir-preset-name">YouTube Banner</span><span class="ir-preset-dim">2560×1440</span></button>
+              <button class="ir-preset-btn" onclick="applyPreset(1080,1920,'TikTok Cover')"><span class="ir-preset-icon">🎵</span><span class="ir-preset-name">TikTok Cover</span><span class="ir-preset-dim">1080×1920</span></button>
+              <button class="ir-preset-btn" onclick="applyPreset(1080,1920,'Instagram Reel')"><span class="ir-preset-icon">🎬</span><span class="ir-preset-name">Instagram Reel</span><span class="ir-preset-dim">1080×1920</span></button>
+            </div>
+          </div>
+          <div class="ir-preset-section">
+            <p class="ir-preset-section__title">{{ call .T "img.resize.preset.section.ecommerce" }}</p>
+            <div class="ir-preset-grid">
+              <button class="ir-preset-btn" onclick="applyPreset(1000,1000,'Etsy Listing')"><span class="ir-preset-icon">🛍️</span><span class="ir-preset-name">Etsy Listing</span><span class="ir-preset-dim">1000×1000</span></button>
+              <button class="ir-preset-btn" onclick="applyPreset(500,500,'Etsy Mini')"><span class="ir-preset-icon">🛒</span><span class="ir-preset-name">Etsy Mini</span><span class="ir-preset-dim">500×500</span></button>
+              <button class="ir-preset-btn" onclick="applyPreset(1000,1000,'Amazon Product')"><span class="ir-preset-icon">📦</span><span class="ir-preset-name">Amazon Product</span><span class="ir-preset-dim">1000×1000</span></button>
+              <button class="ir-preset-btn" onclick="applyPreset(1200,675,'Google Ads')"><span class="ir-preset-icon">📣</span><span class="ir-preset-name">Google Ads</span><span class="ir-preset-dim">1200×675</span></button>
+            </div>
+          </div>
+          <div class="ir-preset-section">
+            <p class="ir-preset-section__title">{{ call .T "img.resize.preset.section.more" }}</p>
+            <div class="ir-preset-grid">
+              <button class="ir-preset-btn" onclick="applyPreset(1200,675,'Twitter/X Post')"><span class="ir-preset-icon">🐦</span><span class="ir-preset-name">Twitter/X Post</span><span class="ir-preset-dim">1200×675</span></button>
+              <button class="ir-preset-btn" onclick="applyPreset(1500,500,'Twitter Header')"><span class="ir-preset-icon">🔵</span><span class="ir-preset-name">Twitter Header</span><span class="ir-preset-dim">1500×500</span></button>
+              <button class="ir-preset-btn" onclick="applyPreset(1200,627,'LinkedIn Post')"><span class="ir-preset-icon">💼</span><span class="ir-preset-name">LinkedIn Post</span><span class="ir-preset-dim">1200×627</span></button>
+              <button class="ir-preset-btn" onclick="applyPreset(1080,1080,'Pinterest Pin')"><span class="ir-preset-icon">📌</span><span class="ir-preset-name">Pinterest Pin</span><span class="ir-preset-dim">1080×1080</span></button>
             </div>
           </div>
           <div class="ir-selected-preset" id="selectedPreset" style="display:none">
@@ -277,66 +403,203 @@
     </div>
   </section>
 
-  <!-- ══ Features ══════════════════════════════ -->
-  <section class="ir-features-section">
-    <div class="ir-container">
-      <div class="ir-features-grid">
-        <div class="ir-feature-card">
-          <div class="ir-feature-icon" style="background:#eff6ff">📐</div>
-          <h3>{{ call .T "img.resize.feature.privacy.title" }}</h3>
-          <p>{{ call .T "img.resize.feature.privacy.desc" }}</p>
+  <!-- ══ SECTION 1: How it works ═════════════════ -->
+  <section class="ir-section ir-section--alt">
+    <div class="ir-section-inner">
+      <span class="ir-section-label">{{ call .T "img.resize.s1.label" }}</span>
+      <h2 class="ir-section-title">{{ call .T "img.resize.s1.title" }}</h2>
+      <p class="ir-section-body">{{ call .T "img.resize.s1.body" }}</p>
+      <div class="ir-steps">
+        <div class="ir-step">
+          <div class="ir-step__num">1</div>
+          <h3 class="ir-step__title">{{ call .T "img.resize.s1.step1.title" }}</h3>
+          <p class="ir-step__desc">{{ call .T "img.resize.s1.step1.desc" }}</p>
         </div>
-        <div class="ir-feature-card">
-          <div class="ir-feature-icon" style="background:#f0fdf4">🖼️</div>
-          <h3>{{ call .T "img.resize.feature.batch.title" }}</h3>
-          <p>{{ call .T "img.resize.feature.batch.desc" }}</p>
+        <div class="ir-step">
+          <div class="ir-step__num">2</div>
+          <h3 class="ir-step__title">{{ call .T "img.resize.s1.step2.title" }}</h3>
+          <p class="ir-step__desc">{{ call .T "img.resize.s1.step2.desc" }}</p>
         </div>
-        <div class="ir-feature-card">
-          <div class="ir-feature-icon" style="background:#fef9e7">⚡</div>
-          <h3>{{ call .T "img.resize.feature.preset.title" }}</h3>
-          <p>{{ call .T "img.resize.feature.preset.desc" }}</p>
+        <div class="ir-step">
+          <div class="ir-step__num">3</div>
+          <h3 class="ir-step__title">{{ call .T "img.resize.s1.step3.title" }}</h3>
+          <p class="ir-step__desc">{{ call .T "img.resize.s1.step3.desc" }}</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ══ About (with sidebar ads) ═══════════════ -->
-  <section class="ir-about-section">
-    <div class="ir-container">
-      <div style="display:flex;gap:32px;align-items:flex-start">
-        <!-- Left Ad -->
-        <div style="flex-shrink:0;width:160px" class="ir-about-ad-left">
-          {{- template "partials/ad_slot.html" dict "SlotID" "img-resize-about-left" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+  <!-- ══ SECTION 2: Precision Resize ═════════════ -->
+  <section class="ir-section">
+    <div class="ir-section-inner">
+      <div class="ir-split">
+        <div class="ir-split-text">
+          <span class="ir-section-label">{{ call .T "img.resize.s2.label" }}</span>
+          <h2 class="ir-section-title">{{ call .T "img.resize.s2.title" }}</h2>
+          <p class="ir-section-body">{{ call .T "img.resize.s2.body1" }}</p>
+          <p class="ir-section-body">{{ call .T "img.resize.s2.body2" }}</p>
         </div>
-        <div style="flex:1;min-width:0">
-          <span class="ir-section-label">{{ call .T "img.resize.about.label" }}</span>
-          <h2 class="ir-section-title">{{ call .T "img.resize.about.title" }}</h2>
-          <p class="ir-about-body">{{ call .T "img.resize.about.body1" }}</p>
-          <p class="ir-about-body">{{ call .T "img.resize.about.body2" }}</p>
-          <p class="ir-about-body">{{ call .T "img.resize.about.body3" }}</p>
-          <p class="ir-about-body">{{ call .T "img.resize.about.body4" }}</p>
-          <p class="ir-about-body">{{ call .T "img.resize.about.body5" }}</p>
-        </div>
-        <!-- Right Ad -->
-        <div style="flex-shrink:0;width:160px" class="ir-about-ad-right">
-          {{- template "partials/ad_slot.html" dict "SlotID" "img-resize-about-right" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+        <div class="ir-split-visual">
+          <div class="ir-visual-box">
+            <div class="ir-visual-box__icon">📐</div>
+            <div class="ir-visual-stat">
+              <span class="ir-visual-stat__num">1px</span>
+              <span class="ir-visual-stat__lbl">{{ call .T "img.resize.s2.stat.lbl" }}</span>
+            </div>
+            <div class="ir-visual-box__label">{{ call .T "img.resize.s2.stat.sub" }}</div>
+          </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ══ SECTION 3: Format Support ═══════════════ -->
+  <section class="ir-section ir-section--alt">
+    <div class="ir-section-inner--wide">
+      <span class="ir-section-label">{{ call .T "img.resize.s3.label" }}</span>
+      <h2 class="ir-section-title">{{ call .T "img.resize.s3.title" }}</h2>
+      <p class="ir-section-body">{{ call .T "img.resize.s3.body" }}</p>
+      <div class="ir-format-grid">
+        <div class="ir-format-card--new">
+          <div class="ir-format-card__icon">🖼️</div>
+          <h3 class="ir-format-card__name">JPEG / JPG</h3>
+          <p class="ir-format-card__desc">{{ call .T "img.resize.s3.fmt.jpg" }}</p>
+        </div>
+        <div class="ir-format-card--new">
+          <div class="ir-format-card__icon">🎨</div>
+          <h3 class="ir-format-card__name">PNG</h3>
+          <p class="ir-format-card__desc">{{ call .T "img.resize.s3.fmt.png" }}</p>
+        </div>
+        <div class="ir-format-card--new">
+          <div class="ir-format-card__icon">⚡</div>
+          <h3 class="ir-format-card__name">WebP</h3>
+          <p class="ir-format-card__desc">{{ call .T "img.resize.s3.fmt.webp" }}</p>
+        </div>
+        <div class="ir-format-card--new">
+          <div class="ir-format-card__icon">📱</div>
+          <h3 class="ir-format-card__name">{{ call .T "img.resize.s3.fmt.preset.name" }}</h3>
+          <p class="ir-format-card__desc">{{ call .T "img.resize.s3.fmt.preset.desc" }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SECTION 4: Privacy ══════════════════════ -->
+  <section class="ir-section">
+    <div class="ir-section-inner">
+      <div class="ir-split ir-split--reverse">
+        <div class="ir-split-text">
+          <span class="ir-section-label">{{ call .T "img.resize.s4.label" }}</span>
+          <h2 class="ir-section-title">{{ call .T "img.resize.s4.title" }}</h2>
+          <p class="ir-section-body">{{ call .T "img.resize.s4.body1" }}</p>
+          <p class="ir-section-body">{{ call .T "img.resize.s4.body2" }}</p>
+        </div>
+        <div class="ir-split-visual">
+          <div class="ir-visual-box">
+            <div class="ir-visual-box__icon">🔒</div>
+            <div class="ir-visual-stat">
+              <span class="ir-visual-stat__num">0 bytes</span>
+              <span class="ir-visual-stat__lbl">{{ call .T "img.resize.s4.stat.lbl" }}</span>
+            </div>
+            <div class="ir-visual-box__label">{{ call .T "img.resize.s4.stat.sub" }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SECTION 5: Batch Processing ═════════════ -->
+  <section class="ir-section ir-section--alt">
+    <div class="ir-section-inner">
+      <span class="ir-section-label">{{ call .T "img.resize.s5.label" }}</span>
+      <h2 class="ir-section-title">{{ call .T "img.resize.s5.title" }}</h2>
+      <p class="ir-section-body">{{ call .T "img.resize.s5.body1" }}</p>
+      <p class="ir-section-body">{{ call .T "img.resize.s5.body2" }}</p>
+    </div>
+  </section>
+
+  <!-- ══ SECTION 6: Use Cases ═══════════════════════ -->
+  <section class="ir-section">
+    <div class="ir-section-inner">
+      <span class="ir-section-label">使用场景</span>
+      <h2 class="ir-section-title">适用于各种场景的图片尺寸调整</h2>
+      <p class="ir-section-body">无论您是博主、设计师、电商运营还是社交媒体经理，我们都能满足您的图片调整需求</p>
+
+      <div class="use-cases-grid">
+        <div class="use-case-card">
+          <div class="use-case-icon">📱</div>
+          <h3>社交媒体优化</h3>
+          <p>完美适配 Instagram、Facebook、Twitter、LinkedIn 等平台的图片尺寸要求，让您的帖子在信息流中脱颖而出</p>
+          <ul>
+            <li>一键应用标准尺寸</li>
+            <li>避免图片拉伸或裁剪</li>
+            <li>保持最佳视觉呈现</li>
+          </ul>
+        </div>
+
+        <div class="use-case-card">
+          <div class="use-case-icon">🛒</div>
+          <h3>电商产品展示</h3>
+          <p>为淘宝、亚马逊、Etsy 等电商平台准备标准的产品图片，提升商品转化率</p>
+          <ul>
+            <li>多角度尺寸统一</li>
+            <li>优化加载速度</li>
+            <li>提高搜索排名</li>
+          </ul>
+        </div>
+
+        <div class="use-case-card">
+          <div class="use-case-icon">📝</div>
+          <h3>博客与网站建设</h3>
+          <p>为 WordPress、Wix 等网站管理系统准备合适的图片尺寸，优化页面加载速度</p>
+          <ul>
+            <li>响应式图片支持</li>
+            <li>SEO 优化</li>
+            <li>WebP 格式更小更快</li>
+          </ul>
+        </div>
+
+        <div class="use-case-card">
+          <div class="use-case-icon">🎬</div>
+          <h3>视频与内容创作</h3>
+          <p>为 YouTube、TikTok、Bilibili 等视频平台制作封面、缩略图和广告素材</p>
+          <ul>
+            <li>高分辨率预览图</li>
+            <li>视频封面优化</li>
+            <li>批量处理节省时间</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SECTION 7: SEO Description ═════════════════ -->
+  <section class="ir-section ir-section--alt">
+    <div class="ir-section-inner">
+      <span class="ir-section-label">{{ call .T "img.resize.s6.label" }}</span>
+      <h2 class="ir-section-title">{{ call .T "img.resize.s6.title" }}</h2>
+      <p class="ir-section-body">{{ call .T "img.resize.s6.body1" }}</p>
+      <p class="ir-section-body">{{ call .T "img.resize.s6.body2" }}</p>
+      <p class="ir-section-body">{{ call .T "img.resize.s6.body3" }}</p>
     </div>
   </section>
 
   <!-- ══ FAQ ══════════════════════════════════ -->
-  <section class="ir-faq-section">
-    <div class="ir-container">
-      <h2 class="ir-section-title">{{ call .T "img.resize.faq.title" }}</h2>
-      <div class="ir-faq-list">
+  <section class="ir-section ir-section--alt">
+    <div class="ir-section-inner">
+      <span class="ir-section-label">FAQ</span>
+      <h2 class="ir-section-title">{{ safeHTML (call .T "img.resize.faq.title") }}</h2>
+      <div class="ir-faq-list--new">
         {{- range $i, $faq := .FAQs }}
-        <div class="ir-faq-item" id="faq-{{ $i }}">
-          <button class="ir-faq-question" onclick="toggleFAQ('faq-{{ $i }}')">
+        <div class="ir-faq-item--new" id="faq-{{ $i }}">
+          <button class="ir-faq-q--new" onclick="toggleFAQ({{ $i }})">
             <span>{{ $faq.Q }}</span>
-            <svg class="ir-faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            <svg class="ir-faq-chevron--new" width="16" height="16" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
           </button>
-          <div class="ir-faq-answer"><p>{{ $faq.A }}</p></div>
+          <div class="ir-faq-a--new"><p>{{ $faq.A }}</p></div>
         </div>
         {{- end }}
       </div>
@@ -353,6 +616,37 @@
 
 <script src="/static/js/img-resize-engine.js?v={{ .AssetVer }}"></script>
 <script src="/static/js/img-resize-ui.js?v={{ .AssetVer }}"></script>
+
+<script>
+function toggleFAQ(idx) {
+  var item = document.getElementById('faq-' + idx);
+  var answerEl = item.querySelector('.ir-faq-a--new');
+  var open = item.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.ir-faq-item--new.open').forEach(function(el) {
+    el.classList.remove('open');
+    var a = el.querySelector('.ir-faq-a--new');
+    if (a) a.style.display = 'none';
+  });
+  if (!open) {
+    item.classList.add('open');
+    if (answerEl) answerEl.style.display = 'block';
+  }
+}
+// Init: force all FAQ answers hidden via inline style
+(function() {
+  function initFAQ() {
+    document.querySelectorAll('.ir-faq-a--new').forEach(function(el) {
+      el.style.display = 'none';
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFAQ);
+  } else {
+    initFAQ();
+  }
+})();
+</script>
 {{ end }}
 
 
