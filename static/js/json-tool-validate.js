@@ -1,14 +1,17 @@
 'use strict';
 // validate
 function initToolOptions() {
-  document.getElementById('toolOptions').innerHTML = `
-    <span class="jt-options-label">缩进</span>
-    <select id="indentSize" class="jt-options-select">
-      <option value="2" selected>2 空格</option>
-      <option value="4">4 空格</option>
-      <option value="tab">Tab</option>
-    </select>
-  `;
+  const inputOpts = document.getElementById('inputOptions');
+  if (inputOpts) {
+    inputOpts.innerHTML = `
+      <span class="jt-options-label">缩进</span>
+      <select id="indentSize" class="jt-options-select jt-options-select--sm">
+        <option value="2" selected>2 空格</option>
+        <option value="4">4 空格</option>
+        <option value="tab">Tab</option>
+      </select>
+    `;
+  }
 }
 function processJson() {
   const raw = getInput().trim();

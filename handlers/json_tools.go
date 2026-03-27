@@ -71,6 +71,15 @@ var AllJsonToolMetas = []JsonToolMeta{
 	{Key: "token-count", Icon: "🔢", Group: "encode", TitleZH: "Token 计数", TitleEN: "Token Counter", DescZH: "统计 GPT-4/Claude/Gemini 等模型的 Token 数量", DescEN: "Count tokens for GPT-4, Claude, Gemini and other LLMs", Keywords: "token counter, gpt token count, llm tokens"},
 }
 
+// jsonOutputTools indicates which tools produce valid JSON output (for tree view)
+var jsonOutputTools = map[string]bool{
+	"validate": true, "pretty": true, "minify": true, "sort-keys": true,
+	"unescape": true, "flatten": true, "repair": true, "jsonc": true,
+	"jwt": true, "path": true, "token-count": true,
+	"from-csv": true, "from-yaml": true, "from-xml": true, "from-sql": true,
+	"schema-generate": true,
+}
+
 // hotToolKeys is the list of hot tools shown in the topbar
 var hotToolKeys = []string{"validate", "pretty", "diff", "tree", "jwt", "to-typescript", "to-yaml", "schema-generate"}
 
@@ -151,6 +160,7 @@ func JsonToolPage(toolKey string) gin.HandlerFunc {
 			"RelatedTools": getRelatedTools(toolKey),
 			"AllTools":     AllJsonToolMetas,
 			"PageClass":    "page-json-tool",
+			"OutputIsJSON": jsonOutputTools[toolKey],
 		})
 		renderJSONTool(c, "tool.html", data)
 	}

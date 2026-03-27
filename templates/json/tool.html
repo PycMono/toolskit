@@ -96,10 +96,54 @@
       </div>
     </div>
 
+    <!-- Tool Selector Bar (shown for ALL tools) -->
+    <div class="jt-tool-selector-bar">
+      <div class="jt-tool-selector" id="toolSelector" onclick="toggleToolSelector()">
+        <span class="jt-tool-selector__icon">{{ $meta.Icon }}</span>
+        <span class="jt-tool-selector__name" id="currentToolName">{{ if eq $lang "zh" }}{{ $meta.TitleZH }}{{ else }}{{ $meta.TitleEN }}{{ end }}</span>
+        <span class="jt-tool-selector__arrow">▾</span>
+        <div class="jt-tool-dropdown" id="toolDropdown" onclick="event.stopPropagation()">
+          <div class="jt-tool-dropdown__search">
+            <input type="text" id="toolSearchInput" placeholder="{{ call .T "json.selector.search" }}" oninput="filterToolDropdown(this.value)" onkeydown="handleToolSearchKeydown(event)">
+          </div>
+          {{ range $group := list "validate" "view" "convert" "codegen" "schema" "encode" }}
+          <div class="jt-tool-dropdown__group" data-group="{{ $group }}">
+            <div class="jt-tool-dropdown__group-title">{{ call $.T (printf "json.home.group.%s" $group) }}</div>
+            {{ range $.AllTools }}{{ if eq .Group $group }}
+            <div class="jt-tool-dropdown__item{{ if eq $.ToolKey .Key }} active{{ end }}" data-key="{{ .Key }}" data-name="{{ if eq $lang "zh" }}{{ .TitleZH }}{{ else }}{{ .TitleEN }}{{ end }}" data-keywords="{{ .Keywords }}" onclick="selectTool('{{ .Key }}')">
+              <span class="jt-tool-dropdown__item-icon">{{ .Icon }}</span>
+              <span class="jt-tool-dropdown__item-name">{{ if eq $lang "zh" }}{{ .TitleZH }}{{ else }}{{ .TitleEN }}{{ end }}</span>
+            </div>
+            {{ end }}{{ end }}
+          </div>
+          {{ end }}
+        </div>
+      </div>
+    </div>
+
     {{ if eq .ToolKey "diff" }}
-    <!-- Diff: 2-pane side-by-side + result below -->
-    <div class="jt-diff-panes">
-      <div class="jt-diff-pane">
+    <!-- Diff: 3-column layout with swap + orange button in center -->
+    <div class="jt-editor-wrap" style="position:relative">
+      <!-- Sidebar Toggle Button -->
+      <button class="jt-sidebar-toggle" id="sidebarToggle" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}"><span class="jt-sidebar-toggle__arrow">◀</span></button>
+      <!-- History Sidebar -->
+      <aside class="jt-history-sidebar" id="historySidebar">
+        <div class="jt-sidebar-header">
+          <span class="jt-sidebar-title">🕐 {{ call .T "json.history.title" }}</span>
+          <div class="jt-sidebar-actions">
+            <button class="jt-sidebar-btn" onclick="clearHistory()" title="{{ call .T "json.history.clear" }}">🗑️</button>
+            <button class="jt-sidebar-btn" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}">✕</button>
+          </div>
+        </div>
+        <div class="jt-history-list" id="historyList">
+          <div class="jt-history-empty">{{ call .T "json.history.empty" }}</div>
+        </div>
+      </aside>
+      <!-- Editor Layout -->
+      <div class="jt-editor-layout">
+
+      <!-- Left: Original JSON -->
+      <div class="jt-editor-pane jt-editor-pane--input">
         <div class="jt-editor-pane__header">
           <span class="jt-editor-pane__label">{{ call .T "json.diff.left" }}</span>
           <div class="jt-editor-pane__actions">
@@ -109,7 +153,28 @@
         </div>
         <div id="diffLeftEditor" class="jt-monaco-editor"></div>
       </div>
-      <div class="jt-diff-pane">
+
+      <!-- Middle: orange arrow + swap -->
+      <div class="jt-editor-actions">
+        <button class="jt-process-btn" id="processBtn" onclick="runProcessJson()" title="{{ call .T "json.diff.btn" }}">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+        <button class="jt-swap-btn" onclick="swapDiffEditors()" title="{{ call .T "json.common.swap" }}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2">
+            <polyline points="17 1 21 5 17 9"/>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+            <polyline points="7 23 3 19 7 15"/>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Right: Compare JSON -->
+      <div class="jt-editor-pane jt-editor-pane--output">
         <div class="jt-editor-pane__header">
           <span class="jt-editor-pane__label">{{ call .T "json.diff.right" }}</span>
           <div class="jt-editor-pane__actions">
@@ -119,17 +184,32 @@
         </div>
         <div id="diffRightEditor" class="jt-monaco-editor"></div>
       </div>
-    </div>
-    <div style="text-align:center;margin:10px 0">
-      <button class="jt-process-btn jt-process-btn--full" style="max-width:240px;margin:0 auto" onclick="processJson()">
-        {{ call .T "json.diff.btn" }}
-      </button>
-    </div>
-    <div id="diffResult" class="jt-diff-result" style="margin-top:8px"></div>
+
+    </div><!-- /jt-editor-layout -->
+    </div><!-- /jt-editor-wrap -->
+    <!-- Diff Result -->
+    <div id="diffResult" class="jt-diff-result" style="margin-top:12px"></div>
 
     {{ else if or (eq .ToolKey "tree") (eq .ToolKey "table") (eq .ToolKey "size") (eq .ToolKey "search") }}
-    <!-- Standard dual-pane layout: input left + orange arrow + custom output right -->
-    <div class="jt-editor-layout">
+    <!-- Tree/Table/Size/Search: input left + orange arrow + custom output right -->
+    <div class="jt-editor-wrap" style="position:relative">
+      <!-- Sidebar Toggle Button -->
+      <button class="jt-sidebar-toggle" id="sidebarToggle" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}"><span class="jt-sidebar-toggle__arrow">◀</span></button>
+      <!-- History Sidebar -->
+      <aside class="jt-history-sidebar" id="historySidebar">
+        <div class="jt-sidebar-header">
+          <span class="jt-sidebar-title">🕐 {{ call .T "json.history.title" }}</span>
+          <div class="jt-sidebar-actions">
+            <button class="jt-sidebar-btn" onclick="clearHistory()" title="{{ call .T "json.history.clear" }}">🗑️</button>
+            <button class="jt-sidebar-btn" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}">✕</button>
+          </div>
+        </div>
+        <div class="jt-history-list" id="historyList">
+          <div class="jt-history-empty">{{ call .T "json.history.empty" }}</div>
+        </div>
+      </aside>
+      <!-- Editor Layout -->
+      <div class="jt-editor-layout">
 
       <!-- Left: Input -->
       <div class="jt-editor-pane jt-editor-pane--input">
@@ -152,25 +232,26 @@
 
       <!-- Middle: orange arrow button -->
       <div class="jt-editor-actions">
-        <button class="jt-process-btn" id="processBtn" onclick="processJson()" title="{{ call .T "json.common.process" }}">
+        <button class="jt-process-btn" id="processBtn" onclick="runProcessJson()" title="{{ call .T "json.common.process" }}">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="2.5">
             <polyline points="9 18 15 12 9 6"/>
           </svg>
         </button>
-        {{ if eq .ToolKey "tree" }}
-        <button class="jt-swap-btn" onclick="expandAll()" title="全部展开" style="font-size:12px;width:30px;height:30px">▼</button>
-        <button class="jt-swap-btn" onclick="collapseAll()" title="全部折叠" style="font-size:12px;width:30px;height:30px">▶</button>
-        {{ end }}
       </div>
 
       <!-- Right: Custom render output -->
       <div class="jt-editor-pane jt-editor-pane--output">
         <div class="jt-editor-pane__header">
           <span class="jt-editor-pane__label">{{ call .T "json.common.output" }}</span>
-          {{ if eq .ToolKey "search" }}
-          <div class="jt-editor-pane__actions" id="searchControls" style="flex:1;justify-content:flex-end"></div>
-          {{ end }}
+          <div class="jt-editor-pane__actions">
+            {{ if eq .ToolKey "tree" }}
+            <button class="jt-btn jt-btn--ghost jt-btn--small" onclick="expandAll()" title="{{ call .T "json.output.expand_all" }}">▼ {{ call .T "json.output.expand_all" }}</button>
+            <button class="jt-btn jt-btn--ghost jt-btn--small" onclick="collapseAll()" title="{{ call .T "json.output.collapse_all" }}">▶ {{ call .T "json.output.collapse_all" }}</button>
+            {{ else if eq .ToolKey "search" }}
+            <div id="searchControls" style="flex:1;justify-content:flex-end"></div>
+            {{ end }}
+          </div>
         </div>
         <div class="jt-viewer-render-area">
           <div id="treeOutput"   {{ if ne .ToolKey "tree"   }}style="display:none"{{ end }}></div>
@@ -180,43 +261,79 @@
         </div>
       </div>
 
-    </div>
+    </div><!-- /jt-editor-layout -->
+    </div><!-- /jt-editor-wrap -->
 
     {{ else if eq .ToolKey "from-excel" }}
     <!-- Excel: side-by-side upload left + output right -->
-    <div class="jt-schema-layout jt-schema-layout--wide">
-      <div class="jt-editor-pane">
-        <div class="jt-editor-pane__header">
-          <span class="jt-editor-pane__label">{{ call .T "json.convert.upload_excel" }}</span>
-        </div>
-        <div style="padding:24px">
-          <div class="jt-upload-box" id="excelUploadBox">
-            <span class="jt-upload-icon">📗</span>
-            <p>{{ call .T "json.convert.upload_excel" }}</p>
-            <label class="jt-btn jt-btn--primary">
-              {{ call .T "json.common.upload" }}
-              <input type="file" accept=".xlsx,.xls,.csv" style="display:none"
-                     onchange="handleExcelUpload(this)">
-            </label>
+    <div class="jt-editor-wrap" style="position:relative">
+      <!-- Sidebar Toggle Button -->
+      <button class="jt-sidebar-toggle" id="sidebarToggle" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}"><span class="jt-sidebar-toggle__arrow">◀</span></button>
+      <!-- History Sidebar -->
+      <aside class="jt-history-sidebar" id="historySidebar">
+        <div class="jt-sidebar-header">
+          <span class="jt-sidebar-title">🕐 {{ call .T "json.history.title" }}</span>
+          <div class="jt-sidebar-actions">
+            <button class="jt-sidebar-btn" onclick="clearHistory()" title="{{ call .T "json.history.clear" }}">🗑️</button>
+            <button class="jt-sidebar-btn" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}">✕</button>
           </div>
         </div>
-      </div>
-      <div class="jt-schema-mid-action" style="visibility:hidden;width:0;padding:0;border:none"></div>
-      <div class="jt-editor-pane jt-editor-pane--output">
-        <div class="jt-editor-pane__header">
-          <span class="jt-editor-pane__label">{{ call .T "json.common.output" }}</span>
-          <div class="jt-editor-pane__actions">
-            <button onclick="copyOutput()" class="jt-btn jt-btn--primary">{{ call .T "json.common.copy" }}</button>
-            <button onclick="downloadOutput('output.json','json')" class="jt-btn jt-btn--ghost">{{ call .T "json.common.download" }}</button>
+        <div class="jt-history-list" id="historyList">
+          <div class="jt-history-empty">{{ call .T "json.history.empty" }}</div>
+        </div>
+      </aside>
+      <!-- Excel Content -->
+      <div class="jt-schema-layout jt-schema-layout--wide">
+        <div class="jt-editor-pane">
+          <div class="jt-editor-pane__header">
+            <span class="jt-editor-pane__label">{{ call .T "json.convert.upload_excel" }}</span>
+          </div>
+          <div style="padding:24px">
+            <div class="jt-upload-box" id="excelUploadBox">
+              <span class="jt-upload-icon">📗</span>
+              <p>{{ call .T "json.convert.upload_excel" }}</p>
+              <label class="jt-btn jt-btn--primary">
+                {{ call .T "json.common.upload" }}
+                <input type="file" accept=".xlsx,.xls,.csv" style="display:none"
+                       onchange="handleExcelUpload(this)">
+              </label>
+            </div>
           </div>
         </div>
-        <div id="outputEditor" class="jt-monaco-editor"></div>
+        <div class="jt-schema-mid-action" style="visibility:hidden;width:0;padding:0;border:none"></div>
+        <div class="jt-editor-pane jt-editor-pane--output">
+          <div class="jt-editor-pane__header">
+            <span class="jt-editor-pane__label">{{ call .T "json.common.output" }}</span>
+            <div class="jt-editor-pane__actions">
+              <button onclick="copyOutput()" class="jt-btn jt-btn--primary">{{ call .T "json.common.copy" }}</button>
+              <button onclick="downloadOutput('output.json','json')" class="jt-btn jt-btn--ghost">{{ call .T "json.common.download" }}</button>
+            </div>
+          </div>
+          <div id="outputEditor" class="jt-monaco-editor"></div>
+        </div>
       </div>
-    </div>
+    </div><!-- /jt-editor-wrap -->
 
     {{ else if eq .ToolKey "schema-validate" }}
-    <!-- Schema Validate: standard dual-pane (schema left + orange arrow + data right) + result below -->
-    <div class="jt-editor-layout">
+    <!-- Schema Validate: schema left + orange arrow + data right + result below -->
+    <div class="jt-editor-wrap" style="position:relative">
+      <!-- Sidebar Toggle Button -->
+      <button class="jt-sidebar-toggle" id="sidebarToggle" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}"><span class="jt-sidebar-toggle__arrow">◀</span></button>
+      <!-- History Sidebar -->
+      <aside class="jt-history-sidebar" id="historySidebar">
+        <div class="jt-sidebar-header">
+          <span class="jt-sidebar-title">🕐 {{ call .T "json.history.title" }}</span>
+          <div class="jt-sidebar-actions">
+            <button class="jt-sidebar-btn" onclick="clearHistory()" title="{{ call .T "json.history.clear" }}">🗑️</button>
+            <button class="jt-sidebar-btn" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}">✕</button>
+          </div>
+        </div>
+        <div class="jt-history-list" id="historyList">
+          <div class="jt-history-empty">{{ call .T "json.history.empty" }}</div>
+        </div>
+      </aside>
+      <!-- Editor Layout -->
+      <div class="jt-editor-layout">
 
       <!-- Left: Schema input -->
       <div class="jt-editor-pane jt-editor-pane--input">
@@ -235,7 +352,7 @@
 
       <!-- Middle: orange arrow -->
       <div class="jt-editor-actions">
-        <button class="jt-process-btn" id="processBtn" onclick="processJson()" title="{{ call .T "json.schema.validate.btn" }}">
+        <button class="jt-process-btn" id="processBtn" onclick="runProcessJson()" title="{{ call .T "json.schema.validate.btn" }}">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="2.5">
             <polyline points="9 18 15 12 9 6"/>
@@ -260,6 +377,7 @@
       </div>
 
     </div><!-- /jt-editor-layout -->
+    </div><!-- /jt-editor-wrap -->
 
     <!-- Result panel (shown after validation) -->
     <div id="schemaResultPanel" class="jt-schema-result-panel" style="display:none;margin-top:12px">
@@ -275,14 +393,35 @@
     </div>
 
     {{ else }}
-    <!-- Standard dual-pane editor layout -->
-    <div class="jt-editor-layout">
+    <!-- Standard dual-pane editor layout with history sidebar -->
+    <!-- Editor with History Sidebar -->
+    <div class="jt-editor-wrap" style="position:relative">
+      <!-- Sidebar Toggle Button -->
+      <button class="jt-sidebar-toggle" id="sidebarToggle" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}"><span class="jt-sidebar-toggle__arrow">◀</span></button>
+
+      <!-- History Sidebar -->
+      <aside class="jt-history-sidebar" id="historySidebar">
+        <div class="jt-sidebar-header">
+          <span class="jt-sidebar-title">🕐 {{ call .T "json.history.title" }}</span>
+          <div class="jt-sidebar-actions">
+            <button class="jt-sidebar-btn" onclick="clearHistory()" title="{{ call .T "json.history.clear" }}">🗑️</button>
+            <button class="jt-sidebar-btn" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}">✕</button>
+          </div>
+        </div>
+        <div class="jt-history-list" id="historyList">
+          <div class="jt-history-empty">{{ call .T "json.history.empty" }}</div>
+        </div>
+      </aside>
+
+      <!-- Editor Layout -->
+      <div class="jt-editor-layout">
 
       <!-- Left: Input -->
       <div class="jt-editor-pane jt-editor-pane--input">
         <div class="jt-editor-pane__header">
           <span class="jt-editor-pane__label">{{ call .T "json.common.input" }}</span>
           <div class="jt-editor-pane__actions">
+            <span id="inputOptions" class="jt-input-options"></span>
             <button onclick="loadExample()" class="jt-btn jt-btn--ghost">{{ call .T "json.common.example" }}</button>
             <button onclick="clearInput()"  class="jt-btn jt-btn--ghost">{{ call .T "json.common.clear" }}</button>
             <label class="jt-btn jt-btn--ghost">{{ call .T "json.common.upload" }}
@@ -299,7 +438,7 @@
 
       <!-- Middle: Action buttons -->
       <div class="jt-editor-actions">
-        <button class="jt-process-btn" id="processBtn" onclick="processJson()" title="{{ call .T "json.common.process" }}">
+        <button class="jt-process-btn" id="processBtn" onclick="runProcessJson()" title="{{ call .T "json.common.process" }}">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="2.5">
             <polyline points="9 18 15 12 9 6"/>
@@ -321,6 +460,13 @@
         <div class="jt-editor-pane__header">
           <span class="jt-editor-pane__label">{{ call .T "json.common.output" }}</span>
           <div class="jt-editor-pane__actions">
+            {{ if .OutputIsJSON }}
+            <!-- Expand/Collapse buttons (directly visible for JSON output) -->
+            <button onclick="expandAllOutputTree()" class="jt-btn jt-btn--ghost jt-btn--small" id="expandAllBtn" title="{{ call .T "json.output.expand_all" }}">▼ {{ call .T "json.output.expand_all" }}</button>
+            <button onclick="collapseAllOutputTree()" class="jt-btn jt-btn--ghost jt-btn--small" id="collapseAllBtn" title="{{ call .T "json.output.collapse_all" }}">▶ {{ call .T "json.output.collapse_all" }}</button>
+            {{ end }}
+            <!-- Fullscreen -->
+            <button onclick="openFullscreen()" class="jt-btn jt-btn--ghost" id="fullscreenBtn" title="{{ call .T "json.output.fullscreen" }}">⛶ {{ call .T "json.output.fullscreen" }}</button>
             {{ if eq .ToolKey "unescape" }}
             <button onclick="beautifyOutput()" class="jt-btn jt-btn--primary">✨ 美化</button>
             {{ end }}
@@ -333,6 +479,7 @@
           </div>
         </div>
         <div id="outputEditor" class="jt-monaco-editor"></div>
+        <div id="outputTree" class="jt-output-tree"></div>
         <div class="jt-editor-pane__footer">
           <span id="outputSize"></span>
           <span id="outputStats" class="jt-output-stats"></span>
@@ -340,6 +487,7 @@
       </div>
 
     </div><!-- /jt-editor-layout -->
+    </div><!-- /jt-editor-wrap -->
     {{ end }}
 
     <!-- Error Panel -->
@@ -356,6 +504,54 @@
     {{ if eq .ToolKey "jwt" }}
     <div id="jwtPanel" class="jt-jwt-panel" style="display:none"></div>
     {{ end }}
+
+    <!-- Fullscreen Modal -->
+    <div class="jt-fullscreen-overlay" id="fullscreenOverlay" onclick="closeFullscreenOnBackdrop(event)">
+      <div class="jt-fullscreen-modal">
+        <div class="jt-fullscreen-header">
+          <span class="jt-fullscreen-title">
+            <span id="fullscreenToolIcon">{{ $meta.Icon }}</span>
+            <span id="fullscreenToolName">{{ if eq $lang "zh" }}{{ $meta.TitleZH }}{{ else }}{{ $meta.TitleEN }}{{ end }}</span>
+          </span>
+          <button class="jt-fullscreen-close" onclick="closeFullscreen()">
+            <span>✕</span>
+            <span>{{ call .T "json.output.exit_fullscreen" }}</span>
+          </button>
+        </div>
+        <div class="jt-fullscreen-body">
+          <div class="jt-editor-pane jt-editor-pane--input">
+            <div id="fullscreenInputEditor" class="jt-monaco-editor"></div>
+          </div>
+          <div class="jt-editor-actions">
+            <button class="jt-process-btn" onclick="processJsonFullscreen()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
+            <button class="jt-swap-btn" onclick="swapEditors()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="17 1 21 5 17 9"/>
+                <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                <polyline points="7 23 3 19 7 15"/>
+                <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+              </svg>
+            </button>
+          </div>
+          <div class="jt-editor-pane jt-editor-pane--output">
+            <div id="fullscreenOutputEditor" class="jt-monaco-editor"></div>
+          </div>
+        </div>
+        <div class="jt-fullscreen-footer">
+          <div class="jt-fullscreen-stats">
+            <span id="fullscreenInputSize"></span> → <span id="fullscreenOutputSize"></span>
+          </div>
+          <div class="jt-fullscreen-actions">
+            <button onclick="copyOutput()" class="jt-btn jt-btn--primary">{{ call .T "json.common.copy" }}</button>
+            <button onclick="downloadOutput()" class="jt-btn jt-btn--ghost">{{ call .T "json.common.download" }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div><!-- /jt-container -->
 </section>
@@ -410,7 +606,7 @@
 <script>
   window.JT_LANG       = "{{ .Lang }}";
   window.JT_TOOL       = "{{ .ToolKey }}";
-  window.JT_I18N       = {};
+  window.JT_I18N       = {{ if .Translations }}{{ toJSON .Translations }}{{ else }}{}{{ end }};
   window.JT_ADS_CLIENT = "{{ .AdsClientID }}";
   window.JT_ADS_ENABLED= {{ if .AdsEnabled }}true{{ else }}false{{ end }};
   window.JT_ADS_DEV    = {{ if .AdsEnabled }}false{{ else }}true{{ end }};

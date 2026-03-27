@@ -100,6 +100,16 @@ function setOutput(val, lang) {
     } catch(e) {}
   }
   updateOutputStats(val || '');
+  // Reset tree view so expand/collapse re-renders with new data
+  outputTreeViewVisible = false;
+  // If tree was visible, switch back to code view
+  const editorDiv = document.getElementById('outputEditor');
+  const treeDiv = document.getElementById('outputTree');
+  if (editorDiv && treeDiv) {
+    editorDiv.style.display = '';
+    treeDiv.classList.remove('visible');
+    treeDiv.style.display = 'none';
+  }
 }
 
 function parseInput() {
@@ -178,14 +188,65 @@ function downloadOutput(filename, ext) {
   URL.revokeObjectURL(a.href);
 }
 
+// Reverse tool mapping: tool -> its inverse tool
+const REVERSE_TOOLS = {
+  'escape': 'unescape', 'unescape': 'escape',
+  'pretty': 'minify', 'minify': 'pretty',
+  'to-yaml': 'from-yaml', 'from-yaml': 'to-yaml',
+  'to-xml': 'from-xml', 'from-xml': 'to-xml',
+  'to-csv': 'from-csv', 'from-csv': 'to-csv',
+  'to-sql': 'from-sql', 'from-sql': 'to-sql',
+  'to-excel': 'from-excel', 'from-excel': 'to-excel',
+  'stringify': 'unescape',
+  'jsonc': 'validate',
+};
+
 function swapEditors() {
   const a = getInput(), b = getOutput();
+  if (!a && !b) return; // Nothing to swap
+
+  const currentTool = window.JT_TOOL || '';
+  const reverseTool = REVERSE_TOOLS[currentTool];
+
+  // If this tool has a reverse/inverse tool, navigate to it with the output as input
+  if (reverseTool && b) {
+    const maxHash = 8000;
+    let hash = '';
+    if (b.length <= maxHash) {
+      hash = '#' + encodeURIComponent(b);
+    }
+    const lang = window.JT_LANG || 'en';
+    location.href = `/json/${reverseTool}?lang=${lang}${hash}`;
+    return;
+  }
+
+  // No reverse tool: swap in place
   inputEditor?.setValue(b);
   if (outputEditor) {
     outputEditor.updateOptions({ readOnly: false });
     outputEditor.setValue(a);
     outputEditor.updateOptions({ readOnly: true });
   }
+  clearErrorPanel();
+  outputTreeViewVisible = false;
+  const editorDiv = document.getElementById('outputEditor');
+  const treeDiv = document.getElementById('outputTree');
+  if (editorDiv && treeDiv) {
+    editorDiv.style.display = '';
+    treeDiv.classList.remove('visible');
+    treeDiv.style.display = 'none';
+  }
+  showToast(i18n('json.common.swap') || '已交换输入/输出', 'success');
+}
+
+// Swap left/right editors for diff tool
+function swapDiffEditors() {
+  if (!leftEditor || !rightEditor) return;
+  const leftVal = leftEditor.getValue();
+  const rightVal = rightEditor.getValue();
+  leftEditor.setValue(rightVal);
+  rightEditor.setValue(leftVal);
+  showToast(i18n('json.common.swap') || '已交换左右 JSON', 'success');
 }
 
 function uploadFile(input) {
@@ -325,5 +386,525 @@ document.addEventListener('DOMContentLoaded', () => {
     const name = document.querySelector('.jt-tool-hero__title')?.textContent?.trim() || tool;
     recordVisit(tool, icon, name);
   }
+  loadHistory();
+  restoreSidebarState();
+  initKeyboardShortcuts();
 });
+
+/* ── Keyboard Shortcuts ─────────────────────────── */
+function initKeyboardShortcuts() {
+  document.addEventListener('keydown', (e) => {
+    // Ctrl/Cmd + Enter: Run processJson
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      if (isFullscreen) {
+        processJsonFullscreen();
+      } else if (typeof processJson === 'function') {
+        processJson();
+      }
+    }
+    // Escape: Close fullscreen or error panel
+    if (e.key === 'Escape' && !isFullscreen) {
+      hideErrorPanel();
+    }
+  });
+}
+
+/* ── History Sidebar ───────────────────────────── */
+const HISTORY_KEY = 'jt_input_history';
+const MAX_HISTORY = 50;
+const MAX_INPUT_SIZE = 10000; // 10KB per entry
+
+function getHistory() {
+  try {
+    return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+  } catch(e) { return []; }
+}
+
+function saveHistory(list) {
+  try {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(list));
+  } catch(e) {}
+}
+
+function recordHistory(toolKey, toolName, icon, input) {
+  if (!input || !input.trim()) return;
+  let history = getHistory();
+  // Remove duplicate (same input)
+  history = history.filter(h => h.input !== input);
+  // Truncate input if too long
+  const savedInput = input.length > MAX_INPUT_SIZE ? input.slice(0, MAX_INPUT_SIZE) : input;
+  // Add to front
+  history.unshift({
+    toolKey, toolName, icon,
+    input: savedInput,
+    timestamp: Date.now()
+  });
+  // Keep max
+  if (history.length > MAX_HISTORY) history = history.slice(0, MAX_HISTORY);
+  saveHistory(history);
+  renderHistory();
+}
+
+function loadHistory() {
+  renderHistory();
+}
+
+function renderHistory() {
+  const container = document.getElementById('historyList');
+  if (!container) return;
+  const history = getHistory();
+  if (history.length === 0) {
+    container.innerHTML = `<div class="jt-history-empty">${i18n('json.history.empty')}</div>`;
+    return;
+  }
+  container.innerHTML = history.map((h, i) => {
+    const preview = h.input.slice(0, 40).replace(/\n/g, ' ');
+    const time = formatHistoryTime(h.timestamp);
+    return `
+      <div class="jt-history-item" onclick="restoreHistory(${i})" title="${i18n('json.history.restore')}">
+        <button class="jt-history-item__delete" onclick="event.stopPropagation();deleteHistoryItem(${i})" title="🗑️">✕</button>
+        <div class="jt-history-item__header">
+          <span class="jt-history-item__icon">${h.icon}</span>
+          <span class="jt-history-item__tool">${escapeHtml(h.toolName)}</span>
+          <span class="jt-history-item__time">${time}</span>
+        </div>
+        <div class="jt-history-item__preview">${escapeHtml(preview)}${h.input.length > 40 ? '...' : ''}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function restoreHistory(index) {
+  const history = getHistory();
+  const item = history[index];
+  if (!item) return;
+
+  const currentTool = window.JT_TOOL || '';
+
+  // If history item is from a different tool, navigate to that tool
+  if (item.toolKey && item.toolKey !== currentTool) {
+    const input = item.input || '';
+    const maxHash = 8000;
+    let hash = '';
+    if (input && input.length <= maxHash) {
+      hash = '#' + encodeURIComponent(input);
+    }
+    const lang = window.JT_LANG || 'en';
+    location.href = `/json/${item.toolKey}?lang=${lang}${hash}`;
+    return;
+  }
+
+  // Same tool: just restore input
+  if (inputEditor) {
+    inputEditor.setValue(item.input);
+    clearErrorPanel();
+  }
+  showToast(i18n('json.history.restore') || '已恢复', 'success');
+}
+
+function clearHistory() {
+  if (!confirm(i18n('json.history.clear_confirm'))) return;
+  saveHistory([]);
+  renderHistory();
+  showToast(i18n('json.history.cleared') || '已清空', 'info');
+}
+
+function deleteHistoryItem(index) {
+  let history = getHistory();
+  if (index >= 0 && index < history.length) {
+    history.splice(index, 1);
+    saveHistory(history);
+    renderHistory();
+  }
+}
+
+function formatHistoryTime(ts) {
+  const d = new Date(ts);
+  const now = new Date();
+  const diff = now - d;
+  if (diff < 60000) return i18n('json.history.time.just_now') || '刚刚';
+  if (diff < 3600000) return Math.floor(diff/60000) + i18n('json.history.time.minutes');
+  if (diff < 86400000) return Math.floor(diff/3600000) + i18n('json.history.time.hours');
+  if (diff < 604800000) return Math.floor(diff/86400000) + i18n('json.history.time.days');
+  return d.toLocaleDateString();
+}
+
+function toggleHistorySidebar() {
+  const sidebar = document.getElementById('historySidebar');
+  const toggle = document.getElementById('sidebarToggle');
+  if (!sidebar) return;
+  const isOpen = sidebar.classList.toggle('open');
+  if (toggle) {
+    toggle.style.left = isOpen ? '280px' : '0';
+    // Update arrow direction
+    const arrow = toggle.querySelector('.jt-sidebar-toggle__arrow');
+    if (arrow) arrow.textContent = isOpen ? '◀' : '▶';
+  }
+  // Save state
+  try { localStorage.setItem('jt_sidebar_open', isOpen); } catch(e) {}
+}
+
+function restoreSidebarState() {
+  try {
+    // Default to open if no saved state
+    const savedState = localStorage.getItem('jt_sidebar_open');
+    const isOpen = savedState === null ? true : savedState === 'true';
+    const sidebar = document.getElementById('historySidebar');
+    const toggle = document.getElementById('sidebarToggle');
+    if (isOpen && sidebar) {
+      sidebar.classList.add('open');
+      if (toggle) {
+        toggle.style.left = '280px';
+        const arrow = toggle.querySelector('.jt-sidebar-toggle__arrow');
+        if (arrow) arrow.textContent = '◀';
+      }
+    } else if (toggle) {
+      const arrow = toggle.querySelector('.jt-sidebar-toggle__arrow');
+      if (arrow) arrow.textContent = '▶';
+    }
+  } catch(e) {}
+}
+
+/* ── Tool Selector Dropdown ────────────────────── */
+function toggleToolSelector() {
+  const sel = document.getElementById('toolSelector');
+  if (!sel) return;
+  sel.classList.toggle('open');
+  // Focus search input
+  const search = document.getElementById('toolSearchInput');
+  if (sel.classList.contains('open') && search) {
+    setTimeout(() => search.focus(), 50);
+  }
+}
+
+function filterToolDropdown(query) {
+  const q = (query || '').toLowerCase().trim();
+  let visibleCount = 0;
+  document.querySelectorAll('.jt-tool-dropdown__item').forEach(item => {
+    const name = (item.dataset.name || '').toLowerCase();
+    const keywords = (item.dataset.keywords || '').toLowerCase();
+    const visible = !q || name.includes(q) || keywords.includes(q);
+    item.style.display = visible ? '' : 'none';
+    if (visible) visibleCount++;
+  });
+  document.querySelectorAll('.jt-tool-dropdown__group').forEach(g => {
+    const visible = [...g.querySelectorAll('.jt-tool-dropdown__item')].some(i => i.style.display !== 'none');
+    g.style.display = visible ? '' : 'none';
+  });
+  // Show/hide "no results" message
+  const dropdown = document.getElementById('toolDropdown');
+  if (dropdown) {
+    let noResults = dropdown.querySelector('.jt-tool-dropdown__no-results');
+    if (q && visibleCount === 0) {
+      if (!noResults) {
+        noResults = document.createElement('div');
+        noResults.className = 'jt-tool-dropdown__no-results';
+        dropdown.appendChild(noResults);
+      }
+      noResults.textContent = i18n('json.selector.no_results') || '没有找到匹配的工具';
+      noResults.style.display = '';
+    } else if (noResults) {
+      noResults.style.display = 'none';
+    }
+  }
+}
+
+// Keyboard navigation for tool selector dropdown
+let toolDropdownHighlightIdx = -1;
+
+function handleToolSearchKeydown(e) {
+  const items = [...document.querySelectorAll('.jt-tool-dropdown__item')].filter(i => i.style.display !== 'none');
+  if (!items.length) return;
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    toolDropdownHighlightIdx = Math.min(toolDropdownHighlightIdx + 1, items.length - 1);
+    updateToolDropdownHighlight(items);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    toolDropdownHighlightIdx = Math.max(toolDropdownHighlightIdx - 1, 0);
+    updateToolDropdownHighlight(items);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (toolDropdownHighlightIdx >= 0 && items[toolDropdownHighlightIdx]) {
+      const key = items[toolDropdownHighlightIdx].dataset.key;
+      if (key) selectTool(key);
+    }
+  } else if (e.key === 'Escape') {
+    e.preventDefault();
+    const sel = document.getElementById('toolSelector');
+    if (sel) sel.classList.remove('open');
+  }
+}
+
+function updateToolDropdownHighlight(items) {
+  items.forEach((item, i) => {
+    item.classList.toggle('highlighted', i === toolDropdownHighlightIdx);
+  });
+  if (items[toolDropdownHighlightIdx]) {
+    items[toolDropdownHighlightIdx].scrollIntoView({ block: 'nearest' });
+  }
+}
+
+function selectTool(toolKey) {
+  if (toolKey === window.JT_TOOL) {
+    toggleToolSelector();
+    return;
+  }
+  // Get current input and encode for URL hash
+  const input = getInput().trim();
+  const maxHash = 8000; // URL length limit
+  let hash = '';
+  if (input && input.length <= maxHash) {
+    hash = '#' + encodeURIComponent(input);
+  } else if (input && input.length > maxHash) {
+    showToast(i18n('json.selector.input_too_long') || '输入过长', 'info');
+  }
+  // Navigate
+  const lang = window.JT_LANG || 'en';
+  location.href = `/json/${toolKey}?lang=${lang}${hash}`;
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  const sel = document.getElementById('toolSelector');
+  if (sel && !sel.contains(e.target)) {
+    sel.classList.remove('open');
+  }
+});
+
+/* ── Output Tree View ──────────────────────────── */
+let outputTreeViewVisible = false;
+
+function showOutputTreeView() {
+  const editorDiv = document.getElementById('outputEditor');
+  const treeDiv = document.getElementById('outputTree');
+  if (!editorDiv || !treeDiv) return false;
+
+  // Render tree from output
+  const output = getOutput();
+  if (!output || !output.trim()) {
+    showToast(i18n('json.common.error.empty') || '请先执行操作生成输出', 'info');
+    return false;
+  }
+  try {
+    const parsed = JSON.parse(output);
+    treeDiv.innerHTML = '';
+    treeDiv.appendChild(renderOutputTreeNode(parsed, 'root', '$'));
+  } catch(e) {
+    treeDiv.innerHTML = '<div class="jt-history-empty">' + (i18n('json.output.tree_parse_error') || '无法渲染树视图：JSON 解析失败') + '</div>';
+  }
+  editorDiv.style.display = 'none';
+  treeDiv.classList.add('visible');
+  treeDiv.style.display = 'block';
+  outputTreeViewVisible = true;
+  return true;
+}
+
+function toggleOutputTreeView() {
+  const editorDiv = document.getElementById('outputEditor');
+  const treeDiv = document.getElementById('outputTree');
+  const btn = document.getElementById('treeViewBtn');
+
+  outputTreeViewVisible = !outputTreeViewVisible;
+
+  if (outputTreeViewVisible) {
+    showOutputTreeView();
+    if (btn) btn.classList.add('active');
+  } else {
+    editorDiv.style.display = '';
+    treeDiv.classList.remove('visible');
+    treeDiv.style.display = 'none';
+    if (btn) btn.classList.remove('active');
+  }
+}
+
+function renderOutputTreeNode(value, key, path) {
+  const wrap = document.createElement('div');
+  wrap.className = 'jt-tree-node';
+  if (value === null || typeof value !== 'object') {
+    wrap.innerHTML = '<div class="jt-tree-leaf">' +
+      '<span class="jt-tree-key" onclick="copyOutputTreePath(\'' + escapeHtml(path) + '\')" title="复制路径">' + escapeHtml(String(key)) + '</span>' +
+      '<span class="jt-tree-sep">: </span>' + renderOutputTreeValue(value) + '</div>';
+    return wrap;
+  }
+  const isArr = Array.isArray(value);
+  const keys = Object.keys(value);
+  const open = (path.match(/[.\[]/g) || []).length < 2;
+  const header = document.createElement('div');
+  header.className = 'jt-tree-header';
+  header.innerHTML =
+    '<button class="jt-tree-toggle" onclick="toggleOutputTreeNode(this)">' + (open ? '▼' : '▶') + '</button>' +
+    '<span class="jt-tree-key" onclick="copyOutputTreePath(\'' + escapeHtml(path) + '\')" title="复制路径">' + escapeHtml(String(key)) + '</span>' +
+    '<span class="jt-tree-sep">: </span>' +
+    '<span class="jt-tree-bracket">' + (isArr ? '[' : '{') + '</span>' +
+    '<span class="jt-tree-preview">' + (isArr ? keys.length + ' items' : keys.length + ' keys') + '</span>' +
+    '<span class="jt-tree-bracket">' + (isArr ? ']' : '}') + '</span>';
+  const children = document.createElement('div');
+  children.className = 'jt-tree-children';
+  if (!open) children.style.display = 'none';
+  for (const k of keys) {
+    const cp = isArr ? path + '[' + k + ']' : path + '.' + k;
+    children.appendChild(renderOutputTreeNode(value[k], k, cp));
+  }
+  wrap.appendChild(header);
+  wrap.appendChild(children);
+  return wrap;
+}
+
+function renderOutputTreeValue(v) {
+  if (v === null) return '<span class="jt-val-null">null</span>';
+  if (typeof v === 'boolean') return '<span class="jt-val-bool">' + v + '</span>';
+  if (typeof v === 'number') return '<span class="jt-val-num">' + v + '</span>';
+  return '<span class="jt-val-str">"' + escapeHtml(String(v)) + '"</span>';
+}
+
+function toggleOutputTreeNode(btn) {
+  const c = btn.closest('.jt-tree-header').nextElementSibling;
+  const h = c.style.display === 'none';
+  c.style.display = h ? '' : 'none';
+  btn.textContent = h ? '▼' : '▶';
+}
+
+function expandAllOutputTree() {
+  if (!showOutputTreeView()) return;
+  document.querySelectorAll('#outputTree .jt-tree-children').forEach(n => n.style.display = '');
+  document.querySelectorAll('#outputTree .jt-tree-toggle').forEach(n => n.textContent = '▼');
+}
+
+function collapseAllOutputTree() {
+  if (!showOutputTreeView()) return;
+  document.querySelectorAll('#outputTree .jt-tree-children').forEach(n => n.style.display = 'none');
+  document.querySelectorAll('#outputTree .jt-tree-toggle').forEach(n => n.textContent = '▶');
+}
+
+function copyOutputTreePath(path) {
+  navigator.clipboard.writeText(path).then(() => showToast((i18n('json.output.copy_path') || '已复制') + '：' + path, 'success'));
+}
+
+/* ── Fullscreen Modal ──────────────────────────── */
+let fullscreenInputEditor = null;
+let fullscreenOutputEditor = null;
+let isFullscreen = false;
+
+function openFullscreen() {
+  const overlay = document.getElementById('fullscreenOverlay');
+  if (!overlay) return;
+
+  isFullscreen = true;
+  overlay.classList.add('visible');
+  document.body.style.overflow = 'hidden';
+
+  // Initialize Monaco editors in fullscreen
+  require(['vs/editor/editor.main'], function() {
+    const opts = {
+      fontSize: 14, minimap: { enabled: false },
+      scrollBeyondLastLine: false, automaticLayout: true, wordWrap: 'on',
+    };
+
+    // Create input editor
+    const inputEl = document.getElementById('fullscreenInputEditor');
+    if (inputEl && !fullscreenInputEditor) {
+      fullscreenInputEditor = monaco.editor.create(inputEl, {
+        ...opts, value: getInput(), language: 'json', theme: 'vs',
+      });
+    } else if (fullscreenInputEditor) {
+      fullscreenInputEditor.setValue(getInput());
+    }
+
+    // Create output editor
+    const outputEl = document.getElementById('fullscreenOutputEditor');
+    if (outputEl && !fullscreenOutputEditor) {
+      fullscreenOutputEditor = monaco.editor.create(outputEl, {
+        ...opts, value: getOutput(), language: 'json', theme: 'vs', readOnly: true,
+      });
+    } else if (fullscreenOutputEditor) {
+      fullscreenOutputEditor.setValue(getOutput());
+    }
+
+    updateFullscreenStats();
+  });
+
+  // Add Escape key listener
+  document.addEventListener('keydown', handleFullscreenEsc);
+}
+
+function processJsonFullscreen() {
+  if (!isFullscreen) return;
+  // Sync fullscreen input to main input
+  if (fullscreenInputEditor && inputEditor) {
+    inputEditor.setValue(fullscreenInputEditor.getValue());
+  }
+  // Call the tool-specific processJson
+  if (typeof processJson === 'function') {
+    processJson();
+  }
+  // Sync main output to fullscreen output (after a short delay for async operations)
+  setTimeout(() => {
+    if (fullscreenOutputEditor && outputEditor) {
+      fullscreenOutputEditor.setValue(getOutput());
+      updateFullscreenStats();
+    }
+  }, 50);
+}
+
+function closeFullscreen() {
+  const overlay = document.getElementById('fullscreenOverlay');
+  if (!overlay) return;
+
+  isFullscreen = false;
+  overlay.classList.remove('visible');
+  document.body.style.overflow = '';
+
+  // Sync content back
+  if (fullscreenInputEditor && inputEditor) {
+    inputEditor.setValue(fullscreenInputEditor.getValue());
+  }
+
+  // Remove Escape key listener
+  document.removeEventListener('keydown', handleFullscreenEsc);
+}
+
+function closeFullscreenOnBackdrop(e) {
+  if (e.target.id === 'fullscreenOverlay') {
+    closeFullscreen();
+  }
+}
+
+function handleFullscreenEsc(e) {
+  if (e.key === 'Escape' && isFullscreen) {
+    closeFullscreen();
+  }
+}
+
+function updateFullscreenStats() {
+  const inputEl = document.getElementById('fullscreenInputSize');
+  const outputEl = document.getElementById('fullscreenOutputSize');
+  if (inputEl) inputEl.textContent = formatBytes(new Blob([getInput()]).size);
+  if (outputEl) outputEl.textContent = formatBytes(new Blob([getOutput()]).size);
+}
+
+/* ── History-aware Process Wrapper ─────────────── */
+function runProcessJson() {
+  // Record history before processing
+  const tool = window.JT_TOOL;
+  let inputText = '';
+  if (tool === 'diff') {
+    inputText = (leftEditor?.getValue() || '') + '\n---\n' + (rightEditor?.getValue() || '');
+  } else if (tool === 'schema-validate') {
+    inputText = window._schemaEditor?.getValue() || '';
+  } else {
+    inputText = getInput();
+  }
+  if (tool && inputText.trim()) {
+    const icon = document.querySelector('.jt-tool-hero__icon')?.textContent?.trim() || '🔧';
+    const name = document.querySelector('.jt-tool-hero__title')?.textContent?.trim() || tool;
+    recordHistory(tool, name, icon, inputText);
+  }
+  // Call the tool-specific processJson
+  if (typeof processJson === 'function') {
+    return processJson.apply(this, arguments);
+  }
+}
 
