@@ -148,10 +148,18 @@ func JsonToolPage(toolKey string) gin.HandlerFunc {
 			"en": "Free Online JSON Tool | Tool Box Nova",
 		}[lang]
 
+		// Canonical URL
+		canonical := "https://toolboxnova.com/json/" + toolKey
+		hreflangZH := "https://toolboxnova.com/json/" + toolKey + "?lang=zh"
+		hreflangEN := "https://toolboxnova.com/json/" + toolKey + "?lang=en"
+
 		data := baseData(c, gin.H{
 			"Title":        siteTitle,
 			"Description":  desc,
 			"Keywords":     meta.Keywords,
+			"Canonical":    canonical,
+			"HreflangZH":   hreflangZH,
+			"HreflangEN":   hreflangEN,
 			"Lang":         lang,
 			"T":            t,
 			"ToolKey":      toolKey,

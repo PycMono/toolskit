@@ -1,10 +1,101 @@
 package handlers
 
 import (
+	"html/template"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 )
+
+// buildToolsFAQ returns FAQ items for tools pages (regex, markdown, timestamp, base, case)
+func buildToolsFAQ(lang, tool string) []DevFAQ {
+	faqs := map[string]map[string][]DevFAQ{
+		"en": {
+			"regex": {
+				{Q: "What is a regular expression?", A: "A regular expression (regex) is a sequence of characters that defines a search pattern. It's used for string matching, validation, and text manipulation in programming."},
+				{Q: "What regex flavors does this tool support?", A: "This tool supports JavaScript regex by default (used in web browsers). The syntax is compatible with most modern regex engines including Python, Go, and PCRE with minor differences."},
+				{Q: "What's the difference between greedy and non-greedy quantifiers?", A: "Greedy quantifiers (*, +) match as much text as possible. Non-greedy or lazy quantifiers (*?, +?) match as little as possible. For example, 'a.*b' on 'a1b2b3b' matches 'a1b2b3b', while 'a.*?b' matches 'a1b'."},
+				{Q: "How do I match the start or end of a line?", A: "Use ^ to match the start of a line and $ to match the end. With multiline mode enabled, ^ and $ match at each line boundary instead of just the string start/end."},
+				{Q: "What are lookahead and lookbehind assertions?", A: "Lookahead (?=...) and (?!...) check if a pattern follows or doesn't follow the current position without consuming characters. Lookbehind (?<=...) and (?<!...) check what precedes. These are useful for complex validations."},
+			},
+			"markdown": {
+				{Q: "What is Markdown?", A: "Markdown is a lightweight markup language that uses simple text formatting to create rich text documents. It's widely used for documentation, README files, blogs, and forum posts."},
+				{Q: "Does this editor support GitHub Flavored Markdown (GFM)?", A: "Yes, this editor supports GFM extensions including tables, task lists, strikethrough, autolinks, and code highlighting. These features go beyond standard Markdown."},
+				{Q: "How do I create a table in Markdown?", A: "Use pipes (|) to separate columns and hyphens (-) for the header row separator. Example: | Header 1 | Header 2 | followed by |---|---| creates a two-column table."},
+				{Q: "Can I export my Markdown as HTML?", A: "Yes, click the 'HTML' export button to download the rendered HTML. You can also copy the raw Markdown or the rendered preview content."},
+				{Q: "Is my content saved or sent to a server?", A: "No. All editing and preview happens entirely in your browser. Your content is never transmitted to any server, ensuring complete privacy."},
+			},
+			"timestamp": {
+				{Q: "What is a Unix timestamp?", A: "A Unix timestamp (also called epoch time) is the number of seconds since January 1, 1970 UTC. It's a standard way to represent time in computing that's timezone-independent."},
+				{Q: "What's the difference between seconds and milliseconds timestamps?", A: "Seconds timestamps are 10 digits (e.g., 1700000000). Milliseconds timestamps are 13 digits (e.g., 1700000000000). JavaScript and many APIs use milliseconds, while Unix systems typically use seconds."},
+				{Q: "How do I convert a timestamp to a specific timezone?", A: "Enter your timestamp, then use the timezone converter section to select your target timezone. The tool will show the date and time in that timezone."},
+				{Q: "Why does my timestamp show a date in 1970?", A: "You're probably treating a seconds timestamp as milliseconds (or vice versa). Try switching between 'seconds' and 'milliseconds' mode to get the correct date."},
+				{Q: "What is ISO 8601 format?", A: "ISO 8601 is an international standard for date/time representation (e.g., 2024-01-15T10:30:00Z). The 'Z' suffix indicates UTC timezone, making it unambiguous and machine-readable."},
+			},
+			"base": {
+				{Q: "What are number bases?", A: "Number bases (or radix) are different ways to represent numbers. Common bases include binary (base-2, uses 0-1), octal (base-8, uses 0-7), decimal (base-10, uses 0-9), and hexadecimal (base-16, uses 0-9 and A-F)."},
+				{Q: "Why would I need to convert between bases?", A: "Base conversion is essential in programming. Binary is used in digital systems, hexadecimal is common for memory addresses and color codes, and octal is used in Unix file permissions."},
+				{Q: "How do I convert hexadecimal to decimal manually?", A: "Each hex digit represents 4 bits. Multiply each digit by 16^position (right to left, starting at 0) and sum them. For example, 0xFF = 15×16 + 15 = 255."},
+				{Q: "What is the prefix notation for different bases?", A: "Binary uses 0b (0b1010), octal uses 0o or just 0 (0o17 or 017), and hexadecimal uses 0x (0xFF). These prefixes are common in programming languages."},
+				{Q: "Can I convert negative numbers?", A: "Yes, this tool supports negative numbers. The conversion maintains the sign across all base representations."},
+			},
+			"case": {
+				{Q: "What is camelCase?", A: "camelCase capitalizes the first letter of each word except the first, with no spaces or underscores. Example: 'helloWorld'. It's commonly used in JavaScript and Java for variable names."},
+				{Q: "What's the difference between snake_case and kebab-case?", A: "snake_case uses underscores between words (hello_world), commonly used in Python and Ruby. kebab-case uses hyphens (hello-world), popular in CSS classes and URLs."},
+				{Q: "What is PascalCase?", A: "PascalCase (also called UpperCamelCase) capitalizes the first letter of every word including the first. Example: 'HelloWorld'. It's commonly used for class names in many programming languages."},
+				{Q: "When should I use SCREAMING_SNAKE_CASE?", A: "SCREAMING_SNAKE_CASE (all uppercase with underscores) is typically used for constants and environment variables. Example: 'MAX_CONNECTIONS' or 'API_KEY'."},
+				{Q: "Can this tool handle non-ASCII characters?", A: "Yes, the tool handles Unicode characters correctly. Case conversion works for ASCII letters A-Z and a-z, while other characters are preserved as-is."},
+			},
+		},
+		"zh": {
+			"regex": {
+				{Q: "什么是正则表达式？", A: "正则表达式（Regex）是一种用于描述字符串匹配模式的文本语法。它广泛用于文本搜索、数据验证、字符串替换等场景，是程序员的必备技能之一。"},
+				{Q: "这个工具支持哪些正则语法？", A: "本工具默认使用 JavaScript 正则表达式引擎，兼容大多数现代正则语法。与 Python、Go、PCRE 等引擎基本兼容，但某些高级特性可能有差异。"},
+				{Q: "贪婪匹配和非贪婪匹配有什么区别？", A: "贪婪量词（*、+）会尽可能匹配更多字符，非贪婪量词（*?、+?）则尽可能匹配更少字符。例如在 'a1b2b3b' 中，'a.*b' 匹配整个字符串，而 'a.*?b' 只匹配 'a1b'。"},
+				{Q: "如何匹配行首或行尾？", A: "使用 ^ 匹配行首，$ 匹配行尾。如果启用了多行模式（m 标志），^ 和 $ 会匹配每一行的开头和结尾，而不仅仅是整个字符串的开头和结尾。"},
+				{Q: "什么是先行断言和后行断言？", A: "先行断言 (?=...) 和 (?!...) 用于检查某个位置后面是否匹配（或不匹配）某个模式，但不消耗字符。后行断言 (?<=...) 和 (?<!...) 检查前面的内容。这些在复杂验证中非常有用。"},
+			},
+			"markdown": {
+				{Q: "什么是 Markdown？", A: "Markdown 是一种轻量级标记语言，使用简单的文本格式来创建富文本文档。它广泛用于技术文档、README 文件、博客文章和论坛帖子等场景。"},
+				{Q: "这个编辑器支持 GitHub Flavored Markdown 吗？", A: "是的，本编辑器支持 GFM 扩展语法，包括表格、任务列表、删除线、自动链接和代码高亮等功能，这些功能超出了标准 Markdown 的范围。"},
+				{Q: "如何在 Markdown 中创建表格？", A: "使用管道符 (|) 分隔列，使用连字符 (-) 创建表头分隔行。例如：| 标题1 | 标题2 | 换行后跟 |---|---| 即可创建一个两列的表格。"},
+				{Q: "可以导出 Markdown 为 HTML 吗？", A: "可以，点击 'HTML' 导出按钮即可下载渲染后的 HTML 文件。您也可以复制原始 Markdown 文本或渲染后的预览内容。"},
+				{Q: "我的内容会被保存或发送到服务器吗？", A: "不会。所有编辑和预览都在您的浏览器本地完成，内容永远不会传输到任何服务器，确保完全的隐私保护。"},
+			},
+			"timestamp": {
+				{Q: "什么是 Unix 时间戳？", A: "Unix 时间戳（也叫 Epoch 时间）是从 1970 年 1 月 1 日 UTC 起经过的秒数。它是计算中表示时间的标准方式，与时区无关。"},
+				{Q: "秒级时间戳和毫秒时间戳有什么区别？", A: "秒级时间戳是 10 位数字（如 1700000000），毫秒时间戳是 13 位数字（如 1700000000000）。JavaScript 和许多 API 使用毫秒，而 Unix 系统通常使用秒。"},
+				{Q: "如何将时间戳转换为特定时区？", A: "输入时间戳后，使用时区转换区域选择目标时区，工具会显示该时区的日期和时间。"},
+				{Q: "为什么我的时间戳显示 1970 年的日期？", A: "您可能把秒级时间戳当作毫秒处理了（或相反）。尝试在「秒」和「毫秒」模式之间切换，通常可以解决这个问题。"},
+				{Q: "什么是 ISO 8601 格式？", A: "ISO 8601 是国际标准的日期/时间表示格式（如 2024-01-15T10:30:00Z）。后缀 'Z' 表示 UTC 时区，这种格式明确且易于机器解析。"},
+			},
+			"base": {
+				{Q: "什么是进制？", A: "进制（或基数）是表示数字的不同方式。常见的进制包括二进制（基数为 2，使用 0-1）、八进制（基数为 8，使用 0-7）、十进制（基数为 10，使用 0-9）和十六进制（基数为 16，使用 0-9 和 A-F）。"},
+				{Q: "为什么需要在不同进制之间转换？", A: "进制转换在编程中非常重要。二进制用于数字系统，十六进制常用于内存地址和颜色代码，八进制用于 Unix 文件权限。"},
+				{Q: "如何手动将十六进制转换为十进制？", A: "每个十六进制数字代表 4 位。将每个数字乘以 16^位置（从右到左，从 0 开始），然后求和。例如 0xFF = 15×16 + 15 = 255。"},
+				{Q: "不同进制的前缀表示法是什么？", A: "二进制使用 0b（如 0b1010），八进制使用 0o 或 0（如 0o17 或 017），十六进制使用 0x（如 0xFF）。这些前缀在编程语言中很常见。"},
+				{Q: "可以转换负数吗？", A: "可以，本工具支持负数转换。转换过程会在所有进制表示中保持符号不变。"},
+			},
+			"case": {
+				{Q: "什么是 camelCase？", A: "camelCase（驼峰命名法）将每个单词的首字母大写（第一个单词除外），没有空格或下划线。例如：'helloWorld'。常用于 JavaScript 和 Java 的变量命名。"},
+				{Q: "snake_case 和 kebab-case 有什么区别？", A: "snake_case 使用下划线连接单词（hello_world），常用于 Python 和 Ruby。kebab-case 使用连字符连接（hello-world），常用于 CSS 类名和 URL。"},
+				{Q: "什么是 PascalCase？", A: "PascalCase（也叫大驼峰命名法）将每个单词的首字母都大写，包括第一个。例如：'HelloWorld'。常用于许多编程语言的类名。"},
+				{Q: "什么时候应该使用 SCREAMING_SNAKE_CASE？", A: "SCREAMING_SNAKE_CASE（全大写加下划线）通常用于常量和环境变量。例如：'MAX_CONNECTIONS' 或 'API_KEY'。"},
+				{Q: "这个工具能处理非 ASCII 字符吗？", A: "可以，工具能正确处理 Unicode 字符。大小写转换适用于 ASCII 字母 A-Z 和 a-z，其他字符保持不变。"},
+			},
+		},
+	}
+	if langFaqs, ok := faqs[lang]; ok {
+		if toolFaqs, ok := langFaqs[tool]; ok {
+			return toolFaqs
+		}
+	}
+	// Fallback to English
+	if toolFaqs, ok := faqs["en"][tool]; ok {
+		return toolFaqs
+	}
+	return []DevFAQ{}
+}
 
 // ToolsPage renders the developer tools navigation page
 func ToolsPage(c *gin.Context) {
@@ -107,61 +198,100 @@ func JSONToolPage(c *gin.Context) {
 		"PresetJSON":  presetJSON,
 		"PresetURL":   presetURL,
 		"FAQs":        faqs,
+		"Canonical":   "https://toolboxnova.com/tools/json",
+		"HreflangZH":  "https://toolboxnova.com/tools/json?lang=zh",
+		"HreflangEN":  "https://toolboxnova.com/tools/json?lang=en",
+		"SEOArticle":  template.HTML(t("tools.json.seo.article")),
 	})
 	render(c, "tools_json.html", data)
 }
 
 // RegexToolPage renders the regex tester page
 func RegexToolPage(c *gin.Context) {
+	t := getT(c)
+	lang := getLang(c)
 	data := baseData(c, gin.H{
-		"Title":       "Regex Tester - Test Regular Expressions Online | Tool Box Nova",
-		"Description": "Test and debug regular expressions online with real-time highlighting. Support JavaScript, Python, PCRE flavors with explanation and cheat sheet.",
-		"Keywords":    "regex tester online, regular expression tester, regex101 alternative, regexp",
+		"Title":       t("tools.regex.seo.title"),
+		"Description": t("tools.regex.seo.description"),
+		"Keywords":    t("tools.regex.seo.keywords"),
+		"Canonical":   "https://toolboxnova.com/tools/regex",
+		"HreflangZH":  "https://toolboxnova.com/tools/regex?lang=zh",
+		"HreflangEN":  "https://toolboxnova.com/tools/regex?lang=en",
 		"PageClass":   "page-regex-tool",
+		"FAQs":        buildToolsFAQ(lang, "regex"),
+		"SEOArticle":  template.HTML(t("tools.regex.seo.article")),
 	})
 	render(c, "tools_regex.html", data)
 }
 
 // MarkdownToolPage renders the Markdown editor page
 func MarkdownToolPage(c *gin.Context) {
+	t := getT(c)
+	lang := getLang(c)
 	data := baseData(c, gin.H{
-		"Title":       "Markdown Editor - Live Preview | Tool Box Nova",
-		"Description": "Free online Markdown editor with real-time synchronized preview. Supports GFM, tables, code highlight, export to HTML.",
-		"Keywords":    "markdown editor online, markdown preview, dillinger alternative, stackedit alternative",
+		"Title":       t("tools.markdown.seo.title"),
+		"Description": t("tools.markdown.seo.description"),
+		"Keywords":    t("tools.markdown.seo.keywords"),
+		"Canonical":   "https://toolboxnova.com/tools/markdown",
+		"HreflangZH":  "https://toolboxnova.com/tools/markdown?lang=zh",
+		"HreflangEN":  "https://toolboxnova.com/tools/markdown?lang=en",
 		"PageClass":   "page-markdown-tool",
+		"FAQs":        buildToolsFAQ(lang, "markdown"),
+		"SEOArticle":  template.HTML(t("tools.markdown.seo.article")),
 	})
 	render(c, "tools_markdown.html", data)
 }
 
 // TimestampToolPage renders the timestamp converter page
 func TimestampToolPage(c *gin.Context) {
+	t := getT(c)
+	lang := getLang(c)
 	data := baseData(c, gin.H{
-		"Title":       "Unix Timestamp Converter | Tool Box Nova",
-		"Description": "Convert Unix timestamps to human-readable dates. Get current timestamp, batch convert, support all timezones.",
-		"Keywords":    "unix timestamp converter, epoch time, timestamp to date, epoch converter",
+		"Title":       t("tools.timestamp.seo.title"),
+		"Description": t("tools.timestamp.seo.description"),
+		"Keywords":    t("tools.timestamp.seo.keywords"),
+		"Canonical":   "https://toolboxnova.com/tools/timestamp",
+		"HreflangZH":  "https://toolboxnova.com/tools/timestamp?lang=zh",
+		"HreflangEN":  "https://toolboxnova.com/tools/timestamp?lang=en",
 		"PageClass":   "page-timestamp-tool",
+		"FAQs":        buildToolsFAQ(lang, "timestamp"),
+		"SEOArticle":  template.HTML(t("tools.timestamp.seo.article")),
 	})
 	render(c, "tools_timestamp.html", data)
 }
 
 // BaseConverterPage renders the number base converter page
 func BaseConverterPage(c *gin.Context) {
+	t := getT(c)
+	lang := getLang(c)
 	data := baseData(c, gin.H{
-		"Title":       "Number Base Converter - Binary Hex Octal Decimal | Tool Box Nova",
-		"Description": "Convert numbers between binary (base-2), octal (base-8), decimal (base-10), and hexadecimal (base-16) instantly.",
-		"Keywords":    "binary to decimal converter, hex converter, number base converter, binary octal hex",
+		"Title":       t("tools.base.seo.title"),
+		"Description": t("tools.base.seo.description"),
+		"Keywords":    t("tools.base.seo.keywords"),
+		"Canonical":   "https://toolboxnova.com/tools/base-converter",
+		"HreflangZH":  "https://toolboxnova.com/tools/base-converter?lang=zh",
+		"HreflangEN":  "https://toolboxnova.com/tools/base-converter?lang=en",
 		"PageClass":   "page-base-converter",
+		"FAQs":        buildToolsFAQ(lang, "base"),
+		"SEOArticle":  template.HTML(t("tools.base.seo.article")),
 	})
 	render(c, "tools_base.html", data)
 }
 
 // CaseConverterPage renders the text case converter page
 func CaseConverterPage(c *gin.Context) {
+	t := getT(c)
+	lang := getLang(c)
 	data := baseData(c, gin.H{
-		"Title":       "Text Case Converter - camelCase snake_case kebab-case | Tool Box Nova",
-		"Description": "Convert text between camelCase, PascalCase, snake_case, kebab-case, SCREAMING_SNAKE_CASE, Title Case and more.",
-		"Keywords":    "camelcase converter, snake case converter, text case converter, kebab case",
+		"Title":       t("tools.case.seo.title"),
+		"Description": t("tools.case.seo.description"),
+		"Keywords":    t("tools.case.seo.keywords"),
+		"Canonical":   "https://toolboxnova.com/tools/case-converter",
+		"HreflangZH":  "https://toolboxnova.com/tools/case-converter?lang=zh",
+		"HreflangEN":  "https://toolboxnova.com/tools/case-converter?lang=en",
 		"PageClass":   "page-case-converter",
+		"FAQs":        buildToolsFAQ(lang, "case"),
+		"SEOArticle":  template.HTML(t("tools.case.seo.article")),
 	})
 	render(c, "tools_case.html", data)
 }

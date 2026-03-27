@@ -13,6 +13,27 @@
   {{ if .Keywords }}<meta name="keywords" content="{{ .Keywords }}">{{ end }}
   <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/static/css/json-tools.css?{{ .AssetVer }}">
+
+  {{ if .Canonical }}<link rel="canonical" href="{{ .Canonical }}">{{ end }}
+  {{ if .HreflangZH }}<link rel="alternate" hreflang="zh" href="{{ .HreflangZH }}">{{ end }}
+  {{ if .HreflangEN }}<link rel="alternate" hreflang="en" href="{{ .HreflangEN }}">{{ end }}
+  {{ if .Canonical }}
+  <link rel="alternate" hreflang="ja" href="{{ .Canonical }}?lang=ja">
+  <link rel="alternate" hreflang="ko" href="{{ .Canonical }}?lang=ko">
+  <link rel="alternate" hreflang="es" href="{{ .Canonical }}?lang=spa">
+  <link rel="alternate" hreflang="x-default" href="{{ .Canonical }}">
+  {{ end }}
+
+  {{ if .Canonical }}
+  <meta property="og:title" content="{{ .Title }}">
+  <meta property="og:description" content="{{ .Description }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ .Canonical }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ .Title }}">
+  <meta name="twitter:description" content="{{ .Description }}">
+  {{ end }}
+
   {{ block "json_head" . }}{{ end }}
 </head>
 <body class="jt-page {{ .PageClass }}">

@@ -1,9 +1,58 @@
 {{ template "base" . }}
 
+{{ define "extraHead" }}
+<link rel="stylesheet" href="/static/css/dev-tools.css?v={{ .AssetVer }}">
+<link rel="alternate" hreflang="zh" href="{{ .HreflangZH }}">
+<link rel="alternate" hreflang="en" href="{{ .HreflangEN }}">
+<link rel="alternate" hreflang="x-default" href="{{ .Canonical }}">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "{{ call .T "tools.base.hero.title" }}",
+  "url": "{{ .Canonical }}",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "{{ call .T "tools.base.seo.description" }}"
+}
+</script>
+
+{{ if .FAQs }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {{ range $i, $faq := .FAQs }}{{ if $i }},{{ end }}
+    {"@type":"Question","name":{{ $faq.Q | toJSON }},"acceptedAnswer":{"@type":"Answer","text":{{ $faq.A | toJSON }}}
+}
+    {{ end }}
+  ]
+}
+</script>
+{{ end }}
+{{ end }}
+
 {{ define "content" }}
+<div class="dev-page">
+
+{{- template "partials/ad_slot.html" (dict "SlotID" "tools-base-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
+
+<section class="hero hero--dev" aria-labelledby="hero-title">
+  <div class="hero__inner container">
+    <h1 class="hero__title" id="hero-title">{{ call .T "tools.base.hero.title" }}</h1>
+    <p class="hero__subtitle">{{ call .T "tools.base.hero.subtitle" }}</p>
+    <div class="hero__badges" role="list">
+      <span class="badge badge--blue"   role="listitem">{{ call .T "tools.base.hero.badge1" }}</span>
+      <span class="badge badge--green"  role="listitem">{{ call .T "tools.base.hero.badge2" }}</span>
+      <span class="badge badge--purple" role="listitem">{{ call .T "tools.base.hero.badge3" }}</span>
+    </div>
+  </div>
+</section>
+
 <div class="container base-converter-page">
-  <h1 class="page-h1">🔢 进制转换器</h1>
-  <p class="page-subtitle">二进制 · 八进制 · 十进制 · 十六进制 实时联动转换</p>
 
   <div class="base-grid">
     <div class="base-card base-bin">
@@ -48,25 +97,73 @@
     </div>
   </div>
 
-  <!-- FAQ -->
-  <div class="faq-section">
-    <h2>📖 常见问题</h2>
-    <div class="faq-list">
-      <details class="faq-item"><summary>为什么计算机用二进制？</summary><p>计算机使用二进制因为电子元件只有两种稳定状态（高电平/低电平），对应 1 和 0，这使得设计简单可靠。</p></details>
-      <details class="faq-item"><summary>十六进制在编程中有什么用？</summary><p>十六进制常用于表示内存地址、颜色代码（#FF5733）、字节数据（0xFF）等，因为每个十六进制位恰好对应 4 个二进制位，便于阅读。</p></details>
-      <details class="faq-item"><summary>如何快速判断奇偶数？</summary><p>使用位运算：<code>n & 1 === 0</code> 则为偶数，<code>n & 1 === 1</code> 则为奇数。比 <code>n % 2</code> 更高效。</p></details>
+</div>
+
+<section class="features container" aria-label="Key features">
+  <div class="features__grid">
+    <div class="feature-card">
+      <div class="feature-card__icon">🛡️</div>
+      <h3>{{ call .T "feature.privacy.title" }}</h3>
+      <p>{{ call .T "feature.privacy.desc" }}</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card__icon">⚡</div>
+      <h3>{{ call .T "feature.speed.title" }}</h3>
+      <p>{{ call .T "feature.speed.desc" }}</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card__icon">🆓</div>
+      <h3>{{ call .T "feature.free.title" }}</h3>
+      <p>{{ call .T "feature.free.desc" }}</p>
     </div>
   </div>
-</div>
+</section>
+
+{{ if .FAQs }}
+<section class="faq container" aria-label="Frequently Asked Questions">
+  <h2 class="section-title">FAQ</h2>
+  <div class="faq-list" id="faqList">
+    {{ range $i, $faq := .FAQs }}
+    <div class="faq-item" id="faq-{{ $i }}">
+      <button class="faq-question" type="button"
+              aria-expanded="false" aria-controls="faq-answer-{{ $i }}"
+              onclick="toggleBaseFAQ({{ $i }})">
+        {{ $faq.Q }}
+        <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16">
+          <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        </svg>
+      </button>
+      <div class="faq-answer" id="faq-answer-{{ $i }}" hidden>
+        <p>{{ $faq.A }}</p>
+      </div>
+    </div>
+    {{ end }}
+  </div>
+</section>
+{{ end }}
+
+{{ if .SEOArticle }}
+<section class="seo-article container" aria-label="Learn more">
+  <div class="seo-article__content">
+    {{ .SEOArticle }}
+  </div>
+</section>
+{{ end }}
+
+{{- template "partials/ad_slot.html" (dict "SlotID" "tools-base-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
+
+</div><!-- /dev-page -->
 {{ end }}
 
 {{ define "extraScript" }}
 <script src="/static/js/tools_base.js?v={{ .AssetVer }}"></script>
-
-<!-- Bottom Ad -->
-<div style="text-align:center;margin:24px 0">
-  {{- template "partials/ad_slot.html" dict "SlotID" "tools-base-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
-</div>
-
+<script>
+function toggleBaseFAQ(i) {
+  var btn = document.querySelector('#faq-' + i + ' .faq-question');
+  var ans = document.getElementById('faq-answer-' + i);
+  var open = ans.hidden;
+  ans.hidden = !open;
+  btn.setAttribute('aria-expanded', String(open));
+}
+</script>
 {{ end }}
-

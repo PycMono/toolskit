@@ -22,6 +22,9 @@
 <link rel="canonical" href="https://toolboxnova.com/tools/json">
 <link rel="alternate" hreflang="en" href="https://toolboxnova.com/tools/json?lang=en">
 <link rel="alternate" hreflang="zh" href="https://toolboxnova.com/tools/json?lang=zh">
+<link rel="alternate" hreflang="ja" href="https://toolboxnova.com/tools/json?lang=ja">
+<link rel="alternate" hreflang="ko" href="https://toolboxnova.com/tools/json?lang=ko">
+<link rel="alternate" hreflang="es" href="https://toolboxnova.com/tools/json?lang=spa">
 <link rel="alternate" hreflang="x-default" href="https://toolboxnova.com/tools/json">
 
 <!-- JSON Tool CSS -->
@@ -53,6 +56,21 @@
   ]
 }
 </script>
+
+{{ if .FAQs }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {{ range $i, $faq := .FAQs }}{{ if $i }},{{ end }}
+    {"@type":"Question","name":{{ $faq.Q | toJSON }},"acceptedAnswer":{"@type":"Answer","text":{{ $faq.A | toJSON }}}
+}
+    {{ end }}
+  ]
+}
+</script>
+{{ end }}
 
 <!-- Preset JSON/URL if provided -->
 {{ if .PresetJSON }}
@@ -454,9 +472,55 @@
 
   </div>
 </div>
+
+{{ if .FAQs }}
+<section class="faq container" aria-label="Frequently Asked Questions">
+  <h2 class="section-title">FAQ</h2>
+  <div class="faq-list" id="faqList">
+    {{ range $i, $faq := .FAQs }}
+    <div class="faq-item" id="faq-{{ $i }}">
+      <button class="faq-question" type="button"
+              aria-expanded="false" aria-controls="faq-answer-{{ $i }}"
+              onclick="toggleJsonFAQ({{ $i }})">
+        {{ $faq.Q }}
+        <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16">
+          <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        </svg>
+      </button>
+      <div class="faq-answer" id="faq-answer-{{ $i }}" hidden>
+        <p>{{ $faq.A }}</p>
+      </div>
+    </div>
+    {{ end }}
+  </div>
+</section>
+{{ end }}
+
+{{ if .SEOArticle }}
+<section class="seo-article container" aria-label="Learn more">
+  <div class="seo-article__content">
+    {{ .SEOArticle }}
+  </div>
+</section>
+{{ end }}
+
+<!-- Bottom Ad Banner -->
+<div style="text-align:center;margin:24px 0">
+  {{- template "partials/ad_slot.html" dict "SlotID" "json-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+</div>
+
 {{ end }}
 
 {{ define "extraScript" }}
 <script src="/static/js/tools_json.js?v={{ .AssetVer }}"></script>
+<script>
+function toggleJsonFAQ(i) {
+  var btn = document.querySelector('#faq-' + i + ' .faq-question');
+  var ans = document.getElementById('faq-answer-' + i);
+  var open = ans.hidden;
+  ans.hidden = !open;
+  btn.setAttribute('aria-expanded', String(open));
+}
+</script>
 {{ end }}
 

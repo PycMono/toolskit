@@ -1,8 +1,58 @@
 {{ template "base" . }}
 
+{{ define "extraHead" }}
+<link rel="stylesheet" href="/static/css/dev-tools.css?v={{ .AssetVer }}">
+<link rel="alternate" hreflang="zh" href="{{ .HreflangZH }}">
+<link rel="alternate" hreflang="en" href="{{ .HreflangEN }}">
+<link rel="alternate" hreflang="x-default" href="{{ .Canonical }}">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "{{ call .T "tools.timestamp.hero.title" }}",
+  "url": "{{ .Canonical }}",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "{{ call .T "tools.timestamp.seo.description" }}"
+}
+</script>
+
+{{ if .FAQs }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {{ range $i, $faq := .FAQs }}{{ if $i }},{{ end }}
+    {"@type":"Question","name":{{ $faq.Q | toJSON }},"acceptedAnswer":{"@type":"Answer","text":{{ $faq.A | toJSON }}}
+}
+    {{ end }}
+  ]
+}
+</script>
+{{ end }}
+{{ end }}
+
 {{ define "content" }}
+<div class="dev-page">
+
+{{- template "partials/ad_slot.html" (dict "SlotID" "tools-timestamp-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
+
+<section class="hero hero--dev" aria-labelledby="hero-title">
+  <div class="hero__inner container">
+    <h1 class="hero__title" id="hero-title">{{ call .T "tools.timestamp.hero.title" }}</h1>
+    <p class="hero__subtitle">{{ call .T "tools.timestamp.hero.subtitle" }}</p>
+    <div class="hero__badges" role="list">
+      <span class="badge badge--blue"   role="listitem">{{ call .T "tools.timestamp.hero.badge1" }}</span>
+      <span class="badge badge--green"  role="listitem">{{ call .T "tools.timestamp.hero.badge2" }}</span>
+      <span class="badge badge--purple" role="listitem">{{ call .T "tools.timestamp.hero.badge3" }}</span>
+    </div>
+  </div>
+</section>
+
 <div class="container timestamp-page">
-  <h1 class="page-h1">🕐 时间戳转换工具</h1>
 
   <!-- 当前时间 -->
   <div class="ts-now-card">
@@ -87,25 +137,73 @@
     </div>
   </div>
 
-  <!-- FAQ -->
-  <div class="faq-section">
-    <h2>📖 常见问题</h2>
-    <div class="faq-list">
-      <details class="faq-item"><summary>什么是 Unix 时间戳？</summary><p>Unix 时间戳是从 1970-01-01 00:00:00 UTC（Unix 纪元）到当前时间的秒数（或毫秒数）。是跨平台时间表示的标准方式。</p></details>
-      <details class="faq-item"><summary>秒级和毫秒级时间戳有什么区别？</summary><p>秒级时间戳（10位）精度到秒，毫秒级（13位）精度到毫秒。JavaScript 使用毫秒级，大多数后端语言使用秒级。</p></details>
-      <details class="faq-item"><summary>如何获取当前时间戳？</summary><p>JavaScript: <code>Date.now()</code>（毫秒）或 <code>Math.floor(Date.now()/1000)</code>（秒）。Python: <code>import time; time.time()</code>。</p></details>
+</div>
+
+<section class="features container" aria-label="Key features">
+  <div class="features__grid">
+    <div class="feature-card">
+      <div class="feature-card__icon">🛡️</div>
+      <h3>{{ call .T "feature.privacy.title" }}</h3>
+      <p>{{ call .T "feature.privacy.desc" }}</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card__icon">⚡</div>
+      <h3>{{ call .T "feature.speed.title" }}</h3>
+      <p>{{ call .T "feature.speed.desc" }}</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card__icon">🆓</div>
+      <h3>{{ call .T "feature.free.title" }}</h3>
+      <p>{{ call .T "feature.free.desc" }}</p>
     </div>
   </div>
-</div>
+</section>
+
+{{ if .FAQs }}
+<section class="faq container" aria-label="Frequently Asked Questions">
+  <h2 class="section-title">FAQ</h2>
+  <div class="faq-list" id="faqList">
+    {{ range $i, $faq := .FAQs }}
+    <div class="faq-item" id="faq-{{ $i }}">
+      <button class="faq-question" type="button"
+              aria-expanded="false" aria-controls="faq-answer-{{ $i }}"
+              onclick="toggleTimestampFAQ({{ $i }})">
+        {{ $faq.Q }}
+        <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16">
+          <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        </svg>
+      </button>
+      <div class="faq-answer" id="faq-answer-{{ $i }}" hidden>
+        <p>{{ $faq.A }}</p>
+      </div>
+    </div>
+    {{ end }}
+  </div>
+</section>
+{{ end }}
+
+{{ if .SEOArticle }}
+<section class="seo-article container" aria-label="Learn more">
+  <div class="seo-article__content">
+    {{ .SEOArticle }}
+  </div>
+</section>
+{{ end }}
+
+{{- template "partials/ad_slot.html" (dict "SlotID" "tools-timestamp-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
+
+</div><!-- /dev-page -->
 {{ end }}
 
 {{ define "extraScript" }}
 <script src="/static/js/tools_timestamp.js?v={{ .AssetVer }}"></script>
-
-<!-- Bottom Ad -->
-<div style="text-align:center;margin:24px 0">
-  {{- template "partials/ad_slot.html" dict "SlotID" "tools-timestamp-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
-</div>
-
+<script>
+function toggleTimestampFAQ(i) {
+  var btn = document.querySelector('#faq-' + i + ' .faq-question');
+  var ans = document.getElementById('faq-answer-' + i);
+  var open = ans.hidden;
+  ans.hidden = !open;
+  btn.setAttribute('aria-expanded', String(open));
+}
+</script>
 {{ end }}
-

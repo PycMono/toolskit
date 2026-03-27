@@ -1,9 +1,58 @@
 {{ template "base" . }}
 
+{{ define "extraHead" }}
+<link rel="stylesheet" href="/static/css/dev-tools.css?v={{ .AssetVer }}">
+<link rel="alternate" hreflang="zh" href="{{ .HreflangZH }}">
+<link rel="alternate" hreflang="en" href="{{ .HreflangEN }}">
+<link rel="alternate" hreflang="x-default" href="{{ .Canonical }}">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "{{ call .T "tools.case.hero.title" }}",
+  "url": "{{ .Canonical }}",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "{{ call .T "tools.case.seo.description" }}"
+}
+</script>
+
+{{ if .FAQs }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {{ range $i, $faq := .FAQs }}{{ if $i }},{{ end }}
+    {"@type":"Question","name":{{ $faq.Q | toJSON }},"acceptedAnswer":{"@type":"Answer","text":{{ $faq.A | toJSON }}}
+}
+    {{ end }}
+  ]
+}
+</script>
+{{ end }}
+{{ end }}
+
 {{ define "content" }}
+<div class="dev-page">
+
+{{- template "partials/ad_slot.html" (dict "SlotID" "tools-case-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
+
+<section class="hero hero--dev" aria-labelledby="hero-title">
+  <div class="hero__inner container">
+    <h1 class="hero__title" id="hero-title">{{ call .T "tools.case.hero.title" }}</h1>
+    <p class="hero__subtitle">{{ call .T "tools.case.hero.subtitle" }}</p>
+    <div class="hero__badges" role="list">
+      <span class="badge badge--blue"   role="listitem">{{ call .T "tools.case.hero.badge1" }}</span>
+      <span class="badge badge--green"  role="listitem">{{ call .T "tools.case.hero.badge2" }}</span>
+      <span class="badge badge--purple" role="listitem">{{ call .T "tools.case.hero.badge3" }}</span>
+    </div>
+  </div>
+</section>
+
 <div class="container case-converter-page">
-  <h1 class="page-h1">Aa 大小写 / 命名格式转换</h1>
-  <p class="page-subtitle">支持 14 种格式，一键复制</p>
 
   <div class="case-input-wrap">
     <textarea id="caseInput" class="case-input" rows="3" placeholder="输入任意文本，如：hello world foo bar"></textarea>
@@ -18,25 +67,73 @@
     <button id="copyAllCaseBtn" class="btn btn-outline">📋 全部复制（JSON）</button>
   </div>
 
-  <!-- FAQ -->
-  <div class="faq-section">
-    <h2>📖 常见问题</h2>
-    <div class="faq-list">
-      <details class="faq-item"><summary>什么是 camelCase？</summary><p>驼峰命名法：第一个单词小写，后续单词首字母大写，如 <code>myVariableName</code>。常用于 JavaScript 变量和函数命名。</p></details>
-      <details class="faq-item"><summary>snake_case 和 kebab-case 有什么区别？</summary><p><code>snake_case</code> 用下划线分隔，常用于 Python 和数据库；<code>kebab-case</code> 用连字符分隔，常用于 URL 和 CSS 类名。</p></details>
-      <details class="faq-item"><summary>PascalCase 和 camelCase 的区别？</summary><p>PascalCase（大驼峰）每个单词首字母都大写，如 <code>MyClassName</code>；camelCase（小驼峰）第一个单词小写，如 <code>myClassName</code>。PascalCase 常用于类名。</p></details>
+</div>
+
+<section class="features container" aria-label="Key features">
+  <div class="features__grid">
+    <div class="feature-card">
+      <div class="feature-card__icon">🛡️</div>
+      <h3>{{ call .T "feature.privacy.title" }}</h3>
+      <p>{{ call .T "feature.privacy.desc" }}</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card__icon">⚡</div>
+      <h3>{{ call .T "feature.speed.title" }}</h3>
+      <p>{{ call .T "feature.speed.desc" }}</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card__icon">🆓</div>
+      <h3>{{ call .T "feature.free.title" }}</h3>
+      <p>{{ call .T "feature.free.desc" }}</p>
     </div>
   </div>
-</div>
+</section>
+
+{{ if .FAQs }}
+<section class="faq container" aria-label="Frequently Asked Questions">
+  <h2 class="section-title">FAQ</h2>
+  <div class="faq-list" id="faqList">
+    {{ range $i, $faq := .FAQs }}
+    <div class="faq-item" id="faq-{{ $i }}">
+      <button class="faq-question" type="button"
+              aria-expanded="false" aria-controls="faq-answer-{{ $i }}"
+              onclick="toggleCaseFAQ({{ $i }})">
+        {{ $faq.Q }}
+        <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16">
+          <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        </svg>
+      </button>
+      <div class="faq-answer" id="faq-answer-{{ $i }}" hidden>
+        <p>{{ $faq.A }}</p>
+      </div>
+    </div>
+    {{ end }}
+  </div>
+</section>
+{{ end }}
+
+{{ if .SEOArticle }}
+<section class="seo-article container" aria-label="Learn more">
+  <div class="seo-article__content">
+    {{ .SEOArticle }}
+  </div>
+</section>
+{{ end }}
+
+{{- template "partials/ad_slot.html" (dict "SlotID" "tools-case-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
+
+</div><!-- /dev-page -->
 {{ end }}
 
 {{ define "extraScript" }}
 <script src="/static/js/tools_case.js?v={{ .AssetVer }}"></script>
-
-<!-- Bottom Ad -->
-<div style="text-align:center;margin:24px 0">
-  {{- template "partials/ad_slot.html" dict "SlotID" "tools-case-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
-</div>
-
+<script>
+function toggleCaseFAQ(i) {
+  var btn = document.querySelector('#faq-' + i + ' .faq-question');
+  var ans = document.getElementById('faq-answer-' + i);
+  var open = ans.hidden;
+  ans.hidden = !open;
+  btn.setAttribute('aria-expanded', String(open));
+}
+</script>
 {{ end }}
-

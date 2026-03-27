@@ -1,42 +1,150 @@
 {{ template "base" . }}
 
+{{ define "extraHead" }}
+<link rel="stylesheet" href="/static/css/dev-tools.css?v={{ .AssetVer }}">
+<link rel="alternate" hreflang="zh" href="{{ .HreflangZH }}">
+<link rel="alternate" hreflang="en" href="{{ .HreflangEN }}">
+<link rel="alternate" hreflang="x-default" href="{{ .Canonical }}">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "{{ call .T "tools.markdown.hero.title" }}",
+  "url": "{{ .Canonical }}",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "{{ call .T "tools.markdown.seo.description" }}"
+}
+</script>
+
+{{ if .FAQs }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {{ range $i, $faq := .FAQs }}{{ if $i }},{{ end }}
+    {"@type":"Question","name":{{ $faq.Q | toJSON }},"acceptedAnswer":{"@type":"Answer","text":{{ $faq.A | toJSON }}}
+}
+    {{ end }}
+  ]
+}
+</script>
+{{ end }}
+{{ end }}
+
 {{ define "content" }}
-<div class="markdown-tool-page">
-  <div class="markdown-toolbar">
-    <div class="md-toolbar-left">
-      <button class="md-btn" data-action="bold"      title="{{ call .T "md.toolbar.bold" }} Ctrl+B"><b>B</b></button>
-      <button class="md-btn" data-action="italic"    title="{{ call .T "md.toolbar.italic" }} Ctrl+I"><i>I</i></button>
-      <button class="md-btn" data-action="heading"   title="{{ call .T "md.toolbar.heading" }}">H</button>
-      <button class="md-btn" data-action="ul"        title="{{ call .T "md.toolbar.ul" }}">• —</button>
-      <button class="md-btn" data-action="ol"        title="{{ call .T "md.toolbar.ol" }}">1.</button>
-      <button class="md-btn" data-action="link"      title="{{ call .T "md.toolbar.link" }}">🔗</button>
-      <button class="md-btn" data-action="image"     title="{{ call .T "md.toolbar.image" }}">🖼</button>
-      <button class="md-btn" data-action="code"      title="{{ call .T "md.toolbar.code" }}">`</button>
-      <button class="md-btn" data-action="codeblock" title="{{ call .T "md.toolbar.codeblock" }}">```</button>
-      <button class="md-btn" data-action="table"     title="{{ call .T "md.toolbar.table" }}">⊞</button>
-      <button class="md-btn" data-action="hr"        title="{{ call .T "md.toolbar.hr" }}">—</button>
-      <button class="md-btn" data-action="quote"     title="{{ call .T "md.toolbar.quote" }}">"</button>
-    </div>
-    <div class="md-toolbar-right">
-      <button id="syncScrollBtn"  class="md-btn active" title="{{ call .T "md.toolbar.sync_scroll" }}">⇅ {{ call .T "md.toolbar.sync_scroll" }}</button>
-      <button id="fullPreviewBtn" class="md-btn"        title="{{ call .T "md.toolbar.preview" }}">👁 {{ call .T "md.toolbar.preview" }}</button>
-      <button id="exportHtmlBtn"  class="md-btn">⬇ HTML</button>
-      <button id="copyMdBtn"      class="md-btn">📋 {{ call .T "md.toolbar.copy" }}</button>
-      <button id="clearMdBtn"     class="md-btn">⊗ {{ call .T "md.toolbar.clear" }}</button>
+<div class="dev-page">
+
+{{- template "partials/ad_slot.html" (dict "SlotID" "tools-markdown-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
+
+<section class="hero hero--dev" aria-labelledby="hero-title">
+  <div class="hero__inner container">
+    <h1 class="hero__title" id="hero-title">{{ call .T "tools.markdown.hero.title" }}</h1>
+    <p class="hero__subtitle">{{ call .T "tools.markdown.hero.subtitle" }}</p>
+    <div class="hero__badges" role="list">
+      <span class="badge badge--blue"   role="listitem">{{ call .T "tools.markdown.hero.badge1" }}</span>
+      <span class="badge badge--green"  role="listitem">{{ call .T "tools.markdown.hero.badge2" }}</span>
+      <span class="badge badge--purple" role="listitem">{{ call .T "tools.markdown.hero.badge3" }}</span>
     </div>
   </div>
-  <div class="markdown-layout" id="markdownLayout">
-    <div class="md-editor-pane" id="editorPane">
-      <div class="pane-header">{{ call .T "md.pane.edit" }}</div>
-      <textarea id="mdEditor" class="md-editor" placeholder="{{ call .T "md.placeholder" }}"></textarea>
+</section>
+
+<div class="container">
+  <div class="markdown-tool-page">
+    <div class="markdown-toolbar">
+      <div class="md-toolbar-left">
+        <button class="md-btn" data-action="bold"      title="{{ call .T "md.toolbar.bold" }} Ctrl+B"><b>B</b></button>
+        <button class="md-btn" data-action="italic"    title="{{ call .T "md.toolbar.italic" }} Ctrl+I"><i>I</i></button>
+        <button class="md-btn" data-action="heading"   title="{{ call .T "md.toolbar.heading" }}">H</button>
+        <button class="md-btn" data-action="ul"        title="{{ call .T "md.toolbar.ul" }}">• —</button>
+        <button class="md-btn" data-action="ol"        title="{{ call .T "md.toolbar.ol" }}">1.</button>
+        <button class="md-btn" data-action="link"      title="{{ call .T "md.toolbar.link" }}">🔗</button>
+        <button class="md-btn" data-action="image"     title="{{ call .T "md.toolbar.image" }}">🖼</button>
+        <button class="md-btn" data-action="code"      title="{{ call .T "md.toolbar.code" }}">`</button>
+        <button class="md-btn" data-action="codeblock" title="{{ call .T "md.toolbar.codeblock" }}">```</button>
+        <button class="md-btn" data-action="table"     title="{{ call .T "md.toolbar.table" }}">⊞</button>
+        <button class="md-btn" data-action="hr"        title="{{ call .T "md.toolbar.hr" }}">—</button>
+        <button class="md-btn" data-action="quote"     title="{{ call .T "md.toolbar.quote" }}">"</button>
+      </div>
+      <div class="md-toolbar-right">
+        <button id="syncScrollBtn"  class="md-btn active" title="{{ call .T "md.toolbar.sync_scroll" }}">⇅ {{ call .T "md.toolbar.sync_scroll" }}</button>
+        <button id="fullPreviewBtn" class="md-btn"        title="{{ call .T "md.toolbar.preview" }}">👁 {{ call .T "md.toolbar.preview" }}</button>
+        <button id="exportHtmlBtn"  class="md-btn">⬇ HTML</button>
+        <button id="copyMdBtn"      class="md-btn">📋 {{ call .T "md.toolbar.copy" }}</button>
+        <button id="clearMdBtn"     class="md-btn">⊗ {{ call .T "md.toolbar.clear" }}</button>
+      </div>
     </div>
-    <div class="md-divider" id="mdDivider"></div>
-    <div class="md-preview-pane" id="previewPane">
-      <div class="pane-header">{{ call .T "md.pane.preview" }} <span class="word-count" id="wordCount"></span></div>
-      <div id="mdPreview" class="md-preview"></div>
+    <div class="markdown-layout" id="markdownLayout">
+      <div class="md-editor-pane" id="editorPane">
+        <div class="pane-header">{{ call .T "md.pane.edit" }}</div>
+        <textarea id="mdEditor" class="md-editor" placeholder="{{ call .T "md.placeholder" }}"></textarea>
+      </div>
+      <div class="md-divider" id="mdDivider"></div>
+      <div class="md-preview-pane" id="previewPane">
+        <div class="pane-header">{{ call .T "md.pane.preview" }} <span class="word-count" id="wordCount"></span></div>
+        <div id="mdPreview" class="md-preview"></div>
+      </div>
     </div>
   </div>
 </div>
+
+<section class="features container" aria-label="Key features">
+  <div class="features__grid">
+    <div class="feature-card">
+      <div class="feature-card__icon">🛡️</div>
+      <h3>{{ call .T "feature.privacy.title" }}</h3>
+      <p>{{ call .T "feature.privacy.desc" }}</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card__icon">⚡</div>
+      <h3>{{ call .T "feature.speed.title" }}</h3>
+      <p>{{ call .T "feature.speed.desc" }}</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card__icon">🆓</div>
+      <h3>{{ call .T "feature.free.title" }}</h3>
+      <p>{{ call .T "feature.free.desc" }}</p>
+    </div>
+  </div>
+</section>
+
+{{ if .FAQs }}
+<section class="faq container" aria-label="Frequently Asked Questions">
+  <h2 class="section-title">FAQ</h2>
+  <div class="faq-list" id="faqList">
+    {{ range $i, $faq := .FAQs }}
+    <div class="faq-item" id="faq-{{ $i }}">
+      <button class="faq-question" type="button"
+              aria-expanded="false" aria-controls="faq-answer-{{ $i }}"
+              onclick="toggleMarkdownFAQ({{ $i }})">
+        {{ $faq.Q }}
+        <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16">
+          <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        </svg>
+      </button>
+      <div class="faq-answer" id="faq-answer-{{ $i }}" hidden>
+        <p>{{ $faq.A }}</p>
+      </div>
+    </div>
+    {{ end }}
+  </div>
+</section>
+{{ end }}
+
+{{ if .SEOArticle }}
+<section class="seo-article container" aria-label="Learn more">
+  <div class="seo-article__content">
+    {{ .SEOArticle }}
+  </div>
+</section>
+{{ end }}
+
+{{- template "partials/ad_slot.html" (dict "SlotID" "tools-markdown-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled) }}
+
+</div><!-- /dev-page -->
 {{ end }}
 
 {{ define "extraScript" }}
@@ -44,11 +152,13 @@
 <script src="https://cdn.jsdelivr.net/npm/highlight.js@11/highlight.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11/styles/github.min.css">
 <script src="/static/js/tools_markdown.js?v={{ .AssetVer }}"></script>
-
-<!-- Bottom Ad -->
-<div style="text-align:center;margin:24px 0">
-  {{- template "partials/ad_slot.html" dict "SlotID" "tools-markdown-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
-</div>
-
+<script>
+function toggleMarkdownFAQ(i) {
+  var btn = document.querySelector('#faq-' + i + ' .faq-question');
+  var ans = document.getElementById('faq-answer-' + i);
+  var open = ans.hidden;
+  ans.hidden = !open;
+  btn.setAttribute('aria-expanded', String(open));
+}
+</script>
 {{ end }}
-

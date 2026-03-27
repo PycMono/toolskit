@@ -10,8 +10,11 @@
 <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/timezone.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/relativeTime.js"></script>
 <link rel="stylesheet" href="/static/css/weather-query.css?v={{ .AssetVer }}">
-<link rel="alternate" hreflang="zh-CN" href="{{ .HreflangZH }}">
+<link rel="alternate" hreflang="zh" href="{{ .HreflangZH }}">
 <link rel="alternate" hreflang="en" href="{{ .HreflangEN }}">
+<link rel="alternate" hreflang="ja" href="https://toolboxnova.com/weather/query?lang=ja">
+<link rel="alternate" hreflang="ko" href="https://toolboxnova.com/weather/query?lang=ko">
+<link rel="alternate" hreflang="es" href="https://toolboxnova.com/weather/query?lang=spa">
 <link rel="alternate" hreflang="x-default" href="{{ .Canonical }}">
 <link rel="canonical" href="{{ .Canonical }}">
 <meta property="og:title" content="{{ .OGTitle }}">
@@ -25,6 +28,25 @@
 <meta name="twitter:title" content="{{ .OGTitle }}">
 <meta name="twitter:description" content="{{ .OGDesc }}">
 <meta name="twitter:image" content="https://toolboxnova.com/static/img/og-weather.png">
+
+<!-- SoftwareApplication JSON-LD -->
+<script type="application/ld+json">{{ .JSONLD }}</script>
+
+{{ if .FAQs }}
+<!-- FAQPage JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {{ range $i, $faq := .FAQs }}{{ if $i }},{{ end }}
+    {"@type":"Question","name":{{ $faq.Q | toJSON }},"acceptedAnswer":{"@type":"Answer","text":{{ $faq.A | toJSON }}}
+}
+    {{ end }}
+  ]
+}
+</script>
+{{ end }}
 {{ end }}
 
 {{ define "content" }}
@@ -283,6 +305,32 @@
     </aside>
   </div><!-- /wq-layout-with-sidebar -->
 
+  <!-- FAQ Section -->
+  {{ if .FAQs }}
+  <section class="wq-faq-section" aria-label="Frequently Asked Questions">
+    <div class="wq-container">
+      <h2 class="wq-faq-title">FAQ</h2>
+      <div class="wq-faq-list" id="wqFaqList">
+        {{ range $i, $faq := .FAQs }}
+        <div class="wq-faq-item" id="wq-faq-{{ $i }}">
+          <button class="wq-faq-question" type="button"
+                  aria-expanded="false" aria-controls="wq-faq-answer-{{ $i }}"
+                  onclick="toggleWeatherFAQ({{ $i }})">
+            {{ $faq.Q }}
+            <svg class="wq-faq-chevron" width="16" height="16" viewBox="0 0 16 16">
+              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            </svg>
+          </button>
+          <div class="wq-faq-answer" id="wq-faq-answer-{{ $i }}" hidden>
+            <p>{{ $faq.A }}</p>
+          </div>
+        </div>
+        {{ end }}
+      </div>
+    </div>
+  </section>
+  {{ end }}
+
   <!-- ③ 全球互动地图（独立于 wq-main，始终显示） -->
   <section class="wq-world-map-section" id="worldMapSection" aria-label="{{ call .T "wq.world_map.title" }}">
     <div class="wq-world-map__header">
@@ -470,6 +518,15 @@ window.WQ_CITY = {{ toJSON .DefaultCity }};
   window.gaTrackUnitChange   =function(t,v){gaTrackSettingChange(T,'unit_'+t,v);};
   window.gaTrackSnapshot     =function(){if(typeof gaTrackDownload==='function')gaTrackDownload(T,'image/png');};
   window.gaTrackWeatherError =function(t,m){if(typeof gaTrackError==='function')gaTrackError(T,t,m);};
+
+  // FAQ accordion toggle
+  window.toggleWeatherFAQ=function(i){
+    var btn=document.querySelector('#wq-faq-'+i+' .wq-faq-question');
+    var ans=document.getElementById('wq-faq-answer-'+i);
+    var open=ans.hidden;
+    ans.hidden=!open;
+    btn.setAttribute('aria-expanded',String(open));
+  };
 })();
 </script>
 {{ end }}
