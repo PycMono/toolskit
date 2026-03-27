@@ -101,6 +101,7 @@
       <div class="jt-tool-selector" id="toolSelector" onclick="toggleToolSelector()">
         <span class="jt-tool-selector__icon">{{ $meta.Icon }}</span>
         <span class="jt-tool-selector__name" id="currentToolName">{{ if eq $lang "zh" }}{{ $meta.TitleZH }}{{ else }}{{ $meta.TitleEN }}{{ end }}</span>
+        <span class="jt-tool-selector__hint">{{ call .T "json.selector.search" }}</span>
         <span class="jt-tool-selector__arrow">▾</span>
         <div class="jt-tool-dropdown" id="toolDropdown" onclick="event.stopPropagation()">
           <div class="jt-tool-dropdown__search">
@@ -597,8 +598,8 @@
         onerror="(function(){var s=document.createElement('script');s.src='https://unpkg.com/fast-xml-parser@4.3.5/dist/fxp.js';document.head.appendChild(s)})()"></script>
 {{ end }}
 {{ if eq .ToolKey "path" }}
-<script src="https://unpkg.com/jsonpath-plus@9.0.0/dist/index-browser-umd.cjs"
-        onerror="var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jsonpath/1.1.1/jsonpath.min.js';document.head.appendChild(s)"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsonpath-plus@9.0.0/dist/index-browser-umd.min.js"
+        onerror="var s=document.createElement('script');s.src='https://unpkg.com/jsonpath-plus@9.0.0/dist/index-browser-umd.min.js';document.head.appendChild(s)"></script>
 {{ end }}
 {{ if or (eq .ToolKey "to-typescript") (eq .ToolKey "to-python") (eq .ToolKey "to-java") (eq .ToolKey "to-csharp") (eq .ToolKey "to-go") (eq .ToolKey "to-kotlin") (eq .ToolKey "to-swift") (eq .ToolKey "to-rust") (eq .ToolKey "to-php") }}
 <script src="/static/js/json-codegen-core.js?{{ .AssetVer }}"></script>

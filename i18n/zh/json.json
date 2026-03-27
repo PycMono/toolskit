@@ -32,6 +32,8 @@
   "json.common.output": "输出",
   "json.common.process": "执行",
   "json.common.swap": "交换输入/输出",
+  "json.common.swap_empty": "输入和输出都为空，无法交换",
+  "json.common.swap_no_output": "请先执行操作生成输出",
   "json.common.error.invalid": "JSON 格式错误",
   "json.common.error.empty": "请先输入内容",
   "json.common.upload": "上传文件",

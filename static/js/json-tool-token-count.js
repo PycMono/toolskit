@@ -1,7 +1,10 @@
 'use strict';
 // token-count
 function initToolOptions() {
-  document.getElementById('toolOptions').innerHTML = `
+  // Put options in the input header next to Example/Clear buttons
+  const target = document.getElementById('inputOptions') || document.getElementById('toolOptions');
+  if (!target) return;
+  target.innerHTML = `
     <span class="jt-options-label">模型</span>
     <select id="tokenModel" class="jt-options-select">
       <option value="gpt-4">GPT-4</option>

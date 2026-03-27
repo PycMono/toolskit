@@ -1,7 +1,10 @@
 'use strict';
 // flatten
 function initToolOptions() {
-  document.getElementById('toolOptions').innerHTML = `
+  // Put options in the input header next to Example/Clear buttons
+  const target = document.getElementById('inputOptions') || document.getElementById('toolOptions');
+  if (!target) return;
+  target.innerHTML = `
     <span class="jt-options-label">分隔符</span>
     <input id="flattenDelimiter" type="text" value="." maxlength="3" class="jt-options-input" style="width:50px">
     <div class="jt-options-radio-group">

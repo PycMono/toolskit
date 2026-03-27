@@ -199,11 +199,19 @@ const REVERSE_TOOLS = {
   'to-excel': 'from-excel', 'from-excel': 'to-excel',
   'stringify': 'unescape',
   'jsonc': 'validate',
+  'schema-generate': 'schema-validate',
 };
 
 function swapEditors() {
   const a = getInput(), b = getOutput();
-  if (!a && !b) return; // Nothing to swap
+  if (!a && !b) {
+    showToast(i18n('json.common.swap_empty') || '输入和输出都为空，无法交换', 'info');
+    return;
+  }
+  if (!b) {
+    showToast(i18n('json.common.swap_no_output') || '请先执行操作生成输出', 'info');
+    return;
+  }
 
   const currentTool = window.JT_TOOL || '';
   const reverseTool = REVERSE_TOOLS[currentTool];

@@ -519,7 +519,7 @@ function itbStartFakeProgress(id) {
     pct = Math.min(85, pct + Math.random() * 8 + 2);
     const fill  = document.getElementById('itbPFill-' + id);
     const label = document.getElementById('itbPPct-' + id);
-    if (fill) || fill.style.width = Math.round(pct) + '%';
+    if (fill) fill.style.width = Math.round(pct) + '%';
     if (label) label.textContent = Math.round(pct) + '%';
   }, 200);
   ITB_STATE._progressTimers[id] = timer;
@@ -530,7 +530,7 @@ function itbStopFakeProgress(id, final) {
   if (timer) { clearInterval(timer); delete ITB_STATE._progressTimers[id]; }
   const fill  = document.getElementById('itbPFill-' + id);
   const label = document.getElementById('itbPPct-' + id);
-  if (fill) || fill.style.width = final + '%';
+  if (fill) fill.style.width = final + '%';
   if (label) label.textContent = final + '%';
 }
 

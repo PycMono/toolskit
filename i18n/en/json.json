@@ -32,6 +32,8 @@
   "json.common.output": "Output",
   "json.common.process": "Run",
   "json.common.swap": "Swap Input/Output",
+  "json.common.swap_empty": "Both input and output are empty",
+  "json.common.swap_no_output": "Please run the tool first to generate output",
   "json.common.error.invalid": "Invalid JSON",
   "json.common.error.empty": "Please enter some content first",
   "json.common.upload": "Upload File",
