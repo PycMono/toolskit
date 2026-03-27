@@ -6,6 +6,20 @@
 <link rel="alternate" hreflang="zh" href="{{ .HreflangZH }}">
 <link rel="alternate" hreflang="en" href="{{ .HreflangEN }}">
 <link rel="alternate" hreflang="x-default" href="{{ .Canonical }}">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Whois Lookup",
+  "url": "{{ .Canonical }}",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "{{ .Description }}"
+}
+</script>
+
 {{ if .FAQs }}
 <script type="application/ld+json">
 {
@@ -112,6 +126,14 @@
     </div>
   </div>
 </section>
+
+{{ if .SEOArticle }}
+<section class="seo-article container" aria-label="Learn more">
+  <div class="seo-article__content">
+    {{ .SEOArticle }}
+  </div>
+</section>
+{{ end }}
 
 {{ if .FAQs }}
 <section class="faq container">

@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io"
 	"net"
 	"net/http"
@@ -136,6 +137,7 @@ func DevHashPage(c *gin.Context) {
 		"HreflangEN":  "https://toolboxnova.com/dev/hash?lang=en",
 		"OGImage":     "https://toolboxnova.com/static/img/og.png",
 		"FAQs":        buildDevFAQ(lang, "hash"),
+		"SEOArticle":  template.HTML(t("tools.hash.seo.article")),
 		"PageClass":   "page-dev-hash",
 		"ToolName":    "hash",
 	})
@@ -155,6 +157,7 @@ func DevBase64Page(c *gin.Context) {
 		"HreflangEN":  "https://toolboxnova.com/dev/base64?lang=en",
 		"OGImage":     "https://toolboxnova.com/static/img/og.png",
 		"FAQs":        buildDevFAQ(lang, "base64"),
+		"SEOArticle":  template.HTML(t("tools.base64.seo.article")),
 		"PageClass":   "page-dev-base64",
 		"ToolName":    "base64",
 	})
@@ -174,6 +177,7 @@ func DevURLEncodePage(c *gin.Context) {
 		"HreflangEN":  "https://toolboxnova.com/dev/url-encode?lang=en",
 		"OGImage":     "https://toolboxnova.com/static/img/og.png",
 		"FAQs":        buildDevFAQ(lang, "url_encode"),
+		"SEOArticle":  template.HTML(t("tools.url_encode.seo.article")),
 		"PageClass":   "page-dev-url-encode",
 		"ToolName":    "url-encode",
 	})
@@ -193,6 +197,7 @@ func DevIPPage(c *gin.Context) {
 		"HreflangEN":  "https://toolboxnova.com/dev/ip?lang=en",
 		"OGImage":     "https://toolboxnova.com/static/img/og.png",
 		"FAQs":        buildDevFAQ(lang, "ip"),
+		"SEOArticle":  template.HTML(t("tools.ip.seo.article")),
 		"PageClass":   "page-dev-ip",
 		"ToolName":    "ip",
 	})
@@ -212,6 +217,7 @@ func DevWhoisPage(c *gin.Context) {
 		"HreflangEN":  "https://toolboxnova.com/dev/whois?lang=en",
 		"OGImage":     "https://toolboxnova.com/static/img/og.png",
 		"FAQs":        buildDevFAQ(lang, "whois"),
+		"SEOArticle":  template.HTML(t("tools.whois.seo.article")),
 		"PageClass":   "page-dev-whois",
 		"ToolName":    "whois",
 	})
@@ -231,6 +237,7 @@ func DevWordCounterPage(c *gin.Context) {
 		"HreflangEN":  "https://toolboxnova.com/dev/word-counter?lang=en",
 		"OGImage":     "https://toolboxnova.com/static/img/og.png",
 		"FAQs":        buildDevFAQ(lang, "word_counter"),
+		"SEOArticle":  template.HTML(t("tools.word_counter.seo.article")),
 		"PageClass":   "page-dev-word-counter",
 		"ToolName":    "word-counter",
 	})

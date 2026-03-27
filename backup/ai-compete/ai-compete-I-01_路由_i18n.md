@@ -290,38 +290,38 @@ No other text.`, req.ProductDesc)
 ```html
 {{ define "extraHead" }}
 <link rel="canonical" href="{{ .Canonical }}">
-<link rel="alternate" hreflang="zh"        href="{{ .HreflangZH }}">
-<link rel="alternate" hreflang="en"        href="{{ .HreflangEN }}">
-<link rel="alternate" hreflang="ja"        href="{{ .HreflangJA }}">
-<link rel="alternate" hreflang="ko"        href="{{ .HreflangKO }}">
-<link rel="alternate" hreflang="es"        href="{{ .HreflangSPA }}">
+<link rel="alternate" hreflang="zh" href="{{ .HreflangZH }}">
+<link rel="alternate" hreflang="en" href="{{ .HreflangEN }}">
+<link rel="alternate" hreflang="ja" href="{{ .HreflangJA }}">
+<link rel="alternate" hreflang="ko" href="{{ .HreflangKO }}">
+<link rel="alternate" hreflang="es" href="{{ .HreflangSPA }}">
 <link rel="alternate" hreflang="x-default" href="{{ .Canonical }}">
 <link rel="stylesheet" href="/static/css/ai-compete.css?v={{ .AssetVer }}">
 
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "{{ .Title }}",
-  "applicationCategory": "BusinessApplication",
-  "operatingSystem": "Web Browser",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "description": "{{ .Description }}",
-  "url": "{{ .Canonical }}"
-}
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "{{ .Title }}",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web Browser",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "description": "{{ .Description }}",
+      "url": "{{ .Canonical }}"
+    }
 </script>
 
 {{ if .FAQs }}
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {{ range $i, $faq := .FAQs }}{{ if $i }},{{ end }}
-    {"@type":"Question","name":{{ $faq.Q | toJSON }},"acceptedAnswer":{"@type":"Answer","text":{{ $faq.A | toJSON }}}}
-    {{ end }}
-  ]
-}
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {{ range $i, $faq := .FAQs }}{{ if $i }},{{ end }}
+        {"@type":"Question","name":{{ $faq.Q | toJSON }},"acceptedAnswer":{"@type":"Answer","text":{{ $faq.A | toJSON }}}}
+        {{ end }}
+      ]
+    }
 </script>
 {{ end }}
 {{ end }}

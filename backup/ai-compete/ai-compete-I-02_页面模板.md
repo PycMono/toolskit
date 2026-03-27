@@ -23,40 +23,40 @@
 
 {{ define "extraHead" }}
 <link rel="canonical" href="{{ .Canonical }}">
-<link rel="alternate" hreflang="zh"        href="{{ .HreflangZH }}">
-<link rel="alternate" hreflang="en"        href="{{ .HreflangEN }}">
-<link rel="alternate" hreflang="ja"        href="{{ .HreflangJA }}">
-<link rel="alternate" hreflang="ko"        href="{{ .HreflangKO }}">
-<link rel="alternate" hreflang="es"        href="{{ .HreflangSPA }}">
+<link rel="alternate" hreflang="zh" href="{{ .HreflangZH }}">
+<link rel="alternate" hreflang="en" href="{{ .HreflangEN }}">
+<link rel="alternate" hreflang="ja" href="{{ .HreflangJA }}">
+<link rel="alternate" hreflang="ko" href="{{ .HreflangKO }}">
+<link rel="alternate" hreflang="es" href="{{ .HreflangSPA }}">
 <link rel="alternate" hreflang="x-default" href="{{ .Canonical }}">
 <link rel="stylesheet" href="/static/css/ai-compete.css?v={{ .AssetVer }}">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js" defer></script>
 
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "{{ .Title }}",
-  "applicationCategory": "BusinessApplication",
-  "operatingSystem": "Web Browser",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "description": "{{ .Description }}",
-  "url": "{{ .Canonical }}"
-}
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "{{ .Title }}",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web Browser",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "description": "{{ .Description }}",
+      "url": "{{ .Canonical }}"
+    }
 </script>
 
 {{ if .FAQs }}
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {{ range $i, $faq := .FAQs }}{{ if $i }},{{ end }}
-    {"@type":"Question","name":{{ $faq.Q | toJSON }},"acceptedAnswer":{"@type":"Answer","text":{{ $faq.A | toJSON }}}}
-    {{ end }}
-  ]
-}
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {{ range $i, $faq := .FAQs }}{{ if $i }},{{ end }}
+        {"@type":"Question","name":{{ $faq.Q | toJSON }},"acceptedAnswer":{"@type":"Answer","text":{{ $faq.A | toJSON }}}}
+        {{ end }}
+      ]
+    }
 </script>
 {{ end }}
 {{ end }}
@@ -64,235 +64,238 @@
 {{ define "content" }}
 <div class="page-ai-compete">
 
-  {{/* ① Hero 下方广告位 */}}
-  {{- template "partials/ad_slot.html" (dict
-      "SlotID"    "ai-compete-top"
-      "AdSlotNum" ""
-      "Size"      "728x90"
-      "Mobile"    "320x50"
-      "ClientID"  .AdsClientID
-      "Enabled"   .AdsEnabled) }}
+    {{/* ① Hero 下方广告位 */}}
+    {{- template "partials/ad_slot.html" (dict
+    "SlotID" "ai-compete-top"
+    "AdSlotNum" ""
+    "Size" "728x90"
+    "Mobile" "320x50"
+    "ClientID" .AdsClientID
+    "Enabled" .AdsEnabled) }}
 
-  {{/* ② Hero 区 */}}
-  <section class="tool-hero" aria-labelledby="hero-title">
-    <div class="container">
-      <h1 id="hero-title">{{ call .T "ai-compete.hero.title" }}</h1>
-      <p class="hero-subtitle">{{ call .T "ai-compete.hero.subtitle" }}</p>
-      <div class="hero-badges" role="list">
-        <span class="badge" role="listitem">{{ call .T "ai-compete.hero.badge1" }}</span>
-        <span class="badge" role="listitem">{{ call .T "ai-compete.hero.badge2" }}</span>
-        <span class="badge" role="listitem">{{ call .T "ai-compete.hero.badge3" }}</span>
-      </div>
-    </div>
-  </section>
-
-  {{/* ③ 主功能区 */}}
-  <section class="tool-main container" aria-label="Competitive Analysis Tool">
-    <div class="tool-layout">
-
-      {{/* 输入面板 */}}
-      <div class="tool-panel" id="inputPanel">
-
-        {{/* 产品输入 */}}
-        <div class="input-group">
-          <label for="productInput" class="input-label">
-            {{ call .T "ai-compete.input.product_label" }}
-          </label>
-          <textarea
-            id="productInput"
-            class="product-textarea"
-            rows="3"
-            placeholder="{{ call .T "ai-compete.input.product_placeholder" }}"
-            aria-required="true"
-            maxlength="1000"
-          ></textarea>
+    {{/* ② Hero 区 */}}
+    <section class="tool-hero" aria-labelledby="hero-title">
+        <div class="container">
+            <h1 id="hero-title">{{ call .T "ai-compete.hero.title" }}</h1>
+            <p class="hero-subtitle">{{ call .T "ai-compete.hero.subtitle" }}</p>
+            <div class="hero-badges" role="list">
+                <span class="badge" role="listitem">{{ call .T "ai-compete.hero.badge1" }}</span>
+                <span class="badge" role="listitem">{{ call .T "ai-compete.hero.badge2" }}</span>
+                <span class="badge" role="listitem">{{ call .T "ai-compete.hero.badge3" }}</span>
+            </div>
         </div>
+    </section>
 
-        {{/* 竞品列表 */}}
-        <div class="input-group">
-          <label class="input-label">
-            {{ call .T "ai-compete.input.competitor_label" }}
-          </label>
+    {{/* ③ 主功能区 */}}
+    <section class="tool-main container" aria-label="Competitive Analysis Tool">
+        <div class="tool-layout">
 
-          {{/* AI 推荐按钮 */}}
-          <button id="suggestBtn" class="btn btn-ghost btn-sm" type="button"
-                  aria-label="{{ call .T "ai-compete.suggest.btn" }}">
-            {{ call .T "ai-compete.suggest.btn" }}
-          </button>
+            {{/* 输入面板 */}}
+            <div class="tool-panel" id="inputPanel">
 
-          {{/* 推荐竞品弹出层 */}}
-          <div id="suggestDropdown" class="suggest-dropdown" hidden
-               role="listbox" aria-label="Suggested competitors">
-            <div id="suggestList" class="suggest-list"></div>
-          </div>
+                {{/* 产品输入 */}}
+                <div class="input-group">
+                    <label for="productInput" class="input-label">
+                        {{ call .T "ai-compete.input.product_label" }}
+                    </label>
+                    <textarea
+                            id="productInput"
+                            class="product-textarea"
+                            rows="3"
+                            placeholder="{{ call .T " ai-compete.input.product_placeholder" }}"
+                    aria-required="true"
+                    maxlength="1000"
+                    ></textarea>
+                </div>
 
-          {{/* 已添加竞品 Tag 列表 */}}
-          <div id="competitorTags" class="competitor-tags" role="list"
-               aria-label="Added competitors"></div>
+                {{/* 竞品列表 */}}
+                <div class="input-group">
+                    <label class="input-label">
+                        {{ call .T "ai-compete.input.competitor_label" }}
+                    </label>
 
-          {{/* 手动添加输入 */}}
-          <div class="competitor-add-row">
-            <input
-              type="text"
-              id="competitorInput"
-              class="competitor-input"
-              placeholder="{{ call .T "ai-compete.input.competitor_placeholder" }}"
-              maxlength="200"
-              aria-label="{{ call .T "ai-compete.input.competitor_label" }}"
-            >
-            <button id="addCompetitorBtn" class="btn btn-outline btn-sm" type="button">
-              {{ call .T "ai-compete.input.competitor_add" }}
-            </button>
-          </div>
-          <p id="competitorMaxMsg" class="input-hint error-text" hidden>
-            {{ call .T "ai-compete.input.competitor_max" }}
-          </p>
+                    {{/* AI 推荐按钮 */}}
+                    <button id="suggestBtn" class="btn btn-ghost btn-sm" type="button"
+                            aria-label="{{ call .T " ai-compete.suggest.btn
+                    " }}">
+                    {{ call .T "ai-compete.suggest.btn" }}
+                    </button>
+
+                    {{/* 推荐竞品弹出层 */}}
+                    <div id="suggestDropdown" class="suggest-dropdown" hidden
+                         role="listbox" aria-label="Suggested competitors">
+                        <div id="suggestList" class="suggest-list"></div>
+                    </div>
+
+                    {{/* 已添加竞品 Tag 列表 */}}
+                    <div id="competitorTags" class="competitor-tags" role="list"
+                         aria-label="Added competitors"></div>
+
+                    {{/* 手动添加输入 */}}
+                    <div class="competitor-add-row">
+                        <input
+                                type="text"
+                                id="competitorInput"
+                                class="competitor-input"
+                                placeholder="{{ call .T " ai-compete.input.competitor_placeholder" }}"
+                        maxlength="200"
+                        aria-label="{{ call .T "ai-compete.input.competitor_label" }}"
+                        >
+                        <button id="addCompetitorBtn" class="btn btn-outline btn-sm" type="button">
+                            {{ call .T "ai-compete.input.competitor_add" }}
+                        </button>
+                    </div>
+                    <p id="competitorMaxMsg" class="input-hint error-text" hidden>
+                        {{ call .T "ai-compete.input.competitor_max" }}
+                    </p>
+                </div>
+
+                {{/* 分析维度勾选 */}}
+                <div class="input-group">
+                    <span class="input-label">{{ call .T "ai-compete.dimension.label" }}</span>
+                    <div class="dimension-grid" role="group" aria-label="Analysis dimensions">
+                        <label class="dim-checkbox">
+                            <input type="checkbox" name="dim" value="marketing" checked>
+                            <span class="dim-icon">📣</span>
+                            {{ call .T "ai-compete.dimension.marketing" }}
+                        </label>
+                        <label class="dim-checkbox">
+                            <input type="checkbox" name="dim" value="product" checked>
+                            <span class="dim-icon">🧩</span>
+                            {{ call .T "ai-compete.dimension.product" }}
+                        </label>
+                        <label class="dim-checkbox">
+                            <input type="checkbox" name="dim" value="pricing" checked>
+                            <span class="dim-icon">💰</span>
+                            {{ call .T "ai-compete.dimension.pricing" }}
+                        </label>
+                        <label class="dim-checkbox">
+                            <input type="checkbox" name="dim" value="audience" checked>
+                            <span class="dim-icon">👥</span>
+                            {{ call .T "ai-compete.dimension.audience" }}
+                        </label>
+                        <label class="dim-checkbox">
+                            <input type="checkbox" name="dim" value="sentiment" checked>
+                            <span class="dim-icon">💬</span>
+                            {{ call .T "ai-compete.dimension.sentiment" }}
+                        </label>
+                        <label class="dim-checkbox">
+                            <input type="checkbox" name="dim" value="company" checked>
+                            <span class="dim-icon">🏢</span>
+                            {{ call .T "ai-compete.dimension.company" }}
+                        </label>
+                        <label class="dim-checkbox">
+                            <input type="checkbox" name="dim" value="swot" checked>
+                            <span class="dim-icon">📊</span>
+                            {{ call .T "ai-compete.dimension.swot" }}
+                        </label>
+                    </div>
+                </div>
+
+                {{/* 操作按钮 */}}
+                <div class="tool-actions">
+                    <button id="analyzeBtn" class="btn btn-primary btn-lg" type="button"
+                            aria-live="polite">
+                        {{ call .T "ai-compete.btn.analyze" }}
+                    </button>
+                    <button id="clearBtn" class="btn btn-ghost" type="button">
+                        {{ call .T "ai-compete.btn.clear" }}
+                    </button>
+                </div>
+
+                {{/* 错误提示 */}}
+                <p id="errorMsg" class="error-text" role="alert" hidden></p>
+
+            </div>
+            {{/* /tool-panel */}}
+
+            {{/* ④ 侧边广告位 */}}
+            {{- template "partials/ad_slot.html" (dict
+            "SlotID" "ai-compete-sidebar"
+            "AdSlotNum" ""
+            "Size" "300x250"
+            "MobileHide" true
+            "ClientID" .AdsClientID
+            "Enabled" .AdsEnabled) }}
+
         </div>
+        {{/* /tool-layout */}}
+    </section>
 
-        {{/* 分析维度勾选 */}}
-        <div class="input-group">
-          <span class="input-label">{{ call .T "ai-compete.dimension.label" }}</span>
-          <div class="dimension-grid" role="group" aria-label="Analysis dimensions">
-            <label class="dim-checkbox">
-              <input type="checkbox" name="dim" value="marketing" checked>
-              <span class="dim-icon">📣</span>
-              {{ call .T "ai-compete.dimension.marketing" }}
-            </label>
-            <label class="dim-checkbox">
-              <input type="checkbox" name="dim" value="product" checked>
-              <span class="dim-icon">🧩</span>
-              {{ call .T "ai-compete.dimension.product" }}
-            </label>
-            <label class="dim-checkbox">
-              <input type="checkbox" name="dim" value="pricing" checked>
-              <span class="dim-icon">💰</span>
-              {{ call .T "ai-compete.dimension.pricing" }}
-            </label>
-            <label class="dim-checkbox">
-              <input type="checkbox" name="dim" value="audience" checked>
-              <span class="dim-icon">👥</span>
-              {{ call .T "ai-compete.dimension.audience" }}
-            </label>
-            <label class="dim-checkbox">
-              <input type="checkbox" name="dim" value="sentiment" checked>
-              <span class="dim-icon">💬</span>
-              {{ call .T "ai-compete.dimension.sentiment" }}
-            </label>
-            <label class="dim-checkbox">
-              <input type="checkbox" name="dim" value="company" checked>
-              <span class="dim-icon">🏢</span>
-              {{ call .T "ai-compete.dimension.company" }}
-            </label>
-            <label class="dim-checkbox">
-              <input type="checkbox" name="dim" value="swot" checked>
-              <span class="dim-icon">📊</span>
-              {{ call .T "ai-compete.dimension.swot" }}
-            </label>
-          </div>
+    {{/* ⑤ 分析进度条区 */}}
+    <section class="analysis-progress container" id="progressSection" hidden
+             aria-live="polite" aria-label="Analysis progress">
+        <div class="progress-header">
+            <span class="progress-spinner" aria-hidden="true"></span>
+            <span id="progressText" class="progress-text"></span>
         </div>
-
-        {{/* 操作按钮 */}}
-        <div class="tool-actions">
-          <button id="analyzeBtn" class="btn btn-primary btn-lg" type="button"
-                  aria-live="polite">
-            {{ call .T "ai-compete.btn.analyze" }}
-          </button>
-          <button id="clearBtn" class="btn btn-ghost" type="button">
-            {{ call .T "ai-compete.btn.clear" }}
-          </button>
+        <div class="progress-bar-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div id="progressBar" class="progress-bar"></div>
         </div>
+        <div id="progressDimensions" class="progress-dimensions"></div>
+    </section>
 
-        {{/* 错误提示 */}}
-        <p id="errorMsg" class="error-text" role="alert" hidden></p>
+    {{/* ⑥ 结果区 */}}
+    <section class="tool-results container" id="resultsSection" hidden
+             aria-labelledby="resultsTitle">
+        <div class="results-header">
+            <h2 id="resultsTitle">{{ call .T "ai-compete.result.title" }}</h2>
+            <div class="results-actions">
+                <button id="exportBtn" class="btn btn-outline" type="button">
+                    {{ call .T "ai-compete.btn.export" }}
+                </button>
+                <button id="copyResultBtn" class="btn btn-ghost" type="button">
+                    {{ call .T "ai-compete.btn.copy" }}
+                </button>
+            </div>
+        </div>
+        {{/* 维度 Accordion 由 JS 动态生成 */}}
+        <div id="dimensionAccordion" class="dimension-accordion"></div>
+    </section>
 
-      </div>{{/* /tool-panel */}}
+    {{/* ⑦ 三特性卡片 */}}
+    <section class="tool-features container" aria-label="Features">
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon" aria-hidden="true">⚡</div>
+                <h3>{{ call .T "ai-compete.feature.1.title" }}</h3>
+                <p>{{ call .T "ai-compete.feature.1.desc" }}</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" aria-hidden="true">📊</div>
+                <h3>{{ call .T "ai-compete.feature.2.title" }}</h3>
+                <p>{{ call .T "ai-compete.feature.2.desc" }}</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" aria-hidden="true">🔒</div>
+                <h3>{{ call .T "ai-compete.feature.3.title" }}</h3>
+                <p>{{ call .T "ai-compete.feature.3.desc" }}</p>
+            </div>
+        </div>
+    </section>
 
-      {{/* ④ 侧边广告位 */}}
-      {{- template "partials/ad_slot.html" (dict
-          "SlotID"     "ai-compete-sidebar"
-          "AdSlotNum"  ""
-          "Size"       "300x250"
-          "MobileHide" true
-          "ClientID"   .AdsClientID
-          "Enabled"    .AdsEnabled) }}
+    {{/* ⑧ FAQ */}}
+    <section class="faq-section container" aria-labelledby="faq-title">
+        <h2 id="faq-title">FAQ</h2>
+        {{ range .FAQs }}
+        <details class="faq-item">
+            <summary class="faq-q">{{ .Q }}</summary>
+            <div class="faq-a"><p>{{ .A }}</p></div>
+        </details>
+        {{ end }}
+    </section>
 
-    </div>{{/* /tool-layout */}}
-  </section>
+    {{/* ⑨ 底部广告位 */}}
+    {{- template "partials/ad_slot.html" (dict
+    "SlotID" "ai-compete-bottom"
+    "AdSlotNum" ""
+    "Size" "728x90"
+    "Mobile" "320x50"
+    "ClientID" .AdsClientID
+    "Enabled" .AdsEnabled) }}
 
-  {{/* ⑤ 分析进度条区 */}}
-  <section class="analysis-progress container" id="progressSection" hidden
-           aria-live="polite" aria-label="Analysis progress">
-    <div class="progress-header">
-      <span class="progress-spinner" aria-hidden="true"></span>
-      <span id="progressText" class="progress-text"></span>
-    </div>
-    <div class="progress-bar-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-      <div id="progressBar" class="progress-bar"></div>
-    </div>
-    <div id="progressDimensions" class="progress-dimensions"></div>
-  </section>
-
-  {{/* ⑥ 结果区 */}}
-  <section class="tool-results container" id="resultsSection" hidden
-           aria-labelledby="resultsTitle">
-    <div class="results-header">
-      <h2 id="resultsTitle">{{ call .T "ai-compete.result.title" }}</h2>
-      <div class="results-actions">
-        <button id="exportBtn" class="btn btn-outline" type="button">
-          {{ call .T "ai-compete.btn.export" }}
-        </button>
-        <button id="copyResultBtn" class="btn btn-ghost" type="button">
-          {{ call .T "ai-compete.btn.copy" }}
-        </button>
-      </div>
-    </div>
-    {{/* 维度 Accordion 由 JS 动态生成 */}}
-    <div id="dimensionAccordion" class="dimension-accordion"></div>
-  </section>
-
-  {{/* ⑦ 三特性卡片 */}}
-  <section class="tool-features container" aria-label="Features">
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon" aria-hidden="true">⚡</div>
-        <h3>{{ call .T "ai-compete.feature.1.title" }}</h3>
-        <p>{{ call .T "ai-compete.feature.1.desc" }}</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon" aria-hidden="true">📊</div>
-        <h3>{{ call .T "ai-compete.feature.2.title" }}</h3>
-        <p>{{ call .T "ai-compete.feature.2.desc" }}</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon" aria-hidden="true">🔒</div>
-        <h3>{{ call .T "ai-compete.feature.3.title" }}</h3>
-        <p>{{ call .T "ai-compete.feature.3.desc" }}</p>
-      </div>
-    </div>
-  </section>
-
-  {{/* ⑧ FAQ */}}
-  <section class="faq-section container" aria-labelledby="faq-title">
-    <h2 id="faq-title">FAQ</h2>
-    {{ range .FAQs }}
-    <details class="faq-item">
-      <summary class="faq-q">{{ .Q }}</summary>
-      <div class="faq-a"><p>{{ .A }}</p></div>
-    </details>
-    {{ end }}
-  </section>
-
-  {{/* ⑨ 底部广告位 */}}
-  {{- template "partials/ad_slot.html" (dict
-      "SlotID"    "ai-compete-bottom"
-      "AdSlotNum" ""
-      "Size"      "728x90"
-      "Mobile"    "320x50"
-      "ClientID"  .AdsClientID
-      "Enabled"   .AdsEnabled) }}
-
-  {{/* ⑩ Toast 容器 */}}
-  <div id="toastContainer" class="toast-container" role="status" aria-live="polite"></div>
+    {{/* ⑩ Toast 容器 */}}
+    <div id="toastContainer" class="toast-container" role="status" aria-live="polite"></div>
 
 </div>{{/* /page-ai-compete */}}
 {{ end }}
@@ -300,13 +303,13 @@
 {{ define "extraScript" }}
 <script src="/static/js/ai-compete.js?v={{ .AssetVer }}"></script>
 <script>
-(function() {
-  var TOOL = 'ai-compete';
-  // gaTrackProcessDone(TOOL, competitorCount, durationMs)
-  // gaTrackExport(TOOL, 'markdown')
-  // gaTrackError(TOOL, 'api_error', errMsg)
-  // gaTrackShare(TOOL, 'copy_result')
-})();
+    (function () {
+        var TOOL = 'ai-compete';
+        // gaTrackProcessDone(TOOL, competitorCount, durationMs)
+        // gaTrackExport(TOOL, 'markdown')
+        // gaTrackError(TOOL, 'api_error', errMsg)
+        // gaTrackShare(TOOL, 'copy_result')
+    })();
 </script>
 {{ end }}
 ```

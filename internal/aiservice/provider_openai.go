@@ -19,7 +19,7 @@ type OpenAIProvider struct {
 
 func NewOpenAIProvider(cfg ProviderConfig) *OpenAIProvider {
 	if cfg.BaseURL == "" {
-		cfg.BaseURL = "https://api.openai.com"
+		cfg.BaseURL = "https://api.openai.com/v1"
 	}
 	if cfg.Model == "" {
 		cfg.Model = "gpt-4o-mini"
@@ -36,9 +36,22 @@ func NewOpenAIProvider(cfg ProviderConfig) *OpenAIProvider {
 func (p *OpenAIProvider) GetProviderName() string { return "openai" }
 func (p *OpenAIProvider) IsAvailable() bool       { return p.cfg.APIKey != "" }
 
+// ── 公开方法（供接口调用）────────────────────────────────────
+
 func (p *OpenAIProvider) Chat(ctx context.Context, req ChatRequest) (*ChatResponse, error) {
+	return p.chatAs(ctx, req, "openai")
+}
+
+func (p *OpenAIProvider) ChatStream(ctx context.Context, req ChatRequest) (<-chan StreamChunk, error) {
+	return p.chatStreamAs(ctx, req)
+}
+
+// ── 内部共享实现（子类通过显式调用复用）────────────────────────
+
+// chatAs 执行非流式请求，providerName 用于填写响应中的 Provider 字段。
+func (p *OpenAIProvider) chatAs(ctx context.Context, req ChatRequest, providerName string) (*ChatResponse, error) {
 	start := time.Now()
-	messages := p.buildMessages(req)
+
 	maxTok := req.MaxTokens
 	if maxTok == 0 {
 		maxTok = 2000
@@ -50,7 +63,7 @@ func (p *OpenAIProvider) Chat(ctx context.Context, req ChatRequest) (*ChatRespon
 
 	payload := map[string]interface{}{
 		"model":       p.cfg.Model,
-		"messages":    messages,
+		"messages":    p.buildMessages(req),
 		"max_tokens":  maxTok,
 		"temperature": temp,
 		"stream":      false,
@@ -58,7 +71,7 @@ func (p *OpenAIProvider) Chat(ctx context.Context, req ChatRequest) (*ChatRespon
 	body, _ := json.Marshal(payload)
 
 	httpReq, err := http.NewRequestWithContext(ctx, "POST",
-		p.cfg.BaseURL+"/v1/chat/completions", bytes.NewReader(body))
+		strings.TrimRight(p.cfg.BaseURL, "/")+"/chat/completions", bytes.NewReader(body))
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +86,7 @@ func (p *OpenAIProvider) Chat(ctx context.Context, req ChatRequest) (*ChatRespon
 
 	if resp.StatusCode != http.StatusOK {
 		raw, _ := io.ReadAll(resp.Body)
-		return nil, fmt.Errorf("openai error %d: %s", resp.StatusCode, string(raw))
+		return nil, fmt.Errorf("%s error %d: %s", providerName, resp.StatusCode, string(raw))
 	}
 
 	var result struct {
@@ -93,7 +106,7 @@ func (p *OpenAIProvider) Chat(ctx context.Context, req ChatRequest) (*ChatRespon
 		return nil, err
 	}
 	if len(result.Choices) == 0 {
-		return nil, fmt.Errorf("no choices returned")
+		return nil, fmt.Errorf("%s: no choices returned", providerName)
 	}
 
 	return &ChatResponse{
@@ -104,14 +117,14 @@ func (p *OpenAIProvider) Chat(ctx context.Context, req ChatRequest) (*ChatRespon
 			CompletionTokens: result.Usage.CompletionTokens,
 			TotalTokens:      result.Usage.TotalTokens,
 		},
-		Provider:  "openai",
+		Provider:  providerName,
 		Model:     p.cfg.Model,
 		LatencyMs: time.Since(start).Milliseconds(),
 	}, nil
 }
 
-func (p *OpenAIProvider) ChatStream(ctx context.Context, req ChatRequest) (<-chan StreamChunk, error) {
-	messages := p.buildMessages(req)
+// chatStreamAs 执行流式请求，返回 SSE chunk channel。
+func (p *OpenAIProvider) chatStreamAs(ctx context.Context, req ChatRequest) (<-chan StreamChunk, error) {
 	maxTok := req.MaxTokens
 	if maxTok == 0 {
 		maxTok = 2000
@@ -123,7 +136,7 @@ func (p *OpenAIProvider) ChatStream(ctx context.Context, req ChatRequest) (<-cha
 
 	payload := map[string]interface{}{
 		"model":       p.cfg.Model,
-		"messages":    messages,
+		"messages":    p.buildMessages(req),
 		"max_tokens":  maxTok,
 		"temperature": temp,
 		"stream":      true,
@@ -131,7 +144,7 @@ func (p *OpenAIProvider) ChatStream(ctx context.Context, req ChatRequest) (<-cha
 	body, _ := json.Marshal(payload)
 
 	httpReq, err := http.NewRequestWithContext(ctx, "POST",
-		p.cfg.BaseURL+"/v1/chat/completions", bytes.NewReader(body))
+		strings.TrimRight(p.cfg.BaseURL, "/")+"/chat/completions", bytes.NewReader(body))
 	if err != nil {
 		return nil, err
 	}
@@ -141,6 +154,11 @@ func (p *OpenAIProvider) ChatStream(ctx context.Context, req ChatRequest) (<-cha
 	resp, err := p.client.Do(httpReq)
 	if err != nil {
 		return nil, err
+	}
+	if resp.StatusCode != http.StatusOK {
+		raw, _ := io.ReadAll(resp.Body)
+		resp.Body.Close()
+		return nil, fmt.Errorf("stream error %d: %s", resp.StatusCode, string(raw))
 	}
 
 	ch := make(chan StreamChunk, 16)
@@ -159,7 +177,6 @@ func (p *OpenAIProvider) ChatStream(ctx context.Context, req ChatRequest) (<-cha
 				ch <- StreamChunk{Done: true}
 				return
 			}
-
 			var chunk struct {
 				Choices []struct {
 					Delta struct {
@@ -180,6 +197,8 @@ func (p *OpenAIProvider) ChatStream(ctx context.Context, req ChatRequest) (<-cha
 	}()
 	return ch, nil
 }
+
+// ── buildMessages ─────────────────────────────────────────────
 
 func (p *OpenAIProvider) buildMessages(req ChatRequest) []map[string]string {
 	var msgs []map[string]string

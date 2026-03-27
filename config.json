@@ -2,7 +2,7 @@
   "port": "5001",
   "debug": false,
   "site_url": "https://toolboxnova.com",
-  "asset_version": "v2026032905",
+  "asset_version": "v2026032909",
   "sms_api_key": "",
   "email_api_key": "",
   "google_ads_id": "ca-pub-9000734285117391",
@@ -31,7 +31,7 @@
     },
     "deepseek": {
       "enabled": true,
-      "api_key": "sk-xxx",
+      "api_key": "sk-5bd8166ecccb4fb8b612f11806b53d86",
       "base_url": "https://api.deepseek.com/v1",
       "model": "deepseek-chat",
       "max_tokens": 2000,

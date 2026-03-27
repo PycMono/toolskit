@@ -228,6 +228,14 @@
   </div>
 </section>
 
+{{ if .SEOArticle }}
+<section class="seo-article container" aria-label="Learn more">
+  <div class="seo-article__content">
+    {{ .SEOArticle }}
+  </div>
+</section>
+{{ end }}
+
 {{ if .FAQs }}
 <section class="faq container" aria-label="Frequently Asked Questions">
   <h2 class="section-title">FAQ</h2>
