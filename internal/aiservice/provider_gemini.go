@@ -31,7 +31,7 @@ func NewGeminiProvider(cfg ProviderConfig) *GeminiProvider {
 	}
 	return &GeminiProvider{
 		cfg:    cfg,
-		client: &http.Client{Timeout: time.Duration(cfg.Timeout) * time.Second},
+		client: &http.Client{Timeout: time.Duration(cfg.Timeout) * time.Second, Transport: noProxyTransport()},
 	}
 }
 

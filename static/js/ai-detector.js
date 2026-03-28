@@ -316,7 +316,8 @@
     setHumanizeBtnState('loading');
 
     try {
-      const res = await fetch('/api/ai/humanize', {
+      // Use the JSON API endpoint for non-streaming response
+      const res = await fetch('/api/ai/humanize-json', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -332,9 +333,13 @@
       const result = await res.json();
       State.humanizeResult = result;
 
-      renderCompare(text, result.humanized_text || result.humanizedText || '');
-      State.inputText = result.humanized_text || result.humanizedText || text;
-      await startDetect(true);
+      // API returns { text: "..." }, use that for humanized text
+      const humanizedText = result.text || result.humanized_text || result.humanizedText || '';
+      renderCompare(text, humanizedText);
+      if (humanizedText) {
+        State.inputText = humanizedText;
+        await startDetect(true);
+      }
       showToast(t('toast.humanize_success'), 'success');
 
       // GA event
@@ -649,7 +654,7 @@
 
   // ─── Download / Copy ─────────────────────────────────────
   function copyHumanized() {
-    const text = (State.humanizeResult && (State.humanizeResult.humanized_text || State.humanizeResult.humanizedText)) || State.inputText;
+    const text = (State.humanizeResult && (State.humanizeResult.text || State.humanizeResult.humanized_text || State.humanizeResult.humanizedText)) || State.inputText;
     navigator.clipboard.writeText(text).then(() => {
       showToast(t('toast.copy_success'), 'success');
     }).catch(() => {
@@ -665,7 +670,7 @@
   }
 
   function downloadTxt() {
-    const text = (State.humanizeResult && (State.humanizeResult.humanized_text || State.humanizeResult.humanizedText)) || State.inputText;
+    const text = (State.humanizeResult && (State.humanizeResult.text || State.humanizeResult.humanized_text || State.humanizeResult.humanizedText)) || State.inputText;
     const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

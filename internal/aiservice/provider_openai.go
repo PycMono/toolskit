@@ -8,9 +8,17 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 )
+
+// noProxyTransport returns an HTTP transport that bypasses system proxy settings.
+func noProxyTransport() *http.Transport {
+	return &http.Transport{
+		Proxy: func(*http.Request) (*url.URL, error) { return nil, nil },
+	}
+}
 
 type OpenAIProvider struct {
 	cfg    ProviderConfig
@@ -29,7 +37,7 @@ func NewOpenAIProvider(cfg ProviderConfig) *OpenAIProvider {
 	}
 	return &OpenAIProvider{
 		cfg:    cfg,
-		client: &http.Client{Timeout: time.Duration(cfg.Timeout) * time.Second},
+		client: &http.Client{Timeout: time.Duration(cfg.Timeout) * time.Second, Transport: noProxyTransport()},
 	}
 }
 

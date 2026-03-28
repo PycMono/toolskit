@@ -60,6 +60,9 @@ func main() {
 	// Wire humanizer engine (prompts dir + 60s cache TTL)
 	handlers.InitHumanizerEngine("./prompts", 60*time.Second)
 	log.Printf("✅ AI Humanizer Engine initialized")
+	// Load AI Compete prompts
+	handlers.InitCompetePrompts("./prompts")
+	log.Printf("✅ AI Compete prompts initialized")
 
 	r := gin.Default()
 

@@ -91,6 +91,9 @@ func newPromptLoader(promptDir string, ttl time.Duration) *promptLoader {
 }
 
 func (l *promptLoader) load(mode string) (*prompt, error) {
+	// Resolve mode alias to canonical prompt-file mode
+	mode = resolveMode(mode)
+
 	l.mu.RLock()
 	c, ok := l.cache[mode]
 	l.mu.RUnlock()
@@ -139,20 +142,38 @@ func parsePromptMD(mode, content string) (*prompt, error) {
 
 // ─── Strategy (mode → provider selection) ───────────────────────────────────
 
+// modeAliases maps frontend-only modes to prompt-file modes.
+var modeAliases = map[string]string{
+	"free":   "standard",
+	"smart":  "standard",
+	"easy":   "basic",
+	"formal": "business",
+	"casual": "standard",
+	"ultra":  "aggressive",
+}
+
+// resolveMode returns the canonical mode for prompt loading and temperature lookup.
+func resolveMode(mode string) string {
+	if alias, ok := modeAliases[mode]; ok {
+		return alias
+	}
+	return mode
+}
+
 // modeToTemperature maps humanization mode to LLM temperature.
 func modeToTemperature(mode string) float64 {
 	switch mode {
-	case "basic":
+	case "basic", "easy":
 		return 0.5
-	case "standard":
+	case "standard", "free", "smart", "casual":
 		return 0.7
-	case "aggressive":
+	case "aggressive", "ultra":
 		return 0.9
 	case "academic":
 		return 0.6
 	case "creative":
 		return 1.0
-	case "business":
+	case "business", "formal":
 		return 0.5
 	default:
 		return 0.7

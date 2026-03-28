@@ -293,6 +293,7 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 			aiAPI.POST("/detect",      handlers.AIHumanizerDetectAPI)
 			aiAPI.POST("/detect-file", handlers.AIDetectFileAPI)
 			aiAPI.POST("/humanize",    handlers.AIHumanizerStreamAPI)
+			aiAPI.POST("/humanize-json", handlers.AIHumanizerNewAPI) // JSON (non-streaming) for detector
 			aiAPI.POST("/fetch-url",   handlers.AIDetectURLAPI)
 		}
 

@@ -7,12 +7,100 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
+	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
+
+// ─── Prompt Loader for AI Compete ─────────────────────────────────────
+
+// noProxyTransport returns an HTTP transport that bypasses system proxy settings.
+func noProxyTransport() *http.Transport {
+	return &http.Transport{
+		Proxy: func(*http.Request) (*url.URL, error) { return nil, nil },
+	}
+}
+
+type competePrompt struct {
+	system string
+	user   string
+}
+
+type competePromptLoader struct {
+	mu        sync.RWMutex
+	promptDir string
+	cache     map[string]*competePrompt
+}
+
+var competePromptLoaderInstance *competePromptLoader
+
+// InitCompetePrompts initializes the AI Compete prompt loader. Call from main.go.
+func InitCompetePrompts(promptDir string) {
+	competePromptLoaderInstance = &competePromptLoader{
+		promptDir: promptDir,
+		cache:     make(map[string]*competePrompt),
+	}
+	// Pre-load prompts
+	competePromptLoaderInstance.load("compete-analyze")
+	competePromptLoaderInstance.load("compete-suggest")
+}
+
+func (l *competePromptLoader) load(name string) (*competePrompt, error) {
+	l.mu.RLock()
+	if p, ok := l.cache[name]; ok {
+		l.mu.RUnlock()
+		return p, nil
+	}
+	l.mu.RUnlock()
+
+	path := filepath.Join(l.promptDir, name+".md")
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("prompt file '%s' not found: %w", path, err)
+	}
+
+	p, err := parseCompetePromptMD(string(content))
+	if err != nil {
+		return nil, err
+	}
+
+	l.mu.Lock()
+	l.cache[name] = p
+	l.mu.Unlock()
+	return p, nil
+}
+
+func parseCompetePromptMD(content string) (*competePrompt, error) {
+	parts := strings.SplitN(content, "\n# USER\n", 2)
+	if len(parts) != 2 {
+		return nil, fmt.Errorf("prompt missing '# USER' section")
+	}
+	system := strings.TrimSpace(strings.TrimPrefix(strings.TrimSpace(parts[0]), "# SYSTEM"))
+	user := strings.TrimSpace(parts[1])
+	return &competePrompt{system: system, user: user}, nil
+}
+
+func (l *competePromptLoader) get(name string) (*competePrompt, error) {
+	return l.load(name)
+}
+
+func (l *competePromptLoader) build(name string, vars map[string]string) (system string, user string, err error) {
+	p, e := l.get(name)
+	if e != nil {
+		return "", "", e
+	}
+	system = p.system
+	user = p.user
+	for k, v := range vars {
+		user = strings.ReplaceAll(user, "{{."+k+"}}", v)
+	}
+	return system, user, nil
+}
 
 // ── FAQ ──────────────────────────────────────────────────────────────
 type AiCompeteFAQ struct{ Q, A string }
@@ -119,18 +207,43 @@ func AiCompeteAnalyze(c *gin.Context) {
 		dimensions = []string{"marketing", "product", "pricing", "audience", "sentiment", "company", "swot"}
 	}
 	competitorList := strings.Join(req.Competitors, ", ")
-	prompt := buildAiCompetePrompt(req.ProductDesc, competitorList, dimensions, req.Lang)
+	dimList := strings.Join(dimensions, ", ")
+
+	// Build language instruction
+	langInstruction := map[string]string{
+		"zh":  "请用中文输出分析结果。",
+		"ja":  "分析結果を日本語で出力してください。",
+		"ko":  "분석 결과를 한국어로 출력하세요.",
+		"spa": "Por favor, genera el análisis en español.",
+	}[req.Lang]
+	if langInstruction == "" {
+		langInstruction = "Please output the analysis in English."
+	}
+
+	// Load prompt from file
+	systemPrompt, userPrompt, err := competePromptLoaderInstance.build("compete-analyze", map[string]string{
+		"ProductDesc":     req.ProductDesc,
+		"Competitors":     competitorList,
+		"Dimensions":      dimList,
+		"LangInstruction": langInstruction,
+	})
+	if err != nil {
+		fmt.Fprintf(c.Writer, "event: error\ndata: {\"msg\":\"prompt load error\"}\n\n")
+		flusher.Flush()
+		return
+	}
 
 	claudeAPIKey := os.Getenv("ANTHROPIC_API_KEY")
 	claudeReqBody, _ := json.Marshal(map[string]interface{}{
 		"model":      "claude-sonnet-4-6",
 		"max_tokens": 8000,
 		"stream":     true,
+		"system":     systemPrompt,
 		"tools": []map[string]interface{}{
 			{"type": "web_search_20250305", "name": "web_search"},
 		},
 		"messages": []map[string]interface{}{
-			{"role": "user", "content": prompt},
+			{"role": "user", "content": userPrompt},
 		},
 	})
 
@@ -141,7 +254,7 @@ func AiCompeteAnalyze(c *gin.Context) {
 	claudeReq.Header.Set("anthropic-version", "2023-06-01")
 	claudeReq.Header.Set("Content-Type", "application/json")
 
-	client := &http.Client{Timeout: 180 * time.Second}
+	client := &http.Client{Timeout: 180 * time.Second, Transport: noProxyTransport()}
 	resp, err := client.Do(claudeReq)
 	if err != nil {
 		fmt.Fprintf(c.Writer, "event: error\ndata: {\"msg\":\"claude api error\"}\n\n")
@@ -162,43 +275,6 @@ func AiCompeteAnalyze(c *gin.Context) {
 	flusher.Flush()
 }
 
-func buildAiCompetePrompt(product, competitors string, dimensions []string, lang string) string {
-	langInstruction := map[string]string{
-		"zh":  "请用中文输出分析结果。",
-		"ja":  "分析結果を日本語で出力してください。",
-		"ko":  "분석 결과를 한국어로 출력하세요.",
-		"spa": "Por favor, genera el análisis en español.",
-	}[lang]
-	if langInstruction == "" {
-		langInstruction = "Please output the analysis in English."
-	}
-
-	dimList := strings.Join(dimensions, ", ")
-	return fmt.Sprintf(`You are an expert competitive intelligence analyst. Use web search to gather real, up-to-date information.
-
-My product: %s
-
-Competitors to analyze: %s
-
-Analyze the following dimensions: %s
-
-%s
-
-For each dimension, output a JSON block on a single line prefixed with "DIMENSION:" in this format:
-DIMENSION:{"dim":"marketing","competitor":"competitor_name","data":{...}}
-
-Dimensions schema:
-- marketing: {"tagline":"","uvp":"","keywords":[],"channels":[],"social":"","positioning":""}
-- product:   {"features":{"my_product":[],"competitor_name":[]},"integrations":"","platforms":"","differentiators":""}
-- pricing:   {"model":"","tiers":[{"name":"","price":"","features":[]}],"free_trial":false,"notes":""}
-- audience:  {"personas":[],"industries":[],"company_sizes":[],"buyer_roles":[]}
-- sentiment: {"overall":"positive|mixed|negative","pros":[],"cons":[],"sources":["G2","Capterra","App Store"]}
-- company:   {"founded":"","size":"","funding":"","hq":"","notable":""}
-- swot:      {"strengths":[],"weaknesses":[],"opportunities":[],"threats":[]}
-
-Output each competitor's each dimension as a separate DIMENSION: line. Be concise but data-rich. Use real data from web search.`, product, competitors, dimList, langInstruction)
-}
-
 // ── AI 推荐竞品接口 ───────────────────────────────────────────────────
 type AiCompeteSuggestRequest struct {
 	ProductDesc string `json:"product_desc"`
@@ -212,26 +288,35 @@ func AiCompeteSuggest(c *gin.Context) {
 		return
 	}
 
-	claudeAPIKey := os.Getenv("ANTHROPIC_API_KEY")
-	prompt := fmt.Sprintf(`Based on this product description, suggest the top 5 competitors.
-Product: %s
-Return ONLY a JSON array: [{"name":"...","url":"...","reason":"..."}]
-No other text.`, req.ProductDesc)
+	// Load prompt from file
+	systemPrompt, userPrompt, err := competePromptLoaderInstance.build("compete-suggest", map[string]string{
+		"ProductDesc": req.ProductDesc,
+	})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "prompt load error"})
+		return
+	}
 
+	claudeAPIKey := os.Getenv("ANTHROPIC_API_KEY")
 	claudeReqBody, _ := json.Marshal(map[string]interface{}{
-		"model":     "claude-haiku-4-5-20251001",
+		"model":      "claude-haiku-4-5-20251001",
 		"max_tokens": 500,
+		"system":     systemPrompt,
+		"tools": []map[string]interface{}{
+			{"type": "web_search_20250305", "name": "web_search"},
+		},
 		"messages": []map[string]interface{}{
-			{"role": "user", "content": prompt},
+			{"role": "user", "content": userPrompt},
 		},
 	})
+
 	claudeReq, _ := http.NewRequest("POST", "https://api.anthropic.com/v1/messages",
 		bytes.NewBuffer(claudeReqBody))
 	claudeReq.Header.Set("x-api-key", claudeAPIKey)
 	claudeReq.Header.Set("anthropic-version", "2023-06-01")
 	claudeReq.Header.Set("Content-Type", "application/json")
 
-	client := &http.Client{Timeout: 30 * time.Second}
+	client := &http.Client{Timeout: 30 * time.Second, Transport: noProxyTransport()}
 	resp, err := client.Do(claudeReq)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "ai error"})

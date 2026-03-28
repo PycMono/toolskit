@@ -240,28 +240,45 @@ var AIHumanizer = {
       var reader  = resp.body.getReader();
       var decoder = new TextDecoder('utf-8');
       var buf     = '';
+      var done    = false; // Track if [DONE] was received
 
       function read() {
         reader.read().then(function(r) {
-          if (r.done) {
-            finishHumanize(startTime);
+          if (r.done || done) {
+            if (!done) finishHumanize(startTime);
             return;
           }
           buf += decoder.decode(r.value, { stream: true });
           var lines = buf.split('\n');
           buf = lines.pop(); // keep incomplete line
           lines.forEach(function(line) {
+            // Track SSE event type
+            if (line.startsWith('event:')) {
+              if (line.indexOf('event: error') !== -1) {
+                STATE._sseError = true;
+              }
+              return;
+            }
             if (!line.startsWith('data: ')) return;
             var token = line.slice(6);
-            if (token === '[DONE]') { finishHumanize(startTime); return; }
-            if (token.startsWith('event: error')) return;
+            if (token === '[DONE]') {
+              done = true;
+              finishHumanize(startTime);
+              return;
+            }
+            // If we saw an error event, this data line contains the error message
+            if (STATE._sseError) {
+              try { var errMsg = JSON.parse(token); showToast(errMsg.msg || errMsg.message || 'Server error', 'error'); } catch(_) { showToast(token, 'error'); }
+              resetProcessing();
+              return;
+            }
             // Unescape newlines the backend escapes as \\n
             token = token.replace(/\\n/g, '\n');
             STATE.streamBuffer += token;
             renderStreamOutput(STATE.streamBuffer);
             updateProgressBar(estimateProgress(STATE.streamBuffer.length, STATE.inputText.length));
           });
-          read();
+          if (!done) read();
         }).catch(function(err) {
           if (err.name !== 'AbortError') {
             showToast(t('ah.error.api_fail'), 'error');
