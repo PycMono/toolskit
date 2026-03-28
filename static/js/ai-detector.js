@@ -376,17 +376,22 @@
 
   // ─── Render Results ───────────────────────────────────────
   function renderDetectionResults(result) {
-    $id('aidEmpty').style.display = 'none';
-    $id('aidResult').style.display = 'flex';
+    const emptyEl = $id('aidEmpty');
+    const resultEl = $id('aidResult');
+    if (emptyEl) emptyEl.style.display = 'none';
+    if (resultEl) resultEl.style.display = 'flex';
 
-    updateGauge(result.score, result.verdict);
-    renderBreakdown(result.score, result.sentences || []);
-    renderDetectorScores(result.detectors || {});
-    renderHighlightedText(result.sentences || []);
+    try { updateGauge(result.score, result.verdict); } catch(e) { console.warn('gauge error', e); }
+    try { renderBreakdown(result.score, result.sentences || []); } catch(e) { console.warn('breakdown error', e); }
+    try { renderDetectorScores(result.detectors || {}); } catch(e) { console.warn('detector scores error', e); }
+    try { renderHighlightedText(result.sentences || []); } catch(e) { console.warn('highlight error', e); }
 
-    $id('aidReadability').textContent = (result.readability && result.readability.grade) ? result.readability.grade : '--';
-    $id('aidWordCountResult').textContent = result.word_count || '--';
-    $id('aidLangResult').textContent = (result.language || '--').toUpperCase();
+    const readabilityEl = $id('aidReadability');
+    const wordCountEl = $id('aidWordCountResult');
+    const langEl = $id('aidLangResult');
+    if (readabilityEl) readabilityEl.textContent = (result.readability && result.readability.grade) ? result.readability.grade : '--';
+    if (wordCountEl)   wordCountEl.textContent   = result.word_count || '--';
+    if (langEl)        langEl.textContent         = (result.language || '--').toUpperCase();
 
     if (typeof gsap !== 'undefined') {
       gsap.from('#aidResult', { opacity: 0, y: 20, duration: 0.4, ease: 'power2.out' });
@@ -431,7 +436,10 @@
     function animatePct(elId, val) {
       const el = $id(elId);
       if (!el) return;
-      if (typeof CountUp !== 'undefined') {
+      // countUp UMD exports as window.countUp (lowercase), class is countUp.CountUp
+      if (typeof countUp !== 'undefined' && countUp.CountUp) {
+        new countUp.CountUp(el, val, { duration: 0.9, suffix: '%' }).start();
+      } else if (typeof CountUp !== 'undefined') {
         new CountUp.CountUp(el, val, { duration: 0.9, suffix: '%' }).start();
       } else {
         el.textContent = val + '%';
@@ -449,36 +457,46 @@
                 :               '#EF4444';
     const borderColor = getComputedStyle(document.documentElement).getPropertyValue('--aid-border').trim() || '#E5E3FF';
 
-    const data = {
+    const chartData = {
       datasets: [{
         data: [score, 100 - score],
         backgroundColor: [color, borderColor],
         borderWidth: 0,
-        circumference: 180,
-        rotation: 270,
       }]
     };
 
+    // Chart.js 4.x: circumference & rotation belong in options, not dataset
+    const chartOptions = {
+      circumference: 180,
+      rotation: -90,
+      plugins: { tooltip: { enabled: false }, legend: { display: false } },
+      cutout: '72%',
+      animation: { duration: 800 }
+    };
+
     if (!State.gaugeChart) {
-      State.gaugeChart = new Chart($id('aidGaugeChart'), {
+      const canvas = $id('aidGaugeChart');
+      if (!canvas) return;
+      State.gaugeChart = new Chart(canvas, {
         type: 'doughnut',
-        data,
-        options: {
-          plugins: { tooltip: { enabled: false }, legend: { display: false } },
-          cutout: '72%',
-          animation: { duration: 800 }
-        }
+        data: chartData,
+        options: chartOptions
       });
     } else {
-      State.gaugeChart.data = data;
+      State.gaugeChart.data = chartData;
       State.gaugeChart.update('active');
     }
 
-    // CountUp animation
-    if (typeof CountUp !== 'undefined') {
-      new CountUp.CountUp('aidGaugeScore', score, { duration: 1.2, suffix: '' }).start();
-    } else {
-      $id('aidGaugeScore').textContent = score + '%';
+    // CountUp animation — UMD exports as window.countUp.CountUp (lowercase)
+    const scoreEl = $id('aidGaugeScore');
+    if (scoreEl) {
+      if (typeof countUp !== 'undefined' && countUp.CountUp) {
+        new countUp.CountUp(scoreEl, score, { duration: 1.2, suffix: '' }).start();
+      } else if (typeof CountUp !== 'undefined') {
+        new CountUp.CountUp(scoreEl, score, { duration: 1.2, suffix: '' }).start();
+      } else {
+        scoreEl.textContent = score + '%';
+      }
     }
 
     // Verdict
@@ -489,10 +507,13 @@
     };
     const v = verdict || (score <= 45 ? 'human' : score <= 70 ? 'mixed' : 'ai');
     const confidence = (State.detectResult && State.detectResult.confidence) ? State.detectResult.confidence : 90;
-    $id('aidVerdict').innerHTML = `
-      <span class="aid-verdict-badge aid-verdict-badge--${v}">${t(verdictMap[v] || 'verdict.mixed')}</span>
-      <span class="aid-confidence-text">${t('result.confidence', { pct: confidence })}</span>
-    `;
+    const verdictEl = $id('aidVerdict');
+    if (verdictEl) {
+      verdictEl.innerHTML = `
+        <span class="aid-verdict-badge aid-verdict-badge--${v}">${t(verdictMap[v] || 'verdict.mixed')}</span>
+        <span class="aid-confidence-text">${t('result.confidence', { pct: confidence })}</span>
+      `;
+    }
   }
 
   function renderDetectorScores(detectors) {
@@ -519,7 +540,9 @@
         setTimeout(() => {
           bar.style.width = target + '%';
           const scoreEl = bar.closest('.aid-detector-item').querySelector('.aid-detector-score');
-          if (typeof CountUp !== 'undefined') {
+          if (typeof countUp !== 'undefined' && countUp.CountUp) {
+            new countUp.CountUp(scoreEl, target, { duration: 0.8, suffix: '%' }).start();
+          } else if (typeof CountUp !== 'undefined') {
             new CountUp.CountUp(scoreEl, target, { duration: 0.8, suffix: '%' }).start();
           } else {
             scoreEl.textContent = target + '%';

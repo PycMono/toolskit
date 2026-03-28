@@ -208,6 +208,7 @@ var AIHumanizer = {
 
     STATE.isProcessing   = true;
     STATE.streamBuffer   = '';
+    STATE._sseError      = false;  // reset error flag for each new run
     STATE.abortController = new AbortController();
 
     setBtnState('loading');
@@ -252,6 +253,11 @@ var AIHumanizer = {
           var lines = buf.split('\n');
           buf = lines.pop(); // keep incomplete line
           lines.forEach(function(line) {
+            // ⚠️ Critical: stop processing ANY lines after [DONE] is received
+            // Without this guard, tokens after [DONE] in the same buffer chunk
+            // would call renderStreamOutput('') and wipe the final output.
+            if (done) return;
+
             // Track SSE event type
             if (line.startsWith('event:')) {
               if (line.indexOf('event: error') !== -1) {
@@ -313,7 +319,9 @@ var AIHumanizer = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: text }),
     }).then(function(r) { return r.json(); }).then(function(data) {
-      var score = Math.round((data.ai_score || 0) * 100);
+      // API returns { score: 0-100, verdict, ... } — use data.score directly
+      var score = typeof data.score === 'number' ? data.score
+                : Math.round((data.ai_score || 0) * 100); // legacy fallback
       if (panel === 'input') {
         STATE.inputAIScore = score;
         animateScoreRing('input', score);
