@@ -11,6 +11,9 @@ import (
 )
 
 func Setup(r *gin.Engine, cfg *config.Config) {
+	// Recovery middleware — catch panics and render 500 page
+	r.Use(handlers.RecoveryMiddleware())
+
 	// Apply i18n + Consent + Ads + GA middleware globally
 	// Order is important: I18n → Consent → Ads → GA
 	r.Use(middleware.I18nMiddleware())
@@ -276,6 +279,9 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 		dev.GET("/word-counter", handlers.DevWordCounterPage)
 		dev.GET("/uuid", handlers.DevUUIDPage)
 		dev.GET("/lorem", handlers.DevLoremPage)
+			dev.GET("/aes", handlers.DevAESPage)
+			dev.GET("/html-entities", handlers.DevHTMLEntitiesPage)
+			dev.GET("/diff", handlers.DevDiffPage)
 	}
 
 	// API routes

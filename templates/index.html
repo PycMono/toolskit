@@ -2,484 +2,820 @@
 
 {{ define "content" }}
 <!-- Hero Section -->
-<section class="hero">
-  <div class="hero-inner">
-    <h1 class="hero-title">{{ call .T "home.hero_title" }}</h1>
-    <p class="hero-sub">{{ call .T "home.hero_sub" }}</p>
-    <div class="hero-search">
-      <input type="text" id="heroSearch" class="hero-search-input" placeholder="{{ call .T "home.search_placeholder" }}" autocomplete="off">
-      <button class="hero-search-btn" onclick="heroSearchGo()">🔍 {{ call .T "home.search_btn" }}</button>
-    </div>
-  </div>
-</section>
-
-<!-- 隐私账号工具 -->
-<section class="tools-section">
+<section class="hero-home">
+  <div class="hero-home__bg"></div>
   <div class="container">
-    <h2 class="section-title">{{ call .T "home.category_privacy" }}</h2>
-    <div class="tools-grid">
-
-      <a href="/sms?lang={{ .Lang }}" class="tool-card tool-blue">
-        <div class="tool-icon">📱</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_sms" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_sms_desc" }}</p>
+    <div class="hero-home__content">
+      <h1 class="hero-home__title">{{ call .T "home.hero_title" }}</h1>
+      <p class="hero-home__subtitle">{{ call .T "home.hero_sub" }}</p>
+      <div class="hero-home__stats">
+        <div class="hero-stat">
+          <span class="hero-stat__num">50+</span>
+          <span class="hero-stat__label">{{ call .T "home.stat_tools" }}</span>
         </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/virtual-address?lang={{ .Lang }}" class="tool-card tool-blue">
-        <div class="tool-icon">🏠</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_address" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_address_desc" }}</p>
+        <div class="hero-stat">
+          <span class="hero-stat__num">100%</span>
+          <span class="hero-stat__label">{{ call .T "home.stat_free" }}</span>
         </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/password-generator?lang={{ .Lang }}" class="tool-card tool-yellow">
-        <div class="tool-icon">🔑</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_password" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_password_desc" }}</p>
+        <div class="hero-stat">
+          <span class="hero-stat__num">0</span>
+          <span class="hero-stat__label">{{ call .T "home.stat_data" }}</span>
         </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/temp-email?lang={{ .Lang }}" class="tool-card tool-green">
-        <div class="tool-icon">📧</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_email" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_email_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/proxy?lang={{ .Lang }}" class="tool-card tool-orange">
-        <div class="tool-icon">🌐</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_proxy" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_proxy_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/privacy/check?lang={{ .Lang }}" class="tool-card tool-red">
-        <div class="tool-icon">🔍</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.privacy_check_title" }}</h3>
-          <p class="tool-desc">{{ call .T "home.privacy_check_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
+      </div>
+      <div class="hero-home__search">
+        <input type="text" id="heroSearch" class="hero-search-input" placeholder="{{ call .T "home.search_placeholder" }}" autocomplete="off">
+        <button class="hero-search-btn" onclick="heroSearchGo()">{{ call .T "home.search_btn" }}</button>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- 多媒体工具 -->
-<section class="tools-section">
+<!-- Quick Access Bar -->
+<div class="quick-access">
   <div class="container">
-    <h2 class="section-title">🖼️ {{ call .T "home.category_media" }}</h2>
-    <div class="tools-grid">
-
-      <a href="/media/image-compress?lang={{ .Lang }}" class="tool-card tool-purple">
-        <div class="tool-icon">🖼️</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_image_compress" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_image_compress_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/media/image-resize?lang={{ .Lang }}" class="tool-card tool-blue">
-        <div class="tool-icon">📐</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_image_resize" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_image_resize_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/img/metadata?lang={{ .Lang }}" class="tool-card tool-green">
-        <div class="tool-icon">🔍</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_image_metadata" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_image_metadata_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/media/qr?lang={{ .Lang }}" class="tool-card tool-yellow">
-        <div class="tool-icon">▦</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_qr" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_qr_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/img/crop?lang={{ .Lang }}" class="tool-card tool-orange">
-        <div class="tool-icon">✂️</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_crop" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_crop_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/img/convert-to-jpg?lang={{ .Lang }}" class="tool-card tool-blue">
-        <div class="tool-icon">🔄</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_convert_to_jpg" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_convert_to_jpg_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/img/jpg-to-image?lang={{ .Lang }}" class="tool-card tool-green">
-        <div class="tool-icon">🖼️</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_jpg_to_image" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_jpg_to_image_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/img/photo-editor?lang={{ .Lang }}" class="tool-card tool-purple">
-        <div class="tool-icon">🎨</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_photo_editor" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_photo_editor_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/img/remove-bg?lang={{ .Lang }}" class="tool-card tool-yellow">
-        <div class="tool-icon">🪄</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_remove_bg" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_remove_bg_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/img/watermark?lang={{ .Lang }}" class="tool-card tool-blue">
-        <div class="tool-icon">💧</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_watermark" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_watermark_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/img/rotate?lang={{ .Lang }}" class="tool-card tool-orange">
-        <div class="tool-icon">🔃</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_rotate" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_rotate_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/color/tools?lang={{ .Lang }}" class="tool-card tool-purple" style="background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 100%);color:#fff;">
-        <div class="tool-icon">🎨</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "color.tools.name" }}</h3>
-          <p class="tool-desc">{{ call .T "color.tools.desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
+    <div class="quick-access__inner">
+      <span class="quick-access__label">{{ call .T "home.quick_access" }}</span>
+      <div class="quick-access__links">
+        <a href="/password-generator?lang={{ .Lang }}" class="quick-link">🔑 {{ call .T "home.tool_password" }}</a>
+        <a href="/json?lang={{ .Lang }}" class="quick-link">{ } {{ call .T "home.tool_json" }}</a>
+        <a href="/temp-email?lang={{ .Lang }}" class="quick-link">📧 {{ call .T "home.tool_email" }}</a>
+        <a href="/dev/hash?lang={{ .Lang }}" class="quick-link">🔐 {{ call .T "nav.dev_hash" }}</a>
+        <a href="/media/qr?lang={{ .Lang }}" class="quick-link">▦ {{ call .T "home.tool_qr" }}</a>
+      </div>
     </div>
   </div>
-</section>
-
-<!-- 开发工具 -->
-<section class="tools-section">
-  <div class="container">
-    <h2 class="section-title">🛠️ {{ call .T "home.category_dev" }}</h2>
-    <div class="tools-grid">
-
-      <a href="/json?lang={{ .Lang }}" class="tool-card tool-blue">
-        <div class="tool-icon">{ }</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_json" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_json_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/json/learn?lang={{ .Lang }}" class="tool-card tool-blue">
-        <div class="tool-icon">📚</div>
-        <div class="tool-badge-wrap">
-          <span class="tool-badge-new">53+</span>
-        </div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_json_learn" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_json_learn_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/json/datasets?lang={{ .Lang }}" class="tool-card tool-yellow">
-        <div class="tool-icon">🗃️</div>
-        <div class="tool-badge-wrap">
-          <span class="tool-badge-new">85+</span>
-        </div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_json_datasets" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_json_datasets_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/tools/regex?lang={{ .Lang }}" class="tool-card tool-green">
-        <div class="tool-icon">🔍</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_regex" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_regex_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/tools/markdown?lang={{ .Lang }}" class="tool-card tool-yellow">
-        <div class="tool-icon">📝</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_markdown" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_markdown_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/tools/timestamp?lang={{ .Lang }}" class="tool-card tool-purple">
-        <div class="tool-icon">🕐</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_timestamp" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_timestamp_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/tools/base-converter?lang={{ .Lang }}" class="tool-card tool-orange">
-        <div class="tool-icon">🔢</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_base_converter" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_base_converter_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/tools/case-converter?lang={{ .Lang }}" class="tool-card tool-blue">
-        <div class="tool-icon">Aa</div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "home.tool_case_converter" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_case_converter_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/dev/hash?lang={{ .Lang }}" class="tool-card tool-purple">
-        <div class="tool-icon">🔐</div>
-        <div class="tool-badge-wrap">
-          <span class="tool-badge-new">NEW</span>
-        </div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "nav.dev_hash" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_hash_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/dev/base64?lang={{ .Lang }}" class="tool-card tool-green">
-        <div class="tool-icon">🔄</div>
-        <div class="tool-badge-wrap">
-          <span class="tool-badge-new">NEW</span>
-        </div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "nav.dev_base64" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_base64_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/dev/url-encode?lang={{ .Lang }}" class="tool-card tool-orange">
-        <div class="tool-icon">🔗</div>
-        <div class="tool-badge-wrap">
-          <span class="tool-badge-new">NEW</span>
-        </div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "nav.dev_url_encode" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_url_encode_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/dev/word-counter?lang={{ .Lang }}" class="tool-card tool-yellow">
-        <div class="tool-icon">📝</div>
-        <div class="tool-badge-wrap">
-          <span class="tool-badge-new">NEW</span>
-        </div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "nav.dev_word_counter" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_word_counter_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-    </div>
-  </div>
-</section>
-
-<!-- 实时查询 -->
-<section class="tools-section">
-  <div class="container">
-    <h2 class="section-title">🌍 {{ call .T "home.category_realtime" }}</h2>
-    <div class="tools-grid tools-grid--compact">
-
-      <a href="/weather/query?lang={{ .Lang }}" class="tool-card tool-sky">
-        <div class="tool-icon">🌤️</div>
-        <div class="tool-badge-wrap">
-          <span class="tool-badge-new">NEW</span>
-        </div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "nav.weather_query" }}</h3>
-          <p class="tool-desc">{{ call .T "wq.home.desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/dev/ip?lang={{ .Lang }}" class="tool-card tool-blue">
-        <div class="tool-icon">🌐</div>
-        <div class="tool-badge-wrap">
-          <span class="tool-badge-new">NEW</span>
-        </div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "nav.dev_ip" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_ip_lookup_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/dev/whois?lang={{ .Lang }}" class="tool-card tool-green">
-        <div class="tool-icon">🔍</div>
-        <div class="tool-badge-wrap">
-          <span class="tool-badge-new">NEW</span>
-        </div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "nav.dev_whois" }}</h3>
-          <p class="tool-desc">{{ call .T "home.tool_whois_desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-    </div>
-  </div>
-</section>
-
-<!-- AI 实验室 -->
-<section class="tools-section">
-  <div class="container">
-    <h2 class="section-title">🤖 {{ call .T "nav.ai" }}</h2>
-    <div class="tools-grid">
-
-      <a href="/ailab/detector?lang={{ .Lang }}" class="tool-card tool-blue">
-        <div class="tool-icon">🔍</div>
-        <div class="tool-badge-wrap">
-          <span class="tool-badge-new">NEW</span>
-        </div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "ailab.detector.name" }}</h3>
-          <p class="tool-desc">{{ call .T "ailab.detector.desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/ai/humanizer?lang={{ .Lang }}" class="tool-card tool-purple">
-        <div class="tool-icon">🧬</div>
-        <div class="tool-badge-wrap">
-          <span class="tool-badge-new">NEW</span>
-        </div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "ah.nav.name" }}</h3>
-          <p class="tool-desc">{{ call .T "ah.hero.subtitle" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-      <a href="/ai/compete?lang={{ .Lang }}" class="tool-card tool-indigo">
-        <div class="tool-icon">🔍</div>
-        <div class="tool-badge-wrap">
-          <span class="tool-badge-new">NEW</span>
-        </div>
-        <div class="tool-info">
-          <h3 class="tool-name">{{ call .T "ai-compete.nav.name" }}</h3>
-          <p class="tool-desc">{{ call .T "ai-compete.nav.desc" }}</p>
-        </div>
-        <div class="tool-arrow">→</div>
-      </a>
-
-    </div>
-  </div>
-</section>
-
-<!-- Top Ad Banner -->
-<div style="text-align:center;margin:16px 0">
-  {{- template "partials/ad_slot.html" dict "SlotID" "home-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
 </div>
 
-<!-- Features section -->
-<section class="features-section">
+<!-- Privacy Tools -->
+<section class="tools-section">
   <div class="container">
-    <div class="features-grid">
-      <div class="feature-item">
-        <div class="feature-icon">🛡</div>
-        <h3>{{ call .T "home.feature.privacy.title" }}</h3>
-        <p>{{ call .T "home.feature.privacy.desc" }}</p>
+    <div class="section-header">
+      <div class="section-header__icon">🛡</div>
+      <h2 class="section-title">{{ call .T "home.category_privacy" }}</h2>
+      <p class="section-desc">{{ call .T "home.category_privacy_desc" }}</p>
+    </div>
+    <div class="tools-grid">
+
+      <a href="/sms?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">📱</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_sms" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_sms_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/virtual-address?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">🏠</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_address" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_address_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/password-generator?lang={{ .Lang }}" class="tool-card tool-card--highlight">
+        <div class="tool-card__icon">🔑</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_password" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_password_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/temp-email?lang={{ .Lang }}" class="tool-card tool-card--highlight">
+        <div class="tool-card__icon">📧</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_email" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_email_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/proxy?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">🌐</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_proxy" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_proxy_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/privacy/check?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">🔍</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.privacy_check_title" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.privacy_check_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- Media Tools -->
+<section class="tools-section tools-section--alt">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header__icon">🖼️</div>
+      <h2 class="section-title">{{ call .T "home.category_media" }}</h2>
+      <p class="section-desc">{{ call .T "home.category_media_desc" }}</p>
+    </div>
+    <div class="tools-grid">
+
+      <a href="/media/image-compress?lang={{ .Lang }}" class="tool-card tool-card--highlight">
+        <div class="tool-card__icon">🗜️</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_image_compress" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_image_compress_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/media/image-resize?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">📐</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_image_resize" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_image_resize_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/img/remove-bg?lang={{ .Lang }}" class="tool-card tool-card--highlight">
+        <div class="tool-card__icon">🪄</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_remove_bg" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_remove_bg_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/img/metadata?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">🔍</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_image_metadata" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_image_metadata_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/media/qr?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">▦</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_qr" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_qr_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/img/crop?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">✂️</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_crop" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_crop_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/img/convert-to-jpg?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">🔄</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_convert_to_jpg" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_convert_to_jpg_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/img/jpg-to-image?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">🖼️</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_jpg_to_image" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_jpg_to_image_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/img/photo-editor?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">🎨</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_photo_editor" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_photo_editor_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/img/watermark?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">💧</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_watermark" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_watermark_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/img/rotate?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">🔃</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_rotate" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_rotate_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/color/tools?lang={{ .Lang }}" class="tool-card tool-card--gradient">
+        <div class="tool-card__icon">🎨</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "color.tools.name" }}</h3>
+          <p class="tool-card__desc">{{ call .T "color.tools.desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- Developer Tools -->
+<section class="tools-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header__icon">🛠️</div>
+      <h2 class="section-title">{{ call .T "home.category_dev" }}</h2>
+      <p class="section-desc">{{ call .T "home.category_dev_desc" }}</p>
+    </div>
+    <div class="tools-grid">
+
+      <a href="/json?lang={{ .Lang }}" class="tool-card tool-card--highlight">
+        <div class="tool-card__icon">{ }</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_json" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_json_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/json/learn?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__badge">53+</div>
+        <div class="tool-card__icon">📚</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_json_learn" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_json_learn_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/json/datasets?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__badge">85+</div>
+        <div class="tool-card__icon">🗃️</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_json_datasets" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_json_datasets_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/tools/regex?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">🔍</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_regex" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_regex_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/tools/markdown?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">📝</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_markdown" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_markdown_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/tools/timestamp?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">🕐</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_timestamp" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_timestamp_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/dev/hash?lang={{ .Lang }}" class="tool-card tool-card--highlight">
+        <div class="tool-card__badge">NEW</div>
+        <div class="tool-card__icon">🔐</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "nav.dev_hash" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_hash_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/dev/base64?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__badge">NEW</div>
+        <div class="tool-card__icon">🔄</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "nav.dev_base64" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_base64_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/dev/url-encode?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__badge">NEW</div>
+        <div class="tool-card__icon">🔗</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "nav.dev_url_encode" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_url_encode_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/dev/word-counter?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__badge">NEW</div>
+        <div class="tool-card__icon">📝</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "nav.dev_word_counter" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_word_counter_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/tools/base-converter?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">🔢</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_base_converter" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_base_converter_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/tools/case-converter?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">Aa</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_case_converter" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_case_converter_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- Real-time Lookup & AI Lab Combined -->
+<section class="tools-section tools-section--alt">
+  <div class="container">
+    <div class="two-col-section">
+      <!-- Real-time Lookup -->
+      <div class="col-section">
+        <div class="section-header section-header--compact">
+          <h2 class="section-title">🌍 {{ call .T "home.category_realtime" }}</h2>
+        </div>
+        <div class="tools-grid tools-grid--compact">
+          <a href="/weather/query?lang={{ .Lang }}" class="tool-card">
+            <div class="tool-card__badge">NEW</div>
+            <div class="tool-card__icon">🌤️</div>
+            <div class="tool-card__body">
+              <h3 class="tool-card__name">{{ call .T "nav.weather_query" }}</h3>
+              <p class="tool-card__desc">{{ call .T "wq.home.desc" }}</p>
+            </div>
+            <div class="tool-card__arrow">→</div>
+          </a>
+          <a href="/dev/ip?lang={{ .Lang }}" class="tool-card">
+            <div class="tool-card__badge">NEW</div>
+            <div class="tool-card__icon">🌐</div>
+            <div class="tool-card__body">
+              <h3 class="tool-card__name">{{ call .T "nav.dev_ip" }}</h3>
+              <p class="tool-card__desc">{{ call .T "home.tool_ip_lookup_desc" }}</p>
+            </div>
+            <div class="tool-card__arrow">→</div>
+          </a>
+          <a href="/dev/whois?lang={{ .Lang }}" class="tool-card">
+            <div class="tool-card__badge">NEW</div>
+            <div class="tool-card__icon">🔍</div>
+            <div class="tool-card__body">
+              <h3 class="tool-card__name">{{ call .T "nav.dev_whois" }}</h3>
+              <p class="tool-card__desc">{{ call .T "home.tool_whois_desc" }}</p>
+            </div>
+            <div class="tool-card__arrow">→</div>
+          </a>
+        </div>
       </div>
-      <div class="feature-item">
-        <div class="feature-icon">⚡</div>
-        <h3>{{ call .T "home.feature.instant.title" }}</h3>
-        <p>{{ call .T "home.feature.instant.desc" }}</p>
-      </div>
-      <div class="feature-item">
-        <div class="feature-icon">🆓</div>
-        <h3>{{ call .T "home.feature.free.title" }}</h3>
-        <p>{{ call .T "home.feature.free.desc" }}</p>
+      <!-- AI Lab -->
+      <div class="col-section">
+        <div class="section-header section-header--compact">
+          <h2 class="section-title">🤖 {{ call .T "nav.ai" }}</h2>
+        </div>
+        <div class="tools-grid tools-grid--compact">
+          <a href="/ailab/detector?lang={{ .Lang }}" class="tool-card">
+            <div class="tool-card__badge">NEW</div>
+            <div class="tool-card__icon">🔍</div>
+            <div class="tool-card__body">
+              <h3 class="tool-card__name">{{ call .T "ailab.detector.name" }}</h3>
+              <p class="tool-card__desc">{{ call .T "ailab.detector.desc" }}</p>
+            </div>
+            <div class="tool-card__arrow">→</div>
+          </a>
+          <a href="/ai/humanizer?lang={{ .Lang }}" class="tool-card">
+            <div class="tool-card__badge">NEW</div>
+            <div class="tool-card__icon">🧬</div>
+            <div class="tool-card__body">
+              <h3 class="tool-card__name">{{ call .T "ah.nav.name" }}</h3>
+              <p class="tool-card__desc">{{ call .T "ah.hero.subtitle" }}</p>
+            </div>
+            <div class="tool-card__arrow">→</div>
+          </a>
+          <a href="/ai/compete?lang={{ .Lang }}" class="tool-card">
+            <div class="tool-card__badge">NEW</div>
+            <div class="tool-card__icon">🔍</div>
+            <div class="tool-card__body">
+              <h3 class="tool-card__name">{{ call .T "ai-compete.nav.name" }}</h3>
+              <p class="tool-card__desc">{{ call .T "ai-compete.nav.desc" }}</p>
+            </div>
+            <div class="tool-card__arrow">→</div>
+          </a>
+        </div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- Ad Banner -->
+<div class="ad-container">
+  <div class="container">
+    {{- template "partials/ad_slot.html" dict "SlotID" "home-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+  </div>
+</div>
+
+<!-- Features Section -->
+<section class="features-home">
+  <div class="container">
+    <div class="features-home__grid">
+      <div class="feature-home">
+        <div class="feature-home__icon">🛡</div>
+        <h3 class="feature-home__title">{{ call .T "home.feature.privacy.title" }}</h3>
+        <p class="feature-home__desc">{{ call .T "home.feature.privacy.desc" }}</p>
+      </div>
+      <div class="feature-home">
+        <div class="feature-home__icon">⚡</div>
+        <h3 class="feature-home__title">{{ call .T "home.feature.instant.title" }}</h3>
+        <p class="feature-home__desc">{{ call .T "home.feature.instant.desc" }}</p>
+      </div>
+      <div class="feature-home">
+        <div class="feature-home__icon">🆓</div>
+        <h3 class="feature-home__title">{{ call .T "home.feature.free.title" }}</h3>
+        <p class="feature-home__desc">{{ call .T "home.feature.free.desc" }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEO Article Section -->
+<section class="seo-home">
+  <div class="container">
+    <article class="seo-home__content">
+      <h2 class="seo-home__title">{{ call .T "home.seo.title" }}</h2>
+
+      <p><strong>Tool Box Nova</strong> {{ call .T "home.seo.intro" }}</p>
+
+      <h3 id="privacy-tools">{{ call .T "home.seo.privacy_title" }}</h3>
+      <p>{{ call .T "home.seo.privacy_desc" }}</p>
+      <ul>
+        <li><strong>{{ call .T "home.tool_sms" }}</strong> — {{ call .T "home.seo.sms_detail" }}</li>
+        <li><strong>{{ call .T "home.tool_email" }}</strong> — {{ call .T "home.seo.email_detail" }}</li>
+        <li><strong>{{ call .T "home.tool_password" }}</strong> — {{ call .T "home.seo.password_detail" }}</li>
+        <li><strong>{{ call .T "home.tool_address" }}</strong> — {{ call .T "home.seo.address_detail" }}</li>
+      </ul>
+
+      <h3 id="developer-tools">{{ call .T "home.seo.dev_title" }}</h3>
+      <p>{{ call .T "home.seo.dev_desc" }}</p>
+      <ul>
+        <li><strong>{{ call .T "home.tool_json" }}</strong> — {{ call .T "home.seo.json_detail" }}</li>
+        <li><strong>{{ call .T "nav.dev_hash" }}</strong> — {{ call .T "home.seo.hash_detail" }}</li>
+        <li><strong>{{ call .T "nav.dev_base64" }}</strong> — {{ call .T "home.seo.base64_detail" }}</li>
+        <li><strong>{{ call .T "home.tool_regex" }}</strong> — {{ call .T "home.seo.regex_detail" }}</li>
+      </ul>
+
+      <h3 id="media-tools">{{ call .T "home.seo.media_title" }}</h3>
+      <p>{{ call .T "home.seo.media_desc" }}</p>
+      <ul>
+        <li><strong>{{ call .T "home.tool_image_compress" }}</strong> — {{ call .T "home.seo.compress_detail" }}</li>
+        <li><strong>{{ call .T "home.tool_remove_bg" }}</strong> — {{ call .T "home.seo.removebg_detail" }}</li>
+        <li><strong>{{ call .T "home.tool_qr" }}</strong> — {{ call .T "home.seo.qr_detail" }}</li>
+      </ul>
+
+      <h3 id="why-choose">{{ call .T "home.seo.why_title" }}</h3>
+      <p>{{ call .T "home.seo.why_intro" }}</p>
+      <ul>
+        <li><strong>{{ call .T "home.seo.why_privacy" }}</strong> — {{ call .T "home.seo.why_privacy_desc" }}</li>
+        <li><strong>{{ call .T "home.seo.why_nosignup" }}</strong> — {{ call .T "home.seo.why_nosignup_desc" }}</li>
+        <li><strong>{{ call .T "home.seo.why_browser" }}</strong> — {{ call .T "home.seo.why_browser_desc" }}</li>
+        <li><strong>{{ call .T "home.seo.why_free" }}</strong> — {{ call .T "home.seo.why_free_desc" }}</li>
+      </ul>
+
+      <p>{{ call .T "home.seo.conclusion" }}</p>
+    </article>
   </div>
 </section>
 
 <!-- FAQ Section -->
-<section class="faq-section" style="padding:60px 0;background:var(--color-bg-alt);">
+<section class="faq-home">
   <div class="container">
-    <h2 style="text-align:center;margin-bottom:40px;font-size:1.75rem;">{{ call .T "home.faq.title" }}</h2>
-    <div class="faq-grid" style="max-width:800px;margin:0 auto;">
+    <h2 class="faq-home__title">{{ call .T "home.faq.title" }}</h2>
+    <div class="faq-home__grid">
       {{ range .FAQs }}
-      <div class="faq-item" style="margin-bottom:16px;border:1px solid var(--color-border);border-radius:8px;overflow:hidden;">
-        <button class="faq-question" onclick="this.parentElement.classList.toggle('open')"
-          style="width:100%;padding:16px 20px;text-align:left;background:var(--color-bg);border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:1rem;">
+      <div class="faq-home__item">
+        <button class="faq-home__q" onclick="this.parentElement.classList.toggle('open')">
           <span>{{ .Q }}</span>
-          <span class="faq-icon" style="font-size:1.2rem;transition:transform 0.3s;">▼</span>
+          <span class="faq-home__icon">▼</span>
         </button>
-        <div class="faq-answer" style="padding:0 20px;max-height:0;overflow:hidden;transition:max-height 0.3s,padding 0.3s;">
-          <p style="padding:12px 0;color:var(--color-text-muted);line-height:1.7;">{{ .A }}</p>
-        </div>
+        <div class="faq-home__a"><p>{{ .A }}</p></div>
       </div>
       {{ end }}
     </div>
   </div>
 </section>
-<style>
-.faq-item.open .faq-answer { max-height:500px; padding:0 20px 16px; }
-.faq-item.open .faq-icon { transform:rotate(180deg); }
-</style>
 
 <!-- Bottom Ad -->
-<div style="text-align:center;margin:24px 0 0">
-  {{- template "partials/ad_slot.html" dict "SlotID" "home-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+<div class="ad-container ad-container--bottom">
+  <div class="container">
+    {{- template "partials/ad_slot.html" dict "SlotID" "home-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+  </div>
 </div>
+
+<style>
+/* ═══════════════════════════════════════════════════════════
+   Homepage Styles
+   ═══════════════════════════════════════════════════════════ */
+
+/* Hero Section */
+.hero-home {
+  position: relative;
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #6366f1 100%);
+  color: #fff;
+  padding: 80px 0 100px;
+  overflow: hidden;
+}
+.hero-home__bg {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08) 0%, transparent 40%);
+  pointer-events: none;
+}
+.hero-home__content { position: relative; z-index: 1; text-align: center; }
+.hero-home__title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  margin: 0 0 16px;
+  line-height: 1.2;
+}
+.hero-home__subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.35rem);
+  opacity: 0.9;
+  margin: 0 0 32px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.hero-home__stats {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  margin-bottom: 40px;
+}
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.hero-stat__num {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+}
+.hero-stat__label {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+.hero-home__search {
+  display: flex;
+  gap: 12px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.hero-search-input {
+  flex: 1;
+  padding: 16px 24px;
+  border-radius: 12px;
+  border: none;
+  font-size: 1rem;
+  outline: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.hero-search-btn {
+  padding: 16px 28px;
+  border-radius: 12px;
+  border: none;
+  background: #fff;
+  color: #1e3a8a;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.hero-search-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* Quick Access */
+.quick-access {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 16px 0;
+}
+.quick-access__inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.quick-access__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+.quick-access__links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.quick-link {
+  padding: 8px 16px;
+  background: var(--color-bg-alt);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+}
+.quick-link:hover {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* Tools Sections */
+.tools-section { padding: 64px 0; }
+.tools-section--alt { background: var(--color-bg-alt); }
+.section-header { margin-bottom: 32px; text-align: center; }
+.section-header--compact { margin-bottom: 20px; text-align: left; }
+.section-header__icon { font-size: 2.5rem; margin-bottom: 8px; }
+.section-title { font-size: 1.75rem; font-weight: 700; color: var(--color-text); margin: 0 0 8px; }
+.section-desc { font-size: 1rem; color: var(--color-text-muted); margin: 0; }
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+.tools-grid--compact { grid-template-columns: 1fr; }
+
+/* Tool Card Redesign */
+.tool-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--color-surface);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  text-decoration: none;
+  color: var(--color-text);
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+.tool-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+  border-color: var(--color-primary);
+  text-decoration: none;
+  color: var(--color-text);
+}
+.tool-card--highlight { border-left: 4px solid var(--color-primary); }
+.tool-card--gradient {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border: none;
+  color: #fff;
+}
+.tool-card--gradient .tool-card__desc { color: rgba(255,255,255,0.85); }
+.tool-card--gradient:hover { color: #fff; }
+.tool-card__badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #10b981;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+.tool-card__icon { font-size: 2rem; flex-shrink: 0; }
+.tool-card__body { flex: 1; min-width: 0; }
+.tool-card__name { font-size: 1.05rem; font-weight: 600; margin: 0 0 4px; }
+.tool-card__desc { font-size: 0.85rem; color: var(--color-text-muted); margin: 0; line-height: 1.4; }
+.tool-card__arrow { color: var(--color-text-muted); font-size: 1.25rem; transition: transform 0.2s, color 0.2s; }
+.tool-card:hover .tool-card__arrow { transform: translateX(4px); color: var(--color-primary); }
+
+/* Two Column Layout */
+.two-col-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+
+/* Ad Container */
+.ad-container { padding: 24px 0; text-align: center; }
+.ad-container--bottom { padding-bottom: 0; }
+
+/* Features */
+.features-home { padding: 64px 0; background: var(--color-bg-alt); }
+.features-home__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+.feature-home { text-align: center; }
+.feature-home__icon { font-size: 3rem; margin-bottom: 16px; }
+.feature-home__title { font-size: 1.25rem; font-weight: 700; margin: 0 0 8px; color: var(--color-text); }
+.feature-home__desc { font-size: 0.95rem; color: var(--color-text-muted); margin: 0; line-height: 1.6; }
+
+/* SEO Article */
+.seo-home { padding: 64px 0; }
+.seo-home__content { max-width: 800px; margin: 0 auto; }
+.seo-home__title { font-size: 1.75rem; font-weight: 700; margin: 0 0 24px; color: var(--color-text); text-align: center; }
+.seo-home__content p { font-size: 1rem; line-height: 1.8; color: var(--color-text-secondary); margin: 0 0 16px; }
+.seo-home__content h3 { font-size: 1.25rem; font-weight: 600; margin: 32px 0 12px; color: var(--color-text); }
+.seo-home__content ul { margin: 0 0 16px; padding-left: 24px; }
+.seo-home__content li { font-size: 1rem; line-height: 1.8; color: var(--color-text-secondary); margin-bottom: 8px; }
+
+/* FAQ Section */
+.faq-home { padding: 64px 0; background: var(--color-bg-alt); }
+.faq-home__title { font-size: 1.75rem; font-weight: 700; text-align: center; margin: 0 0 40px; color: var(--color-text); }
+.faq-home__grid { max-width: 800px; margin: 0 auto; }
+.faq-home__item { margin-bottom: 12px; border: 1px solid var(--color-border); border-radius: 12px; overflow: hidden; background: var(--color-surface); }
+.faq-home__q {
+  width: 100%;
+  padding: 18px 20px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-text);
+}
+.faq-home__icon { font-size: 1rem; transition: transform 0.3s; color: var(--color-text-muted); }
+.faq-home__a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s, padding 0.3s;
+}
+.faq-home__a p { padding: 0 20px 18px; margin: 0; color: var(--color-text-muted); line-height: 1.7; }
+.faq-home__item.open .faq-home__a { max-height: 500px; }
+.faq-home__item.open .faq-home__icon { transform: rotate(180deg); }
+
+/* Dark Theme */
+[data-theme="dark"] .hero-home { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #312e81 100%); }
+[data-theme="dark"] .tool-card { background: var(--color-surface); border-color: var(--color-border); }
+[data-theme="dark"] .tool-card:hover { border-color: var(--color-primary); }
+[data-theme="dark"] .quick-link { background: var(--color-surface-alt); }
+[data-theme="dark"] .quick-link:hover { background: rgba(37, 99, 235, 0.2); }
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .features-home__grid { grid-template-columns: 1fr; gap: 32px; }
+  .two-col-section { grid-template-columns: 1fr; gap: 32px; }
+}
+@media (max-width: 768px) {
+  .hero-home { padding: 60px 0 80px; }
+  .hero-home__stats { gap: 32px; }
+  .hero-stat__num { font-size: 2rem; }
+  .hero-home__search { flex-direction: column; }
+  .hero-search-btn { width: 100%; }
+  .tools-grid { grid-template-columns: 1fr; }
+  .quick-access__inner { flex-direction: column; align-items: flex-start; }
+  .quick-access__links { justify-content: flex-start; }
+}
+</style>
 {{ end }}
 
 {{ define "extraScript" }}

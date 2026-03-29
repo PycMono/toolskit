@@ -1,0 +1,342 @@
+{{ template "base" . }}
+
+{{ define "content" }}
+<div class="unit-converter-page">
+  <div class="container">
+    <h1 class="tool-page-title">Unit Converter</h1>
+    <p class="tool-page-subtitle">Convert length, weight, temperature, area, volume, speed, time, data, pressure, energy and frequency</p>
+
+    <!-- Category Selector -->
+    <div class="category-selector">
+      <button class="cat-btn active" data-cat="length" onclick="switchCategory('length')">Length</button>
+      <button class="cat-btn" data-cat="weight" onclick="switchCategory('weight')">Weight</button>
+      <button class="cat-btn" data-cat="temperature" onclick="switchCategory('temperature')">Temperature</button>
+      <button class="cat-btn" data-cat="area" onclick="switchCategory('area')">Area</button>
+      <button class="cat-btn" data-cat="volume" onclick="switchCategory('volume')">Volume</button>
+      <button class="cat-btn" data-cat="speed" onclick="switchCategory('speed')">Speed</button>
+      <button class="cat-btn" data-cat="time" onclick="switchCategory('time')">Time</button>
+      <button class="cat-btn" data-cat="data" onclick="switchCategory('data')">Data</button>
+      <button class="cat-btn" data-cat="pressure" onclick="switchCategory('pressure')">Pressure</button>
+      <button class="cat-btn" data-cat="energy" onclick="switchCategory('energy')">Energy</button>
+      <button class="cat-btn" data-cat="frequency" onclick="switchCategory('frequency')">Frequency</button>
+    </div>
+
+    <!-- Converter Input -->
+    <div class="converter-box">
+      <div class="converter-row">
+        <div class="field-group">
+          <label>From</label>
+          <input type="number" id="inputValue" class="num-input" value="1" step="any" oninput="convert()">
+          <select id="fromUnit" class="unit-select" onchange="convert()"></select>
+        </div>
+        <button class="swap-btn" onclick="swapUnits()" title="Swap">&#8644;</button>
+        <div class="field-group">
+          <label>To</label>
+          <input type="number" id="outputValue" class="num-input" readonly>
+          <select id="toUnit" class="unit-select" onchange="convert()"></select>
+        </div>
+      </div>
+
+      <!-- Quick Reference -->
+      <div class="quick-ref" id="quickRef"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+.unit-converter-page { max-width: 800px; margin: 30px auto; }
+.unit-converter-page .container { padding: 0 16px; }
+.tool-page-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 4px; }
+.tool-page-subtitle { color: var(--color-text-muted); margin-bottom: 20px; }
+.category-selector {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px;
+}
+.cat-btn {
+  padding: 8px 16px; border: 1px solid var(--color-border); border-radius: 8px;
+  background: var(--color-bg-alt); color: var(--color-text); cursor: pointer;
+  font-size: 0.9rem; font-weight: 500; transition: all 0.15s;
+}
+.cat-btn:hover { border-color: var(--color-primary); }
+.cat-btn.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+.converter-box {
+  background: var(--color-bg-alt); border-radius: 12px; padding: 24px;
+  border: 1px solid var(--color-border);
+}
+.converter-row {
+  display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap;
+}
+.field-group { flex: 1; min-width: 200px; }
+.field-group label {
+  display: block; font-size: 0.85rem; font-weight: 600; color: var(--color-text-muted);
+  margin-bottom: 6px;
+}
+.num-input {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--color-border);
+  border-radius: 8px; font-size: 1.1rem; font-weight: 600;
+  background: var(--color-bg); color: var(--color-text);
+  box-sizing: border-box;
+}
+.num-input:focus { outline: none; border-color: var(--color-primary); }
+.num-input[readonly] { background: var(--color-bg); cursor: default; }
+.unit-select {
+  width: 100%; padding: 8px 12px; border: 1px solid var(--color-border);
+  border-radius: 8px; font-size: 0.9rem; margin-top: 6px;
+  background: var(--color-bg); color: var(--color-text); cursor: pointer;
+}
+.swap-btn {
+  padding: 10px 16px; border: 1px solid var(--color-border); border-radius: 8px;
+  background: var(--color-bg); cursor: pointer; font-size: 1.2rem;
+  color: var(--color-text); transition: all 0.15s; margin-bottom: 26px;
+}
+.swap-btn:hover { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+.quick-ref {
+  margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--color-border);
+}
+.quick-ref h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 10px; color: var(--color-text-muted); }
+.ref-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px;
+}
+.ref-item {
+  background: var(--color-bg); border-radius: 6px; padding: 8px 12px;
+  font-size: 0.85rem; display: flex; justify-content: space-between;
+}
+.ref-item .ref-val { font-weight: 600; font-family: 'SF Mono', 'Fira Code', monospace; }
+.ref-item .ref-unit { color: var(--color-text-muted); }
+</style>
+
+<script>
+(function() {
+  var currentCat = 'length';
+
+  var categories = {
+    length: {
+      units: [
+        { id: 'm', name: 'Meters', factor: 1 },
+        { id: 'km', name: 'Kilometers', factor: 1000 },
+        { id: 'cm', name: 'Centimeters', factor: 0.01 },
+        { id: 'mm', name: 'Millimeters', factor: 0.001 },
+        { id: 'mi', name: 'Miles', factor: 1609.344 },
+        { id: 'yd', name: 'Yards', factor: 0.9144 },
+        { id: 'ft', name: 'Feet', factor: 0.3048 },
+        { id: 'in', name: 'Inches', factor: 0.0254 },
+        { id: 'nmi', name: 'Nautical Miles', factor: 1852 }
+      ]
+    },
+    weight: {
+      units: [
+        { id: 'kg', name: 'Kilograms', factor: 1 },
+        { id: 'g', name: 'Grams', factor: 0.001 },
+        { id: 'mg', name: 'Milligrams', factor: 0.000001 },
+        { id: 't', name: 'Metric Tons', factor: 1000 },
+        { id: 'lb', name: 'Pounds', factor: 0.453592 },
+        { id: 'oz', name: 'Ounces', factor: 0.0283495 },
+        { id: 'st', name: 'Stones', factor: 6.35029 },
+        { id: 'lt', name: 'Long Tons (UK)', factor: 1016.05 },
+        { id: 'sht', name: 'Short Tons (US)', factor: 907.185 }
+      ]
+    },
+    temperature: {
+      units: [
+        { id: 'c', name: 'Celsius (\u00b0C)', factor: null },
+        { id: 'f', name: 'Fahrenheit (\u00b0F)', factor: null },
+        { id: 'k', name: 'Kelvin (K)', factor: null }
+      ]
+    },
+    area: {
+      units: [
+        { id: 'sqm', name: 'Square Meters', factor: 1 },
+        { id: 'sqkm', name: 'Square Kilometers', factor: 1000000 },
+        { id: 'sqft', name: 'Square Feet', factor: 0.092903 },
+        { id: 'sqyd', name: 'Square Yards', factor: 0.836127 },
+        { id: 'sqmi', name: 'Square Miles', factor: 2589988.11 },
+        { id: 'ha', name: 'Hectares', factor: 10000 },
+        { id: 'ac', name: 'Acres', factor: 4046.86 }
+      ]
+    },
+    volume: {
+      units: [
+        { id: 'l', name: 'Liters', factor: 1 },
+        { id: 'ml', name: 'Milliliters', factor: 0.001 },
+        { id: 'm3', name: 'Cubic Meters', factor: 1000 },
+        { id: 'cm3', name: 'Cubic Centimeters', factor: 0.001 },
+        { id: 'galus', name: 'US Gallons', factor: 3.78541 },
+        { id: 'galuk', name: 'UK Gallons', factor: 4.54609 },
+        { id: 'ptus', name: 'US Pints', factor: 0.473176 },
+        { id: 'ptuk', name: 'UK Pints', factor: 0.568261 },
+        { id: 'floz', name: 'US Fluid Ounces', factor: 0.0295735 }
+      ]
+    },
+    speed: {
+      units: [
+        { id: 'ms', name: 'Meters per Second', factor: 1 },
+        { id: 'kmh', name: 'Kilometers per Hour', factor: 0.277778 },
+        { id: 'mph', name: 'Miles per Hour', factor: 0.44704 },
+        { id: 'kn', name: 'Knots', factor: 0.514444 },
+        { id: 'fts', name: 'Feet per Second', factor: 0.3048 }
+      ]
+    },
+    time: {
+      units: [
+        { id: 's', name: 'Seconds', factor: 1 },
+        { id: 'min', name: 'Minutes', factor: 60 },
+        { id: 'h', name: 'Hours', factor: 3600 },
+        { id: 'd', name: 'Days', factor: 86400 },
+        { id: 'w', name: 'Weeks', factor: 604800 },
+        { id: 'mo', name: 'Months (30d)', factor: 2592000 },
+        { id: 'y', name: 'Years (365d)', factor: 31536000 }
+      ]
+    },
+    data: {
+      units: [
+        { id: 'b', name: 'Bits', factor: 1 },
+        { id: 'B', name: 'Bytes', factor: 8 },
+        { id: 'KB', name: 'Kilobytes', factor: 8192 },
+        { id: 'MB', name: 'Megabytes', factor: 8388608 },
+        { id: 'GB', name: 'Gigabytes', factor: 8589934592 },
+        { id: 'TB', name: 'Terabytes', factor: 8796093022208 },
+        { id: 'Kb', name: 'Kilobits', factor: 1000 },
+        { id: 'Mb', name: 'Megabits', factor: 1000000 },
+        { id: 'Gb', name: 'Gigabits', factor: 1000000000 }
+      ]
+    },
+    pressure: {
+      units: [
+        { id: 'pa', name: 'Pascals', factor: 1 },
+        { id: 'kpa', name: 'Kilopascals', factor: 1000 },
+        { id: 'bar', name: 'Bar', factor: 100000 },
+        { id: 'psi', name: 'PSI', factor: 6894.76 },
+        { id: 'atm', name: 'Atmospheres', factor: 101325 },
+        { id: 'mmhg', name: 'mmHg (Torr)', factor: 133.322 }
+      ]
+    },
+    energy: {
+      units: [
+        { id: 'j', name: 'Joules', factor: 1 },
+        { id: 'kj', name: 'Kilojoules', factor: 1000 },
+        { id: 'cal', name: 'Calories', factor: 4.184 },
+        { id: 'kcal', name: 'Kilocalories', factor: 4184 },
+        { id: 'wh', name: 'Watt-hours', factor: 3600 },
+        { id: 'kwh', name: 'Kilowatt-hours', factor: 3600000 },
+        { id: 'btu', name: 'BTU', factor: 1055.06 },
+        { id: 'ev', name: 'Electronvolts', factor: 1.602e-19 }
+      ]
+    },
+    frequency: {
+      units: [
+        { id: 'hz', name: 'Hertz', factor: 1 },
+        { id: 'khz', name: 'Kilohertz', factor: 1000 },
+        { id: 'mhz', name: 'Megahertz', factor: 1000000 },
+        { id: 'ghz', name: 'Gigahertz', factor: 1000000000 },
+        { id: 'thz', name: 'Terahertz', factor: 1000000000000 }
+      ]
+    }
+  };
+
+  function populateSelects(cat) {
+    var fromSel = document.getElementById('fromUnit');
+    var toSel = document.getElementById('toUnit');
+    fromSel.innerHTML = '';
+    toSel.innerHTML = '';
+    var units = categories[cat].units;
+    for (var i = 0; i < units.length; i++) {
+      var opt1 = document.createElement('option');
+      opt1.value = units[i].id;
+      opt1.textContent = units[i].name;
+      fromSel.appendChild(opt1);
+
+      var opt2 = document.createElement('option');
+      opt2.value = units[i].id;
+      opt2.textContent = units[i].name;
+      toSel.appendChild(opt2);
+    }
+    if (units.length > 1) toSel.value = units[1].id;
+  }
+
+  function getUnit(cat, id) {
+    var units = categories[cat].units;
+    for (var i = 0; i < units.length; i++) {
+      if (units[i].id === id) return units[i];
+    }
+    return units[0];
+  }
+
+  function formatNum(n) {
+    if (Math.abs(n) >= 1e15 || (Math.abs(n) < 1e-10 && n !== 0)) return n.toExponential(6);
+    if (Number.isInteger(n)) return n.toLocaleString();
+    var s = n.toPrecision(10);
+    return parseFloat(s).toLocaleString(undefined, { maximumFractionDigits: 8 });
+  }
+
+  function convertTemp(val, fromId, toId) {
+    if (fromId === toId) return val;
+    var c;
+    if (fromId === 'c') c = val;
+    else if (fromId === 'f') c = (val - 32) * 5 / 9;
+    else c = val - 273.15;
+    if (toId === 'c') return c;
+    if (toId === 'f') return c * 9 / 5 + 32;
+    return c + 273.15;
+  }
+
+  window.convert = function() {
+    var cat = currentCat;
+    var val = parseFloat(document.getElementById('inputValue').value) || 0;
+    var fromId = document.getElementById('fromUnit').value;
+    var toId = document.getElementById('toUnit').value;
+    var result;
+
+    if (cat === 'temperature') {
+      result = convertTemp(val, fromId, toId);
+    } else {
+      var fromUnit = getUnit(cat, fromId);
+      var toUnit = getUnit(cat, toId);
+      var baseVal = val * fromUnit.factor;
+      result = baseVal / toUnit.factor;
+    }
+
+    document.getElementById('outputValue').value = formatNum(result);
+    buildQuickRef(cat, val, fromId);
+  };
+
+  function buildQuickRef(cat, val, fromId) {
+    var container = document.getElementById('quickRef');
+    if (cat === 'temperature') { container.innerHTML = ''; return; }
+    var units = categories[cat].units;
+    var fromUnit = getUnit(cat, fromId);
+    var baseVal = val * fromUnit.factor;
+    var html = '<h3>Quick Reference (' + val + ' ' + fromUnit.name + ')</h3><div class="ref-grid">';
+    for (var i = 0; i < units.length; i++) {
+      if (units[i].id === fromId) continue;
+      var converted = baseVal / units[i].factor;
+      html += '<div class="ref-item"><span class="ref-val">' + formatNum(converted) + '</span> <span class="ref-unit">' + units[i].name + '</span></div>';
+    }
+    html += '</div>';
+    container.innerHTML = html;
+  }
+
+  window.switchCategory = function(cat) {
+    currentCat = cat;
+    var btns = document.querySelectorAll('.cat-btn');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].classList.toggle('active', btns[i].getAttribute('data-cat') === cat);
+    }
+    populateSelects(cat);
+    document.getElementById('inputValue').value = 1;
+    convert();
+  };
+
+  window.swapUnits = function() {
+    var fromSel = document.getElementById('fromUnit');
+    var toSel = document.getElementById('toUnit');
+    var tmp = fromSel.value;
+    fromSel.value = toSel.value;
+    toSel.value = tmp;
+    convert();
+  };
+
+  // Initialize
+  populateSelects('length');
+  convert();
+})();
+</script>
+{{ end }}

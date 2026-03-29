@@ -66,6 +66,19 @@ func buildDevFAQ(lang, tool string) []DevFAQ {
 				{Q: "What is keyword density?", A: "Keyword density is the percentage of times a specific word appears in a text relative to the total word count. It is used in SEO analysis to avoid keyword stuffing (typically keep below 2-3%)."},
 				{Q: "How are sentences counted?", A: "Sentences are delimited by periods, exclamation marks, and question marks. Abbreviations like 'Dr.' or 'U.S.' are handled by the parser to avoid false splits."},
 			},
+			"uuid": {
+				{Q: "What is the difference between UUID v4 and v7?", A: "UUID v4 is completely random and has no inherent ordering. UUID v7 includes a Unix timestamp in milliseconds prefix, making it time-sortable - ideal for database primary keys where insertion order matters."},
+				{Q: "Is a UUID globally unique?", A: "Practically yes. UUID v4 has a collision probability of approximately 1 in 2^122, which is negligible for any real-world application. UUID v7 further reduces collision risk due to its timestamp prefix."},
+				{Q: "When should I use UUID v7 instead of v4?", A: "Use UUID v7 for database primary keys, event IDs, or any scenario where time-ordered identifiers improve performance (e.g., B-Tree index efficiency). Use UUID v4 for session tokens, temporary IDs, or when ordering does not matter."},
+				{Q: "Are the generated UUIDs cryptographically secure?", A: "Yes. This tool uses crypto.getRandomValues() in your browser, which provides cryptographically secure randomness. However, UUIDs should not be used directly as encryption keys - use a dedicated key derivation function instead."},
+				{Q: "Can I generate multiple UUIDs at once?", A: "Yes. You can generate up to 100 UUIDs in a single batch. Select the desired count and click generate."},
+			},
+			"lorem": {
+				{Q: "What is Lorem Ipsum?", A: "Lorem Ipsum is placeholder text derived from a Latin work by Cicero in 45 BC. It has been used as dummy text in the typesetting and printing industry since the 1500s."},
+				{Q: "What is the difference between classic and random mode?", A: "Classic mode starts with the traditional Lorem ipsum dolor sit amet... phrase, which is standard in the publishing industry. Random mode generates text from shuffled word dictionaries without a fixed opening, giving a more varied appearance."},
+				{Q: "Why do designers use placeholder text?", A: "Placeholder text allows designers to focus on visual elements like layout, typography, and spacing without being distracted by the meaning of actual content. It is replaced with real content once the design is finalized."},
+				{Q: "Can I control the type of text generated?", A: "Yes. This tool supports paragraphs, sentences, or words. Paragraph mode is ideal for filling large content areas, while sentence and word modes suit headings, buttons, and navigation elements."},
+			},
 		},
 		"zh": {
 			"hash": {
@@ -504,5 +517,62 @@ func DevLoremPage(c *gin.Context) {
 		"ToolName":    "lorem",
 	})
 	renderDevTool(c, "dev/lorem.html", data)
+}
+
+// DevAESPage serves /dev/aes - AES encryption/decryption tool
+func DevAESPage(c *gin.Context) {
+	t := getT(c)
+	lang := getLang(c)
+	data := baseData(c, gin.H{
+		"Title":       t("seo.aes.title"),
+		"Description": t("seo.aes.description"),
+		"Keywords":    t("seo.aes.keywords"),
+		"Canonical":   "https://toolboxnova.com/dev/aes",
+		"HreflangZH":  "https://toolboxnova.com/dev/aes?lang=zh",
+		"HreflangEN":  "https://toolboxnova.com/dev/aes?lang=en",
+		"OGImage":     "https://toolboxnova.com/static/img/og.png",
+		"FAQs":        buildDevFAQ(lang, "aes"),
+		"PageClass":   "page-dev-aes",
+		"ToolName":    "aes",
+	})
+	renderDevTool(c, "dev/aes.html", data)
+}
+
+// DevHTMLEntitiesPage serves /dev/html-entities - HTML entity encoding/decoding tool
+func DevHTMLEntitiesPage(c *gin.Context) {
+	t := getT(c)
+	lang := getLang(c)
+	data := baseData(c, gin.H{
+		"Title":       t("seo.html_entities.title"),
+		"Description": t("seo.html_entities.description"),
+		"Keywords":    t("seo.html_entities.keywords"),
+		"Canonical":   "https://toolboxnova.com/dev/html-entities",
+		"HreflangZH":  "https://toolboxnova.com/dev/html-entities?lang=zh",
+		"HreflangEN":  "https://toolboxnova.com/dev/html-entities?lang=en",
+		"OGImage":     "https://toolboxnova.com/static/img/og.png",
+		"FAQs":        buildDevFAQ(lang, "html_entities"),
+		"PageClass":   "page-dev-html-entities",
+		"ToolName":    "html_entities",
+	})
+	renderDevTool(c, "dev/html_entities.html", data)
+}
+
+// DevDiffPage serves /dev/diff - Text diff checker tool
+func DevDiffPage(c *gin.Context) {
+	t := getT(c)
+	lang := getLang(c)
+	data := baseData(c, gin.H{
+		"Title":       t("seo.diff.title"),
+		"Description": t("seo.diff.description"),
+		"Keywords":    t("seo.diff.keywords"),
+		"Canonical":   "https://toolboxnova.com/dev/diff",
+		"HreflangZH":  "https://toolboxnova.com/dev/diff?lang=zh",
+		"HreflangEN":  "https://toolboxnova.com/dev/diff?lang=en",
+		"OGImage":     "https://toolboxnova.com/static/img/og.png",
+		"FAQs":        buildDevFAQ(lang, "diff"),
+		"PageClass":   "page-dev-diff",
+		"ToolName":    "diff",
+	})
+	renderDevTool(c, "dev/diff.html", data)
 }
 

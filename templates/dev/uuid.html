@@ -1,132 +1,189 @@
 {{ template "base" . }}
 
 {{ define "content" }}
-<section class="dev-tool-hero">
-  <div class="container">
-    <h1 class="tool-title">🔑 UUID Generator</h1>
-    <p class="tool-subtitle">Generate random UUIDs (Universally Unique Identifiers) instantly. Supports UUID v4 and v7.</p>
-  </div>
-</section>
+<div class="dev-page page-dev-uuid">
+  <link rel="stylesheet" href="/static/css/dev-tools.css?v={{ .AssetVer }}">
 
-{{ template "partials/ad_slot.html" dict "SlotID" "dev-uuid-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+  <!-- Hero -->
+  <section class="hero--dev">
+    <div class="container">
+      <h1 class="hero--dev__title">🔑 UUID Generator</h1>
+      <p class="hero--dev__sub">{{ call .T "seo.uuid.description" }}</p>
+      <div class="hero--dev__badges">
+        <span class="badge badge--green">v4 &amp; v7</span>
+        <span class="badge badge--blue">Batch 100</span>
+        <span class="badge badge--purple">Client-Side</span>
+      </div>
+    </div>
+  </section>
 
-<section class="tool-section">
-  <div class="container">
-    <div class="tool-grid">
-      <div class="tool-main">
-        <div class="tool-card">
-          <div class="tool-controls">
-            <div class="control-group">
-              <label>Version</label>
-              <select id="uuidVersion">
-                <option value="4">UUID v4 (Random)</option>
-                <option value="7">UUID v7 (Time-ordered)</option>
-              </select>
-            </div>
-            <div class="control-group">
-              <label>Count</label>
-              <input type="number" id="uuidCount" value="5" min="1" max="100">
-            </div>
-            <div class="control-group">
-              <label>Case</label>
-              <select id="uuidCase">
-                <option value="lower">Lowercase</option>
-                <option value="upper">Uppercase</option>
-              </select>
-            </div>
-            <div class="control-group">
-              <label>Format</label>
-              <select id="uuidFormat">
-                <option value="hyphen">With hyphens</option>
-                <option value="nohyphen">Without hyphens</option>
-              </select>
+  {{ template "partials/ad_slot.html" dict "SlotID" "dev-uuid-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+
+  <!-- Tool -->
+  <div class="tool-wrapper">
+    <div class="container">
+      <div class="split-panel">
+        <div class="split-panel__input">
+          <div class="mode-tabs">
+            <button class="mode-tab active" data-v="4" onclick="setUUIDVersion(4)">UUID v4</button>
+            <button class="mode-tab" data-v="7" onclick="setUUIDVersion(7)">UUID v7</button>
+          </div>
+
+          <div class="options-panel">
+            <div class="options-body" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);">
+              <div>
+                <label style="font-size:0.8rem;font-weight:600;color:var(--color-text-muted);margin-bottom:4px;display:block;">Count</label>
+                <input type="number" id="uuidCount" class="form-input" value="5" min="1" max="100" style="width:100%;">
+              </div>
+              <div>
+                <label style="font-size:0.8rem;font-weight:600;color:var(--color-text-muted);margin-bottom:4px;display:block;">Format</label>
+                <select id="uuidFormat" class="form-select" style="width:100%;">
+                  <option value="hyphen">xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</option>
+                  <option value="nohyphen">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:0.8rem;font-weight:600;color:var(--color-text-muted);margin-bottom:4px;display:block;">Case</label>
+                <select id="uuidCase" class="form-select" style="width:100%;">
+                  <option value="lower">lowercase</option>
+                  <option value="upper">UPPERCASE</option>
+                </select>
+              </div>
             </div>
           </div>
-          <button class="btn-primary" onclick="generateUUIDs()">🎲 Generate UUIDs</button>
+
+          <button class="btn btn--primary" onclick="generateUUIDs()" style="width:100%;margin-top:var(--space-md);">
+            🎲 Generate UUIDs
+          </button>
         </div>
 
-        <div class="result-card">
-          <div class="result-header">
-            <h3>Generated UUIDs</h3>
-            <button class="btn-secondary" onclick="copyUUIDs()">📋 Copy All</button>
+        <div class="split-panel__result">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-sm);">
+            <h3 style="font-size:0.95rem;font-weight:600;">Generated UUIDs</h3>
+            <button class="btn btn--ghost btn--sm" onclick="copyUUIDs()">📋 Copy All</button>
           </div>
-          <textarea id="uuidOutput" class="result-textarea" readonly placeholder="Click Generate to create UUIDs..."></textarea>
+          <textarea id="uuidOutput" class="code-editor" readonly placeholder="Click Generate to create UUIDs..." style="min-height:200px;resize:vertical;"></textarea>
         </div>
       </div>
-
-      <aside class="tool-sidebar">
-        {{ template "partials/ad_slot.html" dict "SlotID" "dev-uuid-sidebar" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
-      </aside>
     </div>
   </div>
-</section>
 
-{{ template "partials/ad_slot.html" dict "SlotID" "dev-uuid-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+  <!-- SEO Article -->
+  <section class="seo-article">
+    <div class="container">
+      <div class="seo-article__content">
+        <h2 id="what-is-uuid">What Is a UUID?</h2>
+        <p>A <strong>UUID (Universally Unique Identifier)</strong> is a 128-bit identifier that is unique across both space and time. It is standardized by <a href="https://tools.ietf.org/html/rfc4122" rel="noopener" target="_blank">RFC 4122</a> and widely used in software development, database systems, distributed computing, and web applications where a unique identifier is needed without requiring central coordination.</p>
 
-{{ if .FAQs }}
-<section class="faq-section">
-  <div class="container">
-    <h2 class="section-title">Frequently Asked Questions</h2>
-    <div class="faq-grid">
-      {{ range .FAQs }}
-      <div class="faq-item">
-        <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
-          <span>{{ .Q }}</span>
-          <span class="faq-icon">▼</span>
-        </button>
-        <div class="faq-answer"><p>{{ .A }}</p></div>
+        <p>Each UUID is represented as a 36-character string in its canonical form (with hyphens), for example: <code>550e8400-e29b-41d4-a716-446655440000</code>. The 128-bit value guarantees an extremely low probability of collision — approximately 1 in 2<sup>122</sup> for UUID v4 — making it practically unique for any real-world application.</p>
+
+        <h2 id="uuid-v4-vs-v7">UUID v4 vs UUID v7: Which Should You Use?</h2>
+        <p><strong>UUID v4 (Random)</strong> is generated entirely from random numbers. It has no inherent ordering, which means UUIDs generated in sequence will appear random. UUID v4 is ideal for use cases where uniqueness is the only requirement, such as session tokens, temporary identifiers, or API request tracking.</p>
+
+        <p><strong>UUID v7 (Time-Ordered)</strong> was introduced in RFC 9562 (2024) to solve a critical performance problem with UUID v4 in database systems. Because v4 UUIDs are random, inserting them into B-Tree indexes (used by PostgreSQL, MySQL, and most databases) causes random I/O patterns, leading to page splits and degraded write performance. UUID v7 solves this by encoding a Unix timestamp in milliseconds as the first 48 bits, ensuring that UUIDs generated in chronological order are also lexicographically adjacent. This makes v7 UUIDs the <strong>recommended choice for database primary keys</strong>, event IDs, and any scenario where insertion-order matters.</p>
+
+        <h2 id="how-to-use">How to Use This UUID Generator</h2>
+        <p>This free online UUID generator runs entirely in your browser using the <code>crypto.getRandomValues()</code> API, which provides <strong>cryptographically secure randomness</strong>. No data is sent to any server — your generated UUIDs are created locally on your device.</p>
+        <ol>
+          <li><strong>Select the version:</strong> Choose UUID v4 for random identifiers or UUID v7 for time-ordered identifiers suitable for database keys.</li>
+          <li><strong>Set the count:</strong> Enter how many UUIDs you need (1–100). The tool generates all UUIDs instantly in a single batch.</li>
+          <li><strong>Choose the format:</strong> Use the canonical hyphenated format (recommended for most systems) or remove hyphens for a compact 32-character string.</li>
+          <li><strong>Select the case:</strong> Generate lowercase or uppercase UUIDs depending on your application's requirements.</li>
+          <li><strong>Copy the results:</strong> Click "Copy All" to copy all generated UUIDs to your clipboard, separated by newlines.</li>
+        </ol>
+
+        <h2 id="security">Security &amp; Privacy</h2>
+        <p>All UUID generation happens client-side using your browser's built-in cryptographic random number generator. This means the generated UUIDs are <strong>not predictable</strong> and <strong>not logged</strong> by any server. However, while UUIDs are suitable for identifiers, they should <strong>not be used directly as encryption keys</strong> — use a dedicated key derivation function (like PBKDF2 or HKDF) if you need a cryptographic key.</p>
+
+        <h2 id="common-uses">Common Use Cases</h2>
+        <ul>
+          <li><strong>Database primary keys</strong> — UUID v7 is ideal due to its time-ordering property</li>
+          <li><strong>Distributed system identifiers</strong> — Generate unique IDs without central coordination</li>
+          <li><strong>Session tokens and cookies</strong> — UUID v4 is perfect for anonymous session identification</li>
+          <li><strong>API request tracking</strong> — Correlate requests across microservices</li>
+          <li><strong>File naming</strong> — Prevent filename collisions in shared storage</li>
+          <li><strong>Testing and development</strong> — Generate unique test data quickly</li>
+        </ul>
+
+        <h2 id="programming">How to Generate UUIDs in Programming</h2>
+        <p>In addition to this online tool, most programming languages have built-in UUID generation:</p>
+        <ul>
+          <li><strong>JavaScript:</strong> <code>crypto.randomUUID()</code> (modern browsers and Node.js 19+)</li>
+          <li><strong>Python:</strong> <code>import uuid; uuid.uuid4()</code> (requires the <code>uuid</code> package)</li>
+          <li><strong>Java:</strong> <code>UUID.randomUUID()</code> (built into <code>java.util</code>)</li>
+          <li><strong>Go:</strong> <code>uuid.New().String()</code> (built into <code>github.com/google/uuid</code>)</li>
+          <li><strong>SQL:</strong> <code>GEN_RANDOM_UUID()</code> (PostgreSQL), <code>NEWID()</code> (MySQL 8.0+)</li>
+        </ul>
       </div>
-      {{ end }}
     </div>
-  </div>
-</section>
-{{ end }}
+  </section>
+
+  <!-- FAQ -->
+  {{ if .FAQs }}
+  <section class="faq">
+    <div class="container">
+      <h2 class="faq__title">Frequently Asked Questions</h2>
+      <div class="faq__grid">
+        {{ range .FAQs }}
+        <div class="faq-item">
+          <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            <span>{{ .Q }}</span>
+            <span class="faq-icon">▼</span>
+          </button>
+          <div class="faq-answer"><p>{{ .A }}</p></div>
+        </div>
+        {{ end }}
+      </div>
+    </div>
+  </section>
+  {{ end }}
+
+  {{ template "partials/ad_slot.html" dict "SlotID" "dev-uuid-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+</div>
 {{ end }}
 
 {{ define "extraScript" }}
 <script>
 function generateUUIDv4() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0;
-    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    var r = crypto.getRandomValues(new Uint8Array(1))[0] % 16;
+    var v = c === 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);
   });
 }
 
 function generateUUIDv7() {
-  const now = Date.now();
-  const timestamp = now.toString(16).padStart(12, '0');
-  const random = Array.from({length: 12}, () => Math.floor(Math.random() * 16).toString(16)).join('');
-  return timestamp.slice(0, 8) + '-' + timestamp.slice(8, 12) + '-7' + random.slice(0, 3) + '-' +
-         (parseInt(random[3], 16) | 0x8).toString(16) + random.slice(4, 8) + '-' + random.slice(8);
+  var now = Date.now();
+  var ts = now.toString(16).padStart(12, '0');
+  var rand = Array.from(crypto.getRandomValues(new Uint8Array(10)), function(b) { return b.toString(16); });
+  return ts.slice(0,8) + '-' + ts.slice(8,12) + '-7' + rand.slice(0,3) + '-' + (parseInt(rand[3],16) | 0x8).toString(16) + rand.slice(4,8) + '-' + rand.slice(8,12);
 }
 
 function generateUUIDs() {
-  const version = document.getElementById('uuidVersion').value;
-  const count = parseInt(document.getElementById('uuidCount').value) || 5;
-  const caseType = document.getElementById('uuidCase').value;
-  const format = document.getElementById('uuidFormat').value;
-
-  const uuids = [];
-  for (let i = 0; i < Math.min(count, 100); i++) {
-    let uuid = version === '7' ? generateUUIDv7() : generateUUIDv4();
-    if (format === 'nohyphen') uuid = uuid.replace(/-/g, '');
-    if (caseType === 'upper') uuid = uuid.toUpperCase();
-    uuids.push(uuid);
+  var count = parseInt(document.getElementById('uuidCount').value) || 5;
+  var fmt = document.getElementById('uuidFormat').value;
+  var cs = document.getElementById('uuidCase').value;
+  var uuids = [];
+  for (var i = 0; i < Math.min(count, 100); i++) {
+    var u = currentVersion === 7 ? generateUUIDv7() : generateUUIDv4();
+    if (fmt === 'nohyphen') u = u.replace(/-/g, '');
+    if (cs === 'upper') u = u.toUpperCase();
+    uuids.push(u);
   }
-
   document.getElementById('uuidOutput').value = uuids.join('\n');
 }
 
 function copyUUIDs() {
-  const output = document.getElementById('uuidOutput');
-  if (output.value) {
-    navigator.clipboard.writeText(output.value);
-    alert('Copied!');
-  }
+  var el = document.getElementById('uuidOutput');
+  if (el.value) { navigator.clipboard.writeText(el.value); el.select(); }
 }
 
-// Generate on load
+var currentVersion = 4;
+function setUUIDVersion(v) {
+  currentVersion = v;
+  document.querySelectorAll('.mode-tab').forEach(function(t) { t.classList.toggle('active', parseInt(t.dataset.v) === v); });
+  generateUUIDs();
+}
 generateUUIDs();
 </script>
 {{ end }}

@@ -506,7 +506,37 @@ func SearchAPI(c *gin.Context) {
 			{"name_zh": "文字计数器", "name_en": "Word Counter", "description": "Count words, characters, readability score and keyword density", "url": "/dev/word-counter", "search": "word counter 文字 计数 字数 词数 可读性 readability flesch keyword"},
 			{"name_zh": "UUID 生成器", "name_en": "UUID Generator", "description": "Generate random UUID v4 and v7 instantly, batch up to 100", "url": "/dev/uuid", "search": "uuid generator guid v4 v7 随机 唯一 标识符"},
 			{"name_zh": "Lorem Ipsum 生成器", "name_en": "Lorem Ipsum Generator", "description": "Generate placeholder text for design and prototypes", "url": "/dev/lorem", "search": "lorem ipsum placeholder text dummy 占位 文本 生成"},
-	}
+			// Image Tools
+			{"name_zh": "图片裁剪", "name_en": "Image Cropper", "description": "Crop images online, free/pixel/fixed ratio modes, batch up to 30", "url": "/img/crop", "search": "image crop 裁剪 cut trim 图片 free ratio pixel"},
+			{"name_zh": "图片格式转换", "name_en": "Image Format Converter", "description": "Convert PNG/WebP/GIF to JPG and JPG to PNG/WebP/GIF/BMP", "url": "/img/convert-to-jpg", "search": "image convert 转换 format png jpg webp gif bmp"},
+			{"name_zh": "图片编辑器", "name_en": "Photo Editor", "description": "Adjust brightness, contrast, saturation, blur in browser", "url": "/img/photo-editor", "search": "photo editor 图片 编辑 brightness contrast saturation blur"},
+			{"name_zh": "背景去除", "name_en": "Background Remover", "description": "AI-powered background removal, runs locally in browser", "url": "/img/remove-bg", "search": "remove background 去除 背景 ai transparent png"},
+			{"name_zh": "图片水印", "name_en": "Image Watermark", "description": "Add text or image watermark, batch support up to 30", "url": "/img/watermark", "search": "watermark 水印 image text logo copyright"},
+			{"name_zh": "图片旋转", "name_en": "Image Rotator", "description": "Rotate and flip images, arbitrary angle support", "url": "/img/rotate", "search": "image rotate 旋转 flip 翻转 angle"},
+			// Color Tools
+			{"name_zh": "颜色选择器", "name_en": "Color Picker", "description": "Pick colors from screen or input HEX/RGB/HSL values", "url": "/color/picker", "search": "color picker 选色 颜色 hex rgb hsl"},
+			{"name_zh": "调色板生成器", "name_en": "Color Palette Generator", "description": "Generate harmonious color palettes from a base color", "url": "/color/palette", "search": "color palette 调色板 配色 生成 harmony"},
+			{"name_zh": "颜色转换器", "name_en": "Color Converter", "description": "Convert between HEX, RGB, HSL, HSV, CMYK formats", "url": "/color/converter", "search": "color convert 转换 hex rgb hsl hsv cmyk"},
+			{"name_zh": "对比度检查", "name_en": "Color Contrast Checker", "description": "Check WCAG accessibility contrast ratios", "url": "/color/contrast", "search": "color contrast 对比度 accessibility wcag a11y"},
+			{"name_zh": "渐变生成器", "name_en": "Gradient Generator", "description": "Create CSS gradients with live preview", "url": "/color/gradient", "search": "gradient 渐变 css linear radial"},
+			{"name_zh": "Tailwind 颜色", "name_en": "Tailwind Color Reference", "description": "Browse all Tailwind CSS colors with copy-paste", "url": "/color/tailwind", "search": "tailwind color 颜色 css reference"},
+			// Text & Dev Tools
+			{"name_zh": "正则表达式测试", "name_en": "Regex Tester", "description": "Test and debug regular expressions with real-time matching", "url": "/tools/regex", "search": "regex regular expression 正则 测试 test debug"},
+			{"name_zh": "Markdown 编辑器", "name_en": "Markdown Editor", "description": "Live preview Markdown editor", "url": "/tools/markdown", "search": "markdown editor 编辑器 preview live 实时预览"},
+			{"name_zh": "时间戳转换", "name_en": "Timestamp Converter", "description": "Convert between Unix timestamp and dates", "url": "/tools/timestamp", "search": "timestamp 时间戳 unix date 日期 转换"},
+			{"name_zh": "进制转换", "name_en": "Base Converter", "description": "Convert between binary, octal, decimal, hex", "url": "/tools/base-converter", "search": "base converter 进制 binary octal decimal hex"},
+			{"name_zh": "大小写转换", "name_en": "Case Converter", "description": "Convert between camelCase, snake_case, UPPER_CASE", "url": "/tools/case-converter", "search": "case converter 大小写 camelCase snake_case UPPER"},
+			{"name_zh": "单位转换器", "name_en": "Unit Converter", "description": "Convert length, weight, temperature, area, volume", "url": "/tools/media/unit-converter", "search": "unit converter 单位 转换 length weight temperature"},
+			// More JSON subtools
+			{"name_zh": "JSON 转义", "name_en": "JSON Escape", "description": "Escape or unescape JSON strings", "url": "/json/escape", "search": "json escape unescape 转义"},
+			{"name_zh": "JSON 搜索", "name_en": "JSON Search", "description": "Search for keys and values in JSON data", "url": "/json/search", "search": "json search 搜索 find key value"},
+			{"name_zh": "JSON 转 CSV", "name_en": "JSON to CSV", "description": "Convert JSON arrays to CSV format", "url": "/json/to-csv", "search": "json csv convert 转换 table"},
+			{"name_zh": "JSON 转 SQL", "name_en": "JSON to SQL", "description": "Generate SQL INSERT statements from JSON", "url": "/json/to-sql", "search": "json sql convert insert 转换"},
+			{"name_zh": "JSON 数据集", "name_en": "JSON Datasets", "description": "85+ free open-source JSON datasets", "url": "/json/datasets", "search": "json dataset 数据集 sample test free"},
+			{"name_zh": "JSON 教程", "name_en": "JSON Learn", "description": "53+ free JSON tutorials from beginner to advanced", "url": "/json/learn", "search": "json learn tutorial 教程 beginner 入门"},
+			// Privacy
+			{"name_zh": "隐私泄露检查", "name_en": "Privacy Check", "description": "Check if your email or password was exposed in data breaches", "url": "/privacy/check", "search": "privacy check 隐私 泄露 breach data password email"},
+		}
 	var results []gin.H
 	for _, tool := range tools {
 		if strings.Contains(strings.ToLower(tool["search"].(string)), q) {

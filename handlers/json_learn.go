@@ -308,7 +308,384 @@ type LearnFAQItem struct {
 	Answer   string
 }
 
+// Category labels for all 5 languages
+var catLabels = map[string]map[string]string{
+	"en": {
+		"basics": "Basics", "multi_lang": "Multi-Language", "debugging": "Debugging",
+		"comparison": "Comparison", "advanced_topics": "Advanced Topics",
+		"security": "Security & Performance", "practical": "Practical Apps",
+	},
+	"zh": {
+		"basics": "基础入门", "multi_lang": "多语言实战", "debugging": "错误排查",
+		"comparison": "格式对比", "advanced_topics": "高级主题",
+		"security": "安全与性能", "practical": "实战应用",
+	},
+	"ja": {
+		"basics": "基礎", "multi_lang": "マルチ言語", "debugging": "デバッグ",
+		"comparison": "比較", "advanced_topics": "高度なトピック",
+		"security": "セキュリティとパフォーマンス", "practical": "実践アプリ",
+	},
+	"ko": {
+		"basics": "기초", "multi_lang": "다중 언어", "debugging": "디버깅",
+		"comparison": "비교", "advanced_topics": "고급 주제",
+		"security": "보안 및 성능", "practical": "실제 앱",
+	},
+	"spa": {
+		"basics": "Fundamentos", "multi_lang": "Multiidioma", "debugging": "Depuración",
+		"comparison": "Comparación", "advanced_topics": "Temas Avanzados",
+		"security": "Seguridad y Rendimiento", "practical": "Aplicaciones Prácticas",
+	},
+}
+
+// Level labels for all 5 languages
+var levelLabels = map[string]map[string]string{
+	"en":   {"beginner": "Beginner", "intermediate": "Intermediate", "advanced": "Advanced"},
+	"zh":   {"beginner": "入门", "intermediate": "中级", "advanced": "高级"},
+	"ja":   {"beginner": "入門", "intermediate": "中級", "advanced": "上級"},
+	"ko":   {"beginner": "입문", "intermediate": "중급", "advanced": "고급"},
+	"spa":  {"beginner": "Principiante", "intermediate": "Intermedio", "advanced": "Avanzado"},
+}
+
+// SEO title/description for all 5 languages
+var seoTitles = map[string]string{
+	"en":  "JSON Learning Hub — 53+ Free Tutorials | ToolboxNova",
+	"zh":  "JSON 学习中心 — 53+ 篇免费教程 | ToolboxNova",
+	"ja":  "JSON学習ハブ — 53以上の無料チュートリアル | ToolboxNova",
+	"ko":  "JSON 학습 허브 — 53개 이상의 무료 튜토리얼 | ToolboxNova",
+	"spa": "Centro de Aprendizaje JSON — Más de 53 Tutoriales Gratuitos | ToolboxNova",
+}
+
+var seoDescs = map[string]string{
+	"en":  "From beginner to advanced, 53+ in-depth JSON tutorials covering syntax, multi-language practice, Schema, security & performance. Completely free.",
+	"zh":  "从零基础到高级进阶，53+ 篇深度 JSON 教程，覆盖语法、多语言实战、Schema、安全与性能。完全免费，在线交互式学习。",
+	"ja":  "初心者から上級者まで、構文、多言語実践、スキーマ、セキュリティとパフォーマンスをカバーする53以上の詳細なJSONチュートリアル。完全無料。",
+	"ko":  "초보자부터 고급까지, 구문, 다중 언어 실습, 스키마, 보안 및 성능을 다루는 53개 이상의 심층 JSON 튜토리얼. 완전 무료.",
+	"spa": "Desde principiante hasta avanzado, más de 53 tutoriales JSON en profundidad que cubren sintaxis, práctica multilingüe, Schema, seguridad y rendimiento. Completamente gratis.",
+}
+
+// UI translations for the learn page
+var learnUITranslations = map[string]map[string]string{
+	"en": {
+		"nav_home":            "Home",
+		"nav_learn":           "Learn JSON",
+		"nav_datasets":        "Datasets",
+		"hero_title":          "Learn JSON",
+		"hero_subtitle":       "Everything you need to master JSON. From basic syntax to advanced validation, security, and real-world applications — plus free datasets.",
+		"badge_tutorials":     "53+ Tutorials",
+		"badge_datasets":      "70+ Datasets",
+		"badge_languages":     "10 Languages",
+		"badge_free":          "100% Free",
+		"path_beginner":       "Beginner Path",
+		"path_beginner_desc":  "Learn JSON syntax, data types, and basic file operations.",
+		"path_intermediate":   "Intermediate Path",
+		"path_intermediate_desc": "Multi-language practice, debugging, and format comparisons.",
+		"path_advanced":       "Advanced Path",
+		"path_advanced_desc":  "JSON Schema, JSONPath, jq, security, databases, and AI.",
+		"articles":            "articles",
+		"search_placeholder":  "Search tutorials…",
+		"filter_all":          "All",
+		"filter_basics":       "Basics",
+		"filter_multi_lang":   "Multi-Language",
+		"filter_debugging":    "Debugging",
+		"filter_comparison":   "Comparison",
+		"filter_advanced":     "Advanced",
+		"filter_security":     "Security",
+		"filter_practical":    "Practical",
+		"level_all":           "All",
+		"level_beginner":      "Beginner",
+		"level_intermediate":  "Intermediate",
+		"level_advanced":      "Advanced",
+		"min_read":            "min",
+		"read":                "Read",
+		"no_results":          "No tutorials found",
+		"no_results_desc":     "Try different keywords or clear filters.",
+		"clear_filters":       "Clear filters",
+		"feature_comprehensive": "Comprehensive",
+		"feature_comprehensive_desc": "53+ tutorials from basics to JSON Schema, JSONPath, jq, security, and API design.",
+		"feature_free":        "100% Free",
+		"feature_free_desc":   "All tutorials, datasets, and code examples are completely free. No registration required.",
+		"feature_practical":   "Practical",
+		"feature_practical_desc": "Real-world examples, interactive code playgrounds, and downloadable sample data.",
+		"faq_title":           "Frequently Asked Questions",
+		"article_not_found":   "Article Not Found",
+		"article_not_found_desc": "The article you're looking for doesn't exist or may have been moved.",
+		"back_to_learn":       "Back to Learning Center",
+		"article_in_progress": "📚 This article is being actively written. In the meantime, you can practice with our",
+		"article_about":       "About This Topic",
+		"article_tools":       "Recommended Tools",
+		"article_related":     "Related Tools",
+		"article_prev":        "Previous",
+		"article_next":        "Next",
+		"tool_validator":      "JSON Validator",
+		"tool_formatter":      "JSON Formatter",
+		"tool_diff":           "JSON Diff",
+		"tool_schema":         "Schema Validator",
+		"tool_free_datasets":  "Free Datasets",
+		"minutes":             "minutes",
+	},
+	"zh": {
+		"nav_home":            "首页",
+		"nav_learn":           "学习 JSON",
+		"nav_datasets":        "数据集",
+		"hero_title":          "学习 JSON",
+		"hero_subtitle":       "掌握 JSON 所需的一切。从基础语法到高级验证、安全和实战应用——以及为你的项目准备的免费数据集。",
+		"badge_tutorials":     "53+ 篇教程",
+		"badge_datasets":      "70+ 数据集",
+		"badge_languages":     "10 种语言",
+		"badge_free":          "完全免费",
+		"path_beginner":       "入门路径",
+		"path_beginner_desc":  "学习 JSON 语法、数据类型和基本文件操作。",
+		"path_intermediate":   "中级路径",
+		"path_intermediate_desc": "多语言实战、错误排查、格式对比。",
+		"path_advanced":       "高级路径",
+		"path_advanced_desc":  "Schema、JSONPath、jq、安全、数据库与 AI。",
+		"articles":            "篇文章",
+		"search_placeholder":  "搜索教程…",
+		"filter_all":          "全部",
+		"filter_basics":       "基础入门",
+		"filter_multi_lang":   "多语言实战",
+		"filter_debugging":    "错误排查",
+		"filter_comparison":   "格式对比",
+		"filter_advanced":     "高级主题",
+		"filter_security":     "安全与性能",
+		"filter_practical":    "实战应用",
+		"level_all":           "全部",
+		"level_beginner":      "入门",
+		"level_intermediate":  "中级",
+		"level_advanced":      "高级",
+		"min_read":            "分钟",
+		"read":                "已读",
+		"no_results":          "没有找到匹配的教程",
+		"no_results_desc":     "请尝试其他关键词或清除筛选。",
+		"clear_filters":       "清除筛选",
+		"feature_comprehensive": "全面覆盖",
+		"feature_comprehensive_desc": "53+ 篇教程，从基础到 Schema、JSONPath、jq、安全和 API 设计。",
+		"feature_free":        "完全免费",
+		"feature_free_desc":   "所有教程、数据集和代码示例完全免费，无需注册。",
+		"feature_practical":   "注重实战",
+		"feature_practical_desc": "真实案例、交互式代码练习和可下载的样例数据。",
+		"faq_title":           "常见问题",
+		"article_not_found":   "文章未找到",
+		"article_not_found_desc": "你访问的文章不存在或已被移动。",
+		"back_to_learn":       "返回学习中心",
+		"article_in_progress": "📚 本文正在持续完善中。你可以使用我们的",
+		"article_about":       "关于本主题",
+		"article_tools":       "推荐工具",
+		"article_related":     "相关工具",
+		"article_prev":        "上一篇",
+		"article_next":        "下一篇",
+		"tool_validator":      "JSON 验证器",
+		"tool_formatter":      "JSON 格式化",
+		"tool_diff":           "JSON 对比",
+		"tool_schema":         "Schema 验证器",
+		"tool_free_datasets":  "免费 JSON 数据集",
+		"minutes":             "分钟",
+	},
+	"ja": {
+		"nav_home":            "ホーム",
+		"nav_learn":           "JSONを学ぶ",
+		"nav_datasets":        "データセット",
+		"hero_title":          "JSONを学ぶ",
+		"hero_subtitle":       "JSONをマスターするために必要なすべて。基本的な構文から高度な検証、セキュリティ、実践的なアプリケーションまで — さらに無料のデータセット。",
+		"badge_tutorials":     "53以上のチュートリアル",
+		"badge_datasets":      "70以上のデータセット",
+		"badge_languages":     "10言語",
+		"badge_free":          "100%無料",
+		"path_beginner":       "入門パス",
+		"path_beginner_desc":  "JSONの構文、データ型、基本的なファイル操作を学ぶ。",
+		"path_intermediate":   "中級パス",
+		"path_intermediate_desc": "多言語実践、デバッグ、フォーマット比較。",
+		"path_advanced":       "上級パス",
+		"path_advanced_desc":  "JSONスキーマ、JSONPath、jq、セキュリティ、データベース、AI。",
+		"articles":            "記事",
+		"search_placeholder":  "チュートリアルを検索…",
+		"filter_all":          "すべて",
+		"filter_basics":       "基礎",
+		"filter_multi_lang":   "マルチ言語",
+		"filter_debugging":    "デバッグ",
+		"filter_comparison":   "比較",
+		"filter_advanced":     "高度なトピック",
+		"filter_security":     "セキュリティ",
+		"filter_practical":    "実践アプリ",
+		"level_all":           "すべて",
+		"level_beginner":      "入門",
+		"level_intermediate":  "中級",
+		"level_advanced":      "上級",
+		"min_read":            "分",
+		"read":                "読了",
+		"no_results":          "チュートリアルが見つかりません",
+		"no_results_desc":     "別のキーワードを試すか、フィルタをクリアしてください。",
+		"clear_filters":       "フィルタをクリア",
+		"feature_comprehensive": "包括的",
+		"feature_comprehensive_desc": "基礎からJSONスキーマ、JSONPath、jq、セキュリティ、APIデザインまで53以上のチュートリアル。",
+		"feature_free":        "100%無料",
+		"feature_free_desc":   "すべてのチュートリアル、データセット、コード例は完全に無料。登録不要。",
+		"feature_practical":   "実践的",
+		"feature_practical_desc": "実世界の例、インタラクティブなコードプレイグラウンド、ダウンロード可能なサンプルデータ。",
+		"faq_title":           "よくある質問",
+		"article_not_found":   "記事が見つかりません",
+		"article_not_found_desc": "お探しの記事は存在しないか、移動された可能性があります。",
+		"back_to_learn":       "学習センターに戻る",
+		"article_in_progress": "📚 この記事は現在執筆中です。その間、以下のツールで練習できます：",
+		"article_about":       "このトピックについて",
+		"article_tools":       "おすすめツール",
+		"article_related":     "関連ツール",
+		"article_prev":        "前へ",
+		"article_next":        "次へ",
+		"tool_validator":      "JSONバリデーター",
+		"tool_formatter":      "JSONフォーマッター",
+		"tool_diff":           "JSON差分",
+		"tool_schema":         "スキーマバリデーター",
+		"tool_free_datasets":  "無料データセット",
+		"minutes":             "分",
+	},
+	"ko": {
+		"nav_home":            "홈",
+		"nav_learn":           "JSON 배우기",
+		"nav_datasets":        "데이터셋",
+		"hero_title":          "JSON 배우기",
+		"hero_subtitle":       "JSON을 마스터하는 데 필요한 모든 것. 기본 구문에서 고급 검증, 보안 및 실제 응용 프로그램까지 — 그리고 무료 데이터셋.",
+		"badge_tutorials":     "53개 이상의 튜토리얼",
+		"badge_datasets":      "70개 이상의 데이터셋",
+		"badge_languages":     "10개 언어",
+		"badge_free":          "100% 무료",
+		"path_beginner":       "입문 경로",
+		"path_beginner_desc":  "JSON 구문, 데이터 유형 및 기본 파일 작업을 배웁니다.",
+		"path_intermediate":   "중급 경로",
+		"path_intermediate_desc": "다중 언어 실습, 디버깅 및 형식 비교.",
+		"path_advanced":       "고급 경로",
+		"path_advanced_desc":  "JSON 스키마, JSONPath, jq, 보안, 데이터베이스 및 AI.",
+		"articles":            "개 글",
+		"search_placeholder":  "튜토리얼 검색…",
+		"filter_all":          "모두",
+		"filter_basics":       "기초",
+		"filter_multi_lang":   "다중 언어",
+		"filter_debugging":    "디버깅",
+		"filter_comparison":   "비교",
+		"filter_advanced":     "고급 주제",
+		"filter_security":     "보안",
+		"filter_practical":    "실제 앱",
+		"level_all":           "모두",
+		"level_beginner":      "입문",
+		"level_intermediate":  "중급",
+		"level_advanced":      "고급",
+		"min_read":            "분",
+		"read":                "읽음",
+		"no_results":          "튜토리얼을 찾을 수 없습니다",
+		"no_results_desc":     "다른 키워드를 시도하거나 필터를 지우세요.",
+		"clear_filters":       "필터 지우기",
+		"feature_comprehensive": "포괄적",
+		"feature_comprehensive_desc": "기본부터 JSON 스키마, JSONPath, jq, 보안 및 API 디자인까지 53개 이상의 튜토리얼.",
+		"feature_free":        "100% 무료",
+		"feature_free_desc":   "모든 튜토리얼, 데이터셋 및 코드 예제는 완전히 무료입니다. 등록 불필요.",
+		"feature_practical":   "실용적",
+		"feature_practical_desc": "실제 예제, 대화형 코드 놀이터 및 다운로드 가능한 샘플 데이터.",
+		"faq_title":           "자주 묻는 질문",
+		"article_not_found":   "글을 찾을 수 없습니다",
+		"article_not_found_desc": "찾으시는 글이 존재하지 않거나 이동되었을 수 있습니다.",
+		"back_to_learn":       "학습 센터로 돌아가기",
+		"article_in_progress": "📚 이 글은 현재 작성 중입니다. 그 동안 다음 도구로 연습할 수 있습니다:",
+		"article_about":       "이 주제에 대해",
+		"article_tools":       "추천 도구",
+		"article_related":     "관련 도구",
+		"article_prev":        "이전",
+		"article_next":        "다음",
+		"tool_validator":      "JSON 검증기",
+		"tool_formatter":      "JSON 포맷터",
+		"tool_diff":           "JSON 비교",
+		"tool_schema":         "스키마 검증기",
+		"tool_free_datasets":  "무료 데이터셋",
+		"minutes":             "분",
+	},
+	"spa": {
+		"nav_home":            "Inicio",
+		"nav_learn":           "Aprender JSON",
+		"nav_datasets":        "Conjuntos de datos",
+		"hero_title":          "Aprender JSON",
+		"hero_subtitle":       "Todo lo que necesitas para dominar JSON. Desde sintaxis básica hasta validación avanzada, seguridad y aplicaciones del mundo real — más conjuntos de datos gratuitos.",
+		"badge_tutorials":     "Más de 53 tutoriales",
+		"badge_datasets":      "Más de 70 conjuntos de datos",
+		"badge_languages":     "10 idiomas",
+		"badge_free":          "100% gratis",
+		"path_beginner":       "Ruta principiante",
+		"path_beginner_desc":  "Aprende sintaxis JSON, tipos de datos y operaciones básicas de archivos.",
+		"path_intermediate":   "Ruta intermedio",
+		"path_intermediate_desc": "Práctica multilingüe, depuración y comparaciones de formatos.",
+		"path_advanced":       "Ruta avanzado",
+		"path_advanced_desc":  "JSON Schema, JSONPath, jq, seguridad, bases de datos e IA.",
+		"articles":            "artículos",
+		"search_placeholder":  "Buscar tutoriales…",
+		"filter_all":          "Todo",
+		"filter_basics":       "Fundamentos",
+		"filter_multi_lang":   "Multiidioma",
+		"filter_debugging":    "Depuración",
+		"filter_comparison":   "Comparación",
+		"filter_advanced":     "Temas avanzados",
+		"filter_security":     "Seguridad",
+		"filter_practical":    "Aplicaciones prácticas",
+		"level_all":           "Todo",
+		"level_beginner":      "Principiante",
+		"level_intermediate":  "Intermedio",
+		"level_advanced":      "Avanzado",
+		"min_read":            "min",
+		"read":                "Leído",
+		"no_results":          "No se encontraron tutoriales",
+		"no_results_desc":     "Intenta con otras palabras clave o limpia los filtros.",
+		"clear_filters":       "Limpiar filtros",
+		"feature_comprehensive": "Integral",
+		"feature_comprehensive_desc": "Más de 53 tutoriales desde lo básico hasta JSON Schema, JSONPath, jq, seguridad y diseño de API.",
+		"feature_free":        "100% gratis",
+		"feature_free_desc":   "Todos los tutoriales, conjuntos de datos y ejemplos de código son completamente gratis. No se requiere registro.",
+		"feature_practical":   "Práctico",
+		"feature_practical_desc": "Ejemplos del mundo real, áreas de juego de código interactivo y datos de muestra descargables.",
+		"faq_title":           "Preguntas frecuentes",
+		"article_not_found":   "Artículo no encontrado",
+		"article_not_found_desc": "El artículo que buscas no existe o puede haber sido movido.",
+		"back_to_learn":       "Volver al centro de aprendizaje",
+		"article_in_progress": "📚 Este artículo se está escribiendo activamente. Mientras tanto, puedes practicar con nuestras",
+		"article_about":       "Sobre este tema",
+		"article_tools":       "Herramientas recomendadas",
+		"article_related":     "Herramientas relacionadas",
+		"article_prev":        "Anterior",
+		"article_next":        "Siguiente",
+		"tool_validator":      "Validador JSON",
+		"tool_formatter":      "Formateador JSON",
+		"tool_diff":           "Diff JSON",
+		"tool_schema":         "Validador de esquema",
+		"tool_free_datasets":  "Conjuntos de datos gratis",
+		"minutes":             "minutos",
+	},
+}
+
+// getUITranslation returns the UI translation for a key in the given language
+func getUITranslation(lang, key string) string {
+	translations, ok := learnUITranslations[lang]
+	if !ok {
+		translations = learnUITranslations["en"]
+	}
+	if val, ok := translations[key]; ok {
+		return val
+	}
+	// Fallback to English
+	if enTranslations, ok := learnUITranslations["en"]; ok {
+		if val, ok := enTranslations[key]; ok {
+			return val
+		}
+	}
+	return key
+}
+
+// getUITranslations returns all UI translations for a language
+func getUITranslations(lang string) map[string]string {
+	translations, ok := learnUITranslations[lang]
+	if !ok {
+		return learnUITranslations["en"]
+	}
+	return translations
+}
+
 func getLearnFAQ(lang string) []LearnFAQItem {
+	// Chinese FAQ
 	if lang == "zh" {
 		return []LearnFAQItem{
 			{Question: "ToolboxNova 的 JSON 教程适合完全零基础的人吗？",
@@ -323,6 +700,52 @@ func getLearnFAQ(lang string) []LearnFAQItem {
 				Answer: "我们的教程更深入、更系统。W3Schools 侧重快速入门（约 15 篇），MDN 侧重 Web API 文档（约 8 篇）。我们提供 53+ 篇覆盖完整知识体系的教程，从基础语法到 JSON Schema、JSONPath、安全防御、性能优化，配备代码高亮、复制和中英文切换功能。"},
 		}
 	}
+	// Japanese FAQ
+	if lang == "ja" {
+		return []LearnFAQItem{
+			{Question: "ToolboxNovaのJSONチュートリアルは完全な初心者でも大丈夫ですか？",
+				Answer: "もちろんです。初心者向けのパスは「JSONとは何か」から始まり、図解と実行可能なコード例で、初心者でも2時間以内にJSONの核心概念を理解できます。各記事には難易度表示があり、入門→中級→上級の順で学習できます。"},
+			{Question: "どのプログラミング言語をカバーしていますか？",
+				Answer: "10の主要言語をカバーしています：Python、JavaScript/Node.js、Java（Gson/Jackson）、Go、C#、PHP、Ruby、Rust（serde）、Swift、TypeScript。各言語には独立した詳細なチュートリアルと、完全に実行可能なコード例が含まれています。"},
+			{Question: "チュートリアルのコード例は実行できますか？",
+				Answer: "はい。チュートリアルにはシンタックスハイライトとワンクリックコピー機能があります。JSON関連の例は、ToolboxNovaのJSONツールで直接検証・テストでき、開発環境をインストールする必要はありません。"},
+			{Question: "チュートリアルの内容は継続的に更新されますか？",
+				Answer: "はい。新しいRFC標準、JSON Schemaの更新、セキュリティのベストプラクティスなど、JSONエコシステムの最新動向を追跡しています。現在53のチュートリアルがあり、2026年末までに70以上に拡張し、AI/LLMやエッジコンピューティングのトピックを追加する予定です。"},
+			{Question: "W3SchoolsやMDNのJSONチュートリアルとどう違いますか？",
+				Answer: "当サイトのチュートリアルはより深く、体系的です。W3Schoolsはクイックスタート（約15記事）、MDNはWeb APIドキュメント（約8記事）に焦点を当てています。当サイトは基礎構文からJSON Schema、JSONPath、セキュリティ、パフォーマンスまで完全な知識体系をカバーする53以上の記事を提供し、シンタックスハイライト、コピーボタン、バイリンガルサポートを備えています。"},
+		}
+	}
+	// Korean FAQ
+	if lang == "ko" {
+		return []LearnFAQItem{
+			{Question: "ToolboxNova의 JSON 튜토리얼은 완전 초보자도 이해할 수 있나요?",
+				Answer: "물론입니다. 초보자 경로는 'JSON이란 무엇인가'부터 시작하여 다이어그램과 실행 가능한 코드 예제로 2시간 이내에 JSON 핵심 개념을 파악할 수 있습니다. 각 글에는 난이도 표시가 있으며, 입문 → 중급 → 고급 순서로 학습할 수 있습니다."},
+			{Question: "어떤 프로그래밍 언어를 다루나요?",
+				Answer: "10개의 주요 언어를 다룹니다: Python, JavaScript/Node.js, Java (Gson/Jackson), Go, C#, PHP, Ruby, Rust (serde), Swift, TypeScript. 각 언어에는 독립적인 심층 튜토리얼과 완전히 실행 가능한 코드 예제가 포함되어 있습니다."},
+			{Question: "튜토리얼의 코드 예제를 직접 실행할 수 있나요?",
+				Answer: "네. 튜토리얼에는 구문 강조와 원클릭 복사 기능이 있습니다. JSON 관련 예제는 개발 환경을 설치하지 않고도 ToolboxNova의 JSON 도구에서 직접 검증하고 테스트할 수 있습니다."},
+			{Question: "튜토리얼 내용은 지속적으로 업데이트되나요?",
+				Answer: "네. 새로운 RFC 표준, JSON Schema 업데이트, 보안 모범 사례 등 JSON 생태계의 최신 동향을 계속 추적하고 있습니다. 현재 53개의 튜토리얼이 있으며, 2026년 말까지 AI/LLM 및 엣지 컴퓨팅 주제를 포함하여 70개 이상으로 확장할 계획입니다."},
+			{Question: "W3Schools나 MDN JSON 튜토리얼과 어떻게 다른가요?",
+				Answer: "당사 튜토리얼은 더 깊고 체계적입니다. W3Schools는 빠른 시작(약 15개)에, MDN은 Web API 문서(약 8개)에 중점을 둡니다. 당사는 기본 구문부터 JSON Schema, JSONPath, 보안 및 성능까지 완전한 지식 체계를 다루는 53개 이상의 글을 제공하며, 구문 강조, 복사 버튼, 이중 언어 지원을 갖추고 있습니다."},
+		}
+	}
+	// Spanish FAQ
+	if lang == "spa" {
+		return []LearnFAQItem{
+			{Question: "¿Los tutoriales JSON de ToolboxNova son adecuados para principiantes completos?",
+				Answer: "Absolutamente. Nuestra ruta para principiantes comienza desde '¿Qué es JSON?' con diagramas visuales y ejemplos de código ejecutables, ayudando a los principiantes a comprender los conceptos clave de JSON en 2 horas. Cada artículo tiene un indicador de dificultad, y puedes seguir la ruta principiante → intermedio → avanzado progresivamente."},
+			{Question: "¿Qué lenguajes de programación cubren estos tutoriales?",
+				Answer: "Cubrimos 10 lenguajes principales: Python, JavaScript/Node.js, Java (Gson/Jackson), Go, C#, PHP, Ruby, Rust (serde), Swift y TypeScript. Cada lenguaje tiene un tutorial dedicado con ejemplos de código completos y ejecutables."},
+			{Question: "¿Puedo ejecutar los ejemplos de código en los tutoriales?",
+				Answer: "Sí. Nuestros tutoriales incluyen resaltado de sintaxis y copia con un clic. Los ejemplos relacionados con JSON se pueden validar y probar directamente en las herramientas JSON de ToolboxNova sin necesidad de instalar ningún entorno de desarrollo."},
+			{Question: "¿El contenido del tutorial se actualizará continuamente?",
+				Answer: "Sí. Rastreamos continuamente los últimos desarrollos del ecosistema JSON, incluidos nuevos estándares RFC, actualizaciones de JSON Schema y mejores prácticas de seguridad. Actualmente tenemos 53 tutoriales y planeamos expandirnos a más de 70 para finales de 2026, cubriendo temas de IA/LLM y computación en el borde."},
+			{Question: "¿En qué se diferencian de los tutoriales JSON de W3Schools o MDN?",
+				Answer: "Nuestros tutoriales son más profundos y sistemáticos. W3Schools se centra en inicios rápidos (~15 artículos), MDN en documentación de Web API (~8 artículos). Nosotros proporcionamos más de 53 artículos que cubren el sistema de conocimiento completo, desde sintaxis básica hasta JSON Schema, JSONPath, seguridad y rendimiento, con resaltado de sintaxis, botones de copia y soporte bilingüe."},
+		}
+	}
+	// English FAQ (default)
 	return []LearnFAQItem{
 		{Question: "Are ToolboxNova's JSON tutorials suitable for complete beginners?",
 			Answer: "Absolutely. Our beginner path starts from 'What is JSON' with visual diagrams and runnable code examples, helping beginners grasp core JSON concepts within 2 hours. Each article has a difficulty indicator, and you can follow the beginner → intermediate → advanced path progressively."},
@@ -337,30 +760,27 @@ func getLearnFAQ(lang string) []LearnFAQItem {
 	}
 }
 
+// getLabels returns the category and level labels for a given language
+func getLabels(lang string) (map[string]string, map[string]string) {
+	cat, ok := catLabels[lang]
+	if !ok {
+		cat = catLabels["en"]
+	}
+	lvl, ok := levelLabels[lang]
+	if !ok {
+		lvl = levelLabels["en"]
+	}
+	return cat, lvl
+}
+
 func getLearnArticleBySlug(slug, lang string) *LearnArticleMeta {
-	catLabelsEN := map[string]string{
-		"basics": "Basics", "multi_lang": "Multi-Language", "debugging": "Debugging",
-		"comparison": "Comparison", "advanced_topics": "Advanced Topics",
-		"security": "Security & Performance", "practical": "Practical Apps",
-	}
-	catLabelsZH := map[string]string{
-		"basics": "基础入门", "multi_lang": "多语言实战", "debugging": "错误排查",
-		"comparison": "格式对比", "advanced_topics": "高级主题",
-		"security": "安全与性能", "practical": "实战应用",
-	}
-	levelLabelsEN := map[string]string{"beginner": "Beginner", "intermediate": "Intermediate", "advanced": "Advanced"}
-	levelLabelsZH := map[string]string{"beginner": "入门", "intermediate": "中级", "advanced": "高级"}
+	catL, lvlL := getLabels(lang)
 
 	for i := range learnArticles {
 		if learnArticles[i].Slug == slug {
 			a := learnArticles[i]
-			if lang == "zh" {
-				a.LevelLabel = levelLabelsZH[a.Level]
-				a.CategoryLabel = catLabelsZH[a.Category]
-			} else {
-				a.LevelLabel = levelLabelsEN[a.Level]
-				a.CategoryLabel = catLabelsEN[a.Category]
-			}
+			a.LevelLabel = lvlL[a.Level]
+			a.CategoryLabel = catL[a.Category]
 			return &a
 		}
 	}
@@ -375,24 +795,13 @@ func JSONLearnHub(c *gin.Context) {
 	}
 	t := getT(c)
 
-	catLabelsEN := map[string]string{
-		"basics": "Basics", "multi_lang": "Multi-Language", "debugging": "Debugging",
-		"comparison": "Comparison", "advanced_topics": "Advanced Topics",
-		"security": "Security & Performance", "practical": "Practical Apps",
-	}
-	catLabelsZH := map[string]string{
-		"basics": "基础入门", "multi_lang": "多语言实战", "debugging": "错误排查",
-		"comparison": "格式对比", "advanced_topics": "高级主题",
-		"security": "安全与性能", "practical": "实战应用",
-	}
-	levelLabelsEN := map[string]string{"beginner": "Beginner", "intermediate": "Intermediate", "advanced": "Advanced"}
-	levelLabelsZH := map[string]string{"beginner": "入门", "intermediate": "中级", "advanced": "高级"}
+	catL, lvlL := getLabels(lang)
 
 	articles := make([]gin.H, 0, len(learnArticles))
 	for _, a := range learnArticles {
-		title, desc, lvl, cat := a.TitleEN, a.DescEN, levelLabelsEN[a.Level], catLabelsEN[a.Category]
+		title, desc := a.TitleEN, a.DescEN
 		if lang == "zh" {
-			title, desc, lvl, cat = a.TitleZH, a.DescZH, levelLabelsZH[a.Level], catLabelsZH[a.Category]
+			title, desc = a.TitleZH, a.DescZH
 		}
 		articles = append(articles, gin.H{
 			"Slug":          a.Slug,
@@ -403,31 +812,36 @@ func JSONLearnHub(c *gin.Context) {
 			"TitleEN":       a.TitleEN,
 			"Desc":          desc,
 			"ReadTime":      a.ReadTime,
-			"LevelLabel":    lvl,
-			"CategoryLabel": cat,
+			"LevelLabel":    lvlL[a.Level],
+			"CategoryLabel": catL[a.Category],
 		})
 	}
 
-	titleMap := map[string]string{
-		"zh": "JSON 学习中心 — 53+ 篇免费教程 | ToolboxNova",
-		"en": "JSON Learning Hub — 53+ Free Tutorials | ToolboxNova",
+	title, ok := seoTitles[lang]
+	if !ok {
+		title = seoTitles["en"]
 	}
-	descMap := map[string]string{
-		"zh": "从零基础到高级进阶，53+ 篇深度 JSON 教程，覆盖语法、多语言实战、Schema、安全与性能。完全免费，在线交互式学习。",
-		"en": "From beginner to advanced, 53+ in-depth JSON tutorials covering syntax, multi-language practice, Schema, security & performance. Completely free.",
+	desc, ok := seoDescs[lang]
+	if !ok {
+		desc = seoDescs["en"]
 	}
 
 	data := baseData(c, gin.H{
-		"Title":        titleMap[lang],
-		"Description":  descMap[lang],
+		"Title":        title,
+		"Description":  desc,
 		"Keywords":     "learn json, json tutorial, json guide, json schema, jsonpath, json security, free json tutorials",
 		"Lang":         lang,
 		"T":            t,
 		"Articles":     articles,
 		"FAQ":          getLearnFAQ(lang),
+		"UI":           getUITranslations(lang),
+		"Canonical":    "https://toolboxnova.com/json/learn",
 		"CanonicalURL": "https://toolboxnova.com/json/learn",
 		"HreflangEN":   "https://toolboxnova.com/json/learn?lang=en",
 		"HreflangZH":   "https://toolboxnova.com/json/learn?lang=zh",
+		"HreflangJA":   "https://toolboxnova.com/json/learn?lang=ja",
+		"HreflangKO":   "https://toolboxnova.com/json/learn?lang=ko",
+		"HreflangSPA":  "https://toolboxnova.com/json/learn?lang=spa",
 		"PageClass":    "page-json-learn",
 	})
 	renderJSONTool(c, "learn.html", data)
@@ -447,6 +861,7 @@ func JSONLearnArticle(c *gin.Context) {
 		c.HTML(http.StatusNotFound, "json/learn.html", gin.H{
 			"Lang":      lang,
 			"NotFound":  true,
+			"UI":        getUITranslations(lang),
 			"PageClass": "page-json-learn",
 		})
 		return
@@ -455,6 +870,11 @@ func JSONLearnArticle(c *gin.Context) {
 	title, desc := article.TitleEN, article.DescEN
 	if lang == "zh" {
 		title, desc = article.TitleZH, article.DescZH
+	}
+
+	seoTitle, ok := seoTitles[lang]
+	if !ok {
+		seoTitle = seoTitles["en"]
 	}
 
 	// Find prev/next
@@ -484,7 +904,7 @@ func JSONLearnArticle(c *gin.Context) {
 	}
 
 	data := baseData(c, gin.H{
-		"Title":        title + " | JSON 学习中心 | ToolboxNova",
+		"Title":        title + " | " + seoTitle,
 		"Description":  desc,
 		"Keywords":     "json learn, " + slug + ", json tutorial",
 		"Lang":         lang,
@@ -494,11 +914,15 @@ func JSONLearnArticle(c *gin.Context) {
 		"ArticleDesc":  desc,
 		"PrevArticle":  prevArticle,
 		"NextArticle":  nextArticle,
+		"UI":           getUITranslations(lang),
+		"Canonical":    "https://toolboxnova.com/json/learn/" + slug,
 		"CanonicalURL": "https://toolboxnova.com/json/learn/" + slug,
 		"HreflangEN":   "https://toolboxnova.com/json/learn/" + slug + "?lang=en",
 		"HreflangZH":   "https://toolboxnova.com/json/learn/" + slug + "?lang=zh",
+		"HreflangJA":   "https://toolboxnova.com/json/learn/" + slug + "?lang=ja",
+		"HreflangKO":   "https://toolboxnova.com/json/learn/" + slug + "?lang=ko",
+		"HreflangSPA":  "https://toolboxnova.com/json/learn/" + slug + "?lang=spa",
 		"PageClass":    "page-json-learn-article",
 	})
 	renderJSONTool(c, "learn.html", data)
 }
-

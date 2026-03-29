@@ -1,0 +1,187 @@
+{{ template "base" . }}
+
+{{ define "content" }}
+<div class="dev-tool-page page-dev-aes">
+  <div class="container">
+    <h1 class="tool-title">AES Encryption / Decryption</h1>
+    <p class="tool-subtitle">Encrypt and decrypt text using AES-256 in your browser. No data leaves your device.</p>
+
+    <div class="aes-panel">
+      <div class="mode-tabs">
+        <button class="mode-tab active" data-mode="encrypt" onclick="setMode('encrypt')">Encrypt</button>
+        <button class="mode-tab" data-mode="decrypt" onclick="setMode('decrypt')">Decrypt</button>
+      </div>
+
+      <div class="form-group">
+        <label>Encryption Key</label>
+        <div class="key-row">
+          <input type="password" id="aesKey" class="form-input" placeholder="Enter your secret key or passphrase">
+          <button class="btn btn-sm" onclick="toggleKey()">Show</button>
+          <button class="btn btn-sm" onclick="genKey()">Random</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Algorithm</label>
+        <select id="aesAlgo" class="form-select">
+          <option value="AES-GCM">AES-256-GCM (Recommended)</option>
+          <option value="AES-CBC">AES-256-CBC</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label id="inputLabel">Plaintext</label>
+        <textarea id="inputText" class="form-textarea" rows="6" placeholder="Enter text to encrypt..."></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-primary" id="processBtn" onclick="processAES()">Encrypt</button>
+      </div>
+
+      <div class="form-group">
+        <label>Output</label>
+        <textarea id="outputText" class="form-textarea" rows="6" readonly placeholder="Result will appear here..."></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-secondary" onclick="copyOutput()">Copy</button>
+        <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+      </div>
+    </div>
+
+    {{ if .FAQs }}
+    <div class="faq-section">
+      <h2>FAQ</h2>
+      {{ range .FAQs }}
+      <div class="faq-item">
+        <h3 class="faq-q">{{ .Q }}</h3>
+        <p class="faq-a">{{ .A }}</p>
+      </div>
+      {{ end }}
+    </div>
+    {{ end }}
+  </div>
+</div>
+
+<style>
+.page-dev-aes { max-width: 800px; margin: 40px auto; }
+.tool-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
+.tool-subtitle { color: var(--color-text-muted); margin-bottom: 24px; }
+.aes-panel { background: var(--color-bg-alt); border-radius: 12px; padding: 24px; border: 1px solid var(--color-border); }
+.mode-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+.mode-tab { flex: 1; padding: 10px; border: 1px solid var(--color-border); background: var(--color-bg); border-radius: 8px; cursor: pointer; font-size: 0.95rem; font-weight: 500; }
+.mode-tab:hover { border-color: var(--color-primary); }
+.mode-tab.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+.form-input, .form-select, .form-textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--color-border); border-radius: 8px; font-size: 0.95rem; background: var(--color-bg); color: var(--color-text); box-sizing: border-box; }
+.form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--color-primary); }
+.form-textarea { font-family: 'JetBrains Mono', monospace; resize: vertical; }
+.key-row { display: flex; gap: 8px; }
+.key-row .form-input { flex: 1; }
+.form-actions { display: flex; gap: 10px; margin-top: 16px; }
+.btn { padding: 10px 20px; border-radius: 8px; font-size: 0.9rem; font-weight: 500; cursor: pointer; border: none; }
+.btn-sm { padding: 8px 14px; }
+.btn-primary { background: var(--color-primary); color: #fff; }
+.btn-secondary { background: var(--color-bg); color: var(--color-text); border: 1px solid var(--color-border); }
+.btn-secondary:hover { border-color: var(--color-primary); }
+.faq-section { margin-top: 40px; }
+.faq-section h2 { font-size: 1.2rem; margin-bottom: 16px; }
+.faq-item { margin-bottom: 16px; }
+.faq-q { font-weight: 600; margin-bottom: 6px; }
+.faq-a { color: var(--color-text-muted); line-height: 1.6; }
+</style>
+
+<script>
+var currentMode = 'encrypt';
+
+function setMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelector('.mode-tab[data-mode="' + mode + '"]').classList.add('active');
+  document.getElementById('processBtn').textContent = mode === 'encrypt' ? 'Encrypt' : 'Decrypt';
+  document.getElementById('inputLabel').textContent = mode === 'encrypt' ? 'Plaintext' : 'Ciphertext (Base64)';
+  document.getElementById('inputText').placeholder = mode === 'encrypt' ? 'Enter text to encrypt...' : 'Paste Base64 ciphertext...';
+}
+
+function toggleKey() {
+  var el = document.getElementById('aesKey');
+  el.type = el.type === 'password' ? 'text' : 'password';
+}
+
+function genKey() {
+  var arr = new Uint8Array(32);
+  crypto.getRandomValues(arr);
+  document.getElementById('aesKey').value = Array.from(arr).map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+}
+
+function uint8ToBase64(u8) {
+  var bin = '';
+  for (var i = 0; i < u8.length; i++) bin += String.fromCharCode(u8[i]);
+  return window.btoa(bin);
+}
+
+function base64ToUint8(b64) {
+  var bin = window.atob(b64);
+  var u8 = new Uint8Array(bin.length);
+  for (var i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+  return u8;
+}
+
+function deriveKey(password, salt, algo) {
+  var enc = new TextEncoder();
+  return crypto.subtle.importKey('raw', enc.encode(password), { name: 'PBKDF2' }, false, ['deriveKey']).then(function(km) {
+    return crypto.subtle.deriveKey({ name: 'PBKDF2', salt: salt, iterations: 100000, hash: 'SHA-256' }, km, { name: algo, length: 256 }, false, ['encrypt', 'decrypt']);
+  });
+}
+
+function processAES() {
+  var key = document.getElementById('aesKey').value.trim();
+  var input = document.getElementById('inputText').value;
+  var algo = document.getElementById('aesAlgo').value;
+
+  if (!key) { alert('Please enter a key'); return; }
+  if (!input) { alert('Please enter text'); return; }
+
+  var salt = crypto.getRandomValues(new Uint8Array(16));
+  var ivLen = algo === 'AES-GCM' ? 12 : 16;
+  var iv = crypto.getRandomValues(new Uint8Array(ivLen));
+  var enc = new TextEncoder();
+  var dec = new TextDecoder();
+
+  if (currentMode === 'encrypt') {
+    deriveKey(key, salt, algo).then(function(cryptoKey) {
+      return crypto.subtle.encrypt({ name: algo, iv: iv }, cryptoKey, enc.encode(input));
+    }).then(function(encrypted) {
+      var combined = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
+      combined.set(salt, 0);
+      combined.set(iv, salt.length);
+      combined.set(new Uint8Array(encrypted), salt.length + iv.length);
+      document.getElementById('outputText').value = uint8ToBase64(combined);
+    }).catch(function(e) { alert('Encryption error: ' + e.message); });
+  } else {
+    var data = base64ToUint8(input);
+    var dSalt = data.slice(0, 16);
+    var dIv = data.slice(16, 16 + ivLen);
+    var dEnc = data.slice(16 + ivLen);
+    deriveKey(key, dSalt, algo).then(function(cryptoKey) {
+      return crypto.subtle.decrypt({ name: algo, iv: dIv }, cryptoKey, dEnc);
+    }).then(function(decrypted) {
+      document.getElementById('outputText').value = dec.decode(decrypted);
+    }).catch(function(e) { alert('Decryption error: ' + e.message); });
+  }
+}
+
+function copyOutput() {
+  var el = document.getElementById('outputText');
+  el.select();
+  document.execCommand('copy');
+}
+
+function clearAll() {
+  document.getElementById('aesKey').value = '';
+  document.getElementById('inputText').value = '';
+  document.getElementById('outputText').value = '';
+}
+</script>
+{{ end }}

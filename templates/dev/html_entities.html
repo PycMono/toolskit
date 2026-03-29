@@ -1,0 +1,167 @@
+{{ template "base" . }}
+
+{{ define "content" }}
+<div class="dev-tool-page page-dev-html-entities">
+  <div class="container">
+    <h1 class="tool-title">{{ call .T "tools.html_entities.title" }}</h1>
+    <p class="tool-subtitle">{{ call .T "tools.html_entities.subtitle" }}</p>
+
+    <div class="entities-panel">
+      <div class="mode-tabs">
+        <button class="mode-tab active" data-mode="encode" onclick="setEntitiesMode('encode')">🔒 {{ call .T "tools.html_entities.encode" }}</button>
+        <button class="mode-tab" data-mode="decode" onclick="setEntitiesMode('decode')">🔓 {{ call .T "tools.html_entities.decode" }}</button>
+      </div>
+
+      <div class="form-group">
+        <label id="inputLabel">{{ call .T "tools.html_entities.input_label" }}</label>
+        <textarea id="inputText" class="form-textarea" rows="8" placeholder="{{ call .T "tools.html_entities.input_placeholder" }}"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-primary" onclick="processEntities()">
+          <span id="processBtnText">🔒 {{ call .T "tools.html_entities.encode_btn" }}</span>
+        </button>
+      </div>
+
+      <div class="form-group">
+        <label>{{ call .T "tools.html_entities.output_label" }}</label>
+        <textarea id="outputText" class="form-textarea" rows="8" readonly placeholder="{{ call .T "tools.html_entities.output_placeholder" }}"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-secondary" onclick="copyOutput()">📋 {{ call .T "common.copy" }}</button>
+        <button class="btn btn-secondary" onclick="swapText()">🔄 {{ call .T "common.swap" }}</button>
+        <button class="btn btn-secondary" onclick="clearAll()">🗑 {{ call .T "common.clear" }}</button>
+      </div>
+    </div>
+
+    {{ if .FAQs }}
+    <div class="faq-section">
+      <h2>{{ call .T "common.faq" }}</h2>
+      {{ range .FAQs }}
+      <div class="faq-item">
+        <h3 class="faq-q">{{ .Q }}</h3>
+        <p class="faq-a">{{ .A }}</p>
+      </div>
+      {{ end }}
+    </div>
+    {{ end }}
+  </div>
+</div>
+
+<style>
+.page-dev-html-entities { max-width: 800px; margin: 40px auto; }
+.tool-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
+.tool-subtitle { color: var(--color-text-muted); margin-bottom: 24px; }
+.entities-panel {
+  background: var(--color-bg-alt); border-radius: 12px; padding: 24px;
+  border: 1px solid var(--color-border);
+}
+.mode-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+.mode-tab {
+  flex: 1; padding: 10px 16px; border: 1px solid var(--color-border);
+  background: var(--color-bg); border-radius: 8px;
+  cursor: pointer; font-size: 0.95rem; font-weight: 500;
+  transition: all 0.2s;
+}
+.mode-tab:hover { border-color: var(--color-primary); }
+.mode-tab.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block; font-size: 0.85rem; font-weight: 600;
+  margin-bottom: 6px; color: var(--color-text);
+}
+.form-textarea {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--color-border);
+  border-radius: 8px; font-size: 0.95rem;
+  background: var(--color-bg); color: var(--color-text);
+  font-family: 'JetBrains Mono', monospace; resize: vertical;
+  box-sizing: border-box;
+}
+.form-textarea:focus { outline: none; border-color: var(--color-primary); }
+.form-actions { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.btn {
+  padding: 10px 20px; border-radius: 8px; font-size: 0.9rem;
+  font-weight: 500; cursor: pointer; border: none;
+  transition: all 0.2s;
+}
+.btn-primary { background: var(--color-primary); color: #fff; }
+.btn-primary:hover { opacity: 0.9; }
+.btn-secondary { background: var(--color-bg); color: var(--color-text); border: 1px solid var(--color-border); }
+.btn-secondary:hover { border-color: var(--color-primary); }
+.faq-section { margin-top: 40px; }
+.faq-section h2 { font-size: 1.2rem; margin-bottom: 16px; }
+.faq-item { margin-bottom: 16px; }
+.faq-q { font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+.faq-a { color: var(--color-text-muted); line-height: 1.6; }
+</style>
+
+<script>
+let currentMode = 'encode';
+
+function setEntitiesMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.mode-tab[data-mode="' + mode + '"]').classList.add('active');
+
+  const btnText = document.getElementById('processBtnText');
+  const inputLabel = document.getElementById('inputLabel');
+
+  if (mode === 'encode') {
+    btnText.textContent = '🔒 ' + (window.lang === 'zh' ? '编码' : 'Encode');
+    if (inputLabel) inputLabel.textContent = window.lang === 'zh' ? '原始文本' : 'Raw Text';
+';
+  } else {
+    btnText.textContent = '🔓 ' + (window.lang === 'zh' ? '解码' : 'Decode');
+    if (inputLabel) inputLabel.textContent = window.lang === 'zh' ? 'HTML 实体文本' : 'HTML Entity Text';
+ }
+  document.getElementById('inputText').placeholder = window.lang === 'zh' ? '输入包含 HTML 实体的文本...' : 'Enter HTML entities...';
+ }
+  }
+}
+
+ processEntities();
+  }
+
+  function processEntities() {
+    const input = document.getElementById('inputText').value;
+    let result;
+    if (currentMode === 'encode') {
+      result = encodeHTMLEntities(input);
+    } else {
+      result = decodeHTMLEntities(input);
+    }
+    document.getElementById('outputText').value = result;
+  }
+
+  function encodeHTMLEntities(text) {
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+  function decodeHTMLEntities(text) {
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
+  }
+  function copyOutput() {
+    const output = document.getElementById('outputText');
+    output.select();
+    document.execCommand('copy');
+  }
+  function swapText() {
+    const input = document.getElementById('inputText');
+    const output = document.getElementById('outputText');
+    const temp = input.value;
+    input.value = output.value;
+    output.value = temp;
+  }
+  function clearAll() {
+    document.getElementById('inputText').value = '';
+    document.getElementById('outputText').value = '';
+  }
+</script>
+{{ end }}

@@ -1,158 +1,203 @@
 {{ template "base" . }}
 
 {{ define "content" }}
-<section class="dev-tool-hero">
-  <div class="container">
-    <h1 class="tool-title">📝 Lorem Ipsum Generator</h1>
-    <p class="tool-subtitle">Generate placeholder text for your designs, prototypes, and documents.</p>
-  </div>
-</section>
+<div class="dev-page page-dev-lorem">
+  <link rel="stylesheet" href="/static/css/dev-tools.css?v={{ .AssetVer }}">
 
-{{ template "partials/ad_slot.html" dict "SlotID" "dev-lorem-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+  <!-- Hero -->
+  <section class="hero--dev">
+    <div class="container">
+      <h1 class="hero--dev__title">📝 Lorem Ipsum Generator</h1>
+      <p class="hero--dev__sub">{{ call .T "seo.lorem.description" }}</p>
+      <div class="hero--dev__badges">
+        <span class="badge badge--green">Free</span>
+        <span class="badge badge--blue">Paragraphs / Sentences / Words</span>
+        <span class="badge badge--purple">Classic &amp; Random</span>
+      </div>
+    </div>
+  </section>
 
-<section class="tool-section">
-  <div class="container">
-    <div class="tool-grid">
-      <div class="tool-main">
-        <div class="tool-card">
-          <div class="tool-controls">
-            <div class="control-group">
-              <label>Type</label>
-              <select id="loremType">
-                <option value="paragraphs">Paragraphs</option>
-                <option value="sentences">Sentences</option>
-                <option value="words">Words</option>
-              </select>
-            </div>
-            <div class="control-group">
-              <label>Count</label>
-              <input type="number" id="loremCount" value="3" min="1" max="100">
-            </div>
-            <div class="control-group">
-              <label>Start with "Lorem ipsum..."</label>
-              <input type="checkbox" id="loremStart" checked>
+  {{ template "partials/ad_slot.html" dict "SlotID" "dev-lorem-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+
+  <!-- Tool -->
+  <div class="tool-wrapper">
+    <div class="container">
+      <div class="split-panel">
+        <div class="split-panel__input">
+          <div class="mode-tabs">
+            <button class="mode-tab active" data-t="paragraphs" onclick="setLoremType('paragraphs')">Paragraphs</button>
+            <button class="mode-tab" data-t="sentences" onclick="setLoremType('sentences')">Sentences</button>
+            <button class="mode-tab" data-t="words" onclick="setLoremType('words')">Words</button>
+          </div>
+
+          <div class="options-panel">
+            <div class="options-body" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-md);">
+              <div>
+                <label style="font-size:0.8rem;font-weight:600;color:var(--color-text-muted);margin-bottom:4px;display:block;">Count</label>
+                <input type="number" id="loremCount" class="form-input" value="3" min="1" max="100" style="width:100%;">
+              </div>
+              <div>
+                <label style="font-size:0.8rem;font-weight:600;color:var(--color-text-muted);margin-bottom:4px;display:block;">Options</label>
+                <label style="display:flex;align-items:center;gap:8px;margin-top:20px;cursor:pointer;">
+                  <input type="checkbox" id="loremStart" checked style="width:16px;height:16px;">
+                  <span style="font-size:0.85rem;">Start with classic "Lorem ipsum dolor sit amet..."</span>
+                </label>
+              </div>
             </div>
           </div>
-          <button class="btn-primary" onclick="generateLorem()">🎲 Generate Text</button>
+
+          <button class="btn btn--primary" onclick="generateLorem()" style="width:100%;margin-top:var(--space-md);">
+            🎲 Generate Text
+          </button>
         </div>
 
-        <div class="result-card">
-          <div class="result-header">
-            <h3>Generated Text <span id="wordCountBadge" class="badge"></span></h3>
-            <button class="btn-secondary" onclick="copyLorem()">📋 Copy</button>
+        <div class="split-panel__result">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-sm);">
+            <h3 style="font-size:0.95rem;font-weight:600;">Generated Text <span id="wordCountBadge" class="badge badge--blue" style="margin-left:8px;"></span></h3>
+            <button class="btn btn--ghost btn--sm" onclick="copyLorem()">📋 Copy</button>
           </div>
-          <textarea id="loremOutput" class="result-textarea" readonly placeholder="Click Generate to create placeholder text..."></textarea>
+          <textarea id="loremOutput" class="code-editor" readonly placeholder="Click Generate to create placeholder text..." style="min-height:200px;resize:vertical;"></textarea>
         </div>
       </div>
-
-      <aside class="tool-sidebar">
-        {{ template "partials/ad_slot.html" dict "SlotID" "dev-lorem-sidebar" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
-      </aside>
     </div>
   </div>
-</section>
 
-{{ template "partials/ad_slot.html" dict "SlotID" "dev-lorem-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+  <!-- SEO Article -->
+  <section class="seo-article">
+    <div class="container">
+      <div class="seo-article__content">
+        <h2 id="what-is-lorem-ipsum">What Is Lorem Ipsum?</h2>
+        <p><strong>Lorem Ipsum</strong> is placeholder text (sometimes referred to as dummy text or filler text) that has been used in the printing, typesetting, and graphic design industries since the 1500s. The text is derived from <strong>De finibus bonorum et malorum</strong> ("On the Ends of Good and Evil"), a philosophical work written by <strong>Marcus Tullius Cicero</strong> in 45 BC. The standard passage begins with "Lorem ipsum dolor sit amet, consectetur adipiscing elit," which roughly translates to "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain."</p>
 
-{{ if .FAQs }}
-<section class="faq-section">
-  <div class="container">
-    <h2 class="section-title">Frequently Asked Questions</h2>
-    <div class="faq-grid">
-      {{ range .FAQs }}
-      <div class="faq-item">
-        <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
-          <span>{{ .Q }}</span>
-          <span class="faq-icon">▼</span>
-        </button>
-        <div class="faq-answer"><p>{{ .A }}</p></div>
+        <p>Unlike random text, Lorem Ipsum has a roughly <strong>normal distribution of letter frequencies</strong>, making it look similar to readable English. This is why designers and typographers have used it for over five centuries — it provides a realistic impression of how final text will look without distracting reviewers with meaningful content.</p>
+
+        <h2 id="why-use">Why Do Designers Use Lorem Ipsum?</h2>
+        <p>Placeholder text serves several critical purposes in the design process:</p>
+        <ul>
+          <li><strong>Focus on layout, not content.</strong> When reviewing a design, stakeholders often get distracted by reading actual text and start commenting on the copy rather than the visual layout. Lorem Ipsum prevents this by providing meaningless text that mimics the visual weight and rhythm of real content.</li>
+          <li><strong>Simulate real content.</strong> Because Lorem Ipsum approximates the word lengths and sentence structures of natural language, it accurately shows how text will flow within a design — including line breaks, paragraph spacing, and typography choices.</li>
+          <li><strong>Accelerate prototyping.</strong> Designers can quickly populate wireframes and mockups without waiting for final copy from clients or content writers, dramatically speeding up the design iteration cycle.</li>
+          <li><strong>International compatibility.</strong> Lorem Ipsum is universally recognized in the design community, making it a shared language between designers, developers, and clients regardless of their native language.</li>
+        </ul>
+
+        <h2 id="how-to-use">How to Use This Lorem Ipsum Generator</h2>
+        <p>This free online Lorem Ipsum generator runs entirely in your browser. <strong>No data is sent to any server</strong>, and no account or sign-up is required. Here's how to use it:</p>
+        <ol>
+          <li><strong>Choose the output type:</strong> Select <em>Paragraphs</em> for multi-paragraph blocks (ideal for body text), <em>Sentences</em> for individual sentences (ideal for headings, buttons, or short descriptions), or <em>Words</em> for a simple word list (ideal for menu items or tags).</li>
+          <li><strong>Set the count:</strong> Enter how many units you need. For paragraphs, 3–5 is typical for a wireframe. For sentences, 5–10 covers most UI elements. For words, 20–50 works well for navigation labels.</li>
+          <li><strong>Choose the starting mode:</strong> Enable "Start with Lorem ipsum..." to begin with the classic opening phrase (the industry standard), or disable it for a more randomized appearance.</li>
+          <li><strong>Copy the result:</strong> Click the "Copy" button to copy all generated text to your clipboard, then paste it into your design tool, code editor, or document.</li>
+        </ol>
+
+        <h2 id="classic-vs-random">Classic vs. Random Mode</h2>
+        <p><strong>Classic mode</strong> starts every generation with the traditional "Lorem ipsum dolor sit amet, consectetur adipiscing elit" phrase, followed by additional randomly generated sentences. This is the most widely recognized form of placeholder text and is what most clients expect to see in wireframes.</p>
+        <p><strong>Random mode</strong> generates entirely new text each time by shuffling the word dictionary. The words are the same Latin-derived vocabulary, but the sentence structure and word order are completely different each time. This is useful when you need <strong>multiple variations</strong> of placeholder text across different sections of a design, or when you want to avoid the instantly recognizable "Lorem ipsum" pattern.</p>
+
+        <h2 id="for-developers">Using Lorem Ipsum in Web Development</h2>
+        <p>In modern web development, Lorem Ipsum is commonly used in:</p>
+        <ul>
+          <li><strong>HTML wireframes and mockups</strong> — Filling placeholder content areas to test layout before real content is available.</li>
+          <li><strong>UI component libraries</strong> — Many design systems include Lorem Ipsum as the default text in button, card, and form components.</li>
+          <li><strong>Content Management Systems</strong> — WordPress, Figma, Sketch, and Adobe XD all use Lorem Ipsum in their default templates.</li>
+          <li><strong>Typography testing</strong> — Evaluating how different fonts, sizes, line heights, and letter spacings look with realistic-length text.</li>
+          <li><strong>Print design</strong> — Magazine layouts, book covers, and poster designs use placeholder text during the layout phase.</li>
+        </ul>
+
+        <h2 id="alternatives">Alternatives to Lorem Ipsum</h2>
+        <p>While Lorem Ipsum is the most traditional choice, modern alternatives exist for specific use cases: <strong>Cicero</strong> (different passages from the same source text), <strong>Pangrams</strong> (sentences that use every letter of the alphabet, like "The quick brown fox jumps over the lazy dog"), <strong>Hipster Ipsum</strong> (trendy, humorous placeholder text), and <strong>Bacon Ipsum</strong> (meat-themed filler text). However, Lorem Ipsum remains the most universally understood option for professional client work.</p>
       </div>
-      {{ end }}
     </div>
-  </div>
-</section>
-{{ end }}
+  </section>
+
+  <!-- FAQ -->
+  {{ if .FAQs }}
+  <section class="faq">
+    <div class="container">
+      <h2 class="faq__title">Frequently Asked Questions</h2>
+      <div class="faq__grid">
+        {{ range .FAQs }}
+        <div class="faq-item">
+          <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            <span>{{ .Q }}</span>
+            <span class="faq-icon">▼</span>
+          </button>
+          <div class="faq-answer"><p>{{ .A }}</p></div>
+        </div>
+        {{ end }}
+      </div>
+    </div>
+  </section>
+  {{ end }}
+
+  {{ template "partials/ad_slot.html" dict "SlotID" "dev-lorem-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+</div>
 {{ end }}
 
 {{ define "extraScript" }}
 <script>
-const loremWords = [
-  "lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit",
-  "sed", "do", "eiusmod", "tempor", "incididunt", "ut", "labore", "et", "dolore",
-  "magna", "aliqua", "enim", "ad", "minim", "veniam", "quis", "nostrud",
-  "exercitation", "ullamco", "laboris", "nisi", "aliquip", "ex", "ea", "commodo",
-  "consequat", "duis", "aute", "irure", "in", "reprehenderit", "voluptate",
-  "velit", "esse", "cillum", "fugiat", "nulla", "pariatur", "excepteur", "sint",
-  "occaecat", "cupidatat", "non", "proident", "sunt", "culpa", "qui", "officia",
-  "deserunt", "mollit", "anim", "id", "est", "laborum"
+var loremWords = [
+  "lorem","ipsum","dolor","sit","amet","consectetur","adipiscing","elit",
+  "sed","do","eiusmod","tempor","incididunt","ut","labore","et","dolore",
+  "magna","aliqua","enim","ad","minim","veniam","quis","nostrud",
+  "exercitation","ullamco","laboris","nisi","aliquip","ex","ea","commodo",
+  "consequat","duis","aute","irure","in","reprehenderit","voluptate",
+  "velit","esse","cillum","fugiat","nulla","pariatur","excepteur","sint",
+  "occaecat","cupidatat","non","proident","sunt","culpa","qui","officia",
+  "deserunt","mollit","anim","id","est","laborum"
 ];
-
-const classicStart = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+var classicStart = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
 
 function generateLorem() {
-  const type = document.getElementById('loremType').value;
-  const count = parseInt(document.getElementById('loremCount').value) || 3;
-  const startClassic = document.getElementById('loremStart').checked;
-
-  let result = '';
-
-  if (type === 'words') {
-    result = generateWords(count, startClassic);
-  } else if (type === 'sentences') {
-    result = generateSentences(count, startClassic);
-  } else {
-    result = generateParagraphs(count, startClassic);
-  }
-
+  var count = parseInt(document.getElementById('loremCount').value) || 3;
+  var startClassic = document.getElementById('loremStart').checked;
+  var result = '';
+  if (currentType === 'words') { result = genWords(count); }
+  else if (currentType === 'sentences') { result = genSentences(count, startClassic); }
+  else { result = genParagraphs(count, startClassic); }
   document.getElementById('loremOutput').value = result;
-  const wordCount = result.split(/\s+/).filter(w => w).length;
-  document.getElementById('wordCountBadge').textContent = wordCount + ' words';
+  var wc = result.split(/\s+/).filter(function(w){return w;}).length;
+  document.getElementById('wordCountBadge').textContent = wc + ' words';
 }
-
-function generateWords(count, startClassic) {
-  const words = [];
-  for (let i = 0; i < count; i++) {
-    words.push(loremWords[Math.floor(Math.random() * loremWords.length)]);
+function genWords(n) {
+  var w = [];
+  for (var i = 0; i < n; i++) w.push(loremWords[Math.floor(Math.random()*loremWords.length)]);
+  return w.join(' ');
+}
+function genSentences(n, classic) {
+  var s = [];
+  for (var i = 0; i < n; i++) {
+    var len = 8 + Math.floor(Math.random()*12);
+    var w = [];
+    for (var j = 0; j < len; j++) w.push(loremWords[Math.floor(Math.random()*loremWords.length)]);
+    w[0] = w[0].charAt(0).toUpperCase() + w[0].slice(1);
+    s.push(w.join(' ') + '.');
   }
-  return words.join(' ');
+  if (classic && s.length > 0) s[0] = classicStart;
+  return s.join(' ');
 }
-
-function generateSentences(count, startClassic) {
-  const sentences = [];
-  for (let i = 0; i < count; i++) {
-    const length = 8 + Math.floor(Math.random() * 12);
-    const words = [];
-    for (let j = 0; j < length; j++) {
-      words.push(loremWords[Math.floor(Math.random() * loremWords.length)]);
+function genParagraphs(n, classic) {
+  var p = [];
+  for (var i = 0; i < n; i++) {
+    var sc = 4 + Math.floor(Math.random()*4);
+    if (classic && i === 0) {
+      var rest = genSentences(sc - 1, false);
+      p.push(classicStart + ' ' + rest);
+    } else {
+      p.push(genSentences(sc, false));
     }
-    words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1);
-    sentences.push(words.join(' ') + '.');
   }
-  return sentences.join(' ');
+  return p.join('\n\n');
 }
-
-function generateParagraphs(count, startClassic) {
-  const paragraphs = [];
-  for (let i = 0; i < count; i++) {
-    const sentenceCount = 4 + Math.floor(Math.random() * 4);
-    let para = generateSentences(sentenceCount, startClassic && i === 0);
-    if (startClassic && i === 0) {
-      para = classicStart + ' ' + generateSentences(sentenceCount - 1, false);
-    }
-    paragraphs.push(para);
-  }
-  return paragraphs.join('\n\n');
-}
-
 function copyLorem() {
-  const output = document.getElementById('loremOutput');
-  if (output.value) {
-    navigator.clipboard.writeText(output.value);
-    alert('Copied!');
-  }
+  var el = document.getElementById('loremOutput');
+  if (el.value) { navigator.clipboard.writeText(el.value); el.select(); }
 }
-
-// Generate on load
+var currentType = 'paragraphs';
+function setLoremType(t) {
+  currentType = t;
+  document.querySelectorAll('.mode-tab').forEach(function(btn){ btn.classList.toggle('active', btn.dataset.t === t); });
+  generateLorem();
+}
 generateLorem();
 </script>
 {{ end }}
