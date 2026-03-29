@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -52,6 +53,9 @@ func baseData(c *gin.Context, extraData gin.H) gin.H {
 		// Google Analytics (injected by middleware.GAConfig)
 		"GAMeasurementID": c.GetString("GAMeasurementID"),
 		"EnableGA":        c.GetBool("EnableGA"),
+		// Google Ads Conversion Tracking
+		"GoogleAdsConversionID":    c.GetString("GoogleAdsConversionID"),
+		"GoogleAdsConversionLabel": c.GetString("GoogleAdsConversionLabel"),
 		// Asset version for cache busting (injected by middleware.AdsConfig or set globally)
 		"AssetVer": c.GetString("AssetVersion"),
 		// Cookie Consent (injected by middleware.ConsentMiddleware)
@@ -59,6 +63,13 @@ func baseData(c *gin.Context, extraData gin.H) gin.H {
 		"ConsentAnalytics":   c.GetString("ConsentAnalytics"),
 		"ConsentAds":         c.GetString("ConsentAds"),
 		"ConsentCookieName":  c.GetString("ConsentCookieName"),
+		// Social Media Links
+		"TwitterURL":  c.GetString("TwitterURL"),
+		"GitHubURL":   c.GetString("GitHubURL"),
+		"LinkedInURL": c.GetString("LinkedInURL"),
+		// Newsletter
+		"NewsletterEnabled":  c.GetBool("NewsletterEnabled"),
+		"NewsletterProvider": c.GetString("NewsletterProvider"),
 	}
 	for k, v := range extraData {
 		data[k] = v
@@ -69,11 +80,93 @@ func baseData(c *gin.Context, extraData gin.H) gin.H {
 // IndexPage renders the homepage
 func IndexPage(c *gin.Context) {
 	t := getT(c)
+	lang := getLang(c)
+
+	// WebSite + Organization structured data for SEO
+	jsonld := `{
+		"@context": "https://schema.org",
+		"@graph": [
+			{
+				"@type": "WebSite",
+				"name": "Tool Box Nova",
+				"url": "https://toolboxnova.com",
+				"description": "` + t("home.hero_sub") + `",
+				"potentialAction": {
+					"@type": "SearchAction",
+					"target": "https://toolboxnova.com/?q={search_term_string}",
+					"query-input": "required name=search_term_string"
+				}
+			},
+			{
+				"@type": "Organization",
+				"name": "Tool Box Nova",
+				"url": "https://toolboxnova.com",
+				"logo": "https://toolboxnova.com/static/img/logo.svg",
+				"sameAs": []
+			}
+		]
+	}`
+
+	// Build hreflang map for homepage
+	hreflangMap := map[string]string{
+		"en":  "https://toolboxnova.com/?lang=en",
+		"zh":  "https://toolboxnova.com/?lang=zh",
+		"ja":  "https://toolboxnova.com/?lang=ja",
+		"ko":  "https://toolboxnova.com/?lang=ko",
+		"spa": "https://toolboxnova.com/?lang=spa",
+	}
+
+	// Homepage FAQ items
+	type FAQItem struct {
+		Q, A string
+	}
+	faqs := []FAQItem{
+		{Q: t("home.faq.q1"), A: t("home.faq.a1")},
+		{Q: t("home.faq.q2"), A: t("home.faq.a2")},
+		{Q: t("home.faq.q3"), A: t("home.faq.a3")},
+		{Q: t("home.faq.q4"), A: t("home.faq.a4")},
+		{Q: t("home.faq.q5"), A: t("home.faq.a5")},
+	}
+
+	// Build FAQPage JSON-LD for structured data
+	faqJSONLD := `{
+		"@context": "https://schema.org",
+		"@type": "FAQPage",
+		"mainEntity": [`
+	for i, faq := range faqs {
+		if i > 0 {
+			faqJSONLD += ","
+		}
+		faqJSONLD += `{
+			"@type": "Question",
+			"name": "` + strings.ReplaceAll(faq.Q, `"`, `\"`) + `",
+			"acceptedAnswer": {
+				"@type": "Answer",
+				"text": "` + strings.ReplaceAll(faq.A, `"`, `\"`) + `"
+			}
+		}`
+	}
+	faqJSONLD += `]
+	}`
+
+	// Combine with existing JSON-LD
+	combinedJSONLD := jsonld[:len(jsonld)-3] + `,
+		{
+			"@type": "FAQPage",
+			"mainEntity": ` + faqJSONLD[strings.Index(faqJSONLD, "["):] + `
+		}
+	]
+}`
+
 	data := baseData(c, gin.H{
 		"Title":       t("home.title") + " | Tool Box Nova",
 		"Description": t("home.hero_sub"),
 		"Keywords":    "online tools, developer tools, privacy tools, SMS receiver, temporary email, password generator",
 		"PageClass":   "page-home",
+		"JSONLD":      template.HTML(combinedJSONLD),
+		"HreflangMap": hreflangMap,
+		"Lang":        lang,
+		"FAQs":        faqs,
 	})
 	render(c, "index.html", data)
 }
@@ -155,7 +248,6 @@ func SitemapXML(c *gin.Context) {
                 "/weather/query",
 		
 		// AI Lab
-		"/ailab/detector", "/ailab/humanize",
 		"/ai/detector",
 		"/ai/detector?lang=en", "/ai/detector?lang=zh",
 		"/ai/detector?lang=ja", "/ai/detector?lang=ko", "/ai/detector?lang=es",
@@ -232,6 +324,7 @@ func SitemapXML(c *gin.Context) {
 		// Developer Tools Suite
 		"/dev/hash", "/dev/base64", "/dev/url-encode",
 		"/dev/ip", "/dev/whois", "/dev/word-counter",
+			"/dev/uuid", "/dev/lorem",
 
 		// Color Tools Suite
 		"/color/tools",
@@ -244,7 +337,7 @@ func SitemapXML(c *gin.Context) {
 	c.Header("Content-Type", "application/xml")
 	xml := "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n"
 	siteURL := "https://toolboxnova.com"
-	lastMod := "2026-03-14"
+	lastMod := time.Now().Format("2006-01-02")
 	
 	for _, r := range routes {
 		priority := "0.8"
@@ -260,7 +353,7 @@ func SitemapXML(c *gin.Context) {
 		} else if r == "/sms/prices" {
 			priority = "0.85"
 			changefreq = "daily"
-		} else if r == "/tools/json" || r == "/tools" || r == "/ailab/detector" || r == "/ai/detector" {
+		} else if r == "/tools/json" || r == "/tools" || r == "/ai/detector" {
 			priority = "0.9"
 		} else if r == "/media/qr" {
 			priority = "0.9"
@@ -349,7 +442,25 @@ func SitemapXML(c *gin.Context) {
 
 // RobotsTxt returns robots.txt
 func RobotsTxt(c *gin.Context) {
-	c.String(http.StatusOK, "User-agent: *\nAllow: /\n\nSitemap: https://toolboxnova.com/sitemap.xml\n")
+	robots := `User-agent: *
+Allow: /
+
+# Disallow API endpoints (no SEO value)
+Disallow: /api/
+
+# Disallow admin/auth pages
+Disallow: /sms/login
+Disallow: /sms/register
+Disallow: /sms/buy/success
+Disallow: /sms/buy/cancel
+
+# Sitemap
+Sitemap: https://toolboxnova.com/sitemap.xml
+
+# Crawl-delay (optional, for politeness)
+Crawl-delay: 1
+`
+	c.String(http.StatusOK, robots)
 }
 
 // SearchAPI returns search results
@@ -392,7 +503,9 @@ func SearchAPI(c *gin.Context) {
 		{"name_zh": "URL 编解码", "name_en": "URL Encoder Decoder", "description": "Percent-encode or decode URLs, batch mode, diff highlight", "url": "/dev/url-encode", "search": "url encode decode 百分号 编码 解码 percent encoding"},
 		{"name_zh": "IP 地址查询", "name_en": "IP Address Lookup", "description": "Find your public IP, geolocation, ISP, ASN with map", "url": "/dev/ip", "search": "ip lookup 查询 地址 geolocation isp asn ipv4 ipv6 我的ip"},
 		{"name_zh": "Whois 域名查询", "name_en": "Whois Domain Lookup", "description": "RDAP and raw Whois data for any domain", "url": "/dev/whois", "search": "whois domain 域名 查询 rdap registrar 注册商 到期"},
-		{"name_zh": "文字计数器", "name_en": "Word Counter", "description": "Count words, characters, readability score and keyword density", "url": "/dev/word-counter", "search": "word counter 文字 计数 字数 词数 可读性 readability flesch keyword"},
+			{"name_zh": "文字计数器", "name_en": "Word Counter", "description": "Count words, characters, readability score and keyword density", "url": "/dev/word-counter", "search": "word counter 文字 计数 字数 词数 可读性 readability flesch keyword"},
+			{"name_zh": "UUID 生成器", "name_en": "UUID Generator", "description": "Generate random UUID v4 and v7 instantly, batch up to 100", "url": "/dev/uuid", "search": "uuid generator guid v4 v7 随机 唯一 标识符"},
+			{"name_zh": "Lorem Ipsum 生成器", "name_en": "Lorem Ipsum Generator", "description": "Generate placeholder text for design and prototypes", "url": "/dev/lorem", "search": "lorem ipsum placeholder text dummy 占位 文本 生成"},
 	}
 	var results []gin.H
 	for _, tool := range tools {

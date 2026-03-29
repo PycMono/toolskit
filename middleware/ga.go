@@ -12,7 +12,9 @@ func GAConfig(cfg *config.Config) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Set("GAMeasurementID", cfg.GAMeasurementID)
 		c.Set("EnableGA", cfg.EnableGA)
+		// Google Ads Conversion Tracking
+		c.Set("GoogleAdsConversionID", cfg.GoogleAdsConversionID)
+		c.Set("GoogleAdsConversionLabel", cfg.GoogleAdsConversionLabel)
 		c.Next()
 	}
 }
-

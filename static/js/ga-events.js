@@ -124,3 +124,46 @@ function gaTrackShare(toolName, method) {
   });
 }
 
+/* ══════════════════════════════════════════
+   Google Ads 转换事件
+   ═════════════════════════════════════════ */
+
+/**
+ * 追踪工具使用转化（核心转化事件）
+ * @param {string} toolName       工具名，如 'json-formatter'
+ * @param {string} conversionLabel  转化标签，由服务端注入
+ */
+function gaTrackConversion(toolName, conversionLabel) {
+  if (typeof gtag !== 'function') return;
+  if (typeof window.__GADS_CONV_ID__ !== 'undefined' && conversionLabel) {
+    gtag('event', 'conversion', {
+      'send_to': window.__GADS_CONV_ID__ + '/' + conversionLabel,
+      'value': 1.0,
+      'currency': 'USD'
+    });
+  }
+}
+
+/**
+ * 追踪 SMS 购买转化
+ */
+function gaTrackSMSConversion() {
+  if (typeof gtag !== 'function') return;
+  if (typeof window.__GADS_CONV_SMS__ !== 'undefined') {
+    gtag('event', 'conversion', {
+      'send_to': window.__GADS_CONV_SMS__,
+      'value': 1.0,
+      'currency': 'USD'
+    });
+  }
+}
+
+/**
+ * 追踪页面停留（互动优化 — 用户在页面停留超过 30 秒视为互动）
+ */
+function gaTrackEngagedVisit() {
+  trackEvent('engaged_visit', {
+    engagement_duration_seconds: 30,
+  });
+}
+

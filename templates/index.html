@@ -451,6 +451,31 @@
   </div>
 </section>
 
+<!-- FAQ Section -->
+<section class="faq-section" style="padding:60px 0;background:var(--color-bg-alt);">
+  <div class="container">
+    <h2 style="text-align:center;margin-bottom:40px;font-size:1.75rem;">{{ call .T "home.faq.title" }}</h2>
+    <div class="faq-grid" style="max-width:800px;margin:0 auto;">
+      {{ range .FAQs }}
+      <div class="faq-item" style="margin-bottom:16px;border:1px solid var(--color-border);border-radius:8px;overflow:hidden;">
+        <button class="faq-question" onclick="this.parentElement.classList.toggle('open')"
+          style="width:100%;padding:16px 20px;text-align:left;background:var(--color-bg);border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:1rem;">
+          <span>{{ .Q }}</span>
+          <span class="faq-icon" style="font-size:1.2rem;transition:transform 0.3s;">▼</span>
+        </button>
+        <div class="faq-answer" style="padding:0 20px;max-height:0;overflow:hidden;transition:max-height 0.3s,padding 0.3s;">
+          <p style="padding:12px 0;color:var(--color-text-muted);line-height:1.7;">{{ .A }}</p>
+        </div>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+<style>
+.faq-item.open .faq-answer { max-height:500px; padding:0 20px 16px; }
+.faq-item.open .faq-icon { transform:rotate(180deg); }
+</style>
+
 <!-- Bottom Ad -->
 <div style="text-align:center;margin:24px 0 0">
   {{- template "partials/ad_slot.html" dict "SlotID" "home-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}

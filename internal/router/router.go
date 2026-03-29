@@ -31,6 +31,9 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 	// SEO files
 	r.GET("/robots.txt", handlers.RobotsTxt)
 	r.GET("/sitemap.xml", handlers.SitemapXML)
+	// Health check (for monitoring)
+	r.GET("/health", handlers.HealthCheck)
+	r.GET("/ping", handlers.HealthCheck)
 	// Favicon redirect
 	r.GET("/favicon.ico", func(c *gin.Context) {
 		c.Redirect(302, "/static/img/favicon.svg")
@@ -271,6 +274,8 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 		dev.GET("/ip", handlers.DevIPPage)
 		dev.GET("/whois", handlers.DevWhoisPage)
 		dev.GET("/word-counter", handlers.DevWordCounterPage)
+		dev.GET("/uuid", handlers.DevUUIDPage)
+		dev.GET("/lorem", handlers.DevLoremPage)
 	}
 
 	// API routes
@@ -359,6 +364,8 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 				handlers.JSONFetch,
 			)
 		}
-	}
+		}
 
+		// 404 handler — must be last
+		r.NoRoute(handlers.NotFoundPage)
 }

@@ -45,7 +45,13 @@
   "nav.dev_ip": "Consulta de IP",
   "nav.dev_whois": "Consulta Whois",
   "nav.dev_word_counter": "Contador de palabras",
+  "nav.dev_uuid": "Generador UUID",
+  "nav.dev_lorem": "Generador Lorem Ipsum",
   "nav.json_learn": "Centro de aprendizaje JSON",
   "nav.privacy_check": "Verificador de privacidad",
-  "nav.weather_query": "Consulta del Tiempo"
+  "nav.weather_query": "Consulta del Tiempo",
+  "footer.newsletter.text": "Recibe nuevas herramientas y actualizaciones",
+  "footer.newsletter.placeholder": "Ingresa tu correo",
+  "footer.newsletter.btn": "Suscribirse",
+  "footer.newsletter.success": "¡Gracias por suscribirte!"
 }

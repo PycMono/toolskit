@@ -1,0 +1,132 @@
+{{ template "base" . }}
+
+{{ define "content" }}
+<section class="dev-tool-hero">
+  <div class="container">
+    <h1 class="tool-title">🔑 UUID Generator</h1>
+    <p class="tool-subtitle">Generate random UUIDs (Universally Unique Identifiers) instantly. Supports UUID v4 and v7.</p>
+  </div>
+</section>
+
+{{ template "partials/ad_slot.html" dict "SlotID" "dev-uuid-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+
+<section class="tool-section">
+  <div class="container">
+    <div class="tool-grid">
+      <div class="tool-main">
+        <div class="tool-card">
+          <div class="tool-controls">
+            <div class="control-group">
+              <label>Version</label>
+              <select id="uuidVersion">
+                <option value="4">UUID v4 (Random)</option>
+                <option value="7">UUID v7 (Time-ordered)</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label>Count</label>
+              <input type="number" id="uuidCount" value="5" min="1" max="100">
+            </div>
+            <div class="control-group">
+              <label>Case</label>
+              <select id="uuidCase">
+                <option value="lower">Lowercase</option>
+                <option value="upper">Uppercase</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label>Format</label>
+              <select id="uuidFormat">
+                <option value="hyphen">With hyphens</option>
+                <option value="nohyphen">Without hyphens</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn-primary" onclick="generateUUIDs()">🎲 Generate UUIDs</button>
+        </div>
+
+        <div class="result-card">
+          <div class="result-header">
+            <h3>Generated UUIDs</h3>
+            <button class="btn-secondary" onclick="copyUUIDs()">📋 Copy All</button>
+          </div>
+          <textarea id="uuidOutput" class="result-textarea" readonly placeholder="Click Generate to create UUIDs..."></textarea>
+        </div>
+      </div>
+
+      <aside class="tool-sidebar">
+        {{ template "partials/ad_slot.html" dict "SlotID" "dev-uuid-sidebar" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+      </aside>
+    </div>
+  </div>
+</section>
+
+{{ template "partials/ad_slot.html" dict "SlotID" "dev-uuid-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+
+{{ if .FAQs }}
+<section class="faq-section">
+  <div class="container">
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <div class="faq-grid">
+      {{ range .FAQs }}
+      <div class="faq-item">
+        <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+          <span>{{ .Q }}</span>
+          <span class="faq-icon">▼</span>
+        </button>
+        <div class="faq-answer"><p>{{ .A }}</p></div>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}
+{{ end }}
+
+{{ define "extraScript" }}
+<script>
+function generateUUIDv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+function generateUUIDv7() {
+  const now = Date.now();
+  const timestamp = now.toString(16).padStart(12, '0');
+  const random = Array.from({length: 12}, () => Math.floor(Math.random() * 16).toString(16)).join('');
+  return timestamp.slice(0, 8) + '-' + timestamp.slice(8, 12) + '-7' + random.slice(0, 3) + '-' +
+         (parseInt(random[3], 16) | 0x8).toString(16) + random.slice(4, 8) + '-' + random.slice(8);
+}
+
+function generateUUIDs() {
+  const version = document.getElementById('uuidVersion').value;
+  const count = parseInt(document.getElementById('uuidCount').value) || 5;
+  const caseType = document.getElementById('uuidCase').value;
+  const format = document.getElementById('uuidFormat').value;
+
+  const uuids = [];
+  for (let i = 0; i < Math.min(count, 100); i++) {
+    let uuid = version === '7' ? generateUUIDv7() : generateUUIDv4();
+    if (format === 'nohyphen') uuid = uuid.replace(/-/g, '');
+    if (caseType === 'upper') uuid = uuid.toUpperCase();
+    uuids.push(uuid);
+  }
+
+  document.getElementById('uuidOutput').value = uuids.join('\n');
+}
+
+function copyUUIDs() {
+  const output = document.getElementById('uuidOutput');
+  if (output.value) {
+    navigator.clipboard.writeText(output.value);
+    alert('Copied!');
+  }
+}
+
+// Generate on load
+generateUUIDs();
+</script>
+{{ end }}

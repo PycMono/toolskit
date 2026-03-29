@@ -1,0 +1,115 @@
+{{ template "base" . }}
+
+{{ define "content" }}
+<section class="error-page">
+  <div class="error-container">
+    <div class="error-code">404</div>
+    <h1 class="error-title">{{ call .T "error.404.title" }}</h1>
+    <p class="error-desc">{{ call .T "error.404.desc" }}</p>
+    <div class="error-actions">
+      <a href="/?lang={{ .Lang }}" class="error-btn error-btn-primary">{{ call .T "error.404.btn_home" }}</a>
+      <a href="javascript:history.back()" class="error-btn error-btn-secondary">{{ call .T "error.404.btn_back" }}</a>
+    </div>
+    <div class="error-search">
+      <input type="text" id="errorSearch" class="error-search-input" placeholder="{{ call .T "nav.search_placeholder" }}" autocomplete="off">
+      <button class="error-search-btn" onclick="errorSearchGo()">🔍 {{ call .T "home.search_btn" }}</button>
+    </div>
+  </div>
+</section>
+
+<style>
+.error-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  padding: 40px 20px;
+}
+.error-container { max-width: 500px; }
+.error-code {
+  font-size: 8rem;
+  font-weight: 900;
+  color: var(--color-primary);
+  line-height: 1;
+  opacity: 0.15;
+}
+.error-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: -1rem 0 0.75rem;
+}
+.error-desc {
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+.error-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+.error-btn {
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.error-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.error-btn-primary { background: var(--color-primary); color: #fff; }
+.error-btn-secondary { background: var(--color-bg-alt); color: var(--color-text); border: 1px solid var(--color-border); }
+.error-search {
+  display: flex;
+  gap: 8px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+.error-search-input {
+  flex: 1;
+  padding: 10px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+.error-search-input:focus { outline: none; border-color: var(--color-primary); }
+.error-search-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+</style>
+{{ end }}
+
+{{ define "extraScript" }}
+<script>
+function errorSearchGo() {
+  var q = document.getElementById('errorSearch').value.trim();
+  if (q) {
+    fetch('/api/search?q=' + encodeURIComponent(q))
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.results && data.results.length > 0) {
+          window.location.href = data.results[0].url;
+        }
+      });
+  }
+}
+document.getElementById('errorSearch').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') errorSearchGo();
+});
+</script>
+{{ end }}

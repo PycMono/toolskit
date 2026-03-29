@@ -45,8 +45,14 @@
   "nav.dev_ip": "IP Lookup",
   "nav.dev_whois": "Whois Lookup",
   "nav.dev_word_counter": "Word Counter",
+  "nav.dev_uuid": "UUID Generator",
+  "nav.dev_lorem": "Lorem Ipsum Generator",
   "nav.json_learn": "JSON Learning Hub",
   "nav.privacy_check": "Privacy Checker",
   "nav.breach_checker": "Data Breach Checker",
-  "nav.weather_query": "Weather Query"
+  "nav.weather_query": "Weather Query",
+  "footer.newsletter.text": "Get new tools & updates",
+  "footer.newsletter.placeholder": "Enter your email",
+  "footer.newsletter.btn": "Subscribe",
+  "footer.newsletter.success": "Thanks for subscribing!"
 }

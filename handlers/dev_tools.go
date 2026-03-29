@@ -462,3 +462,47 @@ func renderDevTool(c *gin.Context, page string, data gin.H) {
 	render(c, page, data)
 }
 
+// ─────────────────────────────────────────────────────────────
+//
+//	UUID Generator & Lorem Ipsum (client-side, handlers only)
+//
+// ─────────────────────────────────────────────────────────────
+
+// DevUUIDPage serves /dev/uuid
+func DevUUIDPage(c *gin.Context) {
+	t := getT(c)
+	lang := getLang(c)
+	data := baseData(c, gin.H{
+		"Title":       t("seo.uuid.title"),
+		"Description": t("seo.uuid.description"),
+		"Keywords":    t("seo.uuid.keywords"),
+		"Canonical":   "https://toolboxnova.com/dev/uuid",
+		"HreflangZH":  "https://toolboxnova.com/dev/uuid?lang=zh",
+		"HreflangEN":  "https://toolboxnova.com/dev/uuid?lang=en",
+		"OGImage":     "https://toolboxnova.com/static/img/og.png",
+		"FAQs":        buildDevFAQ(lang, "uuid"),
+		"PageClass":   "page-dev-uuid",
+		"ToolName":    "uuid",
+	})
+	renderDevTool(c, "dev/uuid.html", data)
+}
+
+// DevLoremPage serves /dev/lorem
+func DevLoremPage(c *gin.Context) {
+	t := getT(c)
+	lang := getLang(c)
+	data := baseData(c, gin.H{
+		"Title":       t("seo.lorem.title"),
+		"Description": t("seo.lorem.description"),
+		"Keywords":    t("seo.lorem.keywords"),
+		"Canonical":   "https://toolboxnova.com/dev/lorem",
+		"HreflangZH":  "https://toolboxnova.com/dev/lorem?lang=zh",
+		"HreflangEN":  "https://toolboxnova.com/dev/lorem?lang=en",
+		"OGImage":     "https://toolboxnova.com/static/img/og.png",
+		"FAQs":        buildDevFAQ(lang, "lorem"),
+		"PageClass":   "page-dev-lorem",
+		"ToolName":    "lorem",
+	})
+	renderDevTool(c, "dev/lorem.html", data)
+}
+

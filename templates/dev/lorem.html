@@ -1,0 +1,158 @@
+{{ template "base" . }}
+
+{{ define "content" }}
+<section class="dev-tool-hero">
+  <div class="container">
+    <h1 class="tool-title">📝 Lorem Ipsum Generator</h1>
+    <p class="tool-subtitle">Generate placeholder text for your designs, prototypes, and documents.</p>
+  </div>
+</section>
+
+{{ template "partials/ad_slot.html" dict "SlotID" "dev-lorem-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+
+<section class="tool-section">
+  <div class="container">
+    <div class="tool-grid">
+      <div class="tool-main">
+        <div class="tool-card">
+          <div class="tool-controls">
+            <div class="control-group">
+              <label>Type</label>
+              <select id="loremType">
+                <option value="paragraphs">Paragraphs</option>
+                <option value="sentences">Sentences</option>
+                <option value="words">Words</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label>Count</label>
+              <input type="number" id="loremCount" value="3" min="1" max="100">
+            </div>
+            <div class="control-group">
+              <label>Start with "Lorem ipsum..."</label>
+              <input type="checkbox" id="loremStart" checked>
+            </div>
+          </div>
+          <button class="btn-primary" onclick="generateLorem()">🎲 Generate Text</button>
+        </div>
+
+        <div class="result-card">
+          <div class="result-header">
+            <h3>Generated Text <span id="wordCountBadge" class="badge"></span></h3>
+            <button class="btn-secondary" onclick="copyLorem()">📋 Copy</button>
+          </div>
+          <textarea id="loremOutput" class="result-textarea" readonly placeholder="Click Generate to create placeholder text..."></textarea>
+        </div>
+      </div>
+
+      <aside class="tool-sidebar">
+        {{ template "partials/ad_slot.html" dict "SlotID" "dev-lorem-sidebar" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+      </aside>
+    </div>
+  </div>
+</section>
+
+{{ template "partials/ad_slot.html" dict "SlotID" "dev-lorem-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+
+{{ if .FAQs }}
+<section class="faq-section">
+  <div class="container">
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <div class="faq-grid">
+      {{ range .FAQs }}
+      <div class="faq-item">
+        <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+          <span>{{ .Q }}</span>
+          <span class="faq-icon">▼</span>
+        </button>
+        <div class="faq-answer"><p>{{ .A }}</p></div>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}
+{{ end }}
+
+{{ define "extraScript" }}
+<script>
+const loremWords = [
+  "lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit",
+  "sed", "do", "eiusmod", "tempor", "incididunt", "ut", "labore", "et", "dolore",
+  "magna", "aliqua", "enim", "ad", "minim", "veniam", "quis", "nostrud",
+  "exercitation", "ullamco", "laboris", "nisi", "aliquip", "ex", "ea", "commodo",
+  "consequat", "duis", "aute", "irure", "in", "reprehenderit", "voluptate",
+  "velit", "esse", "cillum", "fugiat", "nulla", "pariatur", "excepteur", "sint",
+  "occaecat", "cupidatat", "non", "proident", "sunt", "culpa", "qui", "officia",
+  "deserunt", "mollit", "anim", "id", "est", "laborum"
+];
+
+const classicStart = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+
+function generateLorem() {
+  const type = document.getElementById('loremType').value;
+  const count = parseInt(document.getElementById('loremCount').value) || 3;
+  const startClassic = document.getElementById('loremStart').checked;
+
+  let result = '';
+
+  if (type === 'words') {
+    result = generateWords(count, startClassic);
+  } else if (type === 'sentences') {
+    result = generateSentences(count, startClassic);
+  } else {
+    result = generateParagraphs(count, startClassic);
+  }
+
+  document.getElementById('loremOutput').value = result;
+  const wordCount = result.split(/\s+/).filter(w => w).length;
+  document.getElementById('wordCountBadge').textContent = wordCount + ' words';
+}
+
+function generateWords(count, startClassic) {
+  const words = [];
+  for (let i = 0; i < count; i++) {
+    words.push(loremWords[Math.floor(Math.random() * loremWords.length)]);
+  }
+  return words.join(' ');
+}
+
+function generateSentences(count, startClassic) {
+  const sentences = [];
+  for (let i = 0; i < count; i++) {
+    const length = 8 + Math.floor(Math.random() * 12);
+    const words = [];
+    for (let j = 0; j < length; j++) {
+      words.push(loremWords[Math.floor(Math.random() * loremWords.length)]);
+    }
+    words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1);
+    sentences.push(words.join(' ') + '.');
+  }
+  return sentences.join(' ');
+}
+
+function generateParagraphs(count, startClassic) {
+  const paragraphs = [];
+  for (let i = 0; i < count; i++) {
+    const sentenceCount = 4 + Math.floor(Math.random() * 4);
+    let para = generateSentences(sentenceCount, startClassic && i === 0);
+    if (startClassic && i === 0) {
+      para = classicStart + ' ' + generateSentences(sentenceCount - 1, false);
+    }
+    paragraphs.push(para);
+  }
+  return paragraphs.join('\n\n');
+}
+
+function copyLorem() {
+  const output = document.getElementById('loremOutput');
+  if (output.value) {
+    navigator.clipboard.writeText(output.value);
+    alert('Copied!');
+  }
+}
+
+// Generate on load
+generateLorem();
+</script>
+{{ end }}

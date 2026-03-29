@@ -31,6 +31,10 @@
       send_page_view: {{ if eq .ConsentAnalytics "granted" }}true{{ else }}false{{ end }},
       anonymize_ip: true
     });
+    {{ if .GoogleAdsConversionID }}
+    // Google Ads Conversion Tracking
+    gtag('config', '{{ .GoogleAdsConversionID }}');
+    {{ end }}
   </script>
   {{ end }}
 
@@ -43,6 +47,13 @@
   {{/* ── Consent CSS ── */}}
   <link rel="stylesheet" href="/static/css/consent.css?v={{ .AssetVer }}">
 
+  {{/* ── Resource Hints ── */}}
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="https://www.google-analytics.com">
+
   <title>{{ .Title }}</title>
   <meta name="description" content="{{ .Description }}">
   <meta name="keywords" content="{{ .Keywords }}">
@@ -53,6 +64,22 @@
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://toolboxnova.com/static/img/og.png">
   <meta name="twitter:card" content="summary_large_image">
+
+  {{/* ── Hreflang for multi-language SEO ── */}}
+  {{ if .HreflangMap }}
+  {{ range $lang, $url := .HreflangMap }}
+  <link rel="alternate" hreflang="{{ $lang }}" href="{{ $url }}">
+  {{ end }}
+  <link rel="alternate" hreflang="x-default" href="{{ index .HreflangMap "en" }}">
+  {{ else }}
+  <link rel="alternate" hreflang="en" href="https://toolboxnova.com{{ .CurrentPath }}?lang=en">
+  <link rel="alternate" hreflang="zh" href="https://toolboxnova.com{{ .CurrentPath }}?lang=zh">
+  <link rel="alternate" hreflang="ja" href="https://toolboxnova.com{{ .CurrentPath }}?lang=ja">
+  <link rel="alternate" hreflang="ko" href="https://toolboxnova.com{{ .CurrentPath }}?lang=ko">
+  <link rel="alternate" hreflang="es" href="https://toolboxnova.com{{ .CurrentPath }}?lang=spa">
+  <link rel="alternate" hreflang="x-default" href="https://toolboxnova.com{{ .CurrentPath }}">
+  {{ end }}
+
   <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/static/css/main.css?v={{ .AssetVer }}">
   {{ if .JSONLD }}<script type="application/ld+json">{{ .JSONLD }}</script>{{ end }}
@@ -93,6 +120,8 @@
           <a href="/dev/base64?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/dev/base64" }}active{{ end }}">🔄 {{ call .T "nav.dev_base64" }}</a>
           <a href="/dev/url-encode?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/dev/url-encode" }}active{{ end }}">🔗 {{ call .T "nav.dev_url_encode" }}</a>
           <a href="/dev/word-counter?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/dev/word-counter" }}active{{ end }}">📝 {{ call .T "nav.dev_word_counter" }}</a>
+          <a href="/dev/uuid?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/dev/uuid" }}active{{ end }}">🔑 {{ call .T "nav.dev_uuid" }}</a>
+          <a href="/dev/lorem?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/dev/lorem" }}active{{ end }}">📝 {{ call .T "nav.dev_lorem" }}</a>
         </div>
       </div>
       <div class="nav-item has-dropdown">
@@ -192,6 +221,8 @@
         <a href="/dev/base64?lang={{ .Lang }}">{{ call .T "nav.dev_base64" }}</a>
         <a href="/dev/url-encode?lang={{ .Lang }}">{{ call .T "nav.dev_url_encode" }}</a>
         <a href="/dev/word-counter?lang={{ .Lang }}">{{ call .T "nav.dev_word_counter" }}</a>
+        <a href="/dev/uuid?lang={{ .Lang }}">{{ call .T "nav.dev_uuid" }}</a>
+        <a href="/dev/lorem?lang={{ .Lang }}">{{ call .T "nav.dev_lorem" }}</a>
       </div>
       <div class="nav-mobile-group">
         <span class="nav-mobile-group__label">{{ call .T "nav.media" }}</span>
@@ -265,21 +296,70 @@
       <div class="footer-bottom-links">
         <a href="/sitemap?lang={{ .Lang }}">{{ call .T "footer.link.sitemap" }}</a>
         <a href="/robots.txt" target="_blank">robots.txt</a>
+        {{- if .TwitterURL }}<a href="{{ .TwitterURL }}" target="_blank" rel="noopener noreferrer me">𝕏 Twitter</a>{{ end }}
+        {{- if .GitHubURL }}<a href="{{ .GitHubURL }}" target="_blank" rel="noopener noreferrer me">GitHub</a>{{ end }}
+        {{- if .LinkedInURL }}<a href="{{ .LinkedInURL }}" target="_blank" rel="noopener noreferrer me">LinkedIn</a>{{ end }}
       </div>
     </div>
   </div>
 </footer>
 
+{{/* ── Newsletter Subscription (bottom of page) ── */}}
+{{ if .NewsletterEnabled }}
+<div id="newsletter-bar" style="background:var(--color-primary);color:#fff;padding:12px 0;text-align:center;">
+  <form id="newsletter-form" style="display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;">
+    <span style="font-size:0.9rem;">📧 {{ call .T "footer.newsletter.text" }}</span>
+    <input type="email" id="newsletter-email" placeholder="{{ call .T "footer.newsletter.placeholder" }}" required
+      style="padding:6px 12px;border:1px solid rgba(255,255,255,0.3);border-radius:4px;background:rgba(255,255,255,0.15);color:#fff;font-size:0.85rem;width:220px;max-width:100%;">
+    <button type="submit" style="padding:6px 16px;border:none;border-radius:4px;background:#fff;color:var(--color-primary);font-size:0.85rem;cursor:pointer;font-weight:600;">
+      {{ call .T "footer.newsletter.btn" }}
+    </button>
+  </form>
+</div>
+<script>
+(function(){
+  var form = document.getElementById('newsletter-form');
+  var emailInput = document.getElementById('newsletter-email');
+  if (form && emailInput) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var email = emailInput.value.trim();
+      if (!email) return;
+      // Track newsletter signup
+      if (typeof gtag === 'function') {
+        gtag('event', 'newsletter_signup', { event_category: 'newsletter', method: 'footer_bar' });
+      }
+      // Show success message
+      form.innerHTML = '<span style="font-size:0.9rem;">✅ ' + (window.__i18n__ ? (window.__i18n__['footer.newsletter.success'] || 'Thanks for subscribing!') : 'Thanks for subscribing!') + '</span>';
+    });
+  }
+})();
+</script>
+{{ end }}
 
-<script src="/static/js/ga-events.js?v={{ .AssetVer }}"></script>
-<script src="/static/js/main.js?v={{ .AssetVer }}"></script>
+
+<script defer src="/static/js/ga-events.js?v={{ .AssetVer }}"></script>
+<script>
+// Inject Google Ads Conversion IDs for client-side tracking
+{{ if .GoogleAdsConversionID }}
+window.__GADS_CONV_ID__ = '{{ .GoogleAdsConversionID }}';
+{{ end }}
+{{ if .GoogleAdsConversionLabel }}
+window.__GADS_CONV_TOOL__ = '{{ .GoogleAdsConversionLabel }}';
+{{ end }}
+// 30-second engaged visit tracking
+setTimeout(function() {
+  if (typeof gaTrackEngagedVisit === 'function') gaTrackEngagedVisit();
+}, 30000);
+</script>
+<script defer src="/static/js/main.js?v={{ .AssetVer }}"></script>
 {{ template "extraScript" . }}
 
 {{/* ── Cookie Consent Banner + Modal ── */}}
 {{ template "partials/cookie-consent.html" . }}
 {{/* ── Consent Engine (must be after partial so CKY_CONFIG is ready) ── */}}
-<script src="/static/js/consent-engine.js?v={{ .AssetVer }}"></script>
-<script src="/static/js/theme.js?v={{ .AssetVer }}"></script>
+<script defer src="/static/js/consent-engine.js?v={{ .AssetVer }}"></script>
+<script defer src="/static/js/theme.js?v={{ .AssetVer }}"></script>
 <script>
 (function() {
   var btn  = document.getElementById('hamburger');

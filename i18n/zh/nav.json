@@ -45,8 +45,14 @@
   "nav.dev_ip": "IP 查询",
   "nav.dev_whois": "Whois 查询",
   "nav.dev_word_counter": "文字计数",
+  "nav.dev_uuid": "UUID 生成器",
+  "nav.dev_lorem": "Lorem Ipsum 生成器",
   "nav.json_learn": "JSON 学习中心",
   "nav.privacy_check": "隐私账号检测",
   "nav.breach_checker": "账号泄露检测",
-  "nav.weather_query": "天气查询"
+  "nav.weather_query": "天气查询",
+  "footer.newsletter.text": "获取新工具和更新",
+  "footer.newsletter.placeholder": "输入邮箱地址",
+  "footer.newsletter.btn": "订阅",
+  "footer.newsletter.success": "订阅成功，感谢！"
 }

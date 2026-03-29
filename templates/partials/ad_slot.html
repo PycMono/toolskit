@@ -4,7 +4,7 @@
   参数：
     - SlotID:      广告位 CSS 类名标识，如 "ai-detector-left"（仅用于样式）
     - AdSlotNum:   Google AdSense 数字 Slot ID，如 "1234567890"
-                   enable_ads=true 时必填，否则不展示任何内容
+                   传入时使用手动广告位；不传时使用 Auto Ads
     - Size:        桌面端尺寸，如 "728x90"
     - Mobile:      移动端尺寸（可选），如 "320x50"
     - MobileHide:  true = 移动端隐藏
@@ -24,7 +24,7 @@
   {{- if $mobileHide }} style="--ad-mobile-display:none"{{ end -}}>
   {{ if $enabled }}
     {{ if $adSlotNum }}
-    <!-- Google AdSense -->
+    <!-- Google AdSense (Manual) -->
     <ins class="adsbygoogle"
          style="display:block"
          data-ad-client="{{ $clientID }}"
@@ -34,8 +34,17 @@
     <script>
       (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
+    {{ else }}
+    <!-- Google AdSense (Auto Ads anchor) -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="{{ $clientID }}"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
     {{ end }}
-    {{/* enable_ads=true 但无 AdSlotNum：不展示任何内容 */}}
   {{ else }}
     <!-- 开发占位：enable_ads=false 时显示 -->
     <div class="ad-placeholder">

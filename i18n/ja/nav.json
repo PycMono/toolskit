@@ -45,7 +45,13 @@
   "nav.dev_ip": "IP 検索",
   "nav.dev_whois": "Whois 検索",
   "nav.dev_word_counter": "文字カウント",
+  "nav.dev_uuid": "UUID 生成器",
+  "nav.dev_lorem": "Lorem Ipsum 生成器",
   "nav.json_learn": "JSON 学習センター",
   "nav.privacy_check": "プライバシーチェッカー",
-  "nav.weather_query": "天気検索"
+  "nav.weather_query": "天気検索",
+  "footer.newsletter.text": "新機能・更新情報をお届け",
+  "footer.newsletter.placeholder": "メールアドレスを入力",
+  "footer.newsletter.btn": "購読する",
+  "footer.newsletter.success": "購読ありがとうございます！"
 }

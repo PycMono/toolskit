@@ -18,7 +18,13 @@ func AdsConfig(cfg *config.Config) gin.HandlerFunc {
 			v = "v1"
 		}
 		c.Set("AssetVersion", v)
+		// Social Media Links
+		c.Set("TwitterURL", cfg.TwitterURL)
+		c.Set("GitHubURL", cfg.GitHubURL)
+		c.Set("LinkedInURL", cfg.LinkedInURL)
+		// Newsletter
+		c.Set("NewsletterEnabled", cfg.NewsletterEnabled)
+		c.Set("NewsletterProvider", cfg.NewsletterProvider)
 		c.Next()
 	}
 }
-
