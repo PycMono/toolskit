@@ -290,6 +290,336 @@ const DATA = {
     flag: '🇿🇦',
     name: 'South Africa',
   },
+  TH: {
+    firstMale: ['อาร์ท','ภูมิ','พีระ','กิตติ','ภาณุ','วีระ','ณัฐ','ชนะ','ธนา','ธีระ','อดิศร','ยุทธ','สุระ','มานะ','ชาญ'],
+    firstFemale: ['นภา','สุดา','อรทัย','กุลธิดา','ชาลี','ทิพย์','พิมพ์','วิภา','ดารุณี','อังคณา','จิตรา','ชลิตา','ศิริ','นิชา','มินตรา'],
+    last: ['สุขสันต์','ใจดี','รักเกียรติ','เจริญ','ศิริ','วงศ์','วิไล','อารี','มีสุข','สมหมาย','ดำรง','เกตุ','ทอง','เทพ','นิล','ฤทธิ์','ชาญ','แก้ว'],
+    streets: ['ถนนสุขุมวิท','ถนนสีลม','ถนนพระราม 1','ถนนพระราม 4','ถนนพหลโยธิน','ถนนวิภาวดีรังสิต','ถนนเพชรบุรี','ถนนราชดำเนิน','ถนนอิสรภาพ','ถนนสาทร'],
+    cities: ['กรุงเทพมหานคร','เชียงใหม่','ภูเก็ต','พัทยา','หาดใหญ่','นนทบุรี','ขอนแก่น','อยุธยา','นครราชสีมา','ชลบุรี','สุราษฎร์ธานี','เชียงราย','อุดรธานี','อุบลราชธานี'],
+    states: ['กรุงเทพมหานคร','เชียงใหม่','ภูเก็ต','พัทยา','หาดใหญ่','นนทบุรี','ขอนแก่น','อยุธยา','นครราชสีมา','ชลบุรี','สุราษฎร์ธานี','เชียงราย','อุดรธานี'],
+    stateAbbr: ['BKK','CMI','PHK','PTY','HSY','NBI','KKN','AYA','NKI','CBI','SUR','CRI','UDN'],
+    phone: '+66',
+    currency: 'THB',
+    tld: '.th',
+    timezone: 'Asia/Bangkok',
+    flag: '🇹🇭',
+    name: 'Thailand',
+  },
+  VN: {
+    firstMale: ['Hùng','Vũ','Đức','Duy','Nam','Hoàng','Tuấn','Anh','Minh','Quốc','Thắng','Hải','Sơn','Long','Thành'],
+    firstFemale: ['Lan','Hương','Mai','Thảo','Ngọc','Hà','Trang','Anh','Thu','Vy','Ly','Nhi','Yến','Bình','Diễm'],
+    last: ['Nguyễn','Trần','Lê','Phạm','Hoàng','Huỳnh','Phan','Vũ','Võ','Đặng','Bùi','Đỗ','Hồ','Ngô','Dương'],
+    streets: ['Đường Nguyễn Huệ','Đường Lê Lợi','Đường Trần Hưng Đạo','Đường Hai Bà Trưng','Đường Quang Trung','Đường Đinh Tiên Hoàng','Đường Lý Thường Kiệt','Đường 3 Tháng 2','Đường Cách Mạng Tháng 8','Đường Xô Viết Nghệ Tĩnh'],
+    cities: ['Hà Nội','TP Hồ Chí Minh','Đà Nẵng','Hải Phòng','Cần Thơ','Huế','Nha Trang','Buôn Ma Thuột','Hải Dương','Biên Hòa','Thái Nguyên','Vũng Tàu','Quy Nhơn'],
+    states: ['Hà Nội','TP Hồ Chí Minh','Đà Nẵng','Hải Phòng','Cần Thơ','Huế','Nha Trang','Buôn Ma Thuột','Hải Dương','Thái Nguyên'],
+    stateAbbr: ['HAN','SGN','DAD','HPH','CANT','HUE','NRT','BMU','HDY','TNU'],
+    phone: '+84',
+    currency: 'VND',
+    tld: '.vn',
+    timezone: 'Asia/Ho_Chi_Minh',
+    flag: '🇻🇳',
+    name: 'Vietnam',
+  },
+  PH: {
+    firstMale: ['Jose','Angel','Juan','Gabriel','Luis','Miguel','Antonio','Rafael','Daniel','Carlos','Francisco','Mark','Christian','John','Michael'],
+    firstFemale: ['Maria','Angelica','Christine','MayAnn','Patricia','Sarah','Ana','Michelle','Rose','Joy','Grace','Jane','Mary','Rachel','Diana'],
+    last: ['Santos','Reyes','Cruz','Bautista','Garcia','Fernandez','Ramos','Flores','Villanueva','Castillo','Rivera','Torres','Del Rosario','Aquino','Mendoza'],
+    streets: ['Main Avenue','Rizal Avenue','Bonifacio Street','Mabini Street','Taft Avenue','Edsa','Ortigas Avenue','Shaw Boulevard','Ayala Avenue','Buendia Avenue'],
+    cities: ['Manila','Quezon City','Davao','Cebu','Caloocan','Zamboanga','Antipolo','Taguig','Pasig','Cagayan de Oro','Parañaque','Valenzuela','Bacoor','General Santos'],
+    states: ['Metro Manila','Cebu','Davao','Cavite','Bulacan','Laguna','Rizal','Pampanga','Negros Occidental','Cagayan'],
+    stateAbbr: ['NCR','CEB','DAV','CAV','BUL','LAG','RIZ','PAM','NEC','CAG'],
+    phone: '+63',
+    currency: 'PHP',
+    tld: '.ph',
+    timezone: 'Asia/Manila',
+    flag: '🇵🇭',
+    name: 'Philippines',
+  },
+  ID: {
+    firstMale: ['Andi','Budi','Agus','Eko','Dedi','Rian','Fajar','Rizky','Bayu','Dimas','Rendi','Ilham','Faris','Arif','Kevin'],
+    firstFemale: ['Siti','Dewi','Putri','Rina','Wulan','Maya','Sarah','Ayu','Intan','Citra','Nadia','Amelia','Dinda','Bella','Cindy'],
+    last: ['Saputra','Wijaya','Setiawan','Kusuma','Pratama','Nugroho','Hidayat','Santoso','Putra','Wibowo','Kusuma','Suryadi','Permana','Rahman','Saputra'],
+    streets: ['Jalan Sudirman','Jalan Gatot Subroto','Jalan Thamrin','Jalan Rasuna Said','Jalan MH Thamrin','Jalan Asia Afrika','Jalan Diponegoro','Jalan Ahmad Yani','Jalan Pemuda','Jalan Veteran'],
+    cities: ['Jakarta','Surabaya','Bandung','Medan','Semarang','Makassar','Palembang','Denpasar','Yogyakarta','Malang','Bogor','Batam','Tangerang'],
+    states: ['DKI Jakarta','Jawa Barat','Jawa Tengah','Jawa Timur','Sumatra Utara','Banten','DI Yogyakarta','Bali','Sulawesi Selatan','Sumatra Selatan'],
+    stateAbbr: ['JKT','JAB','JAT','JAT','SUM','BAN','YOG','BAL','SUL','SLS'],
+    phone: '+62',
+    currency: 'IDR',
+    tld: '.id',
+    timezone: 'Asia/Jakarta',
+    flag: '🇮🇩',
+    name: 'Indonesia',
+  },
+  MY: {
+    firstMale: ['Ahmad','Muhammad','Farid','Khai','Ryan','Aiden','Ethan','Hakim','Danial','Imran','Zack','Fikri','Aiman','Johan','Hafiz'],
+    firstFemale: ['Nur','Sarah','Ain','Puteri','Farah','Sofia','Emma','Amira','Diana','Aina','Izzah','Myra','Qistina','Syaza','Aleeya'],
+    last: ['Lee','Tan','Lim','Ng','Wong','Goh','Chua','Chan','Koh','Teo','Ong','Yeo','Tay','Ho','Low'],
+    streets: ['Jalan Tun Razak','Jalan Ampang','Jalan Bukit Bintang','Jalan Raja Chulan','Jalan Sultan Ismail','Jalan Imbi','Jalan Pudu','Jalan Peel','Jalan Loke Yew','Jalan Klang Lama'],
+    cities: ['Kuala Lumpur','George Town','Johor Bahru','Ipoh','Shah Alam','Petaling Jaya','Kuching','Kota Kinabalu','Malacca','Seremban'],
+    states: ['Kuala Lumpur','Selangor','Penang','Johor','Perak','Sabah','Sarawak','Negeri Sembilan','Malacca','Kedah'],
+    stateAbbr: ['KUL','SEL','PEN','JHR','PRK','SBH','SWK','NSN','MLK','KDH'],
+    phone: '+60',
+    currency: 'MYR',
+    tld: '.my',
+    timezone: 'Asia/Kuala_Lumpur',
+    flag: '🇲🇾',
+    name: 'Malaysia',
+  },
+  TW: {
+    firstMale: ['建國','志明','文雄','俊傑','家豪','志偉','建宏','雅婷','淑娟','美惠','美玲','淑華','惠雯','靜宜','雅雯'],
+    firstFemale: ['淑娟','美惠','雅婷','美玲','淑華','惠雯','靜宜','雅雯','怡君','怡婷','佩君','佩珊','靜儀','靜怡','婉婷'],
+    last: ['王','李','張','劉','陳','楊','黃','周','吳','徐','孫','胡','朱','高','林','何','郭','馬','羅'],
+    streets: ['忠孝東路','信義路','中山路','中正路','民族路','復興路','光明路','和平路','建國路','自由路'],
+    cities: ['臺北','新北','桃園','臺中','臺南','高雄','基隆','新竹','嘉義','彰化','屏東','宜蘭','花蓮'],
+    states: ['臺北市','新北市','桃園市','臺中市','臺南市','高雄市','基隆市','新竹市','嘉義市','彰化縣'],
+    stateAbbr: ['TPE','NWT','TAO','TXG','TNN','KHH','KEE','HSZ','CYI','CHW'],
+    phone: '+886',
+    currency: 'TWD',
+    tld: '.tw',
+    timezone: 'Asia/Taipei',
+    flag: '🇹🇼',
+    name: 'Taiwan',
+  },
+  PL: {
+    firstMale: ['Piotr','Krzyysztof','Andrzej','Tomasz','Paweł','Michał','Marcin','Jan','Grzegorz','Mateusz','Jakub','Adam','Łukasz','Rafał','Robert'],
+    firstFemale: ['Anna','Maria','Katarzyna','Małgorzata','Agnieszka','Ewa','Joanna','Barbara','Magdalena','Beata','Katarzyna','Natalia','Marta','Paulina','Karolina'],
+    last: ['Nowak','Kowalski','Wiśniewski','Wójcik','Kamiński','Lewandowski','Zieliński','Kozłowski','Jankowski','Mazur','Krawczyk','Piotrowski','Grabowski','Nowakowski','Pawłowski'],
+    streets: ['ulica Marszałkowska','ulica Krakowskie Przedmieście','ulica Nowy Świat','ulica Aleje Jerozolimskie','ulica Piotrkowska','ulica Długa','ulica Floriańska','ulica Grodzka','ulica Mariacka','ulica Wawelska'],
+    cities: ['Warsaw','Kraków','Łódź','Wrocław','Poznań','Gdańsk','Szczecin','Bydgoszcz','Lublin','Katowice','Białystok','Gdynia','Częstochowa'],
+    states: ['Mazowieckie','Śląskie','Wielkopolskie','Małopolskie','Dolnośląskie','Lubelskie','Pomorskie','Łódzkie','Kujawsko-Pomorskie','Podkarpackie'],
+    stateAbbr: ['MAZ','ŚLŚ','WKP','MLP','DLS','LUB','POM','ŁDZ','KUI','PKP'],
+    phone: '+48',
+    currency: 'PLN',
+    tld: '.pl',
+    timezone: 'Europe/Warsaw',
+    flag: '🇵🇱',
+    name: 'Poland',
+  },
+  TR: {
+    firstMale: ['Ahmet','Mehmet','Mustafa','Can','Ali','Mert','Efe','Arda','Kerem','Yusuf','Ömer','Emir','Berk','Çınar','Toprak'],
+    firstFemale: ['Zeynep','Elif','Ayşe','Fatma','Selin','Ece','Deniz','Azra','Sude','Rabia','Mine','Sümeyye','Büşra','Aleyna','Damla'],
+    last: ['Yılmaz','Kaya','Demir','Çelik','Şahin','Yıldız','Yıldırım','Öztürk','Aydın','Özdemir','Keskin','Kılıç','Arslan','Doğan','Koç'],
+    streets: ['İstiklal Caddesi','Bağdat Caddesi','Barbaros Bulvarı','Büyükdere Caddesi','Halaskargazi Caddesi','Nispetiye Caddesi','Abdi İpekçi Caddesi','Valikonağı Caddesi','Teşvikiye Caddesi','Rumeli Caddesi'],
+    cities: ['Istanbul','Ankara','Izmir','Bursa','Antalya','Adana','Gaziantep','Konya','Şanlıurfa','Mersin','Kayseri','Eskişehir','Diyarbakır','Samsun'],
+    states: ['Istanbul','Ankara','Izmir','Bursa','Antalya','Adana','Gaziantep','Konya','Şanlıurfa','Mersin'],
+    stateAbbr: ['IST','ANK','IZM','BUR','ANT','ADA','GAZ','KON','SAN','MER'],
+    phone: '+90',
+    currency: 'TRY',
+    tld: '.tr',
+    timezone: 'Europe/Istanbul',
+    flag: '🇹🇷',
+    name: 'Turkey',
+  },
+  SA: {
+    firstMale: ['محمد','أحمد','عبدالله','سعود','فهد','خالد','عمر','ناصر','عبدالرحمن','تركي','محو','يوسف','علي','حسن','إبراهيم'],
+    firstFemale: ['فاطمة','نورة','سارة','مريم','هند','لينا','دعاء','ريم','أمل','جواهر','شهد','منى','عائشة','خديجة','سجى'],
+    last: ['آل سعود','القحطاني','العمري','السبيعي','الشمري','الحربي','الغامدي','العتيبي','الضبيب','الدوسري','المطيري','الشراري','الزهراني','الفيفي','الربيع'],
+    streets: ['شارع الملك فهد','شارع العليا','شارع التحلية','شارع الأمير محمد','شارع التخصصي','طريق الملك عبدالله','طريق مكة المكرمة','طريق الملك عبدالعزيز','شارع العروبة','شارع الستين'],
+    cities: ['Riyadh','Jeddah','Mecca','Medina','Dammam','Khobar','Tabuk','Buraidah','Abha','Khamis Mushait','Hail','Rafha','Najran','Jizan'],
+    states: ['Riyadh Region','Makkah Region','Madinah Region','Eastern Province','Asir Region','Tabuk Region','Hail Region','Northern Borders Region','Jizan Region','Najran Region'],
+    stateAbbr: ['RIY','MAK','MED','EST','ASR','TAB','HAI','NOR','JIZ','NAJ'],
+    phone: '+966',
+    currency: 'SAR',
+    tld: '.sa',
+    timezone: 'Asia/Riyadh',
+    flag: '🇸🇦',
+    name: 'Saudi Arabia',
+  },
+  AE: {
+    firstMale: ['محمد','أحمد','عبدالله','سعيد','عمر','خالد','فهد','حمد','ماجد','راشد','سلطان','يوسف','علي','حسن','إبراهيم'],
+    firstFemale: ['فاطمة','مريم','نورة','سارة','أمة الله','عائشة','شذى','منى','لينة','ریم','آمنة','هند','أمل','جواهر','مها'],
+    last: ['الشهابي','المعلا','الهاشمي','النعيمي','الظاهري','المر','الكعبي','المنصوري','العبودي','السويدي','البلوشي','الشامسي','الشحی','الخاطر','غانم'],
+    streets: ['Sheikh Zayed Road','Sheikh Rashid Road','Khalid Bin Al Waleed Street','Al Maktoum Street','Al Seef Street','Al Rigga Street','Baniyas Square','Dubai Marina Walk','The Walk JBR','City Walk'],
+    cities: ['Dubai','Abu Dhabi','Sharjah','Al Ain','Ajman','Ras Al Khaimah','Fujairah','Umm Al Quwain','Khor Fakkan','Dibba'],
+    states: ['Dubai','Abu Dhabi','Sharjah','Ajman','Umm Al Quwain','Ras Al Khaimah','Fujairah'],
+    stateAbbr: ['DU','AZ','SH','AJ','UQ','RK','FU'],
+    phone: '+971',
+    currency: 'AED',
+    tld: '.ae',
+    timezone: 'Asia/Dubai',
+    flag: '🇦🇪',
+    name: 'United Arab Emirates',
+  },
+  IL: {
+    firstMale: ['יוסף','דוד','יעקב','משה','אברהם','דניאל','איתי','עומר','יותם','תומר','אדם','נועם','איתמר','רועי','אסף'],
+    firstFemale: ['נועה','מאיה','שירה','תמר','שרון','יעל','דנה','רוני','מיכל','אנה','קרן','סיון','הדר','ליהי','נטע'],
+    last: ['כהן','לוי','ישראל','פרידמן','אברהם','מזרחי','פרץ','בן-דוד','גולן','חזן','כרמלי','ויצמן','שמיר','שפירא','דהן'],
+    streets: ['רחוב דיזנגוף','רחוב אלנבי','רחוב בן-יהודה','רחוב רוטשילד','רחוב יפו','רחוב המלך ג\'ורג','שדרות רוקח','רחוב הרצל','רחוב ז\'בוטינסקי','רחוב ויצמן'],
+    cities: ['Tel Aviv','Jerusalem','Haifa','Rishon LeZion','Petah Tikva','Ashdod','Netanya','Beersheba','Bnei Brak','Holon','Ramat Gan','Rehovot','Bat Yam','Modiin'],
+    states: ['Tel Aviv District','Jerusalem District','Haifa District','Central District','Southern District','Northern District','Judea and Samaria'],
+    stateAbbr: ['TA','JM','HA','CE','SO','Z','IS'],
+    phone: '+972',
+    currency: 'ILS',
+    tld: '.il',
+    timezone: 'Asia/Jerusalem',
+    flag: '🇮🇱',
+    name: 'Israel',
+  },
+  AR: {
+    firstMale: ['Santiago','Mateo','Thiago','Bautista','Joaquín','Tomás','Benicio','Lucas','Facundo','Ignacio','Álvaro','Maximiliano','Lautaro','Fernando','Gonzalo'],
+    firstFemale: ['Sofía','Mía','Isabella','Emma','Valentina','Camila','Zoe','Martina','Juana','Lucía','Julia','Morena','Renata','Olivia','Francesca'],
+    last: ['García','Rodríguez','González','Fernández','López','Martínez','Pérez','Gómez','Díaz','Sanchez','Romero','Ruiz','Torres','Ramírez','Flores'],
+    streets: ['Avenida Corrientes','Avenida Santa Fe','Avenida Rivadavia','Avenida de Mayo','Avenida 9 de Julio','Calle Florida','Calle Lavalle','Avenida Libertador','Avenida del Libertador','Calle Reconquista'],
+    cities: ['Buenos Aires','Córdoba','Rosario','Mendoza','La Plata','San Miguel de Tucumán','Mar del Plata','Salta','Santa Fe','San Juan','Resistencia','Neuquén','Bahía Blanca'],
+    states: ['Buenos Aires','Córdoba','Santa Fe','Mendoza','Tucumán','Entre Ríos','Salta','Misiones','Chaco','San Juan'],
+    stateAbbr: ['B','C','SF','M','T','ER','S','MN','CN','J'],
+    phone: '+54',
+    currency: 'ARS',
+    tld: '.ar',
+    timezone: 'America/Argentina/Buenos_Aires',
+    flag: '🇦🇷',
+    name: 'Argentina',
+  },
+  CO: {
+    firstMale: ['Santiago','Sebastián','Mateo','Samuel','Mateo','Alejandro','Daniel','David','Gabriel','Joaquín','Andrés','Felipe','Juan José','José','Miguel'],
+    firstFemale: ['María','Sofía','Valentina','Isabella','Camila','Valeria','Daniela','María José','Lucía','Ana','Victoria','María Fernanda','Paula','Natalia','Sara'],
+    last: ['Rodríguez','Martínez','García','López','González','Hernández','Pérez','Sánchez','Ramírez','Torres','Flores','Rivera','Gómez','Díaz','Cruz'],
+    streets: ['Calle 7','Avenida Caracas','Calle 19','Calle 26','Avenida Jiménez','Carrera 7','Calle 72','Calle 100','Avenida Boyacá','Carrera 15'],
+    cities: ['Bogotá','Medellín','Cali','Barranquilla','Cartagena','Cúcuta','Bucaramanga','Pereira','Santa Marta','Ibagué','Pasto','Villavicencio'],
+    states: ['Cundinamarca','Antioquia','Valle del Cauca','Atlántico','Bolívar','Norte de Santander','Santander','Risaralda','Magdalena','Tolima'],
+    stateAbbr: ['CUN','ANT','VAC','ATL','BOL','NSA','SAN','RIS','MAG','TOL'],
+    phone: '+57',
+    currency: 'COP',
+    tld: '.co',
+    timezone: 'America/Bogota',
+    flag: '🇨🇴',
+    name: 'Colombia',
+  },
+  CL: {
+    firstMale: ['Santiago','Mateo','Joaquín','Lucas','Benjamín','Thiago','Tomás','Agustín','Martín','Nicolás','Alejandro','Diego','Samuel','Gabriel','Leandro'],
+    firstFemale: ['Sofía','Emma','Antonella','Isidora','Victoria','Julia','Constanza','Martina','Florencia','Amelia','Javiera','Catalina','Emilia','Paz','Mía'],
+    last: ['González','Muñoz','Rojas','Díaz','Pérez','Soto','Morales','López','Silva','Torres','Araya','Gutiérrez','Fernández','Castro','Ramírez'],
+    streets: ['Avenida Providencia','Avenida Libertador Bernardo O\'Higgins','Avenida Las Condes','Avenida Apoquindo','Avenida Suecia','Avenida Isidora Goyenechea','Costanera Center','Avenida Kennedy','Avenida Vicuña Mackenna','Avenida Tobalaba'],
+    cities: ['Santiago','Valparaíso','Concepción','La Serena','Antofagasta','Temuco','Rancagua','Talca','Arica','Chillán','Iquique','Puerto Montt'],
+    states: ['Región Metropolitana','Valparaíso','Concepción','La Serena','Antofagasta','Araucanía','O\'Higgins','Maule','Arica y Parinacota','Ñuble'],
+    stateAbbr: ['RM','VAL','CON','SER','ANT','ARA','OHI','MAU','ARI','NBL'],
+    phone: '+56',
+    currency: 'CLP',
+    tld: '.cl',
+    timezone: 'America/Santiago',
+    flag: '🇨🇱',
+    name: 'Chile',
+  },
+  PE: {
+    firstMale: ['Santiago','Mateo','Sebastián','Leonardo','Diego','Álvaro','Adrián','Thiago','Emiliano','Andrés','Gonzalo','Bruno','Samuel','Ian','Lucas'],
+    firstFemale: ['Valentina','Zoe','Ariana','Sofía','Camila','Isabella','Valeria','Mía','Luana','Emma','Abigail','Victoria','Renata','Antonella','Sharon'],
+    last: ['García','Rodríguez','Pérez','Gonzáles','Flores','Díaz','Torres','López','Ramírez','Sánchez','Quispe','Fernández','Rivera','Rojas','Chávez'],
+    streets: ['Avenida Javier Prado','Avenida Brasil','Avenida Tacna','Avenida Benavides','Avenida Paseo de la República','Avenida Argentina','Avenida Wilson','Avenida Grau','Avenida Colonial','Jirón de la Unión'],
+    cities: ['Lima','Arequipa','Trujillo','Chiclayo','Piura','Iquitos','Cusco','Huancayo','Chimbote','Pucallpa','Tacna','Ica','Juliaca'],
+    states: ['Lima','Arequipa','La Libertad','Lambayeque','Piura','Loreto','Cusco','Junín','Ancash','Madre de Dios'],
+    stateAbbr: ['LIM','ARE','LIB','LAM','PIU','LOR','CUS','JUN','ANC','MDD'],
+    phone: '+51',
+    currency: 'PEN',
+    tld: '.pe',
+    timezone: 'America/Lima',
+    flag: '🇵🇪',
+    name: 'Peru',
+  },
+  EG: {
+    firstMale: ['محمد','أحمد','محمود','حسن','عمر','علي','يوسف','كريم','عبدالرحمن','إبراهيم','محمد','طارق','سيف','خالد','عامر'],
+    firstFemale: ['نور الهدى','فاطمة','زينب','مريم','نور','سارة','آية','جنى','ليلى','هنا','رنا','دعاء','يسر','نورهان','منة الله'],
+    last: ['محمد','أحمد','محمود','عبدالله','إبراهيم','حسن','حسين','علي','عمر','خالد','يوسف','عبدالرحمن','محمود','سعيد','عادل'],
+    streets: ['شارع المعز','شارع عباس العقاد','شارع الجلاء','كورنيش النيل','شارع قصر العيني','شارع التحرير','شارع جمال عبدالناصر','شارع السادات','شارع رمسيس','شارع 26 يوليو'],
+    cities: ['Cairo','Alexandria','Giza','Shubra El Kheima','Port Said','Suez','Luxor','Asyut','Mansoura','Mahalla El Kubra','Tanta','Ismailia'],
+    states: ['Cairo','Alexandria','Giza','Dakahlia','Sharqia','Monufia','Qalyubia','Gharbia','Beheira','Kafr El Sheikh'],
+    stateAbbr: ['CAH','ALX','GIZ','DKH','SHR','MNF','KBH','GH','BEH','KFS'],
+    phone: '+20',
+    currency: 'EGP',
+    tld: '.eg',
+    timezone: 'Africa/Cairo',
+    flag: '🇪🇬',
+    name: 'Egypt',
+  },
+  NG: {
+    firstMale: ['Emmanuel','Oluwaseun','Chinedu','Chukwuemeka','Oluwafemi','Ayomide','Ifeanyi','Oluwadamiloju','Oluwalana','David','Samuel','Christian','Isaac','Daniel','Matthew'],
+    firstFemale: ['Chisom','Ololade','Olamide','Favour','Peace','Blessing','Grace','Mercy','Hope','Chidinma','Chinasa','Ngozi','Adaeze','Ifeoma','Obiageli'],
+    last: ['Adeyemi','Okafor','Okonkwo','Eze','Nnamdi','Okoro','Ibe','Nwosu','Okeke','Iwu','Nnajiofor','Nwankwo','Okoye','Ezeoke','Udeh'],
+    streets: ['Adetokunbo Ademola Street','Mobolaji Bank Anthony Way','Obafemi Awolowo Way','Herbert Macaulay Way','Ahmadu Bello Way','Ikorodu Road','Agege Motor Road','Lagos-Abeokuta Expressway','Oshodi-Apapa Expressway','Victoria Island'],
+    cities: ['Lagos','Kano','Ibadan','Abuja','Port Harcourt','Benin City','Maiduguri','Zaria','Aba','Jos','Ilorin','Oyo','Kaduna','Sokoto'],
+    states: ['Lagos','Kano','Ibadan','Abuja','Rivers','Edo','Borno','Kaduna','Abia','Plateau','Kwara','Oyo','Katsina','Sokoto'],
+    stateAbbr: ['LAG','KAN','IBA','ABJ','RIV','EDO','BOR','KAD','ABI','PLA','KWA','OYO','KTS','SOK'],
+    phone: '+234',
+    currency: 'NGN',
+    tld: '.ng',
+    timezone: 'Africa/Lagos',
+    flag: '🇳🇬',
+    name: 'Nigeria',
+  },
+  KE: {
+    firstMale: ['Ian','Ryan','Tyler','Kevin','Joshua','Austin','Brandon','Zachary','Isaac','Nathan','Christian','Ethan','Caleb','Justin','Andrew'],
+    firstFemale: ['Mary','Faith','Grace','Hope','Mercy','Joy','Peace','Blessing','Jane','Sarah','Naomi','Hannah','Esther','Ruth','Lydia'],
+    last: ['Mwangi','Mwaura','Otieno','Omondi','Kipchoge','Kipkorir','Njoroge','Kamau','Ochieng','Wanjiku','Nyambura','Akinyi','Njeri','Wanjiku','Muthoni'],
+    streets: ['Thika Road','Mombasa Road','Uhuru Highway','Jogoo Road','Lang\'ata Road','Waiyaki Way','Outer Ring Road','Jomo Kenyatta Avenue','Moi Avenue','Kenyatta Avenue'],
+    cities: ['Nairobi','Mombasa','Kisumu','Nakuru','Eldoret','Kehancha','Malindi','Kitui','Garissa','Meru','Kakamega','Embu','Nyeri','Isiolo'],
+    states: ['Nairobi','Mombasa','Kisumu','Nakuru','Eldoret','Kehancha','Malindi','Kitui','Garissa','Meru','Kakamega','Embu','Nyeri','Isiolo'],
+    stateAbbr: ['NBI','MBA','KIS','NAK','ELD','KEH','MAL','KIT','GAR','MRU','KAK','EBU','NYE','ISO'],
+    phone: '+254',
+    currency: 'KES',
+    tld: '.ke',
+    timezone: 'Africa/Nairobi',
+    flag: '🇰🇪',
+    name: 'Kenya',
+  },
+  UA: {
+    firstMale: ['Олександр','Дмитро','Сергій','Андрій','Олег','Максим','Вадим','Богдан','Михайло','Ігор','Володимир','Юрій','Роман','Павло','Артем'],
+    firstFemale: ['Анна','Олена','Марія','Катерина','Тетяна','Оксана','Наталія','Ірина','Юлія','Вікторія','Ольга','Світлана','Ганна','Інна','Людмила'],
+    last: ['Шевченко','Бойко','Коваленко','Бондаренко','Мельник','Кононенко','Бабенко','Гончаренко','Петренко','Савченко','Іванов','Попов','Сидоренко','Кузьменко','Мороз'],
+    streets: ['вул. Хрещатик','вул. Леся Курбаса','просп. Перемоги','вул. Сагайдачного','вул. Софіївська','просп. Мазепи','вул. Б. Хмельницького','вул. Прорізна','вул. Інститутська','вул. Банкова'],
+    cities: ['Київ','Харків','Одеса','Дніпро','Донецьк','Запоріжжя','Львів','Кривий Ріг','Миколаїв','Маріуполь','Луганськ','Севастополь','Вінниця','Макіївка'],
+    states: ['Київ','Харківська','Одеська','Дніпропетровська','Донецька','Запорізька','Львівська','Кіровоградська','Автономна Республіка Крим'],
+    stateAbbr: ['KV','KH','OD','DP','DT','ZP','LV','KR','CR'],
+    phone: '+380',
+    currency: 'UAH',
+    tld: '.ua',
+    timezone: 'Europe/Kiev',
+    flag: '🇺🇦',
+    name: 'Ukraine',
+  },
+  GR: {
+    firstMale: ['Γιώργος','Γιάννης','Κωνσταντίνος','Δημήτρης','Νίκος','Παναγιώτης','Χρήστος','Αθανάσιος','Βασίλης','Μιχάλης','Αλέξανδρος','Ευάγγελος','Στέλιος','Ηλίας','Αντώνης'],
+    firstFemale: ['Μαρία','Ελένη','Σοφία','Κωνσταντίνα','Δήμητρα','Βασιλική','Ευαγγελία','Αθηνά','Αννα','Γεωργία','Αγγελική','Ζωή','Χριστίνα','Παρασκευή','Ιωάννα'],
+    last: ['Παπαδόπουλος','Γεωργίου','Γεωργίου','Ιωάννου','Κωνσταντίνου','Δημητρίου','Νικολάου','Πέτρου','Βασιλείου','Αθανασίου','Αντωνίου','Χρήστου','Ευαγγέλου','Μιχαήλ','Αλεξάνδρου'],
+    streets: ['Λεωφόρος Κηφισίας','Λεωφόρος Ποσειδώνος','Λεωφόρος Βουλιαγμένης','Λεωφόρος Αλεξάνδρας','Οδός Πανεπιστημίου','Οδός Σταδίου','Οδός Ερμού','Οδός Μητροπόλεως','Οδός Αγίου Σοφίας','Οδός Πανόρμου'],
+    cities: ['Αθήνα','Θεσσαλονίκη','Πάτρα','Ηράκλειο','Λάρισα','Βόλος','Αχαρνές','Ιωάννινα','Χανιά','Λαμία','Νίκαια','Αλεξανδρούπολη','Καλαμάτα','Ξάνθη'],
+    states: ['Αττική','Κεντρική Μακεδονία','Θεσσαλία','Δυτική Ελλάδα','Κρήτη','Ανατολική Μακεδονία και Θράκη','Ήπειρος','Στερεά Ελλάδα','Πελοπόννησος','Νότιο Αιγαίο'],
+    stateAbbr: ['ATT','CMK','THE','WGR','CRE','AMT','EPI','CGR','PEL','SAE'],
+    phone: '+30',
+    currency: 'EUR',
+    tld: '.gr',
+    timezone: 'Europe/Athens',
+    flag: '🇬🇷',
+    name: 'Greece',
+  },
+  PT: {
+    firstMale: ['João','Rodrigo','Martim','Santiago','Gabriel','Tomás','Henrique','Francisco','Diogo','Samuel','André','Lucas','Miguel','Dinis','Rafael'],
+    firstFemale: ['Leonor','Maria','Matilde','Mariana','Ana','Beatriz','Sofia','Carolina','Inês','Francisca','Luana','Clara','Joana','Isabel','Eva'],
+    last: ['Silva','Santos','Ferreira','Pereira','Oliveira','Costa','Rodrigues','Martins','Gomes','Lopes','Almeida','Ribeiro','Carvalho','Pinto','Fernandes'],
+    streets: ['Avenida da Liberdade','Rua Augusta','Rua do Comércio','Avenida da República','Rua Garrett','Avenida 25 de Abril','Rua do Ouro','Rua Nova do Carvalho','Rua da Palma','Rua dos Fanqueiros'],
+    cities: ['Lisbon','Porto','Braga','Coimbra','Funchal','Setúbal','Aveiro','Viseu','Leiria','Faro','Vila Nova de Gaia','Évora','Guarda','Castelo Branco'],
+    states: ['Lisbon','Porto','Braga','Coimbra','Madeira','Setúbal','Aveiro','Viseu','Leiria','Faro'],
+    stateAbbr: ['LIS','POR','BRA','COI','MDR','SET','AVE','VIS','LEI','FAR'],
+    phone: '+351',
+    currency: 'EUR',
+    tld: '.pt',
+    timezone: 'Europe/Lisbon',
+    flag: '🇵🇹',
+    name: 'Portugal',
+  },
+  CZ: {
+    firstMale: ['Jakub','Tomáš','Jan','Lukáš','Adam','Ondřej','Vojtěch','Matěj','Daniel','Petr','Michal','Filip','David','Milan','Karel'],
+    firstFemale: ['Tereza','Anna','Eliška','Adéla','Viktoria','Nela','Natálie','Karolína','Kateřina','Sophie','Veronika','Jessica','Lucie','Michaela','Sára'],
+    last: ['Novák','Svoboda','Novotný','Dvořák','Černý','Procházka','Kučera','Veselý','Horák','Němec','Marek','Pokorný','Hájek','Jelínek','Kříž'],
+    streets: ['Národní třída','Na Příkopě','Vinohradská třída','Václavské náměstí','Karlova ulice','Parléřova ulice','Jungmannova ulice','Opletalova ulice','Politických vězňů','Řetězová ulice'],
+    cities: ['Prague','Brno','Ostrava','Plzeň','Liberec','Olomouc','Budweis','Hradec Králové','Pardubice','Zlín','Kladno','Most','Karviná'],
+    states: ['Prague','Central Bohemian','South Bohemian','Plzeň','Carlsbad','Ústí nad Labem','Liberec','Hradec Králové','Pardubice','Vysocina','South Moravian','Olomouc','Zlín','Moravian-Silesian'],
+    stateAbbr: ['PRG','CE','SC','PL','KA','US','LI','HK','PA','VY','JM','OL','ZL','MS'],
+    phone: '+420',
+    currency: 'CZK',
+    tld: '.cz',
+    timezone: 'Europe/Prague',
+    flag: '🇨🇿',
+    name: 'Czech Republic',
+  },
 };
 
 // Fallback for countries not explicitly defined
@@ -319,6 +649,28 @@ const COUNTRIES = {
   'SE': { name: 'Sweden', flag: '🇸🇪' },
   'SG': { name: 'Singapore', flag: '🇸🇬' },
   'ZA': { name: 'South Africa', flag: '🇿🇦' },
+  'TH': { name: 'Thailand', flag: '🇹🇭' },
+  'VN': { name: 'Vietnam', flag: '🇻🇳' },
+  'PH': { name: 'Philippines', flag: '🇵🇭' },
+  'ID': { name: 'Indonesia', flag: '🇮🇩' },
+  'MY': { name: 'Malaysia', flag: '🇲🇾' },
+  'TW': { name: 'Taiwan', flag: '🇹🇼' },
+  'PL': { name: 'Poland', flag: '🇵🇱' },
+  'TR': { name: 'Turkey', flag: '🇹🇷' },
+  'SA': { name: 'Saudi Arabia', flag: '🇸🇦' },
+  'AE': { name: 'UAE', flag: '🇦🇪' },
+  'IL': { name: 'Israel', flag: '🇮🇱' },
+  'AR': { name: 'Argentina', flag: '🇦🇷' },
+  'CO': { name: 'Colombia', flag: '🇨🇴' },
+  'CL': { name: 'Chile', flag: '🇨🇱' },
+  'PE': { name: 'Peru', flag: '🇵🇪' },
+  'EG': { name: 'Egypt', flag: '🇪🇬' },
+  'NG': { name: 'Nigeria', flag: '🇳🇬' },
+  'KE': { name: 'Kenya', flag: '🇰🇪' },
+  'UA': { name: 'Ukraine', flag: '🇺🇦' },
+  'GR': { name: 'Greece', flag: '🇬🇷' },
+  'PT': { name: 'Portugal', flag: '🇵🇹' },
+  'CZ': { name: 'Czech Republic', flag: '🇨🇿' },
 };
 
 // ---- Helpers ----
@@ -326,6 +678,36 @@ function rnd(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function rndInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 function rndStr(n, chars='abcdefghijklmnopqrstuvwxyz0123456789') {
   return Array.from({length:n}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+}
+
+// Helper to convert non-Latin names to Latin for email/username
+function toLatinName(name) {
+  // Common transliterations for Chinese characters
+  const chineseMap = {
+    '偉': 'wei', '芳': 'fang', '娜': 'na', '秀英': 'xiuying', '敏': 'min', '靜': 'jing',
+    '麗': 'li', '強': 'qiang', '磊': 'lei', '洋': 'yang', '豔': 'yan', '勇': 'yong',
+    '軍': 'jun', '傑': 'jie', '娟': 'juan', '霞': 'xia', '英': 'ying',
+    // More Chinese
+    '建國': 'jianguo', '志明': 'zhiming', '文雄': 'wenxiong', '俊傑': 'junjie', '家豪': 'jiahao',
+    '志偉': 'zhiwei', '建宏': 'jianhong', '雅婷': 'yating', '淑娟': 'shujuan', '美惠': 'meihui',
+    '美玲': 'meiling', '淑華': 'shuhua', '惠雯': 'huiwen', '靜宜': 'jingyi', '雅雯': 'yawen',
+    '怡君': 'yijun', '怡婷': 'yiting', '佩君': 'peijun', '佩珊': 'peishan', '靜儀': 'jingyi',
+    '靜怡': 'jingyi', '婉婷': 'wanting',
+  };
+
+  // For Arabic, Hebrew, Thai, etc., generate a random Latin name
+  const hasNonLatin = /[\u0591-\u07FF\u0400-\u04FF\u4E00-\u9FFF\u0E00-\u0E7F]/.test(name);
+  if (hasNonLatin) {
+    // Return a common Latin name based on length
+    const commonNames = ['john','david','michael','alex','chris','nick','sam','ryan','kevin','jason'];
+    return commonNames[name.length % commonNames.length];
+  }
+
+  // Default: use toLowerCase with accent removal
+  return name.toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove accents
+    .replace(/[^a-z0-9]/g, ''); // Remove special chars
 }
 
 // Luhn algorithm for credit card numbers
@@ -362,9 +744,14 @@ function generateCard() {
 const BLOOD_TYPES = ['A+','A-','B+','B-','AB+','AB-','O+','O-'];
 const MARITAL = ['Single','Married','Divorced','Widowed'];
 const EDUCATION = ['High School','Associate','Bachelor','Master','PhD'];
-const JOBS = ['Software Engineer','Product Manager','Data Analyst','Marketing Manager','Sales Representative','Accountant','Designer','Teacher','Doctor','Lawyer','Nurse','Architect'];
-const DEPARTMENTS = ['Engineering','Marketing','Finance','Operations','HR','Sales','Design','Legal','Product','Research'];
-const COMPANIES = ['Acme Corp','TechVision Ltd','Global Solutions','Nexus Industries','Apex Systems','Vertex Analytics','Pinnacle Group','Horizon Digital','Summit Technologies','Catalyst Partners'];
+const JOBS = ['Software Engineer','Product Manager','Data Analyst','Marketing Manager','Sales Representative','Accountant','Designer','Teacher','Doctor','Lawyer','Nurse','Architect','Financial Analyst','Consultant','Project Manager','Business Analyst','Operations Manager','Human Resources','Research Scientist','Web Developer','Mobile Developer','DevOps Engineer','UX Designer','Content Writer','Digital Marketer'];
+const DEPARTMENTS = ['Engineering','Marketing','Finance','Operations','HR','Sales','Design','Legal','Product','Research','Customer Service','IT','Quality Assurance','Data Science','Communications'];
+const COMPANIES = ['Acme Corp','TechVision Ltd','Global Solutions','Nexus Industries','Apex Systems','Vertex Analytics','Pinnacle Group','Horizon Digital','Summit Technologies','Catalyst Partners','Innovate Labs','Prime Solutions','Stellar Corp','Quantum Dynamics','Future Forward'];
+const INDUSTRIES = ['Technology','Finance','Healthcare','Education','Retail','Manufacturing','Consulting','Media','Telecommunications','Energy','Transportation','Real Estate','Entertainment','Non-Profit'];
+const EYE_COLORS = ['Brown','Blue','Green','Hazel','Amber','Gray'];
+const HAIR_COLORS = ['Black','Brown','Blonde','Red','Gray','White'];
+const HEIGHTS_CM = { male: [165, 195], female: [150, 180] };
+const WEIGHTS_KG = [50, 100];
 
 function generateOne(code, gender, includeCompany, includeCoords, hideSensitive) {
   if (code === 'random') {
@@ -382,30 +769,70 @@ function generateOne(code, gender, includeCompany, includeCoords, hideSensitive)
   const birthYear = new Date().getFullYear() - age;
   const birthMonth = String(rndInt(1, 12)).padStart(2, '0');
   const birthDay = String(rndInt(1, 28)).padStart(2, '0');
-  const email = `${firstName.toLowerCase().replace(/\s/g,'')}${lastName.toLowerCase()}${rndInt(10,999)}@${['gmail.com','yahoo.com','outlook.com','hotmail.com'][rndInt(0,3)]}`;
-  const username = `${firstName.toLowerCase()}${rndInt(10,9999)}`;
-  const phone = `${d.phone} ${rndInt(100,999)}-${rndInt(1000,9999)}`;
+
+  // Use Latin name for email/username to avoid encoding issues
+  const latinFirstName = toLatinName(firstName);
+  const latinLastName = toLatinName(lastName);
+  const email = `${latinFirstName}${latinLastName}${rndInt(10,999)}@${['gmail.com','yahoo.com','outlook.com','hotmail.com'][rndInt(0,3)]}`;
+  const username = `${latinFirstName}${rndInt(10,9999)}`;
+
+  // Phone format with better formatting
+  const phone = `${d.phone} ${rndInt(100,999)} ${rndInt(1000,9999)}`;
   const ssn = hideSensitive ? '***-**-****' : `${rndInt(100,999)}-${rndInt(10,99)}-${rndInt(1000,9999)}`;
+
+  // New fields: height, weight, eye color, hair color
+  const heightRange = isFemaleBool ? HEIGHTS_CM.female : HEIGHTS_CM.male;
+  const height = rndInt(heightRange[0], heightRange[1]);
+  const weight = rndInt(WEIGHTS_KG[0], WEIGHTS_KG[1]);
+  const eyeColor = rnd(EYE_COLORS);
+  const hairColor = rnd(HAIR_COLORS);
 
   const streetNum = rndInt(1, 9999);
   const street = rnd(d.streets);
   const city = rnd(d.cities);
-  const stateIdx = rndInt(0, d.states.length - 1);
+
+  // Safe state index to avoid array out of bounds
+  const stateIdx = rndInt(0, Math.min(d.states.length, d.stateAbbr.length) - 1);
   const state = d.states[stateIdx];
   const stateAbbr = d.stateAbbr[stateIdx] || state;
-  const zip = String(rndInt(10000, 99999));
+
+  // ZIP code format based on country
+  let zip;
+  if (['US', 'CA', 'MX', 'AR', 'CO', 'PE', 'CL'].includes(code)) {
+    zip = String(rndInt(10000, 99999));
+  } else if (['GB', 'FR', 'DE', 'IT', 'ES', 'NL', 'SE', 'PL', 'UA', 'GR', 'PT', 'CZ'].includes(code)) {
+    zip = `${rndInt(10,99)} ${rndInt(100,999)}`;
+  } else if (['JP', 'TH', 'ID'].includes(code)) {
+    zip = String(rndInt(100, 999)).padStart(3, '0') + '-' + String(rndInt(1000, 9999));
+  } else if (['CN', 'TW', 'KR'].includes(code)) {
+    zip = String(rndInt(100, 999)).padStart(3, '0');
+  } else if (['BR'].includes(code)) {
+    zip = String(rndInt(10000, 99999)).padStart(5, '0') + '-' + String(rndInt(100, 999));
+  } else if (['IN'].includes(code)) {
+    zip = String(rndInt(100000, 999999));
+  } else if (['RU', 'UA'].includes(code)) {
+    zip = String(rndInt(100000, 999999));
+  } else {
+    zip = String(rndInt(10000, 99999));
+  }
+
   const fullAddress = `${streetNum} ${street}, ${city}, ${stateAbbr} ${zip}, ${countryInfo.name}`;
 
   const card = generateCard();
   const maskedCard = hideSensitive ? `****-****-****-${card.number.slice(-4)}` : card.number.replace(/(.{4})/g, '$1-').slice(0,-1);
   const income = hideSensitive ? '•••,•••' : `${rndInt(30,200)},000`;
-  const workPhone = hideSensitive ? '***-***-****' : `${d.phone} ${rndInt(100,999)}-${rndInt(1000,9999)}`;
+  const workPhone = hideSensitive ? '***-***-****' : `${d.phone} ${rndInt(100,999)} ${rndInt(1000,9999)}`;
   const cvv = hideSensitive ? '***' : card.cvv;
 
   const passport = hideSensitive ? '••••••••' : rndStr(9,'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789').toUpperCase();
   const license = hideSensitive ? '••••••••' : rndStr(8,'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789').toUpperCase();
   const taxId = hideSensitive ? '***-**-****' : `${rndInt(100,999)}-${rndInt(10,99)}-${rndInt(1000,9999)}`;
-  const website = `https://www.${firstName.toLowerCase()}${lastName.toLowerCase()}${d.tld}`;
+  const website = `https://www.${latinFirstName}${latinLastName}${d.tld}`;
+
+  // Social media handles
+  const twitterHandle = `@${latinFirstName}${rndInt(100,9999)}`;
+  const instagramHandle = `${latinFirstName}.${latinLastName}${rndInt(10,99)}`;
+  const linkedinUrl = `https://linkedin.com/in/${latinFirstName}-${latinLastName}${rndInt(100,9999)}`;
 
   const lat = includeCoords ? (rndInt(-90000, 90000) / 1000).toFixed(3) : null;
   const lng = includeCoords ? (rndInt(-180000, 180000) / 1000).toFixed(3) : null;
@@ -418,13 +845,15 @@ function generateOne(code, gender, includeCompany, includeCoords, hideSensitive)
     ssn, email, phone,
     streetNum, street, city, state, stateAbbr, zip, fullAddress,
     timezone: d.timezone,
-    job: rnd(JOBS), department: rnd(DEPARTMENTS),
+    job: rnd(JOBS), department: rnd(DEPARTMENTS), industry: rnd(INDUSTRIES),
     company: includeCompany ? rnd(COMPANIES) : null,
     income, workPhone,
     cardType: card.type, cardNumber: maskedCard, cardExpiry: card.expiry, cardCVV: cvv,
     marital: rnd(MARITAL), education: rnd(EDUCATION),
     bloodType: rnd(BLOOD_TYPES),
     passport, license, taxId, website,
+    height, weight, eyeColor, hairColor,
+    twitterHandle, instagramHandle, linkedinUrl,
     lat, lng,
   };
 }
@@ -454,6 +883,9 @@ function renderResults() {
   const summaryBody = document.getElementById('summaryTableBody');
   if (!container) return;
 
+  // Get translations
+  const t = window.addressTranslations || {};
+
   container.innerHTML = currentBatch.map((p, i) => `
     <div class="address-record">
       <div class="address-record-header">
@@ -462,46 +894,54 @@ function renderResults() {
       </div>
       <div class="address-blocks">
         <div class="address-block">
-          <div class="address-block-title">👤 Basic Info</div>
-          ${field('Name', p.fullName)}
-          ${field('Username', p.username)}
-          ${field('Gender / Age', `${p.gender}, ${p.age}`)}
-          ${field('Birthday', p.birthday)}
-          ${field('ID / SSN', p.ssn)}
-          ${field('Email', p.email)}
-          ${field('Phone', p.phone)}
+          <div class="address-block-title">👤 ${t.basicInfo || 'Basic Info'}</div>
+          ${field(t.name || 'Name', p.fullName)}
+          ${field(t.username || 'Username', p.username)}
+          ${field(t.genderAge || 'Gender / Age', `${p.gender}, ${p.age}`)}
+          ${field(t.birthday || 'Birthday', p.birthday)}
+          ${field(t.idSsn || 'ID / SSN', p.ssn)}
+          ${field(t.email || 'Email', p.email)}
+          ${field(t.phone || 'Phone', p.phone)}
         </div>
         <div class="address-block">
-          <div class="address-block-title">🏠 Address</div>
-          ${field('Country', `${p.flag} ${p.countryName}`)}
-          ${field('State / Province', p.state)}
-          ${field('City', p.city)}
-          ${field('Street', `${p.streetNum} ${p.street}`)}
-          ${field('ZIP Code', p.zip)}
-          ${field('Timezone', p.timezone)}
-          ${p.lat ? field('Coordinates', `${p.lat}, ${p.lng}`) : ''}
+          <div class="address-block-title">🏠 ${t.addressInfo || 'Address'}</div>
+          ${field(t.country || 'Country', `${p.flag} ${p.countryName}`)}
+          ${field(t.state || 'State / Province', p.state)}
+          ${field(t.city || 'City', p.city)}
+          ${field(t.street || 'Street', `${p.streetNum} ${p.street}`)}
+          ${field(t.zip || 'ZIP Code', p.zip)}
+          ${field(t.timezone || 'Timezone', p.timezone)}
+          ${p.lat ? field(t.coordinates || 'Coordinates', `${p.lat}, ${p.lng}`) : ''}
         </div>
         <div class="address-block">
-          <div class="address-block-title">💼 Employment & Credit Card</div>
-          ${field('Job Title', p.job)}
-          ${field('Department', p.department)}
-          ${p.company ? field('Company', p.company) : ''}
-          ${field('Annual Income', p.income)}
-          ${field('Work Phone', p.workPhone)}
-          ${field('Card Type', p.cardType)}
-          ${field('Card Number', p.cardNumber)}
-          ${field('Expiry', p.cardExpiry)}
-          ${field('CVV', p.cardCVV)}
+          <div class="address-block-title">💼 ${t.employment || 'Employment & Credit Card'}</div>
+          ${field(t.job || 'Job Title', p.job)}
+          ${field(t.department || 'Department', p.department)}
+          ${p.company ? field(t.company || 'Company', p.company) : ''}
+          ${field(t.income || 'Annual Income', p.income)}
+          ${field(t.workPhone || 'Work Phone', p.workPhone)}
+          ${field(t.cardType || 'Card Type', p.cardType)}
+          ${field(t.cardNumber || 'Card Number', p.cardNumber)}
+          ${field(t.expiry || 'Expiry', p.cardExpiry)}
+          ${field(t.cvv || 'CVV', p.cardCVV)}
         </div>
         <div class="address-block">
-          <div class="address-block-title">📋 More Details</div>
-          ${field('Marital Status', p.marital)}
-          ${field('Education', p.education)}
-          ${field('Blood Type', p.bloodType)}
-          ${field('Passport No.', p.passport)}
-          ${field('Driver License', p.license)}
-          ${field('Tax ID', p.taxId)}
-          ${field('Website', p.website)}
+          <div class="address-block-title">📋 ${t.moreInfo || 'More Details'}</div>
+          ${field(t.marital || 'Marital Status', p.marital)}
+          ${field(t.education || 'Education', p.education)}
+          ${field(t.bloodType || 'Blood Type', p.bloodType)}
+          ${field(t.height || 'Height', `${p.height} cm`)}
+          ${field(t.weight || 'Weight', `${p.weight} kg`)}
+          ${field(t.eyeColor || 'Eye Color', p.eyeColor)}
+          ${field(t.hairColor || 'Hair Color', p.hairColor)}
+          ${field(t.passport || 'Passport No.', p.passport)}
+          ${field(t.license || 'Driver License', p.license)}
+          ${field(t.taxId || 'Tax ID', p.taxId)}
+          ${field(t.website || 'Website', p.website)}
+          ${field(t.industry || 'Industry', p.industry)}
+          ${field(t.twitter || 'Twitter', p.twitterHandle)}
+          ${field(t.instagram || 'Instagram', p.instagramHandle)}
+          ${field(t.linkedin || 'LinkedIn', p.linkedinUrl)}
         </div>
       </div>
     </div>
@@ -572,7 +1012,11 @@ function clearHistory() {
 
 function saveHistory(person) {
   if (!person) return;
-  history.unshift({ name: person.fullName, country: person.flag + ' ' + person.countryName, ts: Date.now() });
+  // Store full person data for restore functionality
+  history.unshift({
+    ...person,
+    ts: Date.now()
+  });
   history = history.slice(0, 20);
   localStorage.setItem('addrHistory', JSON.stringify(history));
   renderHistory();
@@ -582,12 +1026,22 @@ function renderHistory() {
   const el = document.getElementById('addrHistory');
   if (!el) return;
   if (history.length === 0) { el.innerHTML = '<p style="color:#94a3b8;font-size:13px">No history yet</p>'; return; }
-  el.innerHTML = history.map(h => `
-    <div class="addr-history-item">
-      <strong>${h.name}</strong>
-      ${h.country} · ${new Date(h.ts).toLocaleTimeString()}
+  el.innerHTML = history.map((h, i) => `
+    <div class="addr-history-item" onclick="restoreHistory(${i})" style="cursor:pointer" title="Click to restore">
+      <strong>${h.firstName} ${h.lastName}</strong>
+      ${h.flag} ${h.countryName} · ${new Date(h.ts).toLocaleTimeString()}
     </div>
   `).join('');
+}
+
+function restoreHistory(index) {
+  const h = history[index];
+  if (!h) return;
+  // Create a clean person object without the timestamp
+  const { ts, ...personData } = h;
+  currentBatch = [personData];
+  renderResults();
+  showToast('Restored from history!');
 }
 
 // Init
