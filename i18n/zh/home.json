@@ -39,8 +39,8 @@
   "home.tool_ip_lookup_desc": "查询 IP 归属地、运营商、经纬度等信息",
   "home.tool_sms": "SMS 接码平台",
   "home.tool_sms_desc": "在线接收验证短信，无需真实手机号",
-  "home.tool_address": "全球虚拟地址",
-  "home.tool_address_desc": "生成真实风格的虚假地址与身份信息",
+  "home.tool_address": "虚拟身份生成器",
+  "home.tool_address_desc": "生成随机虚拟身份信息，包括姓名、地址、电话和邮箱",
   "home.tool_password": "随机密码生成",
   "home.tool_password_desc": "加密级安全随机密码，即时生成",
   "home.tool_email": "匿名临时邮箱",
@@ -197,7 +197,7 @@
   "home.seo.sms_detail": "无需使用真实手机号即可接收验证短信。适合注册网站和服务时保护个人号码隐私。",
   "home.seo.email_detail": "生成一次性邮箱地址，10分钟后自动过期。适合一次性注册和避免垃圾邮件。",
   "home.seo.password_detail": "使用可自定义长度、字符集和复杂度选项创建加密级别的安全随机密码。",
-  "home.seo.address_detail": "生成逼真的虚假地址和身份信息，用于测试、表单填写或保护您的真实位置。",
+  "home.seo.address_detail": "生成随机虚拟身份信息，包括姓名、地址、电话号码和邮箱，用于测试、表单填写或保护您的真实身份。",
   "home.seo.dev_title": "开发者工具",
   "home.seo.dev_desc": "面向 Web 开发者、软件工程师和 IT 专业人士的必备工具：",
   "home.seo.json_detail": "完整的 JSON 工具箱，包含 40 多个工具：格式化、验证、转换、压缩、差异对比和 JSONPath 查询。",
@@ -219,5 +219,10 @@
   "home.seo.why_browser_desc": "无需下载或安装任何软件。适用于任何装有现代浏览器的设备——桌面、平板或手机。",
   "home.seo.why_free": "完全免费",
   "home.seo.why_free_desc": "所有 50 多款工具免费使用，无隐藏费用、无高级版本、无使用限制。由少量非侵入式广告支持。",
-  "home.seo.conclusion": "无论您是需要快速访问编码工具的开发者、处理图片的设计师，还是注重在线隐私的用户，Tool Box Nova 都能提供您需要的工具——快速、免费、安全。收藏此页面，随时随地使用您喜欢的工具。"
+  "home.seo.conclusion": "无论您是需要快速访问编码工具的开发者、处理图片的设计师，还是注重在线隐私的用户，Tool Box Nova 都能提供您需要的工具——快速、免费、安全。收藏此页面，随时随地使用您喜欢的工具。",
+
+  "home.tool_password_checker": "密码强度检测",
+  "home.tool_password_checker_desc": "检测密码安全强度，获取安全改进建议",
+  "home.tool_browser_fingerprint": "浏览器指纹检测",
+  "home.tool_browser_fingerprint_desc": "检测浏览器泄漏了哪些可用于追踪的信息"
 }

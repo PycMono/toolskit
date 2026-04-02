@@ -219,6 +219,56 @@ func ContactPage(c *gin.Context) {
 	render(c, "contact.html", data)
 }
 
+// PasswordCheckerPage renders password strength checker page
+func PasswordCheckerPage(c *gin.Context) {
+	t := getT(c)
+
+	type FAQItem struct {
+		Q, A string
+	}
+	faqs := []FAQItem{
+		{Q: t("pck.faq.q1"), A: t("pck.faq.a1")},
+		{Q: t("pck.faq.q2"), A: t("pck.faq.a2")},
+		{Q: t("pck.faq.q3"), A: t("pck.faq.a3")},
+		{Q: t("pck.faq.q4"), A: t("pck.faq.a4")},
+		{Q: t("pck.faq.q5"), A: t("pck.faq.a5")},
+	}
+
+	data := baseData(c, gin.H{
+		"Title":       t("password-checker.seo.title") + " | Tool Box Nova",
+		"Description": t("password-checker.seo.desc"),
+		"Keywords":    "password strength checker, password security, how strong is my password, crack time",
+		"PageClass":   "page-password-checker",
+		"FAQs":        faqs,
+	})
+	render(c, "password-checker.html", data)
+}
+
+// BrowserFingerprintPage renders browser fingerprint detector page
+func BrowserFingerprintPage(c *gin.Context) {
+	t := getT(c)
+
+	type FAQItem struct {
+		Q, A string
+	}
+	faqs := []FAQItem{
+		{Q: t("fingerprint.faq.q1"), A: t("fingerprint.faq.a1")},
+		{Q: t("fingerprint.faq.q2"), A: t("fingerprint.faq.a2")},
+		{Q: t("fingerprint.faq.q3"), A: t("fingerprint.faq.a3")},
+		{Q: t("fingerprint.faq.q4"), A: t("fingerprint.faq.a4")},
+		{Q: t("fingerprint.faq.q5"), A: t("fingerprint.faq.a5")},
+	}
+
+	data := baseData(c, gin.H{
+		"Title":       t("browser-fingerprint.seo.title") + " | Tool Box Nova",
+		"Description": t("browser-fingerprint.seo.desc"),
+		"Keywords":    "browser fingerprint, webRTC leak, canvas fingerprint, privacy test, browser privacy",
+		"PageClass":   "page-browser-fingerprint",
+		"FAQs":        faqs,
+	})
+	render(c, "browser-fingerprint.html", data)
+}
+
 // SitemapPage renders the HTML sitemap page
 func SitemapPage(c *gin.Context) {
 	t := getT(c)
@@ -243,6 +293,8 @@ func SitemapXML(c *gin.Context) {
                 // Privacy Tools
                 "/virtual-address", "/password-generator", "/temp-email", "/proxy",
                 "/privacy/check",
+                "/password-checker",
+                "/browser-fingerprint",
 
                 // Weather Tools
                 "/weather/query",
@@ -472,7 +524,7 @@ func SearchAPI(c *gin.Context) {
 	}
 	tools := []gin.H{
 		{"name_zh": "SMS 接码平台", "name_en": "SMS Receiver", "description": "Receive SMS online for free", "url": "/sms", "search": "sms 接码平台 receiver phone"},
-		{"name_zh": "全球虚拟地址", "name_en": "Virtual Address Generator", "description": "Generate fake addresses", "url": "/virtual-address", "search": "virtual address 虚拟地址 fake identity"},
+		{"name_zh": "虚拟身份生成器", "name_en": "Fake Identity Generator", "description": "Generate fake identity info", "url": "/virtual-address", "search": "fake identity 虚拟身份 virtual identity generator"},
 		{"name_zh": "随机密码生成器", "name_en": "Password Generator", "description": "Generate secure passwords", "url": "/password-generator", "search": "password generator 密码 random secure"},
 		{"name_zh": "匿名临时邮箱", "name_en": "Temporary Email", "description": "Disposable email address", "url": "/temp-email", "search": "temp email 临时邮箱 temporary disposable"},
 		{"name_zh": "匿名代理", "name_en": "Anonymous Proxy", "description": "Browse anonymously", "url": "/proxy", "search": "proxy 代理 anonymous vpn"},
@@ -497,6 +549,8 @@ func SearchAPI(c *gin.Context) {
 		{"name_zh": "AI 检测器", "name_en": "AI Content Detector", "description": "Detect AI-generated content", "url": "/ai/detector", "search": "ai detector detect ai检测 检测器 gptzero"},
 		{"name_zh": "AI 人性化改写", "name_en": "AI Humanizer", "description": "Humanize AI-generated text to bypass detection", "url": "/ai/humanizer", "search": "ai humanize 人性化 bypass humanize rewrite"},
 		{"name_zh": "AI 竞品分析", "name_en": "AI Competitive Analysis", "description": "Analyze competitors across 7 dimensions with AI", "url": "/ai/compete", "search": "competitive analysis 竞品分析 swot marketing pricing competitor"},
+		{"name_zh": "密码强度检测", "name_en": "Password Strength Checker", "description": "Check password strength and get security recommendations", "url": "/password-checker", "search": "password strength checker security crack time 密码强度 安全检测"},
+		{"name_zh": "浏览器指纹检测", "name_en": "Browser Fingerprint Detector", "description": "Detect what information your browser is leaking", "url": "/browser-fingerprint", "search": "browser fingerprint webRTC leak canvas privacy 浏览器指纹 隐私泄漏"},
 		// Developer Tools Suite
 		{"name_zh": "哈希计算器", "name_en": "Hash Generator", "description": "MD5 SHA-1 SHA-256 SHA-512 HMAC hash calculator, client-side", "url": "/dev/hash", "search": "hash md5 sha256 sha512 hmac 哈希 摘要 加密 generator"},
 		{"name_zh": "Base64 编解码", "name_en": "Base64 Encoder Decoder", "description": "Encode or decode Base64 text and files up to 50MB", "url": "/dev/base64", "search": "base64 encode decode 编码 解码 base64url mime"},
@@ -591,7 +645,7 @@ func PasswordPage(c *gin.Context) {
 	render(c, "password.html", data)
 }
 
-// VirtualAddressPage renders virtual address generator page
+// VirtualAddressPage renders fake identity generator page
 func VirtualAddressPage(c *gin.Context) {
 	t := getT(c)
 
@@ -611,17 +665,17 @@ func VirtualAddressPage(c *gin.Context) {
 	data := baseData(c, gin.H{
 		"Title":       t("address.title"),
 		"Description": t("address.meta_desc"),
-		"Keywords":    "fake address generator, virtual address, fake identity, random address",
+		"Keywords":    "fake identity generator, virtual identity, fake address, random identity",
 		"PageClass":   "page-address",
 		"FAQs":        faqs,
 		"JSONLD": template.JS(`{
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "Virtual Address Generator",
+  "name": "Fake Identity Generator",
   "applicationCategory": "UtilityApplication",
   "operatingSystem": "Web Browser",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "description": "Generate realistic fake addresses and identity info.",
+  "description": "Generate random virtual identity info including name, address, phone and email.",
   "url": "https://toolboxnova.com/virtual-address"
 }`),
 	})

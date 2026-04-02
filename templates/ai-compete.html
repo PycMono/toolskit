@@ -175,8 +175,8 @@
 
 <!-- i18n bridge -->
 <script>
-window.__i18n__ = {{ toJSON .Translations }};
-window.__lang__ = "{{ .Lang }}";
+window.__I18N__ = {{ toJSON .Translations }};
+window.__LANG__ = "{{ .Lang }}";
 </script>
 {{ end }}
 
@@ -196,25 +196,25 @@ window.__lang__ = "{{ .Lang }}";
         <span class="ac-badge ac-badge--glow" role="listitem">{{ call .T "ai-compete.hero.badge1" }}</span>
         <span class="ac-badge" role="listitem">{{ call .T "ai-compete.hero.badge2" }}</span>
         <span class="ac-badge ac-badge--new" role="listitem">{{ call .T "ai-compete.hero.badge3" }}</span>
-        <span class="ac-badge" role="listitem">100% Free</span>
-        <span class="ac-badge" role="listitem">No Signup</span>
+        <span class="ac-badge" role="listitem">{{ call .T "ai-compete.trust.free" }}</span>
+        <span class="ac-badge" role="listitem">{{ call .T "ai-compete.trust.no_signup" }}</span>
       </div>
       <h1 id="hero-title" class="ac-hero__title">{{ call .T "ai-compete.hero.title" }}</h1>
       <p class="ac-hero__subtitle">{{ call .T "ai-compete.hero.subtitle" }}</p>
 
       {{/* Trust Bar */}}
-      <div class="ac-trust-bar" aria-label="Trusted by professionals worldwide">
+      <div class="ac-trust-bar" aria-label="{{ call .T "ai-compete.trust.label" }}">
         <div class="ac-trust-stat">
           <span class="ac-trust-num">8,742+</span>
-          <span class="ac-trust-label">Analyses Completed</span>
+          <span class="ac-trust-label">{{ call .T "ai-compete.trust.analyses" }}</span>
         </div>
         <div class="ac-trust-stat">
           <span class="ac-trust-num">4.9</span>
-          <span class="ac-trust-label">User Rating</span>
+          <span class="ac-trust-label">{{ call .T "ai-compete.trust.rating" }}</span>
         </div>
         <div class="ac-trust-stat">
           <span class="ac-trust-num">2-3 min</span>
-          <span class="ac-trust-label">Average Time</span>
+          <span class="ac-trust-label">{{ call .T "ai-compete.trust.time" }}</span>
         </div>
       </div>
     </div>

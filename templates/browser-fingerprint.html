@@ -1,0 +1,1110 @@
+{{ template "base" . }}
+
+{{ define "extraHead" }}
+<link rel="canonical" href="https://toolboxnova.com/browser-fingerprint">
+<link rel="alternate" hreflang="zh" href="https://toolboxnova.com/browser-fingerprint?lang=zh">
+<link rel="alternate" hreflang="en" href="https://toolboxnova.com/browser-fingerprint?lang=en">
+<link rel="alternate" hreflang="ja" href="https://toolboxnova.com/browser-fingerprint?lang=ja">
+<link rel="alternate" hreflang="ko" href="https://toolboxnova.com/browser-fingerprint?lang=ko">
+<link rel="alternate" hreflang="es" href="https://toolboxnova.com/browser-fingerprint?lang=spa">
+<link rel="alternate" hreflang="x-default" href="https://toolboxnova.com/browser-fingerprint">
+<link rel="stylesheet" href="/static/css/tools-editorial.css?v={{ .AssetVer }}">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Browser Fingerprint Checker",
+  "description": "Check your browser fingerprint and discover what information websites can collect about you. Test for WebRTC leaks, Canvas fingerprinting, WebGL info, and more.",
+  "url": "https://toolboxnova.com/browser-fingerprint",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {{- range $i, $faq := .FAQs }}
+    {{- if $i }},{{ end }}
+    { "@type": "Question", "name": {{ $faq.Q | printf "%q" }},
+      "acceptedAnswer": { "@type": "Answer", "text": {{ $faq.A | printf "%q" }} } }
+    {{- end }}
+  ]
+}
+</script>
+{{ end }}
+
+{{ define "content" }}
+<!-- Hero Section -->
+<section class="page-hero fp-hero">
+  <div class="container">
+    <div class="fp-badges">
+      <span class="fp-badge" id="badgeStatus">
+        <span id="statusIcon">🔍</span> <span id="statusText">Scanning...</span>
+      </span>
+      <span class="fp-badge fp-badge--warning">⚠️ {{ call .T "fingerprint.badge_warning" }}</span>
+      <span class="fp-badge fp-badge--success">🔒 {{ call .T "fingerprint.badge_private" }}</span>
+    </div>
+    <h1>{{ call .T "fingerprint.hero_title" }}</h1>
+    <p>{{ call .T "fingerprint.hero_desc" }}</p>
+    <div class="fp-trust-bar">
+      <div class="fp-trust-item">
+        <span class="fp-trust-num" id="dataPoints">--</span>
+        <span class="fp-trust-label">{{ call .T "fingerprint.trust_datapoints" }}</span>
+      </div>
+      <div class="fp-trust-item">
+        <span class="fp-trust-num" id="leakCount">--</span>
+        <span class="fp-trust-label">{{ call .T "fingerprint.trust_leaks" }}</span>
+      </div>
+      <div class="fp-trust-item">
+        <span class="fp-trust-num" id="scanTime">--</span>
+        <span class="fp-trust-label">{{ call .T "fingerprint.trust_scantime" }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Top Ad -->
+<div style="text-align:center;margin:8px 0 16px">
+  {{- template "partials/ad_slot.html" dict "SlotID" "fingerprint-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+</div>
+
+<div class="container fp-layout">
+  <!-- Main Column -->
+  <div class="fp-main">
+    <!-- Uniqueness Score -->
+    <div class="fp-uniqueness">
+      <div class="fp-uniqueness__score" id="uniquenessScore">{{ call .T "fingerprint.uniqueness_loading" }}</div>
+      <div class="fp-uniqueness__label">{{ call .T "fingerprint.uniqueness_label" }}</div>
+      <div class="fp-uniqueness__meter">
+        <div class="fp-uniqueness__fill" id="uniquenessMeterFill"></div>
+      </div>
+      <div class="fp-uniqueness__desc" id="uniquenessDesc">{{ call .T "fingerprint.uniqueness_loading" }}</div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="fp-actions">
+      <button class="btn btn-primary btn-lg" onclick="runFingerprintScan()">🔍 {{ call .T "fingerprint.btn_scan" }}</button>
+      <button class="btn btn-outline" onclick="copyAllData()">📋 {{ call .T "fingerprint.btn_copy" }}</button>
+      <button class="btn btn-outline" onclick="downloadReport()">📥 {{ call .T "fingerprint.btn_download" }}</button>
+    </div>
+
+    <!-- Detection Cards Grid -->
+    <div class="fp-detection-grid">
+      <!-- Browser Info -->
+      <div class="fp-detection-card" id="cardBrowser">
+        <div class="fp-card-header">
+          <div class="fp-card-icon">🌐</div>
+          <h3 class="fp-card-title">{{ call .T "fingerprint.card_browser" }}</h3>
+          <span class="fp-card-status fp-card-status--detecting" id="browserStatus">{{ call .T "fingerprint.status_detecting" }}</span>
+        </div>
+        <div class="fp-card-content">
+          <div class="fp-card-value" id="browserValue">{{ call .T "fingerprint.loading" }}</div>
+        </div>
+      </div>
+
+      <!-- WebRTC -->
+      <div class="fp-detection-card" id="cardWebrtc">
+        <div class="fp-card-header">
+          <div class="fp-card-icon fp-card-icon--danger">🔌</div>
+          <h3 class="fp-card-title">{{ call .T "fingerprint.card_webrtc" }}</h3>
+          <span class="fp-card-status fp-card-status--detecting" id="webrtcStatus">{{ call .T "fingerprint.status_detecting" }}</span>
+        </div>
+        <div class="fp-card-content">
+          <div class="fp-card-value" id="webrtcValue">{{ call .T "fingerprint.loading" }}</div>
+          <button class="fp-card-copy" onclick="copyValue('webrtcValue')">📋 {{ call .T "fingerprint.btn_copy" }}</button>
+        </div>
+      </div>
+
+      <!-- Canvas -->
+      <div class="fp-detection-card" id="cardCanvas">
+        <div class="fp-card-header">
+          <div class="fp-card-icon">🎨</div>
+          <h3 class="fp-card-title">{{ call .T "fingerprint.card_canvas" }}</h3>
+          <span class="fp-card-status fp-card-status--detecting" id="canvasStatus">{{ call .T "fingerprint.status_detecting" }}</span>
+        </div>
+        <div class="fp-card-content">
+          <div class="fp-card-value" id="canvasValue">{{ call .T "fingerprint.loading" }}</div>
+          <button class="fp-card-copy" onclick="copyValue('canvasValue')">📋 {{ call .T "fingerprint.btn_copy" }}</button>
+        </div>
+      </div>
+
+      <!-- WebGL -->
+      <div class="fp-detection-card" id="cardWebgl">
+        <div class="fp-card-header">
+          <div class="fp-card-icon">🎮</div>
+          <h3 class="fp-card-title">{{ call .T "fingerprint.card_webgl" }}</h3>
+          <span class="fp-card-status fp-card-status--detecting" id="webglStatus">{{ call .T "fingerprint.status_detecting" }}</span>
+        </div>
+        <div class="fp-card-content">
+          <div class="fp-card-value" id="webglValue">{{ call .T "fingerprint.loading" }}</div>
+          <button class="fp-card-copy" onclick="copyValue('webglValue')">📋 {{ call .T "fingerprint.btn_copy" }}</button>
+        </div>
+      </div>
+
+      <!-- Fonts -->
+      <div class="fp-detection-card" id="cardFonts">
+        <div class="fp-card-header">
+          <div class="fp-card-icon fp-card-icon--warning">🔤</div>
+          <h3 class="fp-card-title">{{ call .T "fingerprint.card_fonts" }}</h3>
+          <span class="fp-card-status fp-card-status--detecting" id="fontsStatus">{{ call .T "fingerprint.status_detecting" }}</span>
+        </div>
+        <div class="fp-card-content">
+          <div class="fp-card-value" id="fontsValue">{{ call .T "fingerprint.loading" }}</div>
+          <button class="fp-card-copy" onclick="copyValue('fontsValue')">📋 {{ call .T "fingerprint.btn_copy" }}</button>
+        </div>
+      </div>
+
+      <!-- Screen -->
+      <div class="fp-detection-card" id="cardScreen">
+        <div class="fp-card-header">
+          <div class="fp-card-icon">🖥️</div>
+          <h3 class="fp-card-title">{{ call .T "fingerprint.card_screen" }}</h3>
+          <span class="fp-card-status fp-card-status--detecting" id="screenStatus">{{ call .T "fingerprint.status_detecting" }}</span>
+        </div>
+        <div class="fp-card-content">
+          <div class="fp-card-value" id="screenValue">{{ call .T "fingerprint.loading" }}</div>
+          <button class="fp-card-copy" onclick="copyValue('screenValue')">📋 {{ call .T "fingerprint.btn_copy" }}</button>
+        </div>
+      </div>
+
+      <!-- Language -->
+      <div class="fp-detection-card" id="cardLanguage">
+        <div class="fp-card-header">
+          <div class="fp-card-icon">🗣️</div>
+          <h3 class="fp-card-title">{{ call .T "fingerprint.card_language" }}</h3>
+          <span class="fp-card-status fp-card-status--detecting" id="languageStatus">{{ call .T "fingerprint.status_detecting" }}</span>
+        </div>
+        <div class="fp-card-content">
+          <div class="fp-card-value" id="languageValue">{{ call .T "fingerprint.loading" }}</div>
+          <button class="fp-card-copy" onclick="copyValue('languageValue')">📋 {{ call .T "fingerprint.btn_copy" }}</button>
+        </div>
+      </div>
+
+      <!-- Plugins -->
+      <div class="fp-detection-card" id="cardPlugins">
+        <div class="fp-card-header">
+          <div class="fp-card-icon fp-card-icon--warning">🧩</div>
+          <h3 class="fp-card-title">{{ call .T "fingerprint.card_plugins" }}</h3>
+          <span class="fp-card-status fp-card-status--detecting" id="pluginsStatus">{{ call .T "fingerprint.status_detecting" }}</span>
+        </div>
+        <div class="fp-card-content">
+          <div class="fp-card-value" id="pluginsValue">{{ call .T "fingerprint.loading" }}</div>
+          <button class="fp-card-copy" onclick="copyValue('pluginsValue')">📋 {{ call .T "fingerprint.btn_copy" }}</button>
+        </div>
+      </div>
+
+      <!-- Audio -->
+      <div class="fp-detection-card" id="cardAudio">
+        <div class="fp-card-header">
+          <div class="fp-card-icon">🔊</div>
+          <h3 class="fp-card-title">{{ call .T "fingerprint.card_audio" }}</h3>
+          <span class="fp-card-status fp-card-status--detecting" id="audioStatus">{{ call .T "fingerprint.status_detecting" }}</span>
+        </div>
+        <div class="fp-card-content">
+          <div class="fp-card-value" id="audioValue">{{ call .T "fingerprint.loading" }}</div>
+          <button class="fp-card-copy" onclick="copyValue('audioValue')">📋 {{ call .T "fingerprint.btn_copy" }}</button>
+        </div>
+      </div>
+
+      <!-- Hardware -->
+      <div class="fp-detection-card" id="cardHardware">
+        <div class="fp-card-header">
+          <div class="fp-card-icon">💻</div>
+          <h3 class="fp-card-title">{{ call .T "fingerprint.card_hardware" }}</h3>
+          <span class="fp-card-status fp-card-status--detecting" id="hardwareStatus">{{ call .T "fingerprint.status_detecting" }}</span>
+        </div>
+        <div class="fp-card-content">
+          <div class="fp-card-value" id="hardwareValue">{{ call .T "fingerprint.loading" }}</div>
+          <button class="fp-card-copy" onclick="copyValue('hardwareValue')">📋 {{ call .T "fingerprint.btn_copy" }}</button>
+        </div>
+      </div>
+
+      <!-- Storage -->
+      <div class="fp-detection-card" id="cardStorage">
+        <div class="fp-card-header">
+          <div class="fp-card-icon">💾</div>
+          <h3 class="fp-card-title">{{ call .T "fingerprint.card_storage" }}</h3>
+          <span class="fp-card-status fp-card-status--detecting" id="storageStatus">{{ call .T "fingerprint.status_detecting" }}</span>
+        </div>
+        <div class="fp-card-content">
+          <div class="fp-card-value" id="storageValue">{{ call .T "fingerprint.loading" }}</div>
+        </div>
+      </div>
+
+      <!-- Network -->
+      <div class="fp-detection-card" id="cardNetwork">
+        <div class="fp-card-header">
+          <div class="fp-card-icon">📡</div>
+          <h3 class="fp-card-title">{{ call .T "fingerprint.card_network" }}</h3>
+          <span class="fp-card-status fp-card-status--detecting" id="networkStatus">{{ call .T "fingerprint.status_detecting" }}</span>
+        </div>
+        <div class="fp-card-content">
+          <div class="fp-card-value" id="networkValue">{{ call .T "fingerprint.loading" }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="fp-sidebar">
+    <div class="fp-info-card">
+      <h3>{{ call .T "fingerprint.about_title" }}</h3>
+      <p>{{ call .T "fingerprint.about_desc" }}</p>
+    </div>
+    <div class="fp-info-card">
+      <h3>{{ call .T "fingerprint.what_detected" }}</h3>
+      <ul class="fp-info-list">
+        <li>🌐 {{ call .T "fingerprint.detect.browser" }}</li>
+        <li>🎨 {{ call .T "fingerprint.detect.canvas" }}</li>
+        <li>🎮 {{ call .T "fingerprint.detect.webgl" }}</li>
+        <li>🔌 {{ call .T "fingerprint.detect.webrtc" }}</li>
+        <li>🔤 {{ call .T "fingerprint.detect.fonts" }}</li>
+        <li>🖥️ {{ call .T "fingerprint.detect.screen" }}</li>
+        <li>🧩 {{ call .T "fingerprint.detect.plugins" }}</li>
+        <li>🔊 {{ call .T "fingerprint.detect.audio" }}</li>
+        <li>💾 {{ call .T "fingerprint.detect.storage" }}</li>
+        <li>📡 {{ call .T "fingerprint.detect.network" }}</li>
+      </ul>
+    </div>
+    <div class="fp-info-card">
+      <h3>{{ call .T "fingerprint.tips_title" }}</h3>
+      <ul class="fp-info-list fp-info-list--check">
+        <li>{{ call .T "fingerprint.tip1" }}</li>
+        <li>{{ call .T "fingerprint.tip2" }}</li>
+        <li>{{ call .T "fingerprint.tip3" }}</li>
+        <li>{{ call .T "fingerprint.tip4" }}</li>
+        <li>{{ call .T "fingerprint.tip5" }}</li>
+      </ul>
+    </div>
+    <div class="ad-slot" data-slot="fingerprint-sidebar" style="width:300px;min-height:250px;background:#f1f5f9;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:13px;">
+      Ad Placeholder 300x250
+    </div>
+  </div>
+</div>
+
+<!-- How It Works -->
+<section class="te-section te-section--alt">
+  <div class="te-section-inner">
+    <span class="te-section-label">{{ call .T "fingerprint.how.label" }}</span>
+    <h2 class="te-section-title">{{ call .T "fingerprint.how.title" }}</h2>
+    <div class="te-steps">
+      <div class="te-step">
+        <div class="te-step__num">1</div>
+        <h3 class="te-step__title">{{ call .T "fingerprint.step1.title" }}</h3>
+        <p class="te-step__desc">{{ call .T "fingerprint.step1.desc" }}</p>
+      </div>
+      <div class="te-step">
+        <div class="te-step__num">2</div>
+        <h3 class="te-step__title">{{ call .T "fingerprint.step2.title" }}</h3>
+        <p class="te-step__desc">{{ call .T "fingerprint.step2.desc" }}</p>
+      </div>
+      <div class="te-step">
+        <div class="te-step__num">3</div>
+        <h3 class="te-step__title">{{ call .T "fingerprint.step3.title" }}</h3>
+        <p class="te-step__desc">{{ call .T "fingerprint.step3.desc" }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Privacy -->
+<section class="te-section">
+  <div class="te-section-inner">
+    <div class="te-split">
+      <div class="te-split-text">
+        <span class="te-section-label">{{ call .T "fingerprint.privacy.label" }}</span>
+        <h2 class="te-section-title">{{ call .T "fingerprint.privacy.title" }}</h2>
+        <p class="te-section-body">{{ call .T "fingerprint.privacy.body1" }}</p>
+        <p class="te-section-body">{{ call .T "fingerprint.privacy.body2" }}</p>
+      </div>
+      <div class="te-split-visual">
+        <div class="te-visual-box">
+          <div class="te-visual-box__icon">🔒</div>
+          <div class="te-visual-stat">
+            <span class="te-visual-stat__num">100%</span>
+            <span class="te-visual-stat__lbl">{{ call .T "fingerprint.privacy.stat.lbl" }}</span>
+          </div>
+          <div class="te-visual-box__label">{{ call .T "fingerprint.privacy.stat.sub" }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section class="te-section te-section--alt">
+  <div class="te-section-inner">
+    <span class="te-section-label">{{ call .T "fingerprint.about.label" }}</span>
+    <h2 class="te-section-title">{{ call .T "fingerprint.about.seo.title" }}</h2>
+    <p class="te-section-body">{{ call .T "fingerprint.about.body1" }}</p>
+    <p class="te-section-body">{{ call .T "fingerprint.about.body2" }}</p>
+    <p class="te-section-body">{{ call .T "fingerprint.about.body3" }}</p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="te-section">
+  <div class="te-section-inner">
+    <h2 class="te-section-title">{{ call .T "fingerprint.faq.title" }}</h2>
+    <div class="te-faq-list">
+      {{ range $i, $faq := .FAQs }}
+      <div class="te-faq-item" id="fp-faq-{{ $i }}">
+        <button class="te-faq-q" onclick="toggleFAQ('fp-faq-{{ $i }}')">
+          <span>{{ $faq.Q }}</span>
+          <svg class="te-faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="te-faq-a"><p>{{ $faq.A }}</p></div>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+<script>function toggleFAQ(id){var item=document.getElementById(id);var open=item.classList.contains('open');document.querySelectorAll('.te-faq-item.open').forEach(function(el){el.classList.remove('open')});if(!open)item.classList.add('open')}</script>
+
+<!-- Bottom Ad -->
+<div style="text-align:center;margin:24px 0">
+  {{- template "partials/ad_slot.html" dict "SlotID" "fingerprint-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+</div>
+{{ end }}
+
+{{ define "extraScript" }}
+<style>
+/* Browser Fingerprint Page Styles */
+.fp-hero{padding-top:48px!important;padding-bottom:48px!important}
+.fp-badges{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:20px}
+.fp-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;font-size:.75rem;font-weight:600;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff}
+.fp-badge--warning{background:rgba(245,158,11,.15);border-color:rgba(245,158,11,.3);color:#fcd34d}
+.fp-badge--success{background:rgba(16,185,129,.15);border-color:rgba(16,185,129,.3);color:#6ee7b7}
+
+/* Trust Bar */
+.fp-trust-bar{display:flex;gap:40px;justify-content:center;margin-top:28px;flex-wrap:wrap}
+.fp-trust-item{text-align:center}
+.fp-trust-num{display:block;font-size:1.75rem;font-weight:800;color:#fff}
+.fp-trust-label{font-size:.8rem;opacity:.8}
+
+/* Layout */
+.fp-layout{display:grid;grid-template-columns:1fr;gap:24px;padding:24px 0}
+@media(min-width:900px){.fp-layout{grid-template-columns:1fr 300px}}
+.fp-sidebar{display:none}
+@media(min-width:900px){.fp-sidebar{display:flex;flex-direction:column;gap:16px}}
+
+/* Uniqueness Card */
+.fp-uniqueness{background:var(--t-surface,#fff);border:1px solid var(--t-border,#e2e8f0);border-radius:16px;padding:28px;text-align:center;margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+@media(prefers-color-scheme:dark){.fp-uniqueness{background:var(--t-surface,#1e293b);border-color:var(--t-border,#334155)}}
+[data-theme="dark"] .fp-uniqueness{background:var(--t-surface,#1e293b);border-color:var(--t-border,#334155)}
+.fp-uniqueness__score{font-size:3rem;font-weight:800;background:linear-gradient(135deg,#06b6d4,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.fp-uniqueness__label{font-size:.875rem;color:var(--t-text2,#64748b);margin:4px 0 12px}
+@media(prefers-color-scheme:dark){.fp-uniqueness__label{color:var(--t-text2,#94a3b8)}}
+[data-theme="dark"] .fp-uniqueness__label{color:var(--t-text2,#94a3b8)}
+.fp-uniqueness__meter{height:8px;background:var(--t-border,#e2e8f0);border-radius:999px;overflow:hidden;margin-bottom:8px}
+@media(prefers-color-scheme:dark){.fp-uniqueness__meter{background:var(--t-border,#334155)}}
+[data-theme="dark"] .fp-uniqueness__meter{background:var(--t-border,#334155)}
+.fp-uniqueness__fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#06b6d4,#3b82f6);transition:width .6s ease;width:0}
+.fp-uniqueness__desc{font-size:.8125rem;color:var(--t-text2,#64748b);line-height:1.5}
+@media(prefers-color-scheme:dark){.fp-uniqueness__desc{color:var(--t-text2,#94a3b8)}}
+[data-theme="dark"] .fp-uniqueness__desc{color:var(--t-text2,#94a3b8)}
+
+/* Action Buttons */
+.fp-actions{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.fp-actions .btn-outline{background:var(--t-surface,#fff)}
+@media(prefers-color-scheme:dark){.fp-actions .btn-outline{background:var(--t-surface,#1e293b);color:#f1f5f9;border-color:#475569}}
+[data-theme="dark"] .fp-actions .btn-outline{background:var(--t-surface,#1e293b);color:#f1f5f9;border-color:#475569}
+.fp-actions .btn-outline:hover{border-color:#3b82f6;color:#3b82f6}
+
+/* Detection Grid */
+.fp-detection-grid{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:768px){.fp-detection-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* Detection Card */
+.fp-detection-card{background:var(--t-surface,#fff);border:1px solid var(--t-border,#e2e8f0);border-radius:12px;padding:16px;transition:box-shadow .2s,transform .2s}
+@media(prefers-color-scheme:dark){.fp-detection-card{background:var(--t-surface,#1e293b);border-color:var(--t-border,#334155)}}
+[data-theme="dark"] .fp-detection-card{background:var(--t-surface,#1e293b);border-color:var(--t-border,#334155)}
+.fp-detection-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08);transform:translateY(-2px)}
+.fp-card-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.fp-card-icon{font-size:1.25rem;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:var(--t-bg,#f1f5f9);flex-shrink:0}
+@media(prefers-color-scheme:dark){.fp-card-icon{background:var(--t-bg,#0f172a)}}
+[data-theme="dark"] .fp-card-icon{background:var(--t-bg,#0f172a)}
+.fp-card-icon--danger{background:rgba(239,68,68,.1);color:#ef4444}
+.fp-card-icon--warning{background:rgba(245,158,11,.1);color:#f59e0b}
+.fp-card-title{flex:1;font-size:.9375rem;font-weight:700;color:var(--t-text,#0f172a)}
+@media(prefers-color-scheme:dark){.fp-card-title{color:var(--t-text,#f1f5f9)}}
+[data-theme="dark"] .fp-card-title{color:var(--t-text,#f1f5f9)}
+.fp-card-status{font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.03em}
+.fp-card-status--detecting{background:rgba(59,130,246,.1);color:#3b82f6}
+.fp-card-status--warning{background:rgba(245,158,11,.1);color:#f59e0b}
+.fp-card-status--danger{background:rgba(239,68,68,.1);color:#ef4444}
+.fp-card-status--safe{background:rgba(16,185,129,.1);color:#10b981}
+.fp-card-content{min-height:40px}
+.fp-card-value{font-size:.8125rem;color:var(--t-text2,#64748b);line-height:1.6;word-break:break-word}
+@media(prefers-color-scheme:dark){.fp-card-value{color:var(--t-text2,#94a3b8)}}
+[data-theme="dark"] .fp-card-value{color:var(--t-text2,#94a3b8)}
+.fp-card-copy{margin-top:10px;background:transparent;border:1px solid var(--t-border,#e2e8f0);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:.75rem;color:var(--t-text3,#94a3b8);transition:all .15s}
+@media(prefers-color-scheme:dark){.fp-card-copy{border-color:var(--t-border,#334155)}}
+[data-theme="dark"] .fp-card-copy{border-color:var(--t-border,#334155)}
+.fp-card-copy:hover{background:var(--t-bg,#f1f5f9);color:var(--t-text,#0f172a)}
+@media(prefers-color-scheme:dark){.fp-card-copy:hover{background:var(--t-bg,#0f172a);color:var(--t-text,#f1f5f9)}}
+[data-theme="dark"] .fp-card-copy:hover{background:var(--t-bg,#0f172a);color:var(--t-text,#f1f5f9)}
+
+/* Sidebar Info Cards */
+.fp-info-card{background:var(--t-surface,#fff);border:1px solid var(--t-border,#e2e8f0);border-radius:12px;padding:20px}
+@media(prefers-color-scheme:dark){.fp-info-card{background:var(--t-surface,#1e293b);border-color:var(--t-border,#334155)}}
+[data-theme="dark"] .fp-info-card{background:var(--t-surface,#1e293b);border-color:var(--t-border,#334155)}
+.fp-info-card h3{font-size:.9375rem;font-weight:700;color:var(--t-text,#0f172a);margin:0 0 12px}
+@media(prefers-color-scheme:dark){.fp-info-card h3{color:var(--t-text,#f1f5f9)}}
+[data-theme="dark"] .fp-info-card h3{color:var(--t-text,#f1f5f9)}
+.fp-info-card p{font-size:.8125rem;color:var(--t-text2,#64748b);line-height:1.6;margin:0}
+@media(prefers-color-scheme:dark){.fp-info-card p{color:var(--t-text2,#94a3b8)}}
+[data-theme="dark"] .fp-info-card p{color:var(--t-text2,#94a3b8)}
+.fp-info-list{margin:0;padding:0;list-style:none}
+.fp-info-list li{font-size:.8125rem;color:var(--t-text2,#64748b);padding:6px 0;border-bottom:1px solid var(--t-border,#f1f5f9)}
+@media(prefers-color-scheme:dark){.fp-info-list li{color:var(--t-text2,#94a3b8);border-bottom-color:var(--t-border,#334155)}}
+[data-theme="dark"] .fp-info-list li{color:var(--t-text2,#94a3b8);border-bottom-color:var(--t-border,#334155)}
+.fp-info-list li:last-child{border-bottom:none}
+.fp-info-list--check li{padding-left:20px;position:relative}
+.fp-info-list--check li::before{content:'✓';position:absolute;left:0;color:#10b981;font-weight:700}
+
+/* Toast notification */
+.fp-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:12px 24px;border-radius:8px;font-size:.875rem;font-weight:500;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none}
+.fp-toast.show{opacity:1}
+</style>
+<script>
+(function() {
+  'use strict';
+
+  var fingerprintData = {};
+  var startTime = Date.now();
+  var dataPointCount = 0;
+  var leakCount = 0;
+
+  // Toast notification
+  function showToast(msg) {
+    var toast = document.getElementById('fpToast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'fpToast';
+      toast.className = 'fp-toast';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(function() { toast.classList.remove('show'); }, 2000);
+  }
+
+  function simpleHash(str) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+      var char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(8, '0');
+  }
+
+  function updateBadge(status, text) {
+    var icon = document.getElementById('statusIcon');
+    var textEl = document.getElementById('statusText');
+    if (status === 'warning') {
+      icon.textContent = '⚠️';
+    } else if (status === 'danger') {
+      icon.textContent = '🚨';
+    } else if (status === 'safe') {
+      icon.textContent = '✅';
+    } else {
+      icon.textContent = '🔍';
+    }
+    textEl.textContent = text;
+  }
+
+  function updateCardStatus(id, status, text) {
+    var el = document.getElementById(id + 'Status');
+    if (!el) return;
+    el.className = 'fp-card-status fp-card-status--' + status;
+    el.textContent = text;
+  }
+
+  function detectBrowser() {
+    var ua = navigator.userAgent;
+    var browser = 'Unknown';
+    var version = '';
+
+    if (ua.indexOf('Firefox') > -1) {
+      browser = 'Firefox';
+      var m = ua.match(/Firefox\/(\d+)/);
+      version = m ? m[1] : '';
+    } else if (ua.indexOf('Edg') > -1) {
+      browser = 'Edge';
+      var m = ua.match(/Edg\/(\d+)/);
+      version = m ? m[1] : '';
+    } else if (ua.indexOf('Chrome') > -1) {
+      browser = 'Chrome';
+      var m = ua.match(/Chrome\/(\d+)/);
+      version = m ? m[1] : '';
+    } else if (ua.indexOf('Safari') > -1) {
+      browser = 'Safari';
+      var m = ua.match(/Version\/(\d+)/);
+      version = m ? m[1] : '';
+    }
+
+    var platform = navigator.platform || 'Unknown';
+    var cookieEnabled = navigator.cookieEnabled ? 'Enabled' : 'Disabled';
+    var doNotTrack = navigator.doNotTrack || 'unset';
+
+    var result = {
+      browser: browser,
+      version: version,
+      platform: platform,
+      userAgent: ua,
+      cookieEnabled: cookieEnabled,
+      doNotTrack: doNotTrack
+    };
+
+    fingerprintData.browser = result;
+    dataPointCount += 5;
+
+    document.getElementById('browserValue').innerHTML =
+      '<strong>Browser:</strong> ' + browser + ' ' + version + '<br>' +
+      '<strong>Platform:</strong> ' + platform + '<br>' +
+      '<strong>Cookies:</strong> ' + cookieEnabled + '<br>' +
+      '<strong>DNT:</strong> ' + doNotTrack + '<br>' +
+      '<strong>User Agent:</strong><br><small>' + ua + '</small>';
+
+    updateCardStatus('browser', 'safe', 'Detected');
+  }
+
+  function detectWebRTC() {
+    return new Promise(function(resolve) {
+      var ips = [];
+      var pc = null;
+
+      try {
+        var RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+        if (!RTCPeerConnection) {
+          document.getElementById('webrtcValue').textContent = 'WebRTC not supported';
+          updateCardStatus('webrtc', 'safe', 'Not Supported');
+          fingerprintData.webrtc = { supported: false, ips: [] };
+          resolve([]);
+          return;
+        }
+
+        pc = new RTCPeerConnection({ iceServers: [] });
+        pc.createDataChannel('');
+
+        pc.onicecandidate = function(e) {
+          if (!e.candidate) {
+            displayResults();
+            return;
+          }
+
+          var candidate = e.candidate.candidate;
+          var ipMatch = candidate.match(/(\d{1,3}\.){3}\d{1,3}/);
+          var ipv6Match = candidate.match(/([a-f0-9:]+:+)+[a-f0-9]+/i);
+
+          if (ipMatch && ips.indexOf(ipMatch[0]) === -1) {
+            ips.push(ipMatch[0]);
+          }
+          if (ipv6Match && ips.indexOf(ipv6Match[0]) === -1) {
+            ips.push(ipv6Match[0]);
+          }
+        };
+
+        pc.createOffer().then(function(offer) {
+          return pc.setLocalDescription(offer);
+        }).catch(function() {});
+
+        setTimeout(displayResults, 3000);
+      } catch (e) {
+        document.getElementById('webrtcValue').textContent = 'Error: ' + e.message;
+        updateCardStatus('webrtc', 'warning', 'Error');
+        resolve([]);
+      }
+
+      function displayResults() {
+        if (pc) {
+          pc.close();
+        }
+
+        fingerprintData.webrtc = { supported: true, ips: ips };
+        dataPointCount += ips.length;
+
+        if (ips.length > 0) {
+          leakCount++;
+          document.getElementById('webrtcValue').innerHTML =
+            '<strong style="color:#ef4444">Leaked IPs:</strong><br>' +
+            ips.map(function(ip) { return '• ' + ip; }).join('<br>');
+          updateCardStatus('webrtc', 'danger', 'Leak Found');
+        } else {
+          document.getElementById('webrtcValue').textContent = 'No IP leaks detected';
+          updateCardStatus('webrtc', 'safe', 'No Leak');
+        }
+        resolve(ips);
+      }
+    });
+  }
+
+  function detectCanvas() {
+    try {
+      var canvas = document.createElement('canvas');
+      canvas.width = 200;
+      canvas.height = 50;
+      var ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = '#f60';
+      ctx.fillRect(0, 0, 200, 50);
+      ctx.fillStyle = '#069';
+      ctx.font = '14px Arial';
+      ctx.fillText('Browser Fingerprint 🔒', 2, 15);
+      ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
+      ctx.fillText('Fingerprint Test', 4, 35);
+
+      var dataUrl = canvas.toDataURL();
+      var hash = simpleHash(dataUrl);
+
+      fingerprintData.canvas = { hash: hash };
+      dataPointCount += 2;
+      leakCount++;
+
+      document.getElementById('canvasValue').innerHTML =
+        '<strong>Hash:</strong> ' + hash + '<br><small>Your canvas renders uniquely</small>';
+      updateCardStatus('canvas', 'warning', 'Fingerprintable');
+    } catch (e) {
+      document.getElementById('canvasValue').textContent = 'Canvas blocked/not supported';
+      updateCardStatus('canvas', 'safe', 'Blocked');
+    }
+  }
+
+  function detectWebGL() {
+    try {
+      var canvas = document.createElement('canvas');
+      var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+
+      if (!gl) {
+        document.getElementById('webglValue').textContent = 'WebGL not supported';
+        updateCardStatus('webgl', 'safe', 'Not Supported');
+        fingerprintData.webgl = { supported: false };
+        return;
+      }
+
+      var debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+      var vendor = debugInfo ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) : gl.getParameter(gl.VENDOR);
+      var renderer = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+
+      fingerprintData.webgl = {
+        supported: true,
+        vendor: vendor,
+        renderer: renderer
+      };
+      dataPointCount += 3;
+      leakCount++;
+
+      document.getElementById('webglValue').innerHTML =
+        '<strong>Vendor:</strong> ' + vendor + '<br>' +
+        '<strong>Renderer:</strong> ' + renderer;
+      updateCardStatus('webgl', 'warning', 'Exposed');
+    } catch (e) {
+      document.getElementById('webglValue').textContent = 'Error detecting WebGL';
+      updateCardStatus('webgl', 'warning', 'Error');
+    }
+  }
+
+  function detectFonts() {
+    var baseFonts = ['monospace', 'sans-serif', 'serif'];
+    var testFonts = [
+      'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Georgia',
+      'Impact', 'Tahoma', 'Lucida Console', 'Monaco'
+    ];
+
+    var detected = [];
+    var testString = 'mmmmmmmmmmlli';
+    var testSize = '72px';
+
+    var h = document.getElementsByTagName('body')[0];
+    var span = document.createElement('span');
+    span.style.fontSize = testSize;
+    span.innerHTML = testString;
+    span.style.position = 'absolute';
+    span.style.left = '-9999px';
+    h.appendChild(span);
+
+    var baseWidths = {};
+    baseFonts.forEach(function(baseFont) {
+      span.style.fontFamily = baseFont;
+      baseWidths[baseFont] = span.offsetWidth;
+    });
+
+    testFonts.forEach(function(font) {
+      var detected_font = false;
+      baseFonts.forEach(function(baseFont) {
+        span.style.fontFamily = "'" + font + "', " + baseFont;
+        if (span.offsetWidth !== baseWidths[baseFont]) {
+          detected_font = true;
+        }
+      });
+      if (detected_font && detected.indexOf(font) === -1) {
+        detected.push(font);
+      }
+    });
+
+    h.removeChild(span);
+
+    fingerprintData.fonts = detected;
+    dataPointCount += detected.length;
+
+    if (detected.length > 5) leakCount++;
+
+    document.getElementById('fontsValue').innerHTML =
+      '<strong>Detected (' + detected.length + '):</strong><br>' +
+      detected.join(', ');
+    updateCardStatus('fonts', detected.length > 5 ? 'warning' : 'safe', detected.length + ' fonts');
+  }
+
+
+  function detectScreen() {
+    var result = {
+      screenWidth: screen.width,
+      screenHeight: screen.height,
+      colorDepth: screen.colorDepth,
+      pixelDepth: screen.pixelDepth,
+      devicePixelRatio: window.devicePixelRatio || 1,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      timezoneOffset: new Date().getTimezoneOffset(),
+      availWidth: screen.availWidth,
+      availHeight: screen.availHeight
+    };
+
+    fingerprintData.screen = result;
+    dataPointCount += 6;
+    leakCount++;
+
+    document.getElementById('screenValue').innerHTML =
+      '<strong>Resolution:</strong> ' + result.screenWidth + ' x ' + result.screenHeight + '<br>' +
+      '<strong>Available:</strong> ' + result.availWidth + ' x ' + result.availHeight + '<br>' +
+      '<strong>Color Depth:</strong> ' + result.colorDepth + ' bits<br>' +
+      '<strong>Pixel Ratio:</strong> ' + result.devicePixelRatio + '<br>' +
+      '<strong>Timezone:</strong> ' + result.timezone + '<br>' +
+      '<strong>UTC Offset:</strong> ' + result.timezoneOffset + ' min';
+    updateCardStatus('screen', 'warning', 'Exposed');
+  }
+
+  function detectLanguage() {
+    var result = {
+      language: navigator.language,
+      languages: navigator.languages ? Array.from(navigator.languages) : [navigator.language],
+      locale: Intl.NumberFormat().resolvedOptions().locale
+    };
+
+    fingerprintData.language = result;
+    dataPointCount += 2;
+
+    document.getElementById('languageValue').innerHTML =
+      '<strong>Language:</strong> ' + result.language + '<br>' +
+      '<strong>Languages:</strong> ' + result.languages.join(', ') + '<br>' +
+      '<strong>Locale:</strong> ' + result.locale;
+    updateCardStatus('language', 'safe', 'Detected');
+  }
+
+
+  function detectPlugins() {
+    var plugins = [];
+    if (navigator.plugins) {
+      for (var i = 0; i < navigator.plugins.length; i++) {
+        plugins.push(navigator.plugins[i].name);
+      }
+    }
+
+    fingerprintData.plugins = plugins;
+    dataPointCount += plugins.length;
+    if (plugins.length > 0) leakCount++;
+
+    if (plugins.length > 0) {
+      document.getElementById('pluginsValue').innerHTML =
+        '<strong>Plugins (' + plugins.length + '):</strong><br>' +
+        plugins.slice(0, 10).join('<br>') +
+        (plugins.length > 10 ? '<br>... and ' + (plugins.length - 10) + ' more' : '');
+      updateCardStatus('plugins', 'warning', plugins.length + ' found');
+    } else {
+      document.getElementById('pluginsValue').textContent = 'No plugins detected (modern browsers)';
+      updateCardStatus('plugins', 'safe', 'None');
+    }
+  }
+
+
+  function detectAudio() {
+    try {
+      var audioContext = window.AudioContext || window.webkitAudioContext;
+      if (!audioContext) {
+        document.getElementById('audioValue').textContent = 'AudioContext not supported';
+        updateCardStatus('audio', 'safe', 'Not Supported');
+        fingerprintData.audio = { supported: false };
+        return;
+      }
+
+      var ctx = new audioContext();
+      var sampleRate = ctx.sampleRate;
+
+      var oscillator = ctx.createOscillator();
+      var analyser = ctx.createAnalyser();
+      var gain = ctx.createGain();
+      var scriptProcessor = ctx.createScriptProcessor(4096, 1, 1);
+
+      gain.gain.value = 0;
+      oscillator.type = 'triangle';
+      oscillator.frequency.value = 10000;
+
+      oscillator.connect(analyser);
+      analyser.connect(scriptProcessor);
+      scriptProcessor.connect(gain);
+      gain.connect(ctx.destination);
+      oscillator.start(0);
+
+      var fingerprint = [];
+      analyser.fftSize = 2048;
+      var bufferLength = analyser.frequencyBinCount;
+      var dataArray = new Float32Array(bufferLength);
+      analyser.getFloatFrequencyData(dataArray);
+
+      for (var i = 0; i < bufferLength; i++) {
+        fingerprint.push(dataArray[i]);
+      }
+
+      oscillator.stop();
+      ctx.close();
+
+      var hash = simpleHash(fingerprint.slice(0, 100).join(','));
+
+      fingerprintData.audio = {
+        supported: true,
+        hash: hash,
+        sampleRate: sampleRate
+      };
+      dataPointCount += 2;
+      leakCount++;
+
+      document.getElementById('audioValue').innerHTML =
+        '<strong>Hash:</strong> ' + hash + '<br>' +
+        '<strong>Sample Rate:</strong> ' + sampleRate + ' Hz';
+      updateCardStatus('audio', 'warning', 'Fingerprintable');
+    } catch (e) {
+      document.getElementById('audioValue').textContent = 'Error: ' + e.message;
+      updateCardStatus('audio', 'warning', 'Error');
+    }
+  }
+
+
+  function detectHardware() {
+    var result = {
+      cores: navigator.hardwareConcurrency || 'Unknown',
+      memory: navigator.deviceMemory || 'Unknown',
+      maxTouchPoints: navigator.maxTouchPoints || 0
+    };
+
+    fingerprintData.hardware = result;
+    dataPointCount += 2;
+
+    document.getElementById('hardwareValue').innerHTML =
+      '<strong>CPU Cores:</strong> ' + result.cores + '<br>' +
+      '<strong>Device Memory:</strong> ' + (typeof result.memory === 'number' ? result.memory + ' GB' : result.memory) + '<br>' +
+      '<strong>Touch Points:</strong> ' + result.maxTouchPoints;
+    updateCardStatus('hardware', 'safe', 'Detected');
+  }
+
+
+  function detectStorage() {
+    var result = {
+      localStorage: false,
+      sessionStorage: false,
+      indexedDB: false,
+      openDatabase: false,
+      cookies: navigator.cookieEnabled
+    };
+
+    try {
+      localStorage.setItem('test', 'test');
+      localStorage.removeItem('test');
+      result.localStorage = true;
+    } catch (e) {}
+
+    try {
+      sessionStorage.setItem('test', 'test');
+      sessionStorage.removeItem('test');
+      result.sessionStorage = true;
+    } catch (e) {}
+
+    result.indexedDB = !!window.indexedDB;
+    result.openDatabase = !!window.openDatabase;
+
+    fingerprintData.storage = result;
+    dataPointCount += 4;
+
+    document.getElementById('storageValue').innerHTML =
+      '<strong>Local Storage:</strong> ' + (result.localStorage ? 'Yes' : 'No') + '<br>' +
+      '<strong>Session Storage:</strong> ' + (result.sessionStorage ? 'Yes' : 'No') + '<br>' +
+      '<strong>IndexedDB:</strong> ' + (result.indexedDB ? 'Yes' : 'No') + '<br>' +
+      '<strong>WebSQL:</strong> ' + (result.openDatabase ? 'Yes' : 'No') + '<br>' +
+      '<strong>Cookies:</strong> ' + (result.cookies ? 'Enabled' : 'Disabled');
+    updateCardStatus('storage', 'safe', 'Detected');
+  }
+
+
+  function detectNetwork() {
+    var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    var result = {
+      online: navigator.onLine,
+      connectionType: 'Unknown',
+      downlink: 'Unknown',
+      effectiveType: 'Unknown'
+    };
+
+    if (connection) {
+      result.connectionType = connection.type || 'Unknown';
+      result.downlink = connection.downlink ? connection.downlink + ' Mbps' : 'Unknown';
+      result.effectiveType = connection.effectiveType || 'Unknown';
+    }
+
+    fingerprintData.network = result;
+    dataPointCount += 3;
+
+    document.getElementById('networkValue').innerHTML =
+      '<strong>Online:</strong> ' + (result.online ? 'Yes' : 'No') + '<br>' +
+      '<strong>Connection:</strong> ' + result.connectionType + '<br>' +
+      '<strong>Downlink:</strong> ' + result.downlink + '<br>' +
+      '<strong>Effective Type:</strong> ' + result.effectiveType;
+    updateCardStatus('network', 'safe', 'Detected');
+  }
+
+  function calculateUniqueness() {
+    var factors = 0;
+    var maxFactors = 12;
+
+    if (fingerprintData.browser) factors++;
+    if (fingerprintData.webrtc && fingerprintData.webrtc.ips && fingerprintData.webrtc.ips.length > 0) factors++;
+    if (fingerprintData.canvas) factors++;
+    if (fingerprintData.webgl && fingerprintData.webgl.supported) factors++;
+    if (fingerprintData.fonts && fingerprintData.fonts.length > 5) factors++;
+    if (fingerprintData.screen) factors++;
+    if (fingerprintData.language) factors++;
+    if (fingerprintData.plugins && fingerprintData.plugins.length > 0) factors++;
+    if (fingerprintData.audio) factors++;
+    if (fingerprintData.hardware) factors++;
+    if (fingerprintData.storage) factors++;
+    if (fingerprintData.network) factors++;
+
+    return Math.round((factors / maxFactors) * 100);
+  }
+
+
+  function updateUniqueness() {
+    var score = calculateUniqueness();
+    document.getElementById('uniquenessScore').textContent = score + '%';
+    document.getElementById('uniquenessMeterFill').style.width = score + '%';
+
+    var desc = '';
+    if (score >= 90) {
+      desc = 'Your browser is highly unique and can be easily tracked across websites.';
+    } else if (score >= 70) {
+      desc = 'Your browser has many identifying characteristics that can be used for tracking.';
+    } else if (score >= 50) {
+      desc = 'Your browser has moderate fingerprint exposure. Consider privacy enhancements.';
+    } else if (score >= 30) {
+      desc = 'Your browser has some privacy protections in place, but some risks remain.';
+    } else {
+      desc = 'Your browser has good privacy protections. Limited fingerprinting possible.';
+    }
+    document.getElementById('uniquenessDesc').textContent = desc;
+  }
+
+
+  function updateTrustBar() {
+    var elapsed = Date.now() - startTime;
+    document.getElementById('dataPoints').textContent = dataPointCount;
+    document.getElementById('leakCount').textContent = leakCount;
+    document.getElementById('scanTime').textContent = (elapsed / 1000).toFixed(1) + 's';
+  }
+
+
+  window.copyValue = function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+
+    var text = el.innerText || el.textContent;
+    navigator.clipboard.writeText(text).then(function() {
+      showToast('Copied to clipboard!');
+    });
+  };
+
+
+  window.copyAllData = function() {
+    var text = JSON.stringify(fingerprintData, null, 2);
+    navigator.clipboard.writeText(text).then(function() {
+      showToast('All fingerprint data copied!');
+    });
+  };
+
+
+  window.downloadReport = function() {
+    var report = {
+      timestamp: new Date().toISOString(),
+      fingerprint: fingerprintData,
+      summary: {
+        dataPoints: dataPointCount,
+        potentialLeaks: leakCount,
+        uniquenessScore: calculateUniqueness() + '%'
+      }
+    };
+
+    var blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'fingerprint-report-' + Date.now() + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+
+  window.runFingerprintScan = function() {
+    startTime = Date.now();
+    dataPointCount = 0;
+    leakCount = 0;
+    fingerprintData = {};
+    updateBadge('scanning', 'Scanning...');
+
+    detectBrowser();
+    detectCanvas();
+    detectWebGL();
+    detectFonts();
+    detectScreen();
+    detectLanguage();
+    detectPlugins();
+    detectAudio();
+    detectHardware();
+    detectStorage();
+    detectNetwork();
+
+    detectWebRTC().then(function() {
+      updateUniqueness();
+      updateTrustBar();
+
+      if (leakCount > 3) {
+        updateBadge('danger', 'High Risk');
+      } else if (leakCount > 0) {
+        updateBadge('warning', 'Some Leaks');
+      } else {
+        updateBadge('safe', 'Secure');
+      }
+    });
+  };
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(runFingerprintScan, 500);
+  });
+})();
+</script>
+{{ end }}

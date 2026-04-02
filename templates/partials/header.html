@@ -44,10 +44,12 @@
         <a href="#" class="nav-link">{{ call .T "nav.privacy" }} ▾</a>
         <div class="dropdown-menu">
           <a href="/sms?lang={{ .Lang }}" class="dropdown-item">📱 {{ call .T "home.tool_sms" }}</a>
-          <a href="/virtual-address?lang={{ .Lang }}" class="dropdown-item">🏠 {{ call .T "home.tool_address" }}</a>
+          <a href="/virtual-address?lang={{ .Lang }}" class="dropdown-item">🎭 {{ call .T "home.tool_address" }}</a>
           <a href="/password-generator?lang={{ .Lang }}" class="dropdown-item">🔑 {{ call .T "home.tool_password" }}</a>
           <a href="/temp-email?lang={{ .Lang }}" class="dropdown-item">📧 {{ call .T "home.tool_email" }}</a>
           <a href="/proxy?lang={{ .Lang }}" class="dropdown-item">🌐 {{ call .T "home.tool_proxy" }}</a>
+          <a href="/password-checker?lang={{ .Lang }}" class="dropdown-item">🔐 {{ call .T "home.tool_password_checker" }}</a>
+          <a href="/browser-fingerprint?lang={{ .Lang }}" class="dropdown-item">🖥️ {{ call .T "home.tool_browser_fingerprint" }}</a>
         </div>
       </div>
       <div class="nav-item dropdown">
@@ -83,6 +85,8 @@
         <a href="#" class="nav-link">{{ call .T "nav.ai" }} ▾</a>
         <div class="dropdown-menu">
           <a href="/ailab/detector?lang={{ .Lang }}" class="dropdown-item">🔍 {{ call .T "ailab.detector.name" }}</a>
+          <a href="/ailab/humanizer?lang={{ .Lang }}" class="dropdown-item">✍️ {{ call .T "ailab.humanizer.name" }}</a>
+          <a href="/ailab/compete?lang={{ .Lang }}" class="dropdown-item">📊 {{ call .T "ailab.compete.name" }}</a>
         </div>
       </div>
     </div>

@@ -39,8 +39,8 @@
   "home.tool_ip_lookup_desc": "Query IP location, ISP, coordinates and more",
   "home.tool_sms": "SMS Receiver",
   "home.tool_sms_desc": "Receive SMS online with virtual phone numbers",
-  "home.tool_address": "Virtual Address",
-  "home.tool_address_desc": "Generate realistic fake addresses and identity info",
+  "home.tool_address": "Fake Identity Generator",
+  "home.tool_address_desc": "Generate random virtual identity info including name, address, phone and email",
   "home.tool_password": "Password Generator",
   "home.tool_password_desc": "Cryptographically secure random passwords instantly",
   "home.tool_email": "Temp Email",
@@ -197,7 +197,7 @@
   "home.seo.sms_detail": "Receive verification SMS without using your real phone number. Perfect for signing up for websites and services while keeping your personal number private.",
   "home.seo.email_detail": "Generate disposable email addresses that automatically expire after 10 minutes. Ideal for one-time registrations and avoiding spam.",
   "home.seo.password_detail": "Create cryptographically secure random passwords with customizable length, character sets, and complexity options.",
-  "home.seo.address_detail": "Generate realistic fake addresses and identity information for testing, form filling, or protecting your real location.",
+  "home.seo.address_detail": "Generate random virtual identity information including name, address, phone number, and email for testing, form filling, or protecting your real identity.",
   "home.seo.dev_title": "Developer Tools",
   "home.seo.dev_desc": "Essential utilities for web developers, software engineers, and IT professionals:",
   "home.seo.json_detail": "A complete JSON toolkit with 40+ tools including formatting, validation, conversion, minification, diff comparison, and JSONPath queries.",
@@ -219,5 +219,10 @@
   "home.seo.why_browser_desc": "No software to download or install. Works on any device with a modern browser — desktop, tablet, or mobile.",
   "home.seo.why_free": "Completely Free",
   "home.seo.why_free_desc": "All 50+ tools are free to use with no hidden fees, premium tiers, or usage limits. Supported by minimal, non-intrusive ads.",
-  "home.seo.conclusion": "Whether you're a developer needing quick access to encoding tools, a designer working with images, or someone who values online privacy, Tool Box Nova provides the tools you need — fast, free, and private. Bookmark this page and access your favorite tools anytime, anywhere."
+  "home.seo.conclusion": "Whether you're a developer needing quick access to encoding tools, a designer working with images, or someone who values online privacy, Tool Box Nova provides the tools you need — fast, free, and private. Bookmark this page and access your favorite tools anytime, anywhere.",
+
+  "home.tool_password_checker": "Password Strength Checker",
+  "home.tool_password_checker_desc": "Check your password strength and get security improvement tips",
+  "home.tool_browser_fingerprint": "Browser Fingerprint Detector",
+  "home.tool_browser_fingerprint_desc": "Detect what information your browser leaks for tracking and fingerprinting"
 }

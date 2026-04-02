@@ -103,6 +103,9 @@
           <a href="/temp-email?lang={{ .Lang }}" class="dropdown-item">📧 {{ call .T "home.tool_email" }}</a>
           <a href="/proxy?lang={{ .Lang }}" class="dropdown-item">🌐 {{ call .T "home.tool_proxy" }}</a>
           <a href="/privacy/check?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/privacy/check" }}active{{ end }}">🔍 {{ call .T "nav.breach_checker" }}</a>
+          <div class="dropdown-divider"></div>
+          <a href="/password-checker?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/password-checker" }}active{{ end }}">🔐 {{ call .T "home.tool_password_checker" }}</a>
+          <a href="/browser-fingerprint?lang={{ .Lang }}" class="dropdown-item {{ if eq .CurrentPath "/browser-fingerprint" }}active{{ end }}">🖥️ {{ call .T "home.tool_browser_fingerprint" }}</a>
         </div>
       </div>
       <div class="nav-item has-dropdown">
@@ -208,6 +211,8 @@
         <a href="/temp-email?lang={{ .Lang }}">{{ call .T "home.tool_email" }}</a>
         <a href="/proxy?lang={{ .Lang }}">{{ call .T "home.tool_proxy" }}</a>
         <a href="/privacy/check?lang={{ .Lang }}">{{ call .T "nav.breach_checker" }}</a>
+        <a href="/password-checker?lang={{ .Lang }}">{{ call .T "home.tool_password_checker" }}</a>
+        <a href="/browser-fingerprint?lang={{ .Lang }}">{{ call .T "home.tool_browser_fingerprint" }}</a>
       </div>
       <div class="nav-mobile-group">
         <span class="nav-mobile-group__label">{{ call .T "nav.dev" }}</span>

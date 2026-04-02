@@ -110,6 +110,24 @@
         <div class="tool-card__arrow">→</div>
       </a>
 
+      <a href="/password-checker?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">🔐</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_password_checker" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_password_checker_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
+      <a href="/browser-fingerprint?lang={{ .Lang }}" class="tool-card">
+        <div class="tool-card__icon">🖥️</div>
+        <div class="tool-card__body">
+          <h3 class="tool-card__name">{{ call .T "home.tool_browser_fingerprint" }}</h3>
+          <p class="tool-card__desc">{{ call .T "home.tool_browser_fingerprint_desc" }}</p>
+        </div>
+        <div class="tool-card__arrow">→</div>
+      </a>
+
     </div>
   </div>
 </section>

@@ -39,8 +39,8 @@
   "home.tool_ip_lookup_desc": "Consulta ubicación, ISP, coordenadas de una IP",
   "home.tool_sms": "Plataforma SMS temporal",
   "home.tool_sms_desc": "Recibe SMS de verificación en línea sin número real",
-  "home.tool_address": "Dirección virtual global",
-  "home.tool_address_desc": "Genera direcciones e identidades falsas realistas",
+  "home.tool_address": "Generador de Identidad Falsa",
+  "home.tool_address_desc": "Genera información de identidad virtual aleatoria: nombre, dirección, teléfono y correo",
   "home.tool_password": "Generador de contraseñas aleatorias",
   "home.tool_password_desc": "Genera contraseñas aleatorias seguras al instante",
   "home.tool_email": "Correo electrónico temporal anónimo",
@@ -197,7 +197,7 @@
   "home.seo.sms_detail": "Recibe SMS de verificación sin usar tu número real de teléfono. Perfecto para registrarse en sitios web y servicios manteniendo tu número privado.",
   "home.seo.email_detail": "Genera direcciones de correo desechables que expiran automáticamente después de 10 minutos. Ideal para registros únicos y evitar spam.",
   "home.seo.password_detail": "Crea contraseñas aleatorias criptográficamente seguras con opciones personalizables de longitud, conjuntos de caracteres y complejidad.",
-  "home.seo.address_detail": "Genera direcciones falsas realistas e información de identidad para pruebas, llenado de formularios o protección de tu ubicación real.",
+  "home.seo.address_detail": "Genera información de identidad virtual aleatoria incluyendo nombre, dirección, teléfono y correo para pruebas, formularios o proteger tu identidad real.",
   "home.seo.dev_title": "Herramientas para Desarrolladores",
   "home.seo.dev_desc": "Utilidades esenciales para desarrolladores web, ingenieros de software y profesionales de TI:",
   "home.seo.json_detail": "Un kit de herramientas JSON completo con más de 40 herramientas incluyendo formateo, validación, conversión, minificación, comparación diff y consultas JSONPath.",
@@ -219,5 +219,10 @@
   "home.seo.why_browser_desc": "Sin software para descargar o instalar. Funciona en cualquier dispositivo con un navegador moderno — escritorio, tableta o móvil.",
   "home.seo.why_free": "Completamente Gratuito",
   "home.seo.why_free_desc": "Todas las más de 50 herramientas son gratuitas sin costos ocultos, niveles premium ni límites de uso. Financiado por anuncios mínimos y no intrusivos.",
-  "home.seo.conclusion": "Ya seas un desarrollador que necesita acceso rápido a herramientas de codificación, un diseñador que trabaja con imágenes, o alguien que valora la privacidad en línea, Tool Box Nova proporciona las herramientas que necesitas — rápido, gratis y privado. Marca esta página como favorita y accede a tus herramientas favoritas en cualquier momento y lugar."
+  "home.seo.conclusion": "Ya seas un desarrollador que necesita acceso rápido a herramientas de codificación, un diseñador que trabaja con imágenes, o alguien que valora la privacidad en línea, Tool Box Nova proporciona las herramientas que necesitas — rápido, gratis y privado. Marca esta página como favorita y accede a tus herramientas favoritas en cualquier momento y lugar.",
+
+  "home.tool_password_checker": "Verificador de Fortaleza de Contraseña",
+  "home.tool_password_checker_desc": "Verifica la fortaleza de tu contraseña y obtén consejos de seguridad",
+  "home.tool_browser_fingerprint": "Detector de Huella del Navegador",
+  "home.tool_browser_fingerprint_desc": "Detecta qué información filtra tu navegador para rastreo"
 }

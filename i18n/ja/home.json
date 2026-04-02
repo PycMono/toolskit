@@ -39,8 +39,8 @@
   "home.tool_ip_lookup_desc": "IPの所在地、プロバイダー、緯度経度などの情報を検索",
   "home.tool_sms": "SMS 認証コード受信",
   "home.tool_sms_desc": "オンラインで認証SMSを受信、実際の電話番号不要",
-  "home.tool_address": "グローバル仮想アドレス",
-  "home.tool_address_desc": "リアルな架空アドレスと身分情報を生成",
+  "home.tool_address": "フェイクID生成ツール",
+  "home.tool_address_desc": "名前・住所・電話番号・メールなどランダム仮想ID情報を生成",
   "home.tool_password": "ランダムパスワード生成",
   "home.tool_password_desc": "暗号レベルの安全なランダムパスワードを即時生成",
   "home.tool_email": "匿名一時メール",
@@ -197,7 +197,7 @@
   "home.seo.sms_detail": "実際の電話番号を使用せずに認証SMSを受信。個人の番号を非公開にしたままウェブサイトやサービスに登録できます。",
   "home.seo.email_detail": "10分後に自動的に期限切れになる使い捨てメールアドレスを生成。一回限りの登録やスパム回避に最適。",
   "home.seo.password_detail": "長さ、文字セット、複雑さオプションをカスタマイズして、暗号化レベルの安全なランダムパスワードを作成。",
-  "home.seo.address_detail": "テスト、フォーム入力、実際の場所の保護に使用できるリアルな偽アドレスと身元情報を生成。",
+  "home.seo.address_detail": "テスト、フォーム入力、実際の身元保護に使用できるランダム仮想ID情報（名前・住所・電話番号・メール）を生成。",
   "home.seo.dev_title": "開発者ツール",
   "home.seo.dev_desc": "ウェブ開発者、ソフトウェアエンジニア、IT専門家向けの必須ユーティリティ：",
   "home.seo.json_detail": "フォーマット、検証、変換、圧縮、差分比較、JSONPathクエリを含む40以上のツールを備えた完全なJSONツールキット。",
@@ -219,5 +219,10 @@
   "home.seo.why_browser_desc": "ダウンロードやインストールは不要。デスクトップ、タブレット、モバイルなど、モダンブラウザを搭載したあらゆるデバイスで動作。",
   "home.seo.why_free": "完全無料",
   "home.seo.why_free_desc": "50以上のツールすべてが隠れた料金、プレミアムプラン、使用制限なしで無料。最小限の控えめな広告で運営。",
-  "home.seo.conclusion": "エンコーディングツールへの素早いアクセスを必要とする開発者、画像を扱うデザイナー、オンラインプライバシーを重視する方にとって、Tool Box Nova は必要なツールを提供します — 高速、無料、プライベート。このページをブックマークして、いつでもどこでもお気に入りのツールにアクセス。"
+  "home.seo.conclusion": "エンコーディングツールへの素早いアクセスを必要とする開発者、画像を扱うデザイナー、オンラインプライバシーを重視する方にとって、Tool Box Nova は必要なツールを提供します — 高速、無料、プライベート。このページをブックマークして、いつでもどこでもお気に入りのツールにアクセス。",
+
+  "home.tool_password_checker": "パスワード強度チェッカー",
+  "home.tool_password_checker_desc": "パスワードの強度を確認し、セキュリティ改善のヒントを取得",
+  "home.tool_browser_fingerprint": "ブラウザフィンガープリント検出",
+  "home.tool_browser_fingerprint_desc": "ブラウザが追跡のために漏洩している情報を検出"
 }

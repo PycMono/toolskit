@@ -4,6 +4,8 @@
   "ailab.detector.seo.title": "無料AIコンテンツ検出・人間化ツール — すべてのAI検出器を回避 | ToolboxNova",
   "ailab.detector.seo.desc": "99%の精度でChatGPT、Claude、GeminiなどのAI生成コンテンツを検出。Turnitin、GPTZeroなどを回避。完全無料・登録不要。",
   "ailab.detector.name": "AI コンテンツ検出器",
+  "ailab.humanizer.name": "AI 人間化ツール",
+  "ailab.compete.name": "AI 競合分析",
   "ailab.detector.title": "AI コンテンツ検出器",
   "ailab.detector.desc": "テキストがAI生成かどうかを正確に検出",
   "ailab.detector.hero.title": "AIコンテンツを即座に検出・人間化",

@@ -76,6 +76,8 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 	r.GET("/password-generator", handlers.PasswordPage)
 	r.GET("/temp-email", handlers.TempEmailPage)
 	r.GET("/proxy", handlers.ProxyPage)
+	r.GET("/password-checker", handlers.PasswordCheckerPage)
+	r.GET("/browser-fingerprint", handlers.BrowserFingerprintPage)
 	r.GET("/about", handlers.AboutPage)
 	r.GET("/privacy-policy", handlers.PrivacyPage)
 	r.GET("/terms-of-service", handlers.TermsPage)
@@ -209,6 +211,14 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 		ailab.GET("/humanize", func(c *gin.Context) {
 			lang := c.Query("lang")
 			target := "/ai/humanizer"
+			if lang != "" {
+				target += "?lang=" + lang
+			}
+			c.Redirect(301, target)
+		})
+		ailab.GET("/compete", func(c *gin.Context) {
+			lang := c.Query("lang")
+			target := "/ai/compete"
 			if lang != "" {
 				target += "?lang=" + lang
 			}
