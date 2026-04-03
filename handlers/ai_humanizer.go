@@ -209,39 +209,90 @@ func AIHumanizerDetectAPI(c *gin.Context) {
 	}
 
 	engine := getHumanizerEngine()
-	var aiScore, confidence float64
-	var label string
 
 	if engine == nil {
-		aiScore = 0.5
-		confidence = 0.3
-		label = "mixed"
-	} else {
-		resp, err := engine.Detect(c.Request.Context(), req)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "detection failed"})
-			return
-		}
-		aiScore = resp.AIScore
-		confidence = resp.Confidence
-		label = resp.Label
+		// Fallback with heuristic detection
+		result := transformDetectResponseHeuristic(req.Text)
+		c.JSON(http.StatusOK, result)
+		return
 	}
 
-	// Transform to frontend format
-	result := transformDetectResponse(req.Text, aiScore, confidence, label)
+	resp, err := engine.Detect(c.Request.Context(), req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "detection failed"})
+		return
+	}
+
+	result := transformDetectResponse(req.Text, resp)
 	c.JSON(http.StatusOK, result)
 }
 
-// transformDetectResponse converts engine output to frontend-expected format.
-func transformDetectResponse(text string, aiScore, confidence float64, label string) gin.H {
-	score := int(aiScore * 100)
-	confidencePct := int(confidence * 100)
+// transformDetectResponse converts full engine output to frontend-expected format.
+func transformDetectResponse(text string, resp *humanizer.DetectResponse) gin.H {
+	score := int(resp.AIScore * 100)
+	confidencePct := int(resp.Confidence * 100)
 
-	// Generate sentence-level analysis
-	sentences := generateSentenceAnalysis(text, aiScore)
+	// Use real highlighted sentences from LLM if available
+	var sentences []map[string]interface{}
+	if len(resp.HighlightedSentences) > 0 {
+		sentences = make([]map[string]interface{}, 0, len(resp.HighlightedSentences))
+		for _, s := range resp.HighlightedSentences {
+			sentenceType := "human"
+			if s.AIProbability > 0.7 {
+				sentenceType = "ai"
+			} else if s.AIProbability > 0.4 {
+				sentenceType = "mixed"
+			}
+			sentences = append(sentences, map[string]interface{}{
+				"text":       s.Sentence,
+				"score":      int(s.AIProbability * 100),
+				"type":       sentenceType,
+				"reason":     s.Reason,
+			})
+		}
+	} else {
+		// Fallback to heuristic sentence analysis
+		sentences = generateSentenceAnalysis(text, resp.AIScore)
+	}
 
-	// Generate per-detector scores with variance around the main score
-	detectors := generateDetectorScores(score)
+	// Use real model signature as detector scores
+	detectors := buildDetectorScores(resp)
+
+	// Build forensic evidence for frontend
+	var evidence []map[string]interface{}
+	if len(resp.ForensicEvidence) > 0 {
+		evidence = make([]map[string]interface{}, 0, len(resp.ForensicEvidence))
+		for _, e := range resp.ForensicEvidence {
+			evidence = append(evidence, map[string]interface{}{
+				"dimension":      e.Dimension,
+				"type":           e.Type,
+				"detail":         e.Detail,
+				"original_quote": e.OriginalQuote,
+				"severity":       e.Severity,
+			})
+		}
+	}
+
+	// Build linguistic metrics for frontend
+	metrics := map[string]interface{}{
+		"sentence_length_sd":        resp.LinguisticMetrics.SentenceLengthSD,
+		"paragraph_cv":              resp.LinguisticMetrics.ParagraphCV,
+		"ttr_score":                 resp.LinguisticMetrics.TTRScore,
+		"burstiness_score":          resp.LinguisticMetrics.BurstinessScore,
+		"lexical_diversity":         resp.LinguisticMetrics.LexicalDiversity,
+		"perplexity":                resp.LinguisticMetrics.Perplexity,
+		"syntactic_predictability":  resp.LinguisticMetrics.SyntacticPredictability,
+		"rhetorical_diversity":      resp.LinguisticMetrics.RhetoricalDiversity,
+		"personal_anchor_count":     resp.LinguisticMetrics.PersonalAnchorCount,
+	}
+
+	// Model signature
+	signature := map[string]interface{}{
+		"gpt_match_score":            resp.ModelSignature.GPTMatchScore,
+		"claude_match_score":         resp.ModelSignature.ClaudeMatchScore,
+		"deepseek_gemini_match_score": resp.ModelSignature.DeepSeekGeminiScore,
+		"dominant_signature":         resp.ModelSignature.DominantSignature,
+	}
 
 	// Word count
 	wordCount := strings.Count(text, " ") + 1
@@ -250,9 +301,87 @@ func transformDetectResponse(text string, aiScore, confidence float64, label str
 	}
 
 	return gin.H{
+		"score":                score,
+		"verdict":              resp.Label,
+		"confidence":           confidencePct,
+		"sentences":            sentences,
+		"detectors":            detectors,
+		"word_count":           wordCount,
+		"language":             "en",
+		"readability":          gin.H{"grade": "Standard"},
+		"forensic_evidence":    evidence,
+		"linguistic_metrics":   metrics,
+		"model_signature":      signature,
+		"verdict_summary":      resp.VerdictSummary,
+		"confidence_reasoning": resp.ConfidenceReasoning,
+		"detection_result": map[string]interface{}{
+			"detected_genre":             resp.DetectionResult.DetectedGenre,
+			"detected_model_signature":   resp.DetectionResult.DetectedModel,
+			"anti_evasion_detected":      resp.DetectionResult.AntiEvasionDetected,
+			"calibration_notes":          resp.DetectionResult.CalibrationNotes,
+		},
+	}
+}
+
+// buildDetectorScores converts model signature to detector-style scores.
+func buildDetectorScores(resp *humanizer.DetectResponse) map[string]int {
+	result := make(map[string]int)
+
+	// Map model signature scores to detector names
+	if resp.ModelSignature.GPTMatchScore > 0 {
+		result["gptzero"] = int(resp.ModelSignature.GPTMatchScore * 100)
+		result["turnitin"] = int(resp.ModelSignature.GPTMatchScore * 95)
+	}
+	if resp.ModelSignature.ClaudeMatchScore > 0 {
+		result["copyleaks"] = int(resp.ModelSignature.ClaudeMatchScore * 100)
+		result["originality"] = int(resp.ModelSignature.ClaudeMatchScore * 95)
+	}
+	if resp.ModelSignature.DeepSeekGeminiScore > 0 {
+		result["zerogpt"] = int(resp.ModelSignature.DeepSeekGeminiScore * 100)
+		result["writer"] = int(resp.ModelSignature.DeepSeekGeminiScore * 90)
+	}
+
+	// Fill in remaining detectors from main AI score if not set from signature
+	mainScore := int(resp.AIScore * 100)
+	defaultDetectors := []string{"gptzero", "turnitin", "copyleaks", "zerogpt", "writer", "sapling", "originality", "winston"}
+	for _, det := range defaultDetectors {
+		if _, exists := result[det]; !exists {
+			result[det] = mainScore
+		}
+	}
+
+	// Clamp all scores
+	for k, v := range result {
+		if v < 0 {
+			result[k] = 0
+		}
+		if v > 100 {
+			result[k] = 100
+		}
+	}
+
+	return result
+}
+
+// transformDetectResponseHeuristic provides a fallback when AI engine is not available.
+func transformDetectResponseHeuristic(text string) gin.H {
+	aiScore := 0.5
+	confidence := 0.3
+	label := "mixed"
+	score := int(aiScore * 100)
+
+	sentences := generateSentenceAnalysis(text, aiScore)
+	detectors := generateDetectorScores(score)
+
+	wordCount := strings.Count(text, " ") + 1
+	if strings.TrimSpace(text) == "" {
+		wordCount = 0
+	}
+
+	return gin.H{
 		"score":       score,
 		"verdict":     label,
-		"confidence":  confidencePct,
+		"confidence":  int(confidence * 100),
 		"sentences":   sentences,
 		"detectors":   detectors,
 		"word_count":  wordCount,

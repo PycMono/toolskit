@@ -47,8 +47,8 @@ function handleFiles(files) {
       alert(`跳过不支持的格式: ${file.name}`);
       return;
     }
-    if (file.size > 20 * 1024 * 1024) {
-      alert(`文件过大（>${file.name} > 20MB）`);
+    if (file.size > 100 * 1024 * 1024) {
+      alert(`文件过大（>${file.name} > 100MB）`);
       return;
     }
 

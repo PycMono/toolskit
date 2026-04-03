@@ -933,7 +933,7 @@ function ctAddFiles(files) {
   if (!file) return;
   var allowed = ['image/jpeg','image/png','image/webp','image/svg+xml','image/gif'];
   if (!allowed.includes(file.type)) { ctShowToast('Unsupported format', 'error'); return; }
-  if (file.size > 10 * 1024 * 1024) { ctShowToast('File too large (max 10MB)', 'error'); return; }
+  if (file.size > 100 * 1024 * 1024) { ctShowToast('File too large (max 100MB)', 'error'); return; }
 
   var url = URL.createObjectURL(file);
   State.objectURLs.push(url);

@@ -23,7 +23,13 @@ function decodeJson() {
   const raw = getInput().trim(); if (!raw) return;
   try {
     const decoded = decodeURIComponent(escape(atob(raw)));
-    setOutput(JSON.stringify(JSON.parse(decoded), null, 2));
+    // Try JSON parse first, fall back to raw text
+    try {
+      const parsed = JSON.parse(decoded);
+      setOutput(JSON.stringify(parsed, null, 2));
+    } catch {
+      setOutput(decoded, 'plaintext');
+    }
     const el = document.getElementById('outputStats');
     if (el) el.innerHTML = '<span class="jt-success-badge">✅ Base64 解码完成</span>';
   } catch(e) { showErrorPanel(e, raw); }

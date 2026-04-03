@@ -23,6 +23,24 @@
   --jt-editor-h:    540px;
 }
 
+/* Dark Theme */
+[data-theme="dark"] {
+  --jt-amber:       #fbbf24;
+  --jt-amber-dark:  #f59e0b;
+  --jt-amber-light: #422006;
+  --jt-amber-border:#78350f;
+  --jt-bg:          #0f0f0e;
+  --jt-surface:     #1a1a18;
+  --jt-border:      #2a2a26;
+  --jt-text:        #f5f5f4;
+  --jt-muted:       #a1a199;
+  --jt-shadow-sm:   0 1px 3px rgba(0,0,0,0.3);
+  --jt-shadow-md:   0 4px 16px rgba(0,0,0,0.4);
+  --jt-green:       #22c55e;
+  --jt-red:         #ef4444;
+  --jt-blue:        #3b82f6;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body.jt-page {

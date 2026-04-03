@@ -9,26 +9,32 @@ let rightEditor  = null;  // diff tool
 require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }});
 
 require(['vs/editor/editor.main'], function() {
+  // Detect theme before creating editors
+  const isDark = (document.documentElement.getAttribute('data-theme') || '') === 'dark'
+    || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const editorTheme = isDark ? 'vs-dark' : 'vs';
+
   const opts = {
     fontSize: 13, minimap: { enabled: false },
     scrollBeyondLastLine: false, automaticLayout: true, wordWrap: 'on',
+    theme: editorTheme,
   };
 
   const tool = window.JT_TOOL || '';
 
   if (tool === 'diff') {
     leftEditor = monaco.editor.create(document.getElementById('diffLeftEditor'), {
-      ...opts, value: '', language: 'json', theme: 'vs',
+      ...opts, value: '', language: 'json',
     });
     rightEditor = monaco.editor.create(document.getElementById('diffRightEditor'), {
-      ...opts, value: '', language: 'json', theme: 'vs',
+      ...opts, value: '', language: 'json',
     });
   } else if (tool === 'schema-validate') {
     const schemaEl = document.getElementById('schemaEditor');
     if (schemaEl) {
       window._schemaEditor = monaco.editor.create(schemaEl, {
         ...opts, value: JSON.stringify({ '$schema': 'http://json-schema.org/draft-07/schema#', type: 'object', properties: {} }, null, 2),
-        language: 'json', theme: 'vs',
+        language: 'json',
       });
       window._schemaEditor.onDidChangeModelContent(function() {
         const el = document.getElementById('schemaSize');
@@ -50,7 +56,7 @@ require(['vs/editor/editor.main'], function() {
         'jsonc': 'plaintext', 'from-toml': 'toml', 'from-query': 'plaintext',
         'python-dict': 'python' }[tool] || 'json';
       inputEditor = monaco.editor.create(inputEl, {
-        ...opts, value: '', language: inputLang, theme: 'vs',
+        ...opts, value: '', language: inputLang,
       });
       inputEditor.onDidChangeModelContent(updateInputStats);
     }
@@ -72,7 +78,7 @@ require(['vs/editor/editor.main'], function() {
         'python-dict': 'python', 'json-generator': 'json',
       }[tool] || 'json';
       outputEditor = monaco.editor.create(outputEl, {
-        ...opts, value: '', language: outputLang, theme: 'vs', readOnly: true,
+        ...opts, value: '', language: outputLang, readOnly: true,
       });
     }
   }
@@ -334,7 +340,16 @@ async function fetchJsonFromUrl() {
 function updateInputStats() {
   const text = getInput();
   const el   = document.getElementById('inputSize');
-  if (el) el.textContent = formatBytes(new Blob([text]).size);
+  const bytes = new Blob([text]).size;
+  if (el) el.textContent = formatBytes(bytes);
+  // Warn for large files
+  if (bytes > LARGE_FILE_WARNING) {
+    const warnEl = document.getElementById('inputWarning');
+    if (warnEl) {
+      warnEl.textContent = i18n('json.common.large_file_warning') || '大文件可能影响性能';
+      warnEl.style.display = '';
+    }
+  }
 }
 
 function updateOutputStats(text) {
@@ -431,6 +446,8 @@ function showToast(msg, type = 'info') {
   const el = document.createElement('div');
   el.className   = `jt-toast jt-toast--${type}`;
   el.textContent = msg;
+  el.setAttribute('role', 'status');
+  el.setAttribute('aria-live', 'polite');
   c.appendChild(el);
   requestAnimationFrame(() => el.classList.add('jt-toast--show'));
   setTimeout(() => { el.classList.remove('jt-toast--show'); setTimeout(() => el.remove(), 300); }, 3000);
@@ -450,6 +467,7 @@ function recordVisit(key, icon, name) {
 
 // Auto-record on load
 document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
   const tool = window.JT_TOOL;
   if (tool) {
     const icon = document.querySelector('.jt-tool-hero__icon')?.textContent?.trim() || '🔧';
@@ -460,6 +478,69 @@ document.addEventListener('DOMContentLoaded', () => {
   restoreSidebarState();
   initKeyboardShortcuts();
 });
+
+/* ── Theme Management ───────────────────────────── */
+const THEME_KEY = 'jt_theme';
+
+function getSystemTheme() {
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    return 'dark';
+  }
+  return 'light';
+}
+
+function getSavedTheme() {
+  try {
+    return localStorage.getItem(THEME_KEY);
+  } catch(e) {
+    return null;
+  }
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  // Update toggle button icons
+  const lightIcon = document.getElementById('themeIconLight');
+  const darkIcon = document.getElementById('themeIconDark');
+  if (lightIcon && darkIcon) {
+    lightIcon.style.display = theme === 'dark' ? 'none' : '';
+    darkIcon.style.display = theme === 'dark' ? '' : 'none';
+  }
+  // Update Monaco editor theme if editors exist
+  try {
+    const vsTheme = theme === 'dark' ? 'vs-dark' : 'vs';
+    if (inputEditor) monaco.editor.setTheme(vsTheme);
+    if (outputEditor) monaco.editor.setTheme(vsTheme);
+    if (leftEditor) monaco.editor.setTheme(vsTheme);
+    if (rightEditor) monaco.editor.setTheme(vsTheme);
+    if (window._schemaEditor) monaco.editor.setTheme(vsTheme);
+    if (fullscreenInputEditor) monaco.editor.setTheme(vsTheme);
+    if (fullscreenOutputEditor) monaco.editor.setTheme(vsTheme);
+  } catch(e) {}
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = current === 'dark' ? 'light' : 'dark';
+  try {
+    localStorage.setItem(THEME_KEY, next);
+  } catch(e) {}
+  applyTheme(next);
+}
+
+function initTheme() {
+  const saved = getSavedTheme();
+  const theme = saved || getSystemTheme();
+  applyTheme(theme);
+  // Listen for system theme changes
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (!getSavedTheme()) {
+        applyTheme(e.matches ? 'dark' : 'light');
+      }
+    });
+  }
+}
 
 /* ── Keyboard Shortcuts ─────────────────────────── */
 function initKeyboardShortcuts() {
@@ -477,31 +558,101 @@ function initKeyboardShortcuts() {
     if (e.key === 'Escape' && !isFullscreen) {
       hideErrorPanel();
     }
+    // ?: Show keyboard shortcuts help
+    if (e.key === '?' && !e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT') {
+      showKeyboardHelp();
+    }
+    // Ctrl+S: Download output
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+      e.preventDefault();
+      downloadOutput();
+    }
+    // Ctrl+Shift+C: Copy output
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'C') {
+      e.preventDefault();
+      copyOutput();
+    }
+    // F11: Toggle fullscreen
+    if (e.key === 'F11') {
+      e.preventDefault();
+      if (isFullscreen) {
+        closeFullscreen();
+      } else {
+        openFullscreen();
+      }
+    }
+    // Ctrl+K: Open tool selector
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      toggleToolSelector();
+    }
   });
+}
+
+function showKeyboardHelp() {
+  const shortcuts = [
+    { key: 'Ctrl/Cmd + Enter', action: i18n('json.shortcuts.run') || '执行' },
+    { key: 'Ctrl/Cmd + S', action: i18n('json.shortcuts.download') || '下载' },
+    { key: 'Ctrl/Cmd + Shift + C', action: i18n('json.shortcuts.copy') || '复制输出' },
+    { key: 'Ctrl/Cmd + K', action: i18n('json.shortcuts.selector') || '工具选择器' },
+    { key: 'F11', action: i18n('json.shortcuts.fullscreen') || '全屏' },
+    { key: 'Escape', action: i18n('json.shortcuts.close') || '关闭' },
+  ];
+  const msg = shortcuts.map(s => `${s.key}: ${s.action}`).join('\n');
+  alert(msg);
 }
 
 /* ── History Sidebar ───────────────────────────── */
 const HISTORY_KEY = 'jt_input_history';
 const MAX_HISTORY = 50;
 const MAX_INPUT_SIZE = 10000; // 10KB per entry
+const LARGE_FILE_WARNING = 5 * 1024 * 1024; // 5MB warning threshold
 
 function getHistory() {
   try {
-    return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
-  } catch(e) { return []; }
+    const stored = localStorage.getItem(HISTORY_KEY);
+    if (!stored) return [];
+    const parsed = JSON.parse(stored);
+    // Validate it's an array
+    if (!Array.isArray(parsed)) {
+      console.warn('History data is not an array, resetting');
+      return [];
+    }
+    return parsed;
+  } catch(e) {
+    console.error('Failed to parse history:', e);
+    return [];
+  }
 }
 
 function saveHistory(list) {
   try {
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(list));
-  } catch(e) {}
+    const json = JSON.stringify(list);
+    localStorage.setItem(HISTORY_KEY, json);
+  } catch(e) {
+    console.error('Failed to save history:', e);
+    // If quota exceeded, try to trim older entries
+    if (e.name === 'QuotaExceededError' || e.code === 22) {
+      try {
+        // Keep only last 20 entries
+        const trimmed = list.slice(0, 20);
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(trimmed));
+      } catch(e2) {
+        console.error('Failed to save even trimmed history:', e2);
+      }
+    }
+  }
 }
 
 function recordHistory(toolKey, toolName, icon, input) {
   if (!input || !input.trim()) return;
   let history = getHistory();
-  // Remove duplicate (same input)
-  history = history.filter(h => h.input !== input);
+  // Remove duplicate (same toolKey + input combination)
+  const inputHash = toolKey + ':' + input.slice(0, 100);
+  history = history.filter(h => {
+    const hHash = (h.toolKey || '') + ':' + (h.input || '').slice(0, 100);
+    return hHash !== inputHash;
+  });
   // Truncate input if too long
   const savedInput = input.length > MAX_INPUT_SIZE ? input.slice(0, MAX_INPUT_SIZE) : input;
   // Add to front
@@ -746,6 +897,7 @@ document.addEventListener('click', (e) => {
 
 /* ── Output Tree View ──────────────────────────── */
 let outputTreeViewVisible = false;
+let outputTreeDepth = 3; // Default expansion depth
 
 function showOutputTreeView() {
   const editorDiv = document.getElementById('outputEditor');
@@ -761,7 +913,23 @@ function showOutputTreeView() {
   try {
     const parsed = JSON.parse(output);
     treeDiv.innerHTML = '';
-    treeDiv.appendChild(renderOutputTreeNode(parsed, 'root', '$'));
+    // Add tree toolbar with search and depth control
+    const toolbar = document.createElement('div');
+    toolbar.className = 'jt-tree-toolbar';
+    toolbar.innerHTML =
+      '<input type="text" id="treeSearchInput" placeholder="' + (i18n('json.tree.search') || '搜索...') + '" class="jt-options-input jt-options-input--sm" style="width:140px" oninput="filterTree(this.value)">' +
+      '<label style="display:flex;align-items:center;gap:4px;font-size:0.75rem;color:var(--jt-muted)">' +
+        (i18n('json.tree.depth') || '深度') +
+        '<select id="treeDepthSelect" class="jt-options-select jt-options-select--sm" onchange="setTreeDepth(this.value)">' +
+          '<option value="1">1</option><option value="2">2</option><option value="3" selected>3</option>' +
+          '<option value="4">4</option><option value="5">5</option><option value="99">' + (i18n('json.tree.all') || '全部') + '</option>' +
+        '</select>' +
+      '</label>';
+    treeDiv.appendChild(toolbar);
+    const content = document.createElement('div');
+    content.id = 'treeContent';
+    content.appendChild(renderOutputTreeNode(parsed, 'root', '$', 0));
+    treeDiv.appendChild(content);
   } catch(e) {
     treeDiv.innerHTML = '<div class="jt-history-empty">' + (i18n('json.output.tree_parse_error') || '无法渲染树视图：JSON 解析失败') + '</div>';
   }
@@ -770,6 +938,24 @@ function showOutputTreeView() {
   treeDiv.style.display = 'block';
   outputTreeViewVisible = true;
   return true;
+}
+
+function setTreeDepth(depth) {
+  outputTreeDepth = parseInt(depth) || 3;
+  // Re-render tree
+  showOutputTreeView();
+}
+
+function filterTree(query) {
+  const content = document.getElementById('treeContent');
+  if (!content) return;
+  const q = (query || '').toLowerCase();
+  const items = content.querySelectorAll('.jt-tree-leaf, .jt-tree-header');
+  items.forEach(item => {
+    const text = item.textContent.toLowerCase();
+    const match = !q || text.includes(q);
+    item.style.opacity = match ? '' : '0.3';
+  });
 }
 
 function toggleOutputTreeView() {
@@ -790,23 +976,33 @@ function toggleOutputTreeView() {
   }
 }
 
-function renderOutputTreeNode(value, key, path) {
+function renderOutputTreeNode(value, key, path, depth) {
   const wrap = document.createElement('div');
   wrap.className = 'jt-tree-node';
+
+  // Type icon
+  const typeIcon = getTypeIcon(value);
+
   if (value === null || typeof value !== 'object') {
-    wrap.innerHTML = '<div class="jt-tree-leaf">' +
-      '<span class="jt-tree-key" onclick="copyOutputTreePath(\'' + escapeHtml(path) + '\')" title="复制路径">' + escapeHtml(String(key)) + '</span>' +
-      '<span class="jt-tree-sep">: </span>' + renderOutputTreeValue(value) + '</div>';
+    const leaf = document.createElement('div');
+    leaf.className = 'jt-tree-leaf';
+    leaf.innerHTML =
+      '<span class="jt-tree-icon">' + typeIcon + '</span>' +
+      '<span class="jt-tree-key" onclick="copyOutputTreePath(\'' + escapeHtml(path) + '\')" title="' + (i18n('json.tree.copy_path') || '复制路径') + '">' + escapeHtml(String(key)) + '</span>' +
+      '<span class="jt-tree-sep">: </span>' + renderOutputTreeValue(value) +
+      '<button class="jt-tree-copy-btn" onclick="event.stopPropagation();copyTreeValue(\'' + escapeHtml(JSON.stringify(value)) + '\')" title="' + (i18n('json.tree.copy_value') || '复制值') + '" style="margin-left:4px;opacity:0.5;border:none;background:none;cursor:pointer;font-size:0.6875rem">📋</button>';
+    wrap.appendChild(leaf);
     return wrap;
   }
   const isArr = Array.isArray(value);
   const keys = Object.keys(value);
-  const open = (path.match(/[.\[]/g) || []).length < 2;
+  const open = depth < outputTreeDepth;
   const header = document.createElement('div');
   header.className = 'jt-tree-header';
   header.innerHTML =
     '<button class="jt-tree-toggle" onclick="toggleOutputTreeNode(this)">' + (open ? '▼' : '▶') + '</button>' +
-    '<span class="jt-tree-key" onclick="copyOutputTreePath(\'' + escapeHtml(path) + '\')" title="复制路径">' + escapeHtml(String(key)) + '</span>' +
+    '<span class="jt-tree-icon">' + typeIcon + '</span>' +
+    '<span class="jt-tree-key" onclick="copyOutputTreePath(\'' + escapeHtml(path) + '\')" title="' + (i18n('json.tree.copy_path') || '复制路径') + '">' + escapeHtml(String(key)) + '</span>' +
     '<span class="jt-tree-sep">: </span>' +
     '<span class="jt-tree-bracket">' + (isArr ? '[' : '{') + '</span>' +
     '<span class="jt-tree-preview">' + (isArr ? keys.length + ' items' : keys.length + ' keys') + '</span>' +
@@ -816,11 +1012,31 @@ function renderOutputTreeNode(value, key, path) {
   if (!open) children.style.display = 'none';
   for (const k of keys) {
     const cp = isArr ? path + '[' + k + ']' : path + '.' + k;
-    children.appendChild(renderOutputTreeNode(value[k], k, cp));
+    children.appendChild(renderOutputTreeNode(value[k], k, cp, depth + 1));
   }
   wrap.appendChild(header);
   wrap.appendChild(children);
   return wrap;
+}
+
+function getTypeIcon(value) {
+  if (value === null) return '␀';
+  if (typeof value === 'boolean') return '𝔹';
+  if (typeof value === 'number') return '#';
+  if (typeof value === 'string') return 'Aa';
+  if (Array.isArray(value)) return '[]';
+  if (typeof value === 'object') return '{}';
+  return '?';
+}
+
+function copyTreeValue(jsonStr) {
+  try {
+    const val = JSON.parse(jsonStr);
+    const text = typeof val === 'object' ? JSON.stringify(val, null, 2) : String(val);
+    navigator.clipboard.writeText(text).then(() => showToast(i18n('json.tree.copied') || '已复制', 'success'));
+  } catch(e) {
+    navigator.clipboard.writeText(jsonStr).then(() => showToast(i18n('json.tree.copied') || '已复制', 'success'));
+  }
 }
 
 function renderOutputTreeValue(v) {

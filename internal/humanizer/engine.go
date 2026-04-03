@@ -41,12 +41,70 @@ type DetectRequest struct {
 	Text string `json:"text"`
 }
 
-// DetectResponse is the AI detection result.
+// DetectionResult contains the core detection metadata.
+type DetectionResult struct {
+	AIScore             float64 `json:"ai_score"`
+	HumanScore          float64 `json:"human_score"`
+	ConfidenceLevel     float64 `json:"confidence_level"`
+	Label               string  `json:"label"` // "ai" | "human" | "mixed" | "uncertain"
+	DetectedGenre       string  `json:"detected_genre"`
+	DetectedModel       string  `json:"detected_model_signature"`
+	AntiEvasionDetected bool    `json:"anti_evasion_detected"`
+	CalibrationNotes    string  `json:"calibration_notes"`
+}
+
+// LinguisticMetrics contains quantitative text analysis metrics.
+type LinguisticMetrics struct {
+	SentenceLengthSD        float64 `json:"sentence_length_sd"`
+	ParagraphCV             float64 `json:"paragraph_cv"`
+	TTRScore                float64 `json:"ttr_score"`
+	BurstinessScore         int     `json:"burstiness_score"`
+	LexicalDiversity        int     `json:"lexical_diversity"`
+	Perplexity              string  `json:"perplexity"` // "Low" | "Medium" | "High"
+	SyntacticPredictability string  `json:"syntactic_predictability"`
+	RhetoricalDiversity     int     `json:"rhetorical_diversity"`
+	PersonalAnchorCount     int     `json:"personal_anchor_count"`
+}
+
+// ForensicEvidence represents a single piece of evidence in the analysis.
+type ForensicEvidence struct {
+	Dimension     string `json:"dimension"`     // Statistical | Syntactic | Semantic | Stylistic | ModelSignature | AntiEvasion
+	Type          string `json:"type"`          // Specific evidence type
+	Detail        string `json:"detail"`        // Detailed description
+	OriginalQuote string `json:"original_quote"`
+	Severity      string `json:"severity"` // "Critical" | "High" | "Medium" | "Low"
+}
+
+// HighlightedSentence represents a sentence with AI analysis.
+type HighlightedSentence struct {
+	Sentence      string  `json:"sentence"`
+	Reason        string  `json:"reason"`
+	AIProbability float64 `json:"ai_probability"`
+}
+
+// ModelSignatureAnalysis contains model fingerprint matching scores.
+type ModelSignatureAnalysis struct {
+	GPTMatchScore       float64 `json:"gpt_match_score"`
+	ClaudeMatchScore    float64 `json:"claude_match_score"`
+	DeepSeekGeminiScore float64 `json:"deepseek_gemini_match_score"`
+	DominantSignature   string  `json:"dominant_signature"`
+}
+
+// DetectResponse is the full AI detection result.
 type DetectResponse struct {
 	AIScore    float64 `json:"ai_score"`
 	HumanScore float64 `json:"human_score"`
-	Confidence float64 `json:"confidence"`
-	Label      string  `json:"label"` // "ai" | "human" | "mixed"
+	Confidence float64 `json:"confidence_level"`
+	Label      string  `json:"label"` // "ai" | "human" | "mixed" | "uncertain"
+
+	// Extended fields from detect-ai.md prompt
+	DetectionResult     DetectionResult       `json:"detection_result"`
+	LinguisticMetrics   LinguisticMetrics     `json:"linguistic_metrics"`
+	ForensicEvidence    []ForensicEvidence    `json:"forensic_evidence"`
+	HighlightedSentences []HighlightedSentence `json:"highlighted_sentences"`
+	ModelSignature      ModelSignatureAnalysis `json:"model_signature_analysis"`
+	VerdictSummary      string                `json:"verdict_summary"`
+	ConfidenceReasoning string                `json:"confidence_reasoning"`
 }
 
 // ─── Prompt Loader ───────────────────────────────────────────────────────────
@@ -343,7 +401,7 @@ func (e *Engine) Detect(ctx context.Context, req DetectRequest) (*DetectResponse
 			{Role: "user", Content: userPrompt},
 		},
 		Temperature: 0.1,
-		MaxTokens:   256,
+		MaxTokens:   4096,
 	}
 
 	resp, err := provider.Chat(ctx, chatReq)
@@ -363,6 +421,17 @@ func (e *Engine) Detect(ctx context.Context, req DetectRequest) (*DetectResponse
 	}
 	if err := json.Unmarshal([]byte(content), &result); err != nil {
 		return heuristicDetect(req.Text), nil
+	}
+
+	// Copy from nested detection_result if top-level fields are zero
+	if result.AIScore == 0 && result.DetectionResult.AIScore > 0 {
+		result.AIScore = result.DetectionResult.AIScore
+	}
+	if result.Confidence == 0 && result.DetectionResult.ConfidenceLevel > 0 {
+		result.Confidence = result.DetectionResult.ConfidenceLevel
+	}
+	if result.Label == "" && result.DetectionResult.Label != "" {
+		result.Label = result.DetectionResult.Label
 	}
 
 	// Normalize

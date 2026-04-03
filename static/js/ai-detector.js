@@ -386,6 +386,12 @@
     try { renderDetectorScores(result.detectors || {}); } catch(e) { console.warn('detector scores error', e); }
     try { renderHighlightedText(result.sentences || []); } catch(e) { console.warn('highlight error', e); }
 
+    // New panels from LLM analysis
+    try { renderVerdictSummary(result); } catch(e) { console.warn('verdict summary error', e); }
+    try { renderModelSignature(result.model_signature); } catch(e) { console.warn('model signature error', e); }
+    try { renderLinguisticMetrics(result.linguistic_metrics); } catch(e) { console.warn('linguistic metrics error', e); }
+    try { renderForensicEvidence(result.forensic_evidence); } catch(e) { console.warn('forensic evidence error', e); }
+
     const readabilityEl = $id('aidReadability');
     const wordCountEl = $id('aidWordCountResult');
     const langEl = $id('aidLangResult');
@@ -598,8 +604,12 @@
         const rgb = s.type === 'ai'    ? '239,68,68'
                   : s.type === 'mixed' ? '245,158,11' : '16,185,129';
         const pct = Math.round(s.score || 0);
+        // Show LLM reason as tooltip if available
+        const titleAttr = s.reason
+          ? 'title="' + esc(s.reason) + '"'
+          : 'title="AI probability: ' + pct + '%"';
         return `<span class="${cls}" style="background:rgba(${rgb},${opacity})"
-          title="AI probability: ${pct}%" data-score="${pct}">${esc(s.text)} </span>`;
+          ${titleAttr} data-score="${pct}">${esc(s.text)} </span>`;
       }).join('');
 
       return `<div class="aid-highlight-para aid-highlight-para--${paraType}">
@@ -613,6 +623,169 @@
     if (gotoBtn) gotoBtn.style.display = hasAI ? 'inline-flex' : 'none';
 
     $id('aidHighlightFooter').textContent = t('result.sentences', { count: sentences.length });
+  }
+
+  // ─── New: Verdict Summary ──────────────────────────────────
+  function renderVerdictSummary(result) {
+    const section = $id('aidVerdictSummary');
+    const textEl = $id('aidVerdictSummaryText');
+    const reasoningEl = $id('aidConfidenceReasoning');
+
+    if (!result.verdict_summary && !result.confidence_reasoning) {
+      section.style.display = 'none';
+      return;
+    }
+
+    section.style.display = 'flex';
+    if (textEl && result.verdict_summary) {
+      textEl.textContent = result.verdict_summary;
+    }
+    if (reasoningEl && result.confidence_reasoning) {
+      reasoningEl.textContent = result.confidence_reasoning;
+    }
+  }
+
+  // ─── New: Model Signature Analysis ─────────────────────────
+  function renderModelSignature(signature) {
+    const section = $id('aidSignatureSection');
+    const barsEl = $id('aidSignatureBars');
+    const dominantEl = $id('aidSignatureDominant');
+
+    if (!signature || (!signature.gpt_match_score && !signature.claude_match_score && !signature.deepseek_gemini_match_score)) {
+      section.style.display = 'none';
+      return;
+    }
+
+    section.style.display = 'block';
+
+    const bars = [
+      { label: t('signature.gpt'), value: signature.gpt_match_score || 0, color: '#10B981' },
+      { label: t('signature.claude'), value: signature.claude_match_score || 0, color: '#D97706' },
+      { label: t('signature.deepseek'), value: signature.deepseek_gemini_match_score || 0, color: '#6C63FF' },
+    ];
+
+    barsEl.innerHTML = bars.map(b => {
+      const pct = Math.round(b.value * 100);
+      return `
+        <div class="aid-signature-row">
+          <span class="aid-signature-label">${b.label}</span>
+          <div class="aid-signature-track">
+            <div class="aid-signature-bar" style="background:${b.color}" data-target="${pct}"></div>
+          </div>
+          <span class="aid-signature-pct" data-target="${pct}">0%</span>
+        </div>`;
+    }).join('');
+
+    // Animate bars
+    requestAnimationFrame(() => {
+      barsEl.querySelectorAll('.aid-signature-bar').forEach((bar, i) => {
+        const target = parseInt(bar.dataset.target);
+        setTimeout(() => {
+          bar.style.width = target + '%';
+          const pctEl = bar.closest('.aid-signature-row').querySelector('.aid-signature-pct');
+          if (typeof countUp !== 'undefined' && countUp.CountUp) {
+            new countUp.CountUp(pctEl, target, { duration: 0.8, suffix: '%' }).start();
+          } else {
+            pctEl.textContent = target + '%';
+          }
+        }, i * 120);
+      });
+    });
+
+    // Dominant signature
+    if (dominantEl && signature.dominant_signature) {
+      dominantEl.innerHTML = `<span class="aid-signature-dominant-label">${t('signature.dominant')}:</span> <strong>${esc(signature.dominant_signature)}</strong>`;
+    }
+  }
+
+  // ─── New: Linguistic Metrics ───────────────────────────────
+  function renderLinguisticMetrics(metrics) {
+    const section = $id('aidMetricsSection');
+    const grid = $id('aidMetricsGrid');
+
+    if (!metrics || (!metrics.burstiness_score && !metrics.perplexity && !metrics.ttr_score && !metrics.personal_anchor_count)) {
+      section.style.display = 'none';
+      return;
+    }
+
+    section.style.display = 'block';
+
+    const items = [
+      {
+        label: t('metrics.burstiness'),
+        value: metrics.burstiness_score != null ? metrics.burstiness_score : '--',
+        icon: 'fa-solid fa-wave-square',
+        desc: metrics.burstiness_score >= 18 ? 'Human-like' : metrics.burstiness_score >= 10 ? 'Mixed' : 'AI-like',
+        color: metrics.burstiness_score >= 18 ? 'var(--aid-success)' : metrics.burstiness_score >= 10 ? 'var(--aid-warning)' : 'var(--aid-danger)',
+      },
+      {
+        label: t('metrics.perplexity'),
+        value: metrics.perplexity || '--',
+        icon: 'fa-solid fa-chart-line',
+        desc: metrics.perplexity || '',
+        color: metrics.perplexity === 'High' ? 'var(--aid-success)' : metrics.perplexity === 'Medium' ? 'var(--aid-warning)' : 'var(--aid-danger)',
+      },
+      {
+        label: t('metrics.ttr'),
+        value: metrics.ttr_score ? metrics.ttr_score.toFixed(2) : '--',
+        icon: 'fa-solid fa-font',
+        desc: metrics.ttr_score ? (metrics.ttr_score > 0.6 ? 'Diverse vocabulary' : 'Repetitive vocabulary') : '',
+        color: metrics.ttr_score > 0.6 ? 'var(--aid-success)' : metrics.ttr_score > 0.4 ? 'var(--aid-warning)' : 'var(--aid-danger)',
+      },
+      {
+        label: t('metrics.anchors'),
+        value: metrics.personal_anchor_count != null ? metrics.personal_anchor_count : '--',
+        icon: 'fa-solid fa-user-pen',
+        desc: metrics.personal_anchor_count >= 3 ? 'Strong personal voice' : metrics.personal_anchor_count >= 1 ? 'Some personal touches' : 'No personal anchors',
+        color: metrics.personal_anchor_count >= 3 ? 'var(--aid-success)' : metrics.personal_anchor_count >= 1 ? 'var(--aid-warning)' : 'var(--aid-danger)',
+      },
+    ];
+
+    grid.innerHTML = items.map(item => `
+      <div class="aid-metric-card">
+        <div class="aid-metric-card__header">
+          <i class="${item.icon}" style="color:${item.color}"></i>
+          <span class="aid-metric-card__label">${item.label}</span>
+        </div>
+        <span class="aid-metric-card__value">${item.value}</span>
+        <span class="aid-metric-card__desc">${item.desc}</span>
+      </div>
+    `).join('');
+  }
+
+  // ─── New: Forensic Evidence ────────────────────────────────
+  function renderForensicEvidence(evidence) {
+    const section = $id('aidEvidenceSection');
+    const list = $id('aidEvidenceList');
+
+    if (!evidence || evidence.length === 0) {
+      section.style.display = 'none';
+      return;
+    }
+
+    section.style.display = 'block';
+
+    const severityOrder = { Critical: 0, High: 1, Medium: 2, Low: 3 };
+    const sorted = [...evidence].sort((a, b) => (severityOrder[a.severity] || 3) - (severityOrder[b.severity] || 3));
+
+    list.innerHTML = sorted.map(e => {
+      const severityColor = {
+        Critical: 'var(--aid-danger)',
+        High: '#F97316',
+        Medium: 'var(--aid-warning)',
+        Low: 'var(--aid-text-muted)',
+      }[e.severity] || 'var(--aid-text-muted)';
+
+      return `
+        <div class="aid-evidence-item" style="border-left-color:${severityColor}">
+          <div class="aid-evidence-item__header">
+            <span class="aid-evidence-dimension">${esc(e.dimension || '')}</span>
+            <span class="aid-evidence-severity" style="color:${severityColor}">${e.severity || 'Low'}</span>
+          </div>
+          <p class="aid-evidence-detail">${esc(e.detail || '')}</p>
+          ${e.original_quote ? `<blockquote class="aid-evidence-quote">${esc(e.original_quote)}</blockquote>` : ''}
+        </div>`;
+    }).join('');
   }
 
   // ─── Cross-tool: goto humanizer ──────────────────────────

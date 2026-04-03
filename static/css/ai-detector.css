@@ -607,6 +607,117 @@
   .aid-detector-name { flex: none; }
   .aid-hero { padding: 32px 16px 24px; }
   .aid-tool { padding: 0 16px 24px; }
+  /* New panels responsive */
+  .aid-metrics-grid { grid-template-columns: repeat(2,1fr); }
+  .aid-signature-row .aid-signature-track { display: none; }
+}
+
+/* ── Verdict Summary ── */
+.aid-verdict-summary {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 16px 20px;
+  background: var(--aid-surface-2);
+  border: 1px solid var(--aid-border);
+  border-radius: var(--aid-radius-md);
+}
+.aid-verdict-summary__icon { font-size: 1.4rem; color: var(--aid-primary); }
+.aid-verdict-summary__text {
+  font-size: 0.9rem; line-height: 1.6; color: var(--aid-text);
+  text-align: center; margin: 0;
+}
+.aid-verdict-summary__reasoning {
+  font-size: 0.8rem; color: var(--aid-text-secondary);
+  text-align: center; margin: 0; font-style: italic;
+}
+
+/* ── Model Signature Analysis ── */
+.aid-signature-section {
+  padding: 0;
+}
+.aid-signature-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 0;
+}
+.aid-signature-label {
+  flex: 0 0 120px; font-size: 0.8rem; font-weight: 500; color: var(--aid-text);
+}
+.aid-signature-track {
+  flex: 1; height: 8px; background: var(--aid-border);
+  border-radius: var(--aid-radius-full); overflow: hidden;
+}
+.aid-signature-bar {
+  height: 100%; border-radius: var(--aid-radius-full);
+  width: 0%; transition: width 600ms ease;
+}
+.aid-signature-pct {
+  flex: 0 0 42px; text-align: right; font-weight: 600; font-size: 0.8rem; color: var(--aid-text);
+}
+.aid-signature-dominant {
+  margin-top: 8px; padding-top: 10px;
+  border-top: 1px solid var(--aid-border);
+  font-size: 0.85rem; color: var(--aid-text-secondary);
+}
+.aid-signature-dominant-label { font-weight: 600; }
+.aid-signature-dominant strong { color: var(--aid-primary); }
+
+/* ── Linguistic Metrics Dashboard ── */
+.aid-metrics-section { padding: 0; }
+.aid-metrics-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.aid-metric-card {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 14px 12px;
+  background: var(--aid-surface-2);
+  border: 1px solid var(--aid-border);
+  border-radius: var(--aid-radius-sm);
+  text-align: center;
+}
+.aid-metric-card__header {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.aid-metric-card__header i { font-size: 0.85rem; }
+.aid-metric-card__label { font-size: 0.7rem; font-weight: 600; color: var(--aid-text-secondary); text-transform: uppercase; letter-spacing: 0.03em; }
+.aid-metric-card__value { font-size: 1.3rem; font-weight: 800; color: var(--aid-text); }
+.aid-metric-card__desc { font-size: 0.68rem; color: var(--aid-text-muted); }
+
+/* ── Forensic Evidence ── */
+.aid-evidence-section { padding: 0; }
+.aid-evidence-list {
+  display: flex; flex-direction: column; gap: 8px;
+  max-height: 400px; overflow-y: auto;
+}
+.aid-evidence-item {
+  padding: 12px 14px;
+  background: var(--aid-surface-2);
+  border: 1px solid var(--aid-border);
+  border-left: 4px solid var(--aid-text-muted);
+  border-radius: var(--aid-radius-sm);
+}
+.aid-evidence-item__header {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;
+}
+.aid-evidence-dimension {
+  font-size: 0.75rem; font-weight: 700; color: var(--aid-text);
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.aid-evidence-severity {
+  font-size: 0.7rem; font-weight: 700;
+  padding: 2px 8px; border-radius: var(--aid-radius-full);
+  background: var(--aid-surface);
+}
+.aid-evidence-detail {
+  font-size: 0.82rem; color: var(--aid-text-secondary);
+  line-height: 1.55; margin: 0 0 6px;
+}
+.aid-evidence-quote {
+  font-size: 0.78rem; color: var(--aid-text-muted);
+  font-style: italic; padding: 6px 10px;
+  border-left: 2px solid var(--aid-border);
+  background: var(--aid-surface);
+  border-radius: 0 var(--aid-radius-sm) var(--aid-radius-sm) 0;
+  margin: 0;
 }
 @media (max-width: 480px) {
   .aid-purpose-tabs { overflow-x: auto; flex-wrap: nowrap; }

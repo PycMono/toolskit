@@ -27,6 +27,22 @@
     </div>
     <div class="jt-topbar__right">
       <a href="/" class="jt-home-link">← Tool Box Nova</a>
+      <button class="jt-theme-toggle" id="themeToggle" onclick="toggleTheme()" title="{{ call .T "json.theme.toggle" }}">
+        <svg id="themeIconLight" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg id="themeIconDark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
       <div class="jt-lang-switch lang-switcher">
         <button class="lang-btn" id="jtLangBtn">
           {{- if eq .Lang "zh" }}🇨🇳 中文
@@ -128,15 +144,15 @@
       <!-- Sidebar Toggle Button -->
       <button class="jt-sidebar-toggle" id="sidebarToggle" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}"><span class="jt-sidebar-toggle__arrow">◀</span></button>
       <!-- History Sidebar -->
-      <aside class="jt-history-sidebar" id="historySidebar">
+      <aside class="jt-history-sidebar" id="historySidebar" aria-label="{{ call .T "json.history.title" }}" aria-expanded="true">
         <div class="jt-sidebar-header">
           <span class="jt-sidebar-title">🕐 {{ call .T "json.history.title" }}</span>
           <div class="jt-sidebar-actions">
-            <button class="jt-sidebar-btn" onclick="clearHistory()" title="{{ call .T "json.history.clear" }}">🗑️</button>
-            <button class="jt-sidebar-btn" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}">✕</button>
+            <button class="jt-sidebar-btn" onclick="clearHistory()" title="{{ call .T "json.history.clear" }}" aria-label="{{ call .T "json.history.clear" }}">🗑️</button>
+            <button class="jt-sidebar-btn" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}" aria-label="{{ call .T "json.sidebar.toggle" }}">✕</button>
           </div>
         </div>
-        <div class="jt-history-list" id="historyList">
+        <div class="jt-history-list" id="historyList" role="list">
           <div class="jt-history-empty">{{ call .T "json.history.empty" }}</div>
         </div>
       </aside>
@@ -197,15 +213,15 @@
       <!-- Sidebar Toggle Button -->
       <button class="jt-sidebar-toggle" id="sidebarToggle" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}"><span class="jt-sidebar-toggle__arrow">◀</span></button>
       <!-- History Sidebar -->
-      <aside class="jt-history-sidebar" id="historySidebar">
+      <aside class="jt-history-sidebar" id="historySidebar" aria-label="{{ call .T "json.history.title" }}" aria-expanded="true">
         <div class="jt-sidebar-header">
           <span class="jt-sidebar-title">🕐 {{ call .T "json.history.title" }}</span>
           <div class="jt-sidebar-actions">
-            <button class="jt-sidebar-btn" onclick="clearHistory()" title="{{ call .T "json.history.clear" }}">🗑️</button>
-            <button class="jt-sidebar-btn" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}">✕</button>
+            <button class="jt-sidebar-btn" onclick="clearHistory()" title="{{ call .T "json.history.clear" }}" aria-label="{{ call .T "json.history.clear" }}">🗑️</button>
+            <button class="jt-sidebar-btn" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}" aria-label="{{ call .T "json.sidebar.toggle" }}">✕</button>
           </div>
         </div>
-        <div class="jt-history-list" id="historyList">
+        <div class="jt-history-list" id="historyList" role="list">
           <div class="jt-history-empty">{{ call .T "json.history.empty" }}</div>
         </div>
       </aside>
@@ -271,15 +287,15 @@
       <!-- Sidebar Toggle Button -->
       <button class="jt-sidebar-toggle" id="sidebarToggle" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}"><span class="jt-sidebar-toggle__arrow">◀</span></button>
       <!-- History Sidebar -->
-      <aside class="jt-history-sidebar" id="historySidebar">
+      <aside class="jt-history-sidebar" id="historySidebar" aria-label="{{ call .T "json.history.title" }}" aria-expanded="true">
         <div class="jt-sidebar-header">
           <span class="jt-sidebar-title">🕐 {{ call .T "json.history.title" }}</span>
           <div class="jt-sidebar-actions">
-            <button class="jt-sidebar-btn" onclick="clearHistory()" title="{{ call .T "json.history.clear" }}">🗑️</button>
-            <button class="jt-sidebar-btn" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}">✕</button>
+            <button class="jt-sidebar-btn" onclick="clearHistory()" title="{{ call .T "json.history.clear" }}" aria-label="{{ call .T "json.history.clear" }}">🗑️</button>
+            <button class="jt-sidebar-btn" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}" aria-label="{{ call .T "json.sidebar.toggle" }}">✕</button>
           </div>
         </div>
-        <div class="jt-history-list" id="historyList">
+        <div class="jt-history-list" id="historyList" role="list">
           <div class="jt-history-empty">{{ call .T "json.history.empty" }}</div>
         </div>
       </aside>
@@ -321,15 +337,15 @@
       <!-- Sidebar Toggle Button -->
       <button class="jt-sidebar-toggle" id="sidebarToggle" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}"><span class="jt-sidebar-toggle__arrow">◀</span></button>
       <!-- History Sidebar -->
-      <aside class="jt-history-sidebar" id="historySidebar">
+      <aside class="jt-history-sidebar" id="historySidebar" aria-label="{{ call .T "json.history.title" }}" aria-expanded="true">
         <div class="jt-sidebar-header">
           <span class="jt-sidebar-title">🕐 {{ call .T "json.history.title" }}</span>
           <div class="jt-sidebar-actions">
-            <button class="jt-sidebar-btn" onclick="clearHistory()" title="{{ call .T "json.history.clear" }}">🗑️</button>
-            <button class="jt-sidebar-btn" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}">✕</button>
+            <button class="jt-sidebar-btn" onclick="clearHistory()" title="{{ call .T "json.history.clear" }}" aria-label="{{ call .T "json.history.clear" }}">🗑️</button>
+            <button class="jt-sidebar-btn" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}" aria-label="{{ call .T "json.sidebar.toggle" }}">✕</button>
           </div>
         </div>
-        <div class="jt-history-list" id="historyList">
+        <div class="jt-history-list" id="historyList" role="list">
           <div class="jt-history-empty">{{ call .T "json.history.empty" }}</div>
         </div>
       </aside>
@@ -401,15 +417,15 @@
       <button class="jt-sidebar-toggle" id="sidebarToggle" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}"><span class="jt-sidebar-toggle__arrow">◀</span></button>
 
       <!-- History Sidebar -->
-      <aside class="jt-history-sidebar" id="historySidebar">
+      <aside class="jt-history-sidebar" id="historySidebar" aria-label="{{ call .T "json.history.title" }}" aria-expanded="true">
         <div class="jt-sidebar-header">
           <span class="jt-sidebar-title">🕐 {{ call .T "json.history.title" }}</span>
           <div class="jt-sidebar-actions">
-            <button class="jt-sidebar-btn" onclick="clearHistory()" title="{{ call .T "json.history.clear" }}">🗑️</button>
-            <button class="jt-sidebar-btn" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}">✕</button>
+            <button class="jt-sidebar-btn" onclick="clearHistory()" title="{{ call .T "json.history.clear" }}" aria-label="{{ call .T "json.history.clear" }}">🗑️</button>
+            <button class="jt-sidebar-btn" onclick="toggleHistorySidebar()" title="{{ call .T "json.sidebar.toggle" }}" aria-label="{{ call .T "json.sidebar.toggle" }}">✕</button>
           </div>
         </div>
-        <div class="jt-history-list" id="historyList">
+        <div class="jt-history-list" id="historyList" role="list">
           <div class="jt-history-empty">{{ call .T "json.history.empty" }}</div>
         </div>
       </aside>
@@ -502,11 +518,11 @@
     {{ end }}
 
     <!-- Error Panel -->
-    <div class="jt-error-panel" id="errorPanel" style="display:none">
+    <div class="jt-error-panel" id="errorPanel" style="display:none" role="alert" aria-live="assertive">
       <div class="jt-error-panel__header">
         <span>❌</span>
         <span id="errorTitle"></span>
-        <button onclick="hideErrorPanel()" class="jt-error-panel__close">✕</button>
+        <button onclick="hideErrorPanel()" class="jt-error-panel__close" aria-label="{{ call .T "json.common.close" }}">✕</button>
       </div>
       <div class="jt-error-panel__body" id="errorBody"></div>
     </div>
@@ -517,14 +533,14 @@
     {{ end }}
 
     <!-- Fullscreen Modal -->
-    <div class="jt-fullscreen-overlay" id="fullscreenOverlay" onclick="closeFullscreenOnBackdrop(event)">
+    <div class="jt-fullscreen-overlay" id="fullscreenOverlay" onclick="closeFullscreenOnBackdrop(event)" role="dialog" aria-modal="true" aria-labelledby="fullscreenTitle">
       <div class="jt-fullscreen-modal">
         <div class="jt-fullscreen-header">
-          <span class="jt-fullscreen-title">
+          <span class="jt-fullscreen-title" id="fullscreenTitle">
             <span id="fullscreenToolIcon">{{ $meta.Icon }}</span>
             <span id="fullscreenToolName">{{ if eq $lang "zh" }}{{ $meta.TitleZH }}{{ else }}{{ $meta.TitleEN }}{{ end }}</span>
           </span>
-          <button class="jt-fullscreen-close" onclick="closeFullscreen()">
+          <button class="jt-fullscreen-close" onclick="closeFullscreen()" aria-label="{{ call .T "json.output.exit_fullscreen" }}">
             <span>✕</span>
             <span>{{ call .T "json.output.exit_fullscreen" }}</span>
           </button>

@@ -13,11 +13,12 @@ function processJson() {
   const leftRaw  = leftEditor  ? leftEditor.getValue()  : '';
   const rightRaw = rightEditor ? rightEditor.getValue() : '';
   let left, right;
-  try { left  = JSON.parse(leftRaw);  } catch(e) { showToast('左侧 JSON 格式错误','error'); return; }
-  try { right = JSON.parse(rightRaw); } catch(e) { showToast('右侧 JSON 格式错误','error'); return; }
+  try { left  = JSON.parse(leftRaw);  } catch(e) { showToast(i18n('json.diff.left_error') || '左侧 JSON 格式错误','error'); return; }
+  try { right = JSON.parse(rightRaw); } catch(e) { showToast(i18n('json.diff.right_error') || '右侧 JSON 格式错误','error'); return; }
   const diffs = diffJson(left, right);
-  renderDiffResult(diffs);
+  renderDiffResult(diffs, left, right);
 }
+
 function diffJson(a, b, path) {
   if (path === undefined) path = '$';
   const res = [];
@@ -38,19 +39,33 @@ function diffJson(a, b, path) {
   }
   return res;
 }
-function renderDiffResult(diffs) {
+
+function renderDiffResult(diffs, left, right) {
   const c = document.getElementById('diffResult');
-  if (diffs.length === 0) { c.innerHTML = '<div class="jt-diff-same">✅ 两个 JSON 完全相同</div>'; return; }
-  const added   = diffs.filter(function(d){ return d.type === 'added';   }).length;
-  const removed = diffs.filter(function(d){ return d.type === 'removed'; }).length;
-  const changed = diffs.filter(function(d){ return d.type === 'changed'; }).length;
+  if (!c) return;
+  if (diffs.length === 0) {
+    c.innerHTML = '<div class="jt-diff-same">✅ ' + (i18n('json.diff.identical') || '两个 JSON 完全相同') + '</div>';
+    return;
+  }
+  const added   = diffs.filter(d => d.type === 'added').length;
+  const removed = diffs.filter(d => d.type === 'removed').length;
+  const changed = diffs.filter(d => d.type === 'changed').length;
+
+  // Calculate similarity percentage
+  const leftStr = JSON.stringify(left);
+  const rightStr = JSON.stringify(right);
+  const maxLen = Math.max(leftStr.length, rightStr.length);
+  const similarity = maxLen > 0 ? Math.round((1 - diffs.length / (maxLen / 20)) * 100) : 100;
+  const simPct = Math.max(0, Math.min(100, similarity));
+
   c.innerHTML =
     '<div class="jt-diff-summary">' +
-      '<span class="jt-diff-badge jt-diff-badge--added">+' + added   + ' 新增</span>' +
-      '<span class="jt-diff-badge jt-diff-badge--removed">-' + removed + ' 删除</span>' +
-      '<span class="jt-diff-badge jt-diff-badge--changed">~' + changed + ' 修改</span>' +
+      '<span class="jt-diff-badge" style="background:#f3f4f6;color:#374151">📊 ' + (i18n('json.diff.similarity') || '相似度') + ' ' + simPct + '%</span>' +
+      '<span class="jt-diff-badge jt-diff-badge--added">+' + added   + ' ' + (i18n('json.diff.added') || '新增') + '</span>' +
+      '<span class="jt-diff-badge jt-diff-badge--removed">-' + removed + ' ' + (i18n('json.diff.removed') || '删除') + '</span>' +
+      '<span class="jt-diff-badge jt-diff-badge--changed">~' + changed + ' ' + (i18n('json.diff.changed') || '修改') + '</span>' +
     '</div>' +
-    diffs.map(function(d) {
+    diffs.map(d => {
       return '<div class="jt-diff-item jt-diff-item--' + d.type + '">' +
         '<span class="jt-diff-path">' + escapeHtml(d.path) + '</span>' +
         '<div>' +

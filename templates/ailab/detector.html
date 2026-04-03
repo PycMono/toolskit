@@ -320,6 +320,32 @@
             </div>
           </div>
 
+          <!-- Verdict Summary -->
+          <div class="aid-verdict-summary" id="aidVerdictSummary" style="display:none">
+            <div class="aid-verdict-summary__icon"><i class="fa-solid fa-scale-balanced"></i></div>
+            <p class="aid-verdict-summary__text" id="aidVerdictSummaryText"></p>
+            <p class="aid-verdict-summary__reasoning" id="aidConfidenceReasoning"></p>
+          </div>
+
+          <!-- Model Signature Analysis -->
+          <div class="aid-signature-section" id="aidSignatureSection" style="display:none">
+            <h3 class="aid-section-title">{{ call .T "ailab.detector.result.signature_title" }}</h3>
+            <div class="aid-signature-bars" id="aidSignatureBars"></div>
+            <div class="aid-signature-dominant" id="aidSignatureDominant"></div>
+          </div>
+
+          <!-- Linguistic Metrics Dashboard -->
+          <div class="aid-metrics-section" id="aidMetricsSection" style="display:none">
+            <h3 class="aid-section-title">{{ call .T "ailab.detector.result.metrics_title" }}</h3>
+            <div class="aid-metrics-grid" id="aidMetricsGrid"></div>
+          </div>
+
+          <!-- Forensic Evidence -->
+          <div class="aid-evidence-section" id="aidEvidenceSection" style="display:none">
+            <h3 class="aid-section-title">{{ call .T "ailab.detector.result.evidence_title" }}</h3>
+            <div class="aid-evidence-list" id="aidEvidenceList"></div>
+          </div>
+
           <!-- Stats Row -->
           <div class="aid-stats-row">
             <div class="aid-stat-card">
@@ -493,7 +519,25 @@ window.__AID_I18N__ = {
   "detector.writer":        "Writer.com",
   "detector.sapling":       "Sapling",
   "detector.originality":   "Originality.AI",
-  "detector.winston":       "Winston AI"
+  "detector.winston":       "Winston AI",
+  "evidence.title":         "{{ call .T `ailab.detector.result.evidence_title` }}",
+  "evidence.dimension":     "{{ call .T `ailab.detector.result.evidence_dimension` }}",
+  "evidence.severity":      "{{ call .T `ailab.detector.result.evidence_severity` }}",
+  "evidence.quote":         "{{ call .T `ailab.detector.result.evidence_quote` }}",
+  "metrics.title":          "{{ call .T `ailab.detector.result.metrics_title` }}",
+  "metrics.burstiness":     "{{ call .T `ailab.detector.result.metrics_burstiness` }}",
+  "metrics.perplexity":     "{{ call .T `ailab.detector.result.metrics_perplexity` }}",
+  "metrics.ttr":            "{{ call .T `ailab.detector.result.metrics_ttr` }}",
+  "metrics.anchors":        "{{ call .T `ailab.detector.result.metrics_anchors` }}",
+  "signature.title":        "{{ call .T `ailab.detector.result.signature_title` }}",
+  "signature.gpt":          "{{ call .T `ailab.detector.result.signature_gpt` }}",
+  "signature.claude":       "{{ call .T `ailab.detector.result.signature_claude` }}",
+  "signature.deepseek":     "{{ call .T `ailab.detector.result.signature_deepseek` }}",
+  "signature.dominant":     "{{ call .T `ailab.detector.result.signature_dominant` }}",
+  "severity.critical":      "{{ call .T `ailab.detector.result.severity_critical` }}",
+  "severity.high":          "{{ call .T `ailab.detector.result.severity_high` }}",
+  "severity.medium":        "{{ call .T `ailab.detector.result.severity_medium` }}",
+  "severity.low":           "{{ call .T `ailab.detector.result.severity_low` }}"
 };
 window.__AID_CONFIG__ = {
   freeLimit: {{ .FreeWordLimit }},

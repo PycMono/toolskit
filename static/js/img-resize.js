@@ -10,7 +10,7 @@ let aspectRatioLocked = true;
 let originalRatio = 1;
 
 const MAX_FILES = 20;
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
 /* ══════════════════════════════════════════════
    Initialization
@@ -68,7 +68,7 @@ function handleFiles(files) {
       continue;
     }
     if (file.size > MAX_FILE_SIZE) {
-      errors.push(`${file.name}: 文件过大（最大10MB）`);
+      errors.push(`${file.name}: 文件过大（最大100MB）`);
       continue;
     }
     if (uploadedFiles.length + validFiles.length >= MAX_FILES) {

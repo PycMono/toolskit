@@ -23,7 +23,14 @@ var blockedHosts = []string{
 	"172.17.", "172.18.", "172.19.", "172.20.", "172.21.",
 	"172.22.", "172.23.", "172.24.", "172.25.", "172.26.",
 	"172.27.", "172.28.", "172.29.", "172.30.", "172.31.",
-	"0.0.0.0", "::1", "fc00:", "fd00:",
+	"0.0.0.0", "::1", "fc00:", "fd00:", "169.254.",
+}
+
+// 禁止访问的内网 IP 段（CIDR）
+var blockedCIDRs = []string{
+	"10.0.0.0/8",     "172.16.0.0/12", "192.168.0.0/16",
+	"127.0.0.0/8",    "169.254.0.0/16", "0.0.0.0/8",
+	"::1/128",        "fc00::/7",       "fe80::/10",
 }
 
 // JSONFetch 代理抓取远程 JSON
@@ -48,12 +55,38 @@ func JSONFetch(c *gin.Context) {
 		return
 	}
 
+	// DNS 解析后再验证 IP（防止 DNS rebinding）
+	resolvedIPs, err := net.LookupHost(host)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "failed to resolve host"})
+		return
+	}
+	for _, ip := range resolvedIPs {
+		if isBlockedIP(ip) {
+			c.JSON(http.StatusForbidden, gin.H{"error": "private/local addresses not allowed"})
+			return
+		}
+	}
+
 	// 执行 HTTP 请求
 	client := &http.Client{
 		Timeout: fetchTimeout * time.Second,
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
 			if len(via) >= 5 {
 				return fmt.Errorf("too many redirects")
+			}
+			// Re-validate redirect target
+			redirectHost := strings.ToLower(req.URL.Hostname())
+			if isBlockedHost(redirectHost) {
+				return fmt.Errorf("redirect to private address blocked")
+			}
+			redirectIPs, err := net.LookupHost(redirectHost)
+			if err == nil {
+				for _, ip := range redirectIPs {
+					if isBlockedIP(ip) {
+						return fmt.Errorf("redirect to private address blocked")
+					}
+				}
 			}
 			return nil
 		},
@@ -118,9 +151,27 @@ func isBlockedHost(host string) bool {
 			return true
 		}
 	}
-	// 额外检查：解析 IP 是否为内网
 	if ip := net.ParseIP(host); ip != nil {
-		if ip.IsLoopback() || ip.IsPrivate() || ip.IsLinkLocalUnicast() {
+		if ip.IsLoopback() || ip.IsPrivate() || ip.IsLinkLocalUnicast() || ip.IsLinkLocalMulticast() {
+			return true
+		}
+	}
+	return false
+}
+
+// isBlockedIP 检查 IP 是否在禁止的 CIDR 范围内
+func isBlockedIP(ipStr string) bool {
+	ip := net.ParseIP(ipStr)
+	if ip == nil {
+		return false
+	}
+	if ip.IsLoopback() || ip.IsPrivate() || ip.IsLinkLocalUnicast() || ip.IsLinkLocalMulticast() || ip.IsUnspecified() {
+		return true
+	}
+	// Check CIDR ranges
+	for _, cidr := range blockedCIDRs {
+		_, network, err := net.ParseCIDR(cidr)
+		if err == nil && network.Contains(ip) {
 			return true
 		}
 	}

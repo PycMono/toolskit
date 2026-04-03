@@ -5,7 +5,7 @@ const DevBase64 = (() => {
     mode: 'encode',
     output: '',
     opts: { urlSafe: false, splitChunks: false, eachLine: false },
-    MAX_FILE: 50 * 1024 * 1024,
+    MAX_FILE: 100 * 1024 * 1024,
     debounceTimer: null,
   };
 
