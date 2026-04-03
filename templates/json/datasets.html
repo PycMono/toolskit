@@ -333,7 +333,6 @@ body { background: var(--ds-bg); color: var(--ds-text); font-family: -apple-syst
 
   <!-- Right: Sidebar -->
   <aside class="ds-sidebar">
-    {{- template "partials/ad_slot.html" dict "SlotID" "json-datasets-sidebar" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
     <div class="ds-sidebar__tools" style="margin-top:16px">
       <h4>{{ if eq .Lang "zh" }}其他 JSON 工具{{ else }}JSON Tools{{ end }}</h4>
       <ul class="ds-sidebar__tool-list">

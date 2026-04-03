@@ -112,11 +112,6 @@
   <!-- ══ MAIN LAYOUT (results + side ads) ══ -->
   <div class="ic-main-layout">
 
-    <!-- Left sidebar ad -->
-    <div class="ic-sidebar ic-sidebar--left">
-      {{- template "partials/ad_slot.html" dict "SlotID" "img-compress-left" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
-    </div>
-
     <!-- Center content -->
     <div class="ic-main-center">
 
@@ -138,11 +133,6 @@
 
 
     </div><!-- /ic-main-center -->
-
-    <!-- Right sidebar ad -->
-    <div class="ic-sidebar ic-sidebar--right">
-      {{- template "partials/ad_slot.html" dict "SlotID" "img-compress-right" "Size" "300x250" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
-    </div>
 
   </div><!-- /ic-main-layout -->
 

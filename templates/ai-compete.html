@@ -353,15 +353,6 @@ window.__LANG__ = "{{ .Lang }}";
 
       </div>{{/* /ac-panel */}}
 
-      {{/* Sidebar Ad */}}
-      {{- template "partials/ad_slot.html" (dict
-          "SlotID"     "ai-compete-sidebar"
-          "AdSlotNum"  ""
-          "Size"       "300x250"
-          "MobileHide" true
-          "ClientID"   .AdsClientID
-          "Enabled"    .AdsEnabled) }}
-
     </div>{{/* /ac-layout */}}
   </section>
 
