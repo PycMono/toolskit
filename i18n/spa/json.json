@@ -12,6 +12,7 @@
   "json.home.group.view": "Ver y consultar",
   "json.home.group.convert": "Conversión de datos",
   "json.home.group.codegen": "Generación de código",
+  "json.home.group.generate": "Generar y transformar",
   "json.home.group.schema": "Herramientas de esquema",
   "json.home.group.encode": "Codificación y herramientas",
   "json.home.group.learn": "Aprendizaje y conjuntos de datos",

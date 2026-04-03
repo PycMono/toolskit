@@ -20,6 +20,7 @@
   "json.home.group.view": "表示 & クエリ",
   "json.home.group.convert": "データ変換",
   "json.home.group.codegen": "コード生成",
+  "json.home.group.generate": "生成 & 変換",
   "json.home.group.schema": "Schema ツール",
   "json.home.group.encode": "エンコード & ツール",
   "json.home.group.learn": "学習 & データセット",

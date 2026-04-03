@@ -98,6 +98,11 @@
     </section>
 
       <section class="itb-about">
+      <div style="display:flex;gap:24px;align-items:flex-start">
+        <div style="flex-shrink:0;width:120px" class="itb-about-ad-left">
+          {{- template "partials/ad_slot.html" dict "SlotID" "img-jpg-to-about-left" "Size" "120x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+        </div>
+        <div style="flex:1;min-width:0">
       <span class="itb-about__label">{{ call .T "hero.jpg_to.about.label" }}</span>
       <h2 class="itb-about__title">{{ call .T "hero.jpg_to.about.title" }}</h2>
       <p class="itb-about__body">{{ call .T "hero.jpg_to.about.body1" }}</p>
@@ -105,6 +110,11 @@
       <p class="itb-about__body">{{ call .T "hero.jpg_to.about.body3" }}</p>
       <p class="itb-about__body">{{ call .T "hero.jpg_to.about.body4" }}</p>
       <p class="itb-about__body">{{ call .T "hero.jpg_to.about.body5" }}</p>
+        </div>
+        <div style="flex-shrink:0;width:120px" class="itb-about-ad-right">
+          {{- template "partials/ad_slot.html" dict "SlotID" "img-jpg-to-about-right" "Size" "120x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+        </div>
+      </div>
     </section>
     <section class="itb-faq"><h2 class="itb-faq__title">FAQ</h2>{{ range $i,$f := .FAQs }}<div class="itb-faq-item" id="itbFaq-{{ $i }}"><button class="itb-faq-item__q" onclick="itbToggleFAQ({{ $i }})" aria-expanded="false">{{ $f.Q }}<span class="itb-faq-item__arrow">▾</span></button><div class="itb-faq-item__a"><p>{{ $f.A }}</p></div></div>{{ end }}</section>
   <div class="itb-ad-bottom">{{- template "partials/ad_slot.html" dict "SlotID" "img-jpg-to-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}</div>

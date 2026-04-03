@@ -758,3 +758,63 @@
         font-size: 16px;
     }
 }
+
+
+/* ── URL Input Bar ───────────────────────────────── */
+.jt-url-bar {
+    display: flex;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #f1f5f9;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.jt-url-bar__input {
+    flex: 1;
+    padding: 6px 10px;
+    font-size: 13px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.jt-url-bar__input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.jt-url-bar__btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    background: #6366f1;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.jt-url-bar__btn:hover {
+    background: #4f46e5;
+}
+
+.jt-url-bar__btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+    .jt-url-bar {
+        flex-direction: column;
+    }
+    .jt-url-bar__btn {
+        justify-content: center;
+    }
+}
+

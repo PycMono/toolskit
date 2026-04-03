@@ -343,6 +343,9 @@ body { background: var(--ds-bg); color: var(--ds-text); font-family: -apple-syst
         <li><a href="/json/learn">{{ if eq .Lang "zh" }}学习 JSON{{ else }}Learn JSON{{ end }}</a></li>
       </ul>
     </div>
+    <div style="margin-top:24px;text-align:center">
+      {{- template "partials/ad_slot.html" dict "SlotID" "json-datasets-sidebar" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+    </div>
   </aside>
 </div>
 

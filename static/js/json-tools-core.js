@@ -47,7 +47,8 @@ require(['vs/editor/editor.main'], function() {
     if (inputEl) {
       const inputLang = { 'from-yaml': 'yaml', 'from-xml': 'xml', 'from-sql': 'sql',
         'from-csv': 'plaintext', 'base64': 'plaintext', 'jwt': 'plaintext',
-        'jsonc': 'plaintext' }[tool] || 'json';
+        'jsonc': 'plaintext', 'from-toml': 'toml', 'from-query': 'plaintext',
+        'python-dict': 'python' }[tool] || 'json';
       inputEditor = monaco.editor.create(inputEl, {
         ...opts, value: '', language: inputLang, theme: 'vs',
       });
@@ -65,6 +66,10 @@ require(['vs/editor/editor.main'], function() {
         'to-php': 'php', 'from-yaml': 'json', 'from-xml': 'json',
         'escape': 'plaintext', 'stringify': 'plaintext',
         'base64': 'plaintext', 'jwt': 'json', 'jsonc': 'json',
+        'to-dart': 'dart', 'to-objc': 'objc', 'to-cpp': 'cpp',
+        'to-ruby': 'ruby', 'to-scala': 'scala',
+        'to-toml': 'toml', 'to-query': 'plaintext', 'from-query': 'json',
+        'python-dict': 'python', 'json-generator': 'json',
       }[tool] || 'json';
       outputEditor = monaco.editor.create(outputEl, {
         ...opts, value: '', language: outputLang, theme: 'vs', readOnly: true,
@@ -135,6 +140,9 @@ function loadExample() {
     'base64':    '{"name":"John","age":30}',
     'jwt':       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
     'jsonc':     '{\n  // This is a comment\n  "name": "John", // inline comment\n  /* block comment */\n  "age": 30, // trailing comma allowed in JSONC\n}',
+    'from-toml': '[server]\nhost = "localhost"\nport = 8080\n\n[database]\nurl = "postgres://localhost/mydb"\nmax_connections = 100',
+    'from-query': '?name=John&age=30&city=Beijing&active=true&tags=dev&tags=coder',
+    'python-dict': "{'name': 'John', 'age': 30, 'hobbies': ['coding', 'reading'], 'active': True, 'address': None}",
   };
   const defaultEx = {
     name: 'John Doe', age: 30, email: 'john@example.com',
@@ -176,6 +184,9 @@ function downloadOutput(filename, ext) {
     'to-go':   'go',       'to-kotlin': 'kt',
     'to-swift':'swift',    'to-rust':   'rs',
     'to-php':  'php',
+    'to-dart': 'dart',    'to-objc': 'h',
+    'to-cpp':  'hpp',     'to-ruby':  'rb',
+    'to-scala':'scala',   'to-toml': 'toml',
   };
   const defaultExt = ext || extMap[tool] || 'json';
   const fn = filename || `output.${defaultExt}`;
@@ -197,6 +208,8 @@ const REVERSE_TOOLS = {
   'to-csv': 'from-csv', 'from-csv': 'to-csv',
   'to-sql': 'from-sql', 'from-sql': 'to-sql',
   'to-excel': 'from-excel', 'from-excel': 'to-excel',
+  'to-toml': 'from-toml', 'from-toml': 'to-toml',
+  'to-query': 'from-query', 'from-query': 'to-query',
   'stringify': 'unescape',
   'jsonc': 'validate',
   'schema-generate': 'schema-validate',
@@ -267,6 +280,55 @@ function uploadFile(input) {
   };
   reader.readAsText(file, 'utf-8');
   input.value = '';
+}
+
+// Fetch JSON from URL
+async function fetchJsonFromUrl() {
+  const input = document.getElementById('jsonUrlInput');
+  const url = input?.value?.trim();
+  if (!url) {
+    showToast(i18n('json.common.url_empty') || '请输入 URL', 'error');
+    return;
+  }
+
+  const btn = input?.nextElementSibling;
+  const origText = btn?.innerHTML;
+  if (btn) btn.innerHTML = '...';
+
+  try {
+    const resp = await fetch('/api/tools/json/fetch?url=' + encodeURIComponent(url), {
+      signal: AbortSignal.timeout(20000)
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error || `Error ${resp.status}`);
+    }
+
+    const text = await resp.text();
+
+    if (inputEditor) {
+      inputEditor.setValue(text);
+      // Auto-format if valid JSON
+      try {
+        const parsed = JSON.parse(text);
+        const formatted = JSON.stringify(parsed, null, 2);
+        inputEditor.setValue(formatted);
+        showToast(i18n('json.common.fetch_success') || '已加载 JSON', 'success');
+      } catch (e) {
+        // Not valid JSON, just set as-is
+        showToast(i18n('json.common.fetch_success_raw') || '已加载内容（非 JSON）', 'info');
+      }
+    }
+    clearErrorPanel();
+  } catch (err) {
+    const msg = err.name === 'TimeoutError'
+      ? (i18n('json.common.fetch_timeout') || '请求超时')
+      : (err.message || (i18n('json.common.fetch_error') || 'URL 抓取失败'));
+    showToast(msg, 'error');
+  } finally {
+    if (btn && origText) btn.innerHTML = origText;
+  }
 }
 
 function updateInputStats() {

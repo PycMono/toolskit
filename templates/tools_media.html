@@ -10,6 +10,11 @@
     </div>
   </div>
 
+  <!-- Top Ad -->
+  <div style="text-align:center;margin:8px 0 16px">
+    {{- template "partials/ad_slot.html" dict "SlotID" "tools-media-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+  </div>
+
   <!-- Tools Grid -->
   <div class="container media-tools-container">
     <div class="tools-grid-media">
@@ -118,6 +123,11 @@
         </div>
       </a>
 
+    </div>
+
+    <!-- In-content Ad (between grid and features) -->
+    <div style="text-align:center;margin:24px 0">
+      {{- template "partials/ad_slot.html" dict "SlotID" "tools-media-mid" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
     </div>
 
     <!-- Features Section -->

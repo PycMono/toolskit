@@ -309,6 +309,9 @@ a:hover { text-decoration: underline; }
           <li><a href="/json/datasets" style="font-size:14px;color:#1e40af">{{ index $ui "tool_free_datasets" }}</a></li>
         </ul>
       </div>
+      <div style="margin-top:24px;text-align:center">
+        {{- template "partials/ad_slot.html" dict "SlotID" "json-learn-article-sidebar" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+      </div>
     </aside>
   </div>
 </div>
@@ -423,6 +426,13 @@ a:hover { text-decoration: underline; }
     </div>
   </div>
 </section>
+
+<!-- Mid-content Ad (Hub page) -->
+{{ if not .Article }}
+<div class="lrn-container" style="text-align:center;padding:24px 20px">
+  {{- template "partials/ad_slot.html" dict "SlotID" "json-learn-mid" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+</div>
+{{ end }}
 
 <!-- Features -->
 <section class="lrn-features" style="background:#fff;border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0">

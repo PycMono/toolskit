@@ -20,7 +20,7 @@ type JsonToolMeta struct {
 	Keywords string
 }
 
-// AllJsonToolMetas is the master list of all 38 JSON tools
+// AllJsonToolMetas is the master list of all JSON tools
 var AllJsonToolMetas = []JsonToolMeta{
 	// Validate & Format
 	{Key: "validate", Icon: "✅", Group: "validate", TitleZH: "JSON 验证器", TitleEN: "JSON Validator", DescZH: "在线验证 JSON 格式，错误行高亮显示，支持自动修复建议", DescEN: "Validate JSON online with error highlighting and fix suggestions", Keywords: "json validator, json lint, json checker"},
@@ -69,6 +69,21 @@ var AllJsonToolMetas = []JsonToolMeta{
 	{Key: "jwt", Icon: "🎫", Group: "encode", TitleZH: "JWT 解码", TitleEN: "JWT Decoder", DescZH: "解析 JWT Token，查看 Header/Payload/Signature", DescEN: "Decode and inspect JWT token Header, Payload and Signature", Keywords: "jwt decoder, jwt parser, decode jwt"},
 	{Key: "jsonc", Icon: "💬", Group: "encode", TitleZH: "JSONC 转 JSON", TitleEN: "JSONC to JSON", DescZH: "移除 JSONC/JSON5 注释，转为标准 JSON", DescEN: "Strip comments from JSONC/JSON5 files", Keywords: "jsonc to json, json5, json comments"},
 	{Key: "token-count", Icon: "🔢", Group: "encode", TitleZH: "Token 计数", TitleEN: "Token Counter", DescZH: "统计 GPT-4/Claude/Gemini 等模型的 Token 数量", DescEN: "Count tokens for GPT-4, Claude, Gemini and other LLMs", Keywords: "token counter, gpt token count, llm tokens"},
+	// Generate & Transform
+	{Key: "json-generator", Icon: "🎲", Group: "generate", TitleZH: "JSON 随机生成器", TitleEN: "JSON Generator", DescZH: "根据 Schema 或模板生成随机 JSON 测试数据", DescEN: "Generate random JSON test data from schema or template", Keywords: "json generator, random json, mock data"},
+	{Key: "to-query", Icon: "🔗", Group: "generate", TitleZH: "JSON 转 URL 参数", TitleEN: "JSON to URL Query", DescZH: "将 JSON 对象转换为 URL 查询字符串参数", DescEN: "Convert JSON object to URL query string", Keywords: "json to query, json to url, query string"},
+	{Key: "from-query", Icon: "🔗", Group: "generate", TitleZH: "URL 参数转 JSON", TitleEN: "URL Query to JSON", DescZH: "将 URL 查询字符串解析为 JSON 对象", DescEN: "Parse URL query string to JSON object", Keywords: "query to json, url to json, parse query"},
+	{Key: "python-dict", Icon: "🐍", Group: "generate", TitleZH: "Python Dict 转换", TitleEN: "Python Dict Converter", DescZH: "Python 字典格式与 JSON 互转，处理单引号双引号", DescEN: "Convert between Python dict and JSON format", Keywords: "python dict to json, dict converter, python json"},
+	// TOML Converter
+	{Key: "to-toml", Icon: "📝", Group: "convert", TitleZH: "JSON 转 TOML", TitleEN: "JSON to TOML", DescZH: "将 JSON 转换为 TOML 配置格式", DescEN: "Convert JSON to TOML configuration format", Keywords: "json to toml, toml converter, toml config"},
+	{Key: "from-toml", Icon: "📝", Group: "convert", TitleZH: "TOML 转 JSON", TitleEN: "TOML to JSON", DescZH: "将 TOML 配置文件解析为 JSON", DescEN: "Parse TOML configuration to JSON", Keywords: "toml to json, parse toml, toml parser"},
+	// Additional Code Generators
+	{Key: "to-dart", Icon: "🎯", Group: "codegen", TitleZH: "JSON 转 Dart", TitleEN: "JSON to Dart", DescZH: "根据 JSON 生成 Dart 类，支持 Flutter 开发", DescEN: "Generate Dart classes from JSON for Flutter", Keywords: "json to dart, dart class, flutter json"},
+	{Key: "to-objc", Icon: "🍎", Group: "codegen", TitleZH: "JSON 转 Objective-C", TitleEN: "JSON to Objective-C", DescZH: "根据 JSON 生成 Objective-C 模型类", DescEN: "Generate Objective-C model classes from JSON", Keywords: "json to objective-c, objc model, ios json"},
+	{Key: "to-cpp", Icon: "⚙️", Group: "codegen", TitleZH: "JSON 转 C++", TitleEN: "JSON to C++", DescZH: "根据 JSON 生成 C++ 结构体定义", DescEN: "Generate C++ structs from JSON", Keywords: "json to cpp, c++ struct, cpp json"},
+	{Key: "to-ruby", Icon: "💎", Group: "codegen", TitleZH: "JSON 转 Ruby", TitleEN: "JSON to Ruby", DescZH: "根据 JSON 生成 Ruby 类或 Struct", DescEN: "Generate Ruby classes or structs from JSON", Keywords: "json to ruby, ruby class, rails json"},
+	{Key: "to-scala", Icon: "☕", Group: "codegen", TitleZH: "JSON 转 Scala", TitleEN: "JSON to Scala", DescZH: "根据 JSON 生成 Scala case class", DescEN: "Generate Scala case classes from JSON", Keywords: "json to scala, scala case class, play json"},
+	{Key: "highlight-export", Icon: "🎨", Group: "encode", TitleZH: "JSON 着色导出", TitleEN: "JSON Highlight Export", DescZH: "将 JSON 导出为带语法高亮的 HTML 或 RTF 文件", DescEN: "Export JSON with syntax highlighting as HTML or RTF", Keywords: "json highlight, json export, syntax highlighting, json to html"},
 }
 
 // jsonOutputTools indicates which tools produce valid JSON output (for tree view)
@@ -77,7 +92,8 @@ var jsonOutputTools = map[string]bool{
 	"unescape": true, "flatten": true, "repair": true, "jsonc": true,
 	"jwt": true, "path": true, "token-count": true,
 	"from-csv": true, "from-yaml": true, "from-xml": true, "from-sql": true,
-	"schema-generate": true,
+	"schema-generate": true, "from-toml": true, "from-query": true,
+	"python-dict": true, "json-generator": true,
 }
 
 // hotToolKeys is the list of hot tools shown in the topbar

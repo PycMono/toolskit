@@ -20,6 +20,7 @@
   "json.home.group.view": "보기 & 쿼리",
   "json.home.group.convert": "데이터 변환",
   "json.home.group.codegen": "코드 생성",
+  "json.home.group.generate": "생성 & 변환",
   "json.home.group.schema": "Schema 도구",
   "json.home.group.encode": "인코딩 & 도구",
   "json.home.group.learn": "학습 & 데이터셋",

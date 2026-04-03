@@ -6,6 +6,20 @@
     <h1 class="tool-page-title">Unit Converter</h1>
     <p class="tool-page-subtitle">Convert length, weight, temperature, area, volume, speed, time, data, pressure, energy and frequency</p>
 
+    <!-- Top Ad -->
+    <div style="text-align:center;margin:8px 0 16px">
+      {{- template "partials/ad_slot.html" dict "SlotID" "media-unit-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+    </div>
+
+    <!-- Converter with Side Ads -->
+    <div style="display:flex;gap:16px;align-items:flex-start">
+      <!-- Left Side Ad (desktop only) -->
+      <div style="flex-shrink:0;width:160px" class="unit-ad-left">
+        {{- template "partials/ad_slot.html" dict "SlotID" "media-unit-left" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+      </div>
+
+      <!-- Main Converter Area -->
+      <div style="flex:1;min-width:0">
     <!-- Category Selector -->
     <div class="category-selector">
       <button class="cat-btn active" data-cat="length" onclick="switchCategory('length')">Length</button>
@@ -40,6 +54,19 @@
       <!-- Quick Reference -->
       <div class="quick-ref" id="quickRef"></div>
     </div>
+      </div>
+
+      <!-- Right Side Ad (desktop only) -->
+      <div style="flex-shrink:0;width:160px" class="unit-ad-right">
+        {{- template "partials/ad_slot.html" dict "SlotID" "media-unit-right" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+      </div>
+    </div>
+
+    <!-- Bottom Ad -->
+    <div style="text-align:center;margin:24px 0">
+      {{- template "partials/ad_slot.html" dict "SlotID" "media-unit-bottom" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+    </div>
+
   </div>
 </div>
 
@@ -102,6 +129,9 @@
 }
 .ref-item .ref-val { font-weight: 600; font-family: 'SF Mono', 'Fira Code', monospace; }
 .ref-item .ref-unit { color: var(--color-text-muted); }
+@media (max-width: 1024px) {
+  .unit-ad-left, .unit-ad-right { display: none !important; }
+}
 </style>
 
 <script>

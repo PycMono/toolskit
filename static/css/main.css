@@ -2844,4 +2844,18 @@ body.nav-open { overflow: hidden; }
   [data-theme="dark"] .nav-mobile-group a:hover { background: var(--t-bg); }
 }
 
+/* ── 侧边广告移动端隐藏 ── */
+@media (max-width: 1024px) {
+  .ad-slot[style*="--ad-mobile-display:none"],
+  .itb-about-ad-left,
+  .itb-about-ad-right,
+  .ir-use-case-ad-left,
+  .ir-use-case-ad-right,
+  .qr-about-ad-left,
+  .qr-about-ad-right,
+  .unit-ad-left,
+  .unit-ad-right {
+    display: none !important;
+  }
+}
 

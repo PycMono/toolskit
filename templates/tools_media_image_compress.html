@@ -6,6 +6,11 @@
     <h1 class="tool-page-title">{{ call .T "img.compress.name" }}</h1>
     <p class="tool-page-subtitle">{{ call .T "img.compress.desc" }}</p>
 
+    <!-- Top Ad -->
+    <div style="text-align:center;margin:8px 0 16px">
+      {{- template "partials/ad_slot.html" dict "SlotID" "tools-img-compress-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+    </div>
+
     <!-- Upload Area -->
     <div class="upload-zone" id="uploadZone">
       <div class="upload-icon">☁️</div>
@@ -60,6 +65,11 @@
 
     <!-- Summary Stats -->
     <div class="compress-summary hidden" id="compressSummary"></div>
+
+    <!-- In-content Ad -->
+    <div style="text-align:center;margin:24px 0">
+      {{- template "partials/ad_slot.html" dict "SlotID" "tools-img-compress-mid" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+    </div>
 
   </div>
 </div>

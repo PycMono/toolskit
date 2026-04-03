@@ -164,6 +164,10 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 		jt.GET("/to-sql", handlers.JsonToolPage("to-sql"))
 		jt.GET("/from-sql", handlers.JsonToolPage("from-sql"))
 		jt.GET("/to-markdown", handlers.JsonToolPage("to-markdown"))
+		jt.GET("/to-toml", handlers.JsonToolPage("to-toml"))
+		jt.GET("/from-toml", handlers.JsonToolPage("from-toml"))
+		jt.GET("/to-query", handlers.JsonToolPage("to-query"))
+		jt.GET("/from-query", handlers.JsonToolPage("from-query"))
 
 		// Code Generators
 		jt.GET("/to-typescript", handlers.JsonToolPage("to-typescript"))
@@ -175,6 +179,11 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 		jt.GET("/to-swift", handlers.JsonToolPage("to-swift"))
 		jt.GET("/to-rust", handlers.JsonToolPage("to-rust"))
 		jt.GET("/to-php", handlers.JsonToolPage("to-php"))
+		jt.GET("/to-dart", handlers.JsonToolPage("to-dart"))
+		jt.GET("/to-objc", handlers.JsonToolPage("to-objc"))
+		jt.GET("/to-cpp", handlers.JsonToolPage("to-cpp"))
+		jt.GET("/to-ruby", handlers.JsonToolPage("to-ruby"))
+		jt.GET("/to-scala", handlers.JsonToolPage("to-scala"))
 
 		// Schema
 		jt.GET("/schema-validate", handlers.JsonToolPage("schema-validate"))
@@ -185,6 +194,11 @@ func Setup(r *gin.Engine, cfg *config.Config) {
 		jt.GET("/jwt", handlers.JsonToolPage("jwt"))
 		jt.GET("/jsonc", handlers.JsonToolPage("jsonc"))
 		jt.GET("/token-count", handlers.JsonToolPage("token-count"))
+		jt.GET("/highlight-export", handlers.JsonToolPage("highlight-export"))
+
+		// Generate & Transform
+		jt.GET("/json-generator", handlers.JsonToolPage("json-generator"))
+		jt.GET("/python-dict", handlers.JsonToolPage("python-dict"))
 
 		// Token Count backend API
 		jt.POST("/api/token-count", handlers.JsonTokenCountAPI)

@@ -69,7 +69,7 @@
   <div class="jt-container">
 
     {{ $lang := .Lang }}
-    {{ $groups := list "validate" "view" "convert" "codegen" "schema" "encode" }}
+    {{ $groups := list "validate" "view" "convert" "codegen" "generate" "schema" "encode" }}
     {{ range $groups }}
     <div class="jt-tool-group" data-group="{{ . }}">
       <h2 class="jt-tool-group__title">
@@ -121,6 +121,11 @@
   </div>
 </section>
 {{ end }}
+
+<!-- Mid-content Ad -->
+<div style="text-align:center;margin:24px 0">
+  {{- template "partials/ad_slot.html" dict "SlotID" "json-home-mid" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+</div>
 
 <!-- Features -->
 <section class="jt-home-features">

@@ -171,6 +171,11 @@
 {{ define "content" }}
 <div class="img-resize-page">
 
+  <!-- Top Ad -->
+  <div style="text-align:center;margin:8px auto;max-width:728px">
+    {{- template "partials/ad_slot.html" dict "SlotID" "img-resize-top" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+  </div>
+
   <!-- ══ Hero + Upload ══════════════════════ -->
   <section class="ir-hero">
     <div class="ir-container">
@@ -426,6 +431,11 @@
     </div>
   </section>
 
+  <!-- In-content Ad -->
+  <div style="text-align:center;margin:24px 0">
+    {{- template "partials/ad_slot.html" dict "SlotID" "img-resize-mid" "Size" "728x90" "Mobile" "320x50" "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+  </div>
+
   <!-- ══ SECTION 2: Precision Resize ═════════════ -->
   <section class="ir-section">
     <div class="ir-section-inner">
@@ -517,7 +527,12 @@
 
   <!-- ══ SECTION 6: Use Cases ═══════════════════════ -->
   <section class="ir-section">
-    <div class="ir-section-inner">
+    <div class="ir-section-inner" style="display:flex;gap:24px;align-items:flex-start">
+      <!-- Left Side Ad -->
+      <div style="flex-shrink:0;width:160px" class="ir-use-case-ad-left">
+        {{- template "partials/ad_slot.html" dict "SlotID" "img-resize-uc-left" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
+      </div>
+      <div style="flex:1;min-width:0">
       <span class="ir-section-label">使用场景</span>
       <h2 class="ir-section-title">适用于各种场景的图片尺寸调整</h2>
       <p class="ir-section-body">无论您是博主、设计师、电商运营还是社交媒体经理，我们都能满足您的图片调整需求</p>
@@ -566,6 +581,12 @@
             <li>批量处理节省时间</li>
           </ul>
         </div>
+      </div>
+      </div>
+
+      <!-- Right Side Ad -->
+      <div style="flex-shrink:0;width:160px" class="ir-use-case-ad-right">
+        {{- template "partials/ad_slot.html" dict "SlotID" "img-resize-uc-right" "Size" "160x600" "MobileHide" true "ClientID" .AdsClientID "Enabled" .AdsEnabled }}
       </div>
     </div>
   </section>
